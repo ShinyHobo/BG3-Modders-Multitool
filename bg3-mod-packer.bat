@@ -46,11 +46,15 @@ divine.exe -g "bg3" --action "create-package" --source "%MODDIR%" --destination 
 
 REM Create info file
 echo {> "%MODDIR%\..\temp\info.json"
-echo    "modName": "%NAMEVALUE%",>> "%MODDIR%\..\temp\info.json"
-echo    "GUID": "%UUIDVALUE%",>> "%MODDIR%\..\temp\info.json"
-echo    "folderName": "%PAKNAME%",>> "%MODDIR%\..\temp\info.json"
-echo    "version": "%VERSION%",>> "%MODDIR%\..\temp\info.json"
-echo    "MD5": "">> "%MODDIR%\..\temp\info.json"
+echo     "mods": [>> "%MODDIR%\..\temp\info.json"
+echo     {>> "%MODDIR%\..\temp\info.json"
+echo         "modName": "%NAMEVALUE%",>> "%MODDIR%\..\temp\info.json"
+echo         "UUID": "%UUIDVALUE%",>> "%MODDIR%\..\temp\info.json"
+echo         "folderName": "%PAKNAME%",>> "%MODDIR%\..\temp\info.json"
+echo         "version": "%VERSION%",>> "%MODDIR%\..\temp\info.json"
+echo         "MD5": "">> "%MODDIR%\..\temp\info.json"
+echo     }>> "%MODDIR%\..\temp\info.json"
+echo     ]>> "%MODDIR%\..\temp\info.json"
 echo }>> "%MODDIR%\..\temp\info.json"
 
 REM zip here
