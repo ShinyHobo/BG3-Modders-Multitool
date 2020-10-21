@@ -19,3 +19,5 @@ ModName
     |->Folder3
       |->File.lsf
 ```
+
+Upon working correctly, you will get a .zip of the same name as your mod directory immediately next to it. It is compatible with ShadowChild's <a href='https://github.com/ShadowChild/BaldursGate3/releases'>Candor Mod Manager</a>
