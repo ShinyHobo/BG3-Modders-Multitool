@@ -65,9 +65,9 @@ rmdir /Q /S "%MODDIR%\..\temp"
 
 ECHO All done!
 PAUSE
-KILL
+EXIT
 
 :die
 ECHO Input folder is not the same name as the folder name used in meta.lsx.
 PAUSE
-KILL
+EXIT
