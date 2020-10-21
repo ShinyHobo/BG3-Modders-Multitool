@@ -7,44 +7,63 @@ REM Work from local directory
 ECHO Welcome to the BG3 mod packing utility, created by ShinyHobo. 
 ECHO Please ensure your workspace root directory is the same name as your mod, and that this file is in the same directory as divine.exe (LSLib).
 
-REM Get pack name
-SET "MODDIR=%1"
-FOR /F "delims=|" %%A IN ("%MODDIR%") DO (
-    SET PAKNAME=%%~nxA
-)
+REM Get full path
+SET "MODDIR=%~1"
 
-SET META=%MODDIR%\Mods\%PAKNAME%\meta.lsx
-for /F "tokens=5,7delims==/ " %%a in (
+REM Get pak name
+for %%F in ("%~1") do SET "PAKNAME=%%~nxF"
+
+REM Find UUID, NAME, FOLDER, VERSION VALUES in meta.lsx
+SET META="%MODDIR%\Mods\%PAKNAME%\meta.lsx"
+
+for /F tokens^=6^delims^=^"^/  %%a in (
+ 'findstr /c:"<attribute id=\"Folder\"" ^<%META%'
+) do SET FOLDERVALUE=%%~a
+
+IF "%FOLDERVALUE%" NEQ "%PAKNAME%" ( GOTO :die)
+
+for /F tokens^=6^delims^=^"^/  %%a in (
  'findstr /c:"<attribute id=\"UUID\"" ^<%META%'
-) do SET UUIDVALUE=%%~b
+) do SET UUIDVALUE=%%~a
+for /F tokens^=6^delims^=^"^/  %%a in (
+ 'findstr /c:"<attribute id=\"Name\"" ^<%META%'
+) do SET NAMEVALUE=%%~a
 
 set "FIRSTMATCH=TRUE"
-for /F "tokens=5,7delims==/ " %%a in (
+for /F tokens^=6^delims^=^"^/  %%a in (
  'findstr /c:"<attribute id=\"Version\"" ^<%META%'
 ) do (
  IF DEFINED FIRSTMATCH (
-  SET VERSION=%%~b
+  SET VERSION=%%~a
   SET "FIRSTMATCH="
  )
 )
+REM FOLDERVALUE and PAKNAME should be the same
+REM TODO ERROR HANDLING FOR UUID, NAME, FOLDER VALUES
 
 REM create mod pack and create temp directory
-divine.exe -g "bg3" --action "create-package" --source %MODDIR% --destination %MODDIR%\..\temp\%PAKNAME%.pak -l "all"
+divine.exe -g "bg3" --action "create-package" --source "%MODDIR%" --destination "%MODDIR%\..\temp\%PAKNAME%.pak" -l "all"
 
 REM Create info file
-echo {> %MODDIR%\..\temp\info.json
-echo 	"modName": "%PAKNAME%",>> %MODDIR%\..\temp\info.json
-echo 	"GUID": "%UUIDVALUE%",>> %MODDIR%\..\temp\info.json
-echo 	"folderName": "%PAKNAME%",>> %MODDIR%\..\temp\info.json
-echo 	"version": "%VERSION%",>> %MODDIR%\..\temp\info.json
-echo 	"MD5": "">> %MODDIR%\..\temp\info.json
-echo }>> %MODDIR%\..\temp\info.json
+echo {> "%MODDIR%\..\temp\info.json"
+echo    "modName": "%NAMEVALUE%",>> "%MODDIR%\..\temp\info.json"
+echo    "GUID": "%UUIDVALUE%",>> "%MODDIR%\..\temp\info.json"
+echo    "folderName": "%PAKNAME%",>> "%MODDIR%\..\temp\info.json"
+echo    "version": "%VERSION%",>> "%MODDIR%\..\temp\info.json"
+echo    "MD5": "">> "%MODDIR%\..\temp\info.json"
+echo }>> "%MODDIR%\..\temp\info.json"
 
 REM zip here
-powershell "Compress-Archive -Force %MODDIR%\..\temp\* %MODDIR%\..\%PAKNAME%.zip" 
+powershell "Compress-Archive -Force '%MODDIR%\..\temp\*' '%MODDIR%\..\%PAKNAME%.zip'" 
 
 REM remove temp folder
-rmdir /Q /S %MODDIR%\..\temp
+rmdir /Q /S "%MODDIR%\..\temp"
 
 ECHO All done!
 PAUSE
+KILL
+
+:die
+ECHO Input folder is not the same name as the folder name used in meta.lsx.
+PAUSE
+KILL
