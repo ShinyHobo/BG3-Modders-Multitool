@@ -5,6 +5,7 @@ To use, simply drop the bg3-mod-packer.bat file into your LSLib root directory w
 
 Correct folder structure of mod workspace:
 
+```
 ModName
 |->Mods
   |->ModName
@@ -17,3 +18,4 @@ ModName
       |->File.lsb
     |->Folder3
       |->File.lsf
+```
