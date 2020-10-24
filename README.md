@@ -31,7 +31,7 @@ meta.lsx template:
                     <attribute id="StartupLevelName" type="FixedString" value=""/>
                     <attribute id="Tags" type="LSWString" value=""/>
                     <attribute id="Type" type="FixedString" value="Add-on"/>
-                    <-- Get new UUID from https://www.uuidgenerator.net/ -->
+                    <!-- Get new UUID from https://www.uuidgenerator.net/ -->
 		    <attribute id="UUID" type="FixedString" value="00000000-0000-0000-0000-000000000000"/>
 		    <attribute id="Version" type="int32" value="1"/>
                     <children>
