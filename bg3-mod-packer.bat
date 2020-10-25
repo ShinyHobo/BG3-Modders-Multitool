@@ -41,21 +41,29 @@ for /F tokens^=6^delims^=^"^/  %%a in (
 REM FOLDERVALUE and PAKNAME should be the same
 REM TODO ERROR HANDLING FOR UUID, NAME, FOLDER VALUES
 
+SET "PAKPATH=%MODDIR%\..\temp\%PAKNAME%.pak"
+
 REM create mod pack and create temp directory
-divine.exe -g "bg3" --action "create-package" --source "%MODDIR%" --destination "%MODDIR%\..\temp\%PAKNAME%.pak" -l "all"
+divine.exe -g "bg3" --action "create-package" --source "%MODDIR%" --destination "%PAKPATH%" -l "all"
+
+for /f "skip=1 tokens=* delims=" %%# in ('certutil -hashfile "%PAKPATH%" MD5 ^| findstr /vb "CertUtil: -hashfile command completed successfully."') do (
+	for %%Z in (%%#) do set "MD5=%%Z"
+)
+
+SET "JSONPATH=%MODDIR%\..\temp\info.json"
 
 REM Create info file
-echo {> "%MODDIR%\..\temp\info.json"
-echo     "mods": [>> "%MODDIR%\..\temp\info.json"
-echo     {>> "%MODDIR%\..\temp\info.json"
-echo         "modName": "%NAMEVALUE%",>> "%MODDIR%\..\temp\info.json"
-echo         "UUID": "%UUIDVALUE%",>> "%MODDIR%\..\temp\info.json"
-echo         "folderName": "%PAKNAME%",>> "%MODDIR%\..\temp\info.json"
-echo         "version": "%VERSION%",>> "%MODDIR%\..\temp\info.json"
-echo         "MD5": "">> "%MODDIR%\..\temp\info.json"
-echo     }>> "%MODDIR%\..\temp\info.json"
-echo     ]>> "%MODDIR%\..\temp\info.json"
-echo }>> "%MODDIR%\..\temp\info.json"
+echo {> %JSONPATH%
+echo     "mods": [>> %JSONPATH%
+echo     {>> %JSONPATH%
+echo         "modName": "">> %JSONPATH%
+echo         "UUID": "%UUIDVALUE%",>> %JSONPATH%
+echo         "folderName": "%PAKNAME%",>> %JSONPATH%
+echo         "version": "%VERSION%",>> %JSONPATH%
+echo         "MD5": "%MD5%">> %JSONPATH%
+echo     }>> %JSONPATH%
+echo     ]>> %JSONPATH%
+echo }>> %JSONPATH%
 
 REM zip here
 powershell "Compress-Archive -Force '%MODDIR%\..\temp\*' '%MODDIR%\..\%PAKNAME%.zip'" 
@@ -64,7 +72,6 @@ REM remove temp folder
 rmdir /Q /S "%MODDIR%\..\temp"
 
 ECHO All done!
-PAUSE
 EXIT
 
 :die
