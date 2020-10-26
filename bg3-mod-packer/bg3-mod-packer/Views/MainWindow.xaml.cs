@@ -36,6 +36,5 @@ namespace bg3_mod_packer.Views
             Properties.Settings.Default.divineExe = divineLocation.Text;
             Properties.Settings.Default.Save();
         }
-        }
     }
 }
