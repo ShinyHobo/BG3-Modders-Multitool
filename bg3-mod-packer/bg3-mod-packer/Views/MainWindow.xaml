@@ -8,9 +8,11 @@
         mc:Ignorable="d"
         Title="Baldur's Gate 3 Mod Helper" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="397,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="301"/>
         <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,10,400,10">
             <views:DragAndDropBox />
         </Viewbox>
+        <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="397,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="385"/>
+        <Button x:Name="divineSelect" Content="Select" HorizontalAlignment="Left" Margin="707,41,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23"/>
+        <Label x:Name="divineLabel" Content="divine.exe location" HorizontalAlignment="Left" Margin="397,15,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
