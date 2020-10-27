@@ -70,6 +70,7 @@ namespace bg3_mod_packer.ViewModels
                             process.Start();
                             var stdout = process.StandardOutput.ReadToEnd();
                             process.WaitForExit();
+                            ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += stdout;
 
                             var info = new InfoJson();
 

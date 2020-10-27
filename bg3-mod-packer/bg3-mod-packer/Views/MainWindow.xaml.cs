@@ -13,7 +13,7 @@ namespace bg3_mod_packer.Views
             InitializeComponent();
             divineLocation.Text = Properties.Settings.Default.divineExe;
             divineLocation.ToolTip = divineLocation.Text;
-
+            DataContext = new Models.MainWindow();
         }
 
         private void DivineSelect_Click(object sender, RoutedEventArgs e)
