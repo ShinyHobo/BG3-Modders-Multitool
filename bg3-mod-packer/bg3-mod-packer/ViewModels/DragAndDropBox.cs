@@ -63,8 +63,10 @@ namespace bg3_mod_packer.ViewModels
                                 FileName = "cmd.exe",
                                 Arguments = divine,
                                 WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
+                                CreateNoWindow = true,
                                 UseShellExecute = false,
-                                RedirectStandardOutput = true
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true
                             };
                             process.StartInfo = startInfo;
                             process.Start();
