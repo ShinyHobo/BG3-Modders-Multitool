@@ -36,5 +36,13 @@ namespace bg3_mod_packer.Views
             Properties.Settings.Default.divineExe = divineLocation.Text;
             Properties.Settings.Default.Save();
         }
+
+        private void ConsoleScroller_ScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e)
+        {
+            if (ConsoleScroller.VerticalOffset == ConsoleScroller.ScrollableHeight && e.ExtentHeightChange != 0)
+            {   
+                ConsoleScroller.ScrollToVerticalOffset(ConsoleScroller.ExtentHeight);
+            }
+        }
     }
 }
