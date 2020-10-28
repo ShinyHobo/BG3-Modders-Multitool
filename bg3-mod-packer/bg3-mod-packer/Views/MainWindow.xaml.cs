@@ -41,7 +41,7 @@ namespace bg3_mod_packer.Views
         {
             if (ConsoleScroller.VerticalOffset == ConsoleScroller.ScrollableHeight && e.ExtentHeightChange != 0)
             {   
-                ConsoleScroller.ScrollToVerticalOffset(ConsoleScroller.ExtentHeight);
+                ConsoleScroller.ScrollToEnd();
             }
         }
     }

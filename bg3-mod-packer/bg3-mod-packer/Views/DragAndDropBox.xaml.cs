@@ -20,7 +20,7 @@ namespace bg3_mod_packer.Views
 
         protected override void OnDrop(DragEventArgs e)
         {
-            ViewModels.FolderDragDropHelper.ProcessDrop(e.Data);
+            ViewModels.DragAndDropBox.ProcessDrop(e.Data);
         }
     }
 }
