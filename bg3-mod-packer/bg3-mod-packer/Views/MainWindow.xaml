@@ -1,0 +1,33 @@
+﻿<Window x:Class="bg3_mod_packer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:bg3_mod_packer.Views"
+        xmlns:viewModels="clr-namespace:bg3_mod_packer.ViewModels"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="Baldur's Gate 3 Mod Helper" Height="450" Width="800">
+    <Grid>
+        <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,10,526,159">
+            <views:DragAndDropBox />
+        </Viewbox>
+        <!--TODO move file selectors to separate view-->
+        <Grid Margin="273,10,121,340">
+            <Label x:Name="divineLabel" Content="divine.exe location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310"/>
+            <Button x:Name="divineSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23"/>
+        </Grid>
+        <Grid Margin="273,63,121,287">
+            <Label x:Name="divineLabel1" Content="bg3.exe location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310"/>
+            <Button x:Name="bg3exeSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click"/>
+        </Grid>
+        <ScrollViewer x:Name="ConsoleScroller" Margin="10,267,6,6" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged">
+            <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
+                     IsReadOnly="True" Background="Black" Foreground="White"/>
+        </ScrollViewer>
+        <Button x:Name="unpackAll" Content="Unpack All Files" HorizontalAlignment="Left" Margin="666,75,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="UnpackAll_Click"/>
+        <Button x:Name="unpackAll_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,105,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="UnpackAll_Cancel_Click"/>
+    </Grid>
+</Window>
