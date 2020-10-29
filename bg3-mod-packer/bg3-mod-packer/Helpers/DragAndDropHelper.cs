@@ -13,7 +13,7 @@ namespace bg3_mod_packer.Helpers
     using System.Windows;
     using System.Xml;
 
-    class DragAndDropHelper
+    public static class DragAndDropHelper
     {
         /// <summary>
         /// Path to the temp directory to use.

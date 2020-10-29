@@ -34,5 +34,17 @@ namespace bg3_mod_packer.Properties {
                 this["divineExe"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string bg3Exe {
+            get {
+                return ((string)(this["bg3Exe"]));
+            }
+            set {
+                this["bg3Exe"] = value;
+            }
+        }
     }
 }

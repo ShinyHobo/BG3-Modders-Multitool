@@ -6,7 +6,6 @@ namespace bg3_mod_packer.ViewModels
     using System.IO;
     using System.Windows;
     using System;
-    using bg3_mod_packer.Models;
     using bg3_mod_packer.Helpers;
 
     public class DragAndDropBox
@@ -41,7 +40,7 @@ namespace bg3_mod_packer.ViewModels
                             else
                             {
                                 // File dropping unsupported
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File dropping is not yet supported.";
+                                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File dropping is not yet supported.";
                             }
                         }
                     }
@@ -49,7 +48,7 @@ namespace bg3_mod_packer.ViewModels
             }
             catch(Exception ex)
             {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += ex.Message;
+                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += ex.Message;
             }
         }
     }
