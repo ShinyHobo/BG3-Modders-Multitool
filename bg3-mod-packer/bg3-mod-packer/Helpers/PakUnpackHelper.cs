@@ -19,7 +19,7 @@ namespace bg3_mod_packer.Helpers
         /// </summary>
         public void UnpackAllPakFiles()
         {
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes starting. Files found:";
+            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes starting. Files found:\n";
             this.Processes = new List<int>();
             var pathToDivine = Properties.Settings.Default.divineExe;
             var unpackPath = $"{pathToDivine}\\..\\UnpackedData";
@@ -27,7 +27,7 @@ namespace bg3_mod_packer.Helpers
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\",@"..\Data");
             var files = Directory.GetFiles(dataDir,"*.pak").ToList();
             files.AddRange(Directory.GetFiles($"{dataDir}\\Localization", "*.pak").ToList());
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += string.Join("\n",files);
+            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += string.Join("\n",files) + "\n";
             var startInfo = new ProcessStartInfo
             {
                 FileName = pathToDivine
@@ -62,7 +62,7 @@ namespace bg3_mod_packer.Helpers
                     }
                     catch { }// only exception should be "Process with ID #### not found", safe to ignore
                 }
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "\nUnpacking processes cancelled successfully\n";
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes cancelled successfully\n";
             }
         }
     }
