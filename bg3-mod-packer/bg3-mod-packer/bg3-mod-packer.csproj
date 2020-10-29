@@ -114,6 +114,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\DragAndDropHelper.cs" />
+    <Compile Include="Helpers\PakUnpackHelper.cs" />
     <Compile Include="Models\InfoJson.cs" />
     <Compile Include="Models\MainWindow.cs" />
     <Compile Include="Models\MetaLsx.cs" />
@@ -130,6 +131,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\MainWindow.cs" />
     <Compile Include="Views\DragAndDropBox.xaml.cs">
       <DependentUpon>DragAndDropBox.xaml</DependentUpon>
     </Compile>
