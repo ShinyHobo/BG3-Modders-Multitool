@@ -2,9 +2,12 @@
 Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace.
 
 To use:
-* Simply drop the bg3-mod-packer.bat file into your LSLib root directory where it can access divine.exe. 
-* Drag and drop your unpacked workspace into the .bat to generate an info.json file and .pak with the same name as your workspace. 
-  * The workspace name should be the same as your modpack name.
+* Run bg3-mod-packer.exe
+* Select the location of your LSLib 1.15.2 (or higher) divine.exe 
+* Drag and drop your unpacked workspace into the large blue box to generate an info.json file and .pak with the same name as your workspace.
+
+Extras:
+* Utility for extracting all game assets at once. It can take more than an hour, but will place all the extracted files in a folder in the same directory as divine.exe
 
 meta.lsx template:
 ```
