@@ -27,7 +27,7 @@
             {
                 foreach (string file in Directory.GetFiles(dir))
                 {
-                    fileList.Add(file);
+                    fileList.Add(Path.GetFullPath(file));
                 }
                 fileList.AddRange(DirectorySearch(dir));
             }
@@ -48,11 +48,10 @@
         {
             var guid = Guid.NewGuid().ToString();
             var fileName = Path.GetFileName(file);
-            var fullpath = Path.GetFullPath(file);
             var extension = Path.GetExtension(file);
             var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file); // if file type excluded, only track file name and path
             var contentsBytes = extensionsToExclude.Contains(extension) ? new byte[0] : Encoding.UTF8.GetBytes(contents);
-            Document doc = new Document(guid, fileName, string.Empty, fullpath, string.Empty, string.Empty, contentsBytes);
+            Document doc = new Document(guid, fileName, string.Empty, file, string.Empty, string.Empty, contentsBytes);
             await ie.AddAsync(doc).ContinueWith(delegate {
                 Application.Current.Dispatcher.Invoke(() => {
                     ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileCount++;
