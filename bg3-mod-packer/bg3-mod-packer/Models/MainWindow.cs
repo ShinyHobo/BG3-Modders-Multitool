@@ -17,10 +17,35 @@ namespace bg3_mod_packer.Models
             get { return _consoleOutput; }
             set {
                 _consoleOutput = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ConsoleOutput"));
+                PropertyChangedEvent("ConsoleOutput");
+            }
+        }
+
+        private int _indexFileCount;
+
+        public int IndexFileCount {
+            get { return _indexFileCount; }
+            set {
+                _indexFileCount = value;
+                PropertyChangedEvent("IndexFileCount");
+            }
+        }
+
+        private int _indexFileTotal;
+
+        public int IndexFileTotal {
+            get { return _indexFileTotal; }
+            set {
+                _indexFileTotal = value;
+                PropertyChangedEvent("IndexFileTotal");
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void PropertyChangedEvent(string property)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
     }
 }

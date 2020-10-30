@@ -70,5 +70,12 @@
         {
             ((Models.MainWindow)this.DataContext).UnpackingProcess.CancelUpacking();
         }
+
+        private void IndexFiles_Click(object sender, RoutedEventArgs e)
+        {
+            var unpackPath = $"{Properties.Settings.Default.divineExe}\\..\\UnpackedData";
+            var fileList = IndexHelper.DirectorySearch(unpackPath);
+            new System.Threading.Tasks.Task(() => { IndexHelper.Index(fileList); }).Start();
+        }
     }
 }
