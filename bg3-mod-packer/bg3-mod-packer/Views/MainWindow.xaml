@@ -33,5 +33,6 @@
         <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="396,163,0,0" TextWrapping="Wrap" Text="{Binding IndexFileCount}" VerticalAlignment="Top" Width="50"/>
         <TextBlock x:Name="indexFileTotal" HorizontalAlignment="Left" Margin="461,163,0,0" TextWrapping="Wrap" Text="{Binding IndexFileTotal}" VerticalAlignment="Top" Width="50"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="451,163,0,0" TextWrapping="Wrap" Text="/" VerticalAlignment="Top"/>
+        <Button x:Name="searchFiles" Content="Search Files" HorizontalAlignment="Left" Margin="282,194,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click"/>
     </Grid>
 </Window>
