@@ -1,19 +1,25 @@
 ﻿namespace bg3_mod_packer.Helpers
 {
     using System;
-    using Indexer;
     using System.IO;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
     using bg3_mod_packer.Models;
     using System.Windows;
-    using System.Collections.Concurrent;
     using System.Linq;
+    using Lucene.Net.Store;
+    using Lucene.Net.Analysis;
+    using Lucene.Net.Util;
+    using Lucene.Net.Index;
+    using Lucene.Net.Documents;
+    using Lucene.Net.Analysis.Standard;
+    using Lucene.Net.Search;
+    using Lucene.Net.QueryParsers.Classic;
+    using Lucene.Net.Analysis.Shingle;
 
     public static class IndexHelper
     {
         private static string[] extensionsToExclude = { ".png", ".DDS", ".lsfx", ".lsbc", ".lsbs", ".ttf", ".gr2", ".GR2", ".tga" };
+        private static readonly string luceneIndex = "lucene/index4.db";
 
         /// <summary>
         /// Recursively searches for all files within the given directory.
@@ -23,9 +29,9 @@
         public static List<string> DirectorySearch(string directory)
         {
             var fileList = new List<string>();
-            foreach (string dir in Directory.GetDirectories(directory))
+            foreach (string dir in System.IO.Directory.GetDirectories(directory))
             {
-                foreach (string file in Directory.GetFiles(dir))
+                foreach (string file in System.IO.Directory.GetFiles(dir))
                 {
                     fileList.Add(Path.GetFullPath(file));
                 }
@@ -34,41 +40,114 @@
             return fileList;
         }
 
+        /// <summary>
+        /// Generates an index using the given filelist.
+        /// </summary>
+        /// <param name="filelist">The list of files to index.</param>
         public static void Index(List<string> filelist)
         {
+            // .lsf files do not have spaces to use as token separators, they must use shingles
+            var lsfFiles = filelist.Where(f => Path.GetExtension(f) == ".lsf").ToList();
+            // all other allowed files use spaces or line endings as token separators
+            var allOtherFiles = filelist.Where(f => Path.GetExtension(f) != ".lsf").ToList();
+
+            // Display total file count being indexed
             Application.Current.Dispatcher.Invoke(() => {
                 ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileCount = 0;
                 ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileTotal = filelist.Count;
             });
-            IndexEngine ie = new IndexEngine("bg3-index.db");
-            filelist.ForEachAsync(8, async (file) => await IndexFile(file, ie));
+
+            IndexFiles(lsfFiles, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
+            IndexFiles(allOtherFiles, new StandardAnalyzer(LuceneVersion.LUCENE_48));
         }
 
-        public static async Task IndexFile(string file, IndexEngine ie)
+        /// <summary>
+        /// Indexes the given files using an analyzer.
+        /// </summary>
+        /// <param name="files">The file list to index.</param>
+        /// <param name="analyzer">The analyzer to use when indexing.</param>
+        private static void IndexFiles(List<string> files, Analyzer analyzer)
         {
-            var guid = Guid.NewGuid().ToString();
+            using (FSDirectory dir = FSDirectory.Open(luceneIndex))
+            using (Analyzer a = analyzer)
+            {
+                IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                using (IndexWriter writer = new IndexWriter(dir, config))
+                {
+                    foreach (string file in files)
+                    {
+                        IndexLuceneFile(file, writer);
+                    }
+                    writer.Commit();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a file to the index.
+        /// </summary>
+        /// <param name="file">The file to add.</param>
+        /// <param name="writer">The index to write to.</param>
+        private static void IndexLuceneFile(string file, IndexWriter writer)
+        {
             var fileName = Path.GetFileName(file);
             var extension = Path.GetExtension(file);
-            var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file); // if file type excluded, only track file name and path
-            var contentsBytes = extensionsToExclude.Contains(extension) ? new byte[0] : Encoding.UTF8.GetBytes(contents);
-            Document doc = new Document(guid, fileName, string.Empty, file, string.Empty, string.Empty, contentsBytes);
-            await ie.AddAsync(doc).ContinueWith(delegate {
-                Application.Current.Dispatcher.Invoke(() => {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileCount++;
-                });
+            // if file type is excluded, only track file name and path so it can be searched for by name
+            var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file);
+            var doc = new Document
+            {
+                //new Int64Field("id", id, Field.Store.YES),
+                new TextField("path", file, Field.Store.YES),
+                new TextField("title", fileName, Field.Store.YES),
+                new TextField("body", contents, Field.Store.NO)
+            };
+            writer.AddDocument(doc);
+            
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileCount++;
             });
         }
 
-        //https://devblogs.microsoft.com/pfxteam/implementing-a-simple-foreachasync-part-2/
-        public static Task ForEachAsync<T>(this IEnumerable<T> source, int dop, Func<T, Task> body)
+        /// <summary>
+        /// Searches for and displays results.
+        /// </summary>
+        /// <param name="search">The text to search for. Supports file title and contents.</param>
+        public static void SearchFiles(string search)
         {
-            return Task.WhenAll(
-                from partition in Partitioner.Create(source).GetPartitions(dop)
-                select Task.Run(async delegate {
-                    using (partition)
-                        while (partition.MoveNext())
-                            await body(partition.Current);
-                }));
+            using (FSDirectory dir = FSDirectory.Open(luceneIndex))
+            using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
+            using (IndexReader reader = DirectoryReader.Open(dir))
+            {
+                IndexSearcher searcher = new IndexSearcher(reader);
+                MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title","body" }, analyzer);
+                Query searchTermQuery = queryParser.Parse(search);
+
+                BooleanQuery aggregateQuery = new BooleanQuery() {
+                    { searchTermQuery, Occur.MUST }
+                };
+
+                // perform search
+                TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
+
+                Console.WriteLine();
+                Application.Current.Dispatcher.Invoke(() => {
+                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
+                });
+
+                // display results
+                foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
+                {
+                    float score = scoreDoc.Score;
+                    int docId = scoreDoc.Doc;
+
+                    Document doc = searcher.Doc(docId);
+
+                    Application.Current.Dispatcher.Invoke(() => {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"{doc.Get("path")}\n";
+                    });
+                }
+            }
+
         }
 
         /// <summary>

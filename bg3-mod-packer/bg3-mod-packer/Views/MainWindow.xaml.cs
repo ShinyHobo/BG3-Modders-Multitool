@@ -78,5 +78,11 @@
             var fileExtensions = IndexHelper.GetFileExtensions(fileList);
             new System.Threading.Tasks.Task(() => { IndexHelper.Index(fileList); }).Start();
         }
+
+        private void SearchFiles_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO add search field
+            IndexHelper.SearchFiles("hobgoblin");
+        }
     }
 }
