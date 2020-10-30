@@ -75,6 +75,7 @@
         {
             var unpackPath = $"{Properties.Settings.Default.divineExe}\\..\\UnpackedData";
             var fileList = IndexHelper.DirectorySearch(unpackPath);
+            var fileExtensions = IndexHelper.GetFileExtensions(fileList);
             new System.Threading.Tasks.Task(() => { IndexHelper.Index(fileList); }).Start();
         }
     }

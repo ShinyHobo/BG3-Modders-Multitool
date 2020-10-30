@@ -13,6 +13,8 @@
 
     public static class IndexHelper
     {
+        private static string[] extensionsToExclude = { ".png", ".DDS", ".lsfx", ".lsbc", ".lsbs", ".ttf", ".gr2", ".GR2", ".tga" };
+
         /// <summary>
         /// Recursively searches for all files within the given directory.
         /// </summary>
@@ -23,9 +25,9 @@
             var fileList = new List<string>();
             foreach (string dir in Directory.GetDirectories(directory))
             {
-                foreach (string f in Directory.GetFiles(dir))
+                foreach (string file in Directory.GetFiles(dir))
                 {
-                    fileList.Add(f);
+                    fileList.Add(file);
                 }
                 fileList.AddRange(DirectorySearch(dir));
             }
@@ -46,9 +48,11 @@
         {
             var guid = Guid.NewGuid().ToString();
             var fileName = Path.GetFileName(file);
-            var contents = File.ReadAllText(file);
-            var contentsBytes = Encoding.UTF8.GetBytes(contents);
-            Document doc = new Document(guid, fileName, string.Empty, file, string.Empty, string.Empty, contentsBytes);
+            var fullpath = Path.GetFullPath(file);
+            var extension = Path.GetExtension(file);
+            var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file); // if file type excluded, only track file name and path
+            var contentsBytes = extensionsToExclude.Contains(extension) ? new byte[0] : Encoding.UTF8.GetBytes(contents);
+            Document doc = new Document(guid, fileName, string.Empty, fullpath, string.Empty, string.Empty, contentsBytes);
             await ie.AddAsync(doc).ContinueWith(delegate {
                 Application.Current.Dispatcher.Invoke(() => {
                     ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileCount++;
@@ -66,6 +70,25 @@
                         while (partition.MoveNext())
                             await body(partition.Current);
                 }));
+        }
+
+        /// <summary>
+        /// Gets the complete list of extensions of the files in the given file list.
+        /// </summary>
+        /// <param name="fileList">The file list to scan.</param>
+        /// <returns>The list of file extensions.</returns>
+        public static object GetFileExtensions(List<string> fileList)
+        {
+            var extensions = new List<string>();
+            foreach (var file in fileList)
+            {
+                var extension = Path.GetExtension(file);
+                if (!extensions.Contains(extension))
+                {
+                    extensions.Add(extension);
+                }
+            }
+            return extensions;
         }
     }
 }
