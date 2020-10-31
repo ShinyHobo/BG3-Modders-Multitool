@@ -118,6 +118,7 @@
     <Compile Include="Models\InfoJson.cs" />
     <Compile Include="Models\MainWindow.cs" />
     <Compile Include="Models\MetaLsx.cs" />
+    <Compile Include="Models\ModuleShortDesc.cs" />
     <Compile Include="ViewModels\DragAndDropBox.cs" />
     <Page Include="Views\DragAndDropBox.xaml">
       <SubType>Designer</SubType>
