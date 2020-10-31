@@ -31,6 +31,10 @@
         public static List<string> DirectorySearch(string directory)
         {
             var fileList = new List<string>();
+            if (!System.IO.Directory.Exists(directory))
+            {
+                System.IO.Directory.CreateDirectory(directory);
+            }
             foreach (string dir in System.IO.Directory.GetDirectories(directory))
             {
                 foreach (string file in System.IO.Directory.GetFiles(dir))
@@ -38,6 +42,10 @@
                     fileList.Add(Path.GetFullPath(file));
                 }
                 fileList.AddRange(DirectorySearch(dir));
+            }
+            if(fileList.Count==0)
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No files unpacked for indexing!\n";
             }
             return fileList;
         }
@@ -144,6 +152,13 @@
         {
             return Task.Run(() => { 
                 var matches = new List<string>();
+                if(!System.IO.Directory.Exists(luceneIndex)||!System.IO.Directory.EnumerateFiles(luceneIndex).Any())
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No index available! Please unpack game assets and generate an index.\n";
+                    });
+                    return matches;
+                }
                 using (FSDirectory dir = FSDirectory.Open(luceneIndex))
                 using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
                 using (IndexReader reader = DirectoryReader.Open(dir))
@@ -159,23 +174,31 @@
                         { searchTermQuery, Occur.MUST }
                     };
 
-                    // perform search
-                    TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
-
-                    Console.WriteLine();
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
-                    });
-
-                    // display results
-                    foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
+                    if(reader.MaxDoc != 0)
                     {
-                        float score = scoreDoc.Score;
-                        int docId = scoreDoc.Doc;
+                        // perform search
+                        TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
-                        Document doc = searcher.Doc(docId);
+                        Application.Current.Dispatcher.Invoke(() => {
+                            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
+                        });
 
-                        matches.Add(doc.Get("path"));
+                        // display results
+                        foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
+                        {
+                            float score = scoreDoc.Score;
+                            int docId = scoreDoc.Doc;
+
+                            Document doc = searcher.Doc(docId);
+
+                            matches.Add(doc.Get("path"));
+                        }
+                    }
+                    else
+                    {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "No documents available. Please generate the index again.";
+                        });
                     }
                 }
                 return matches;
