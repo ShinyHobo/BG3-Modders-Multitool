@@ -28,14 +28,14 @@
         </ListView>
         <Border Grid.Row="3" Grid.Column="0" Padding="5,5,5,5">
             <StackPanel Orientation="Vertical">
-                <Button Content="Select All" x:Name="selectAll" Margin="5,0,5,5" Click="SelectAll_Click"/>
-                <Button Content="Deselect All" x:Name="deselectAll" Margin="5,0,5,5" Click="DeselectAll_Click"/>
+                <Button Content="Select All" x:Name="selectAll" Margin="5,0,5,5" Click="SelectAll_Click" Cursor="Hand"/>
+                <Button Content="Deselect All" x:Name="deselectAll" Margin="5,0,5,5" Click="DeselectAll_Click" Cursor="Hand"/>
             </StackPanel>
         </Border>
         <Border Grid.Row="4" Grid.Column="0" Padding="5,5,5,5">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,55,0,0" Height="50">
-                <Button Content="Confirm" x:Name="confirm" Margin="5,5,5,5" Width="100" Foreground="White" Background="#FF87C157" Click="Confirm_Click"/>
-                <Button Content="Cancel" x:Name="cancel" Margin="5,5,5,5" Width="100" Background="#FFC30505" Foreground="White" Click="Cancel_Click"/>
+                <Button Content="Confirm" x:Name="confirm" Margin="5,5,5,5" Width="100" Foreground="White" Background="#FF87C157" Click="Confirm_Click" Cursor="Hand"/>
+                <Button Content="Cancel" x:Name="cancel" Margin="5,5,5,5" Width="100" Background="#FFC30505" Foreground="White" Click="Cancel_Click" Cursor="Hand"/>
             </StackPanel>
         </Border>
     </Grid>
