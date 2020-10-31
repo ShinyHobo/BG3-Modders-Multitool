@@ -19,7 +19,7 @@
     public static class IndexHelper
     {
         private static string[] extensionsToExclude = { ".png", ".DDS", ".lsfx", ".lsbc", ".lsbs", ".ttf", ".gr2", ".GR2", ".tga" };
-        private static readonly string luceneIndex = "lucene/index4.db";
+        private static readonly string luceneIndex = "lucene/index";
 
         /// <summary>
         /// Recursively searches for all files within the given directory.
@@ -57,6 +57,8 @@
                 ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileTotal = filelist.Count;
             });
 
+            if(System.IO.Directory.Exists(luceneIndex))
+                System.IO.Directory.Delete(luceneIndex, true);
             IndexFiles(lsfFiles, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
             IndexFiles(allOtherFiles, new StandardAnalyzer(LuceneVersion.LUCENE_48));
         }
@@ -97,8 +99,8 @@
             var doc = new Document
             {
                 //new Int64Field("id", id, Field.Store.YES),
-                new TextField("path", file, Field.Store.YES),
-                new TextField("title", fileName, Field.Store.YES),
+                new TextField("path", QueryParserBase.Escape(file), Field.Store.YES),
+                new TextField("title", QueryParserBase.Escape(fileName), Field.Store.YES),
                 new TextField("body", contents, Field.Store.NO)
             };
             writer.AddDocument(doc);
@@ -120,7 +122,7 @@
             {
                 IndexSearcher searcher = new IndexSearcher(reader);
                 MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title","body" }, analyzer);
-                Query searchTermQuery = queryParser.Parse(search);
+                Query searchTermQuery = queryParser.Parse(QueryParserBase.Escape(search));
 
                 BooleanQuery aggregateQuery = new BooleanQuery() {
                     { searchTermQuery, Occur.MUST }
