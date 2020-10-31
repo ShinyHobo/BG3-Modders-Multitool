@@ -245,12 +245,20 @@
     <Compile Include="Models\MetaLsx.cs" />
     <Compile Include="Models\ModuleShortDesc.cs" />
     <Compile Include="Models\PakSelection.cs" />
+    <Compile Include="Models\SearchResults.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\DragAndDropBox.cs" />
+    <Compile Include="Views\IndexingWindow.xaml.cs">
+      <DependentUpon>IndexingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PakSelection.xaml.cs">
       <DependentUpon>PakSelection.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\DragAndDropBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\IndexingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

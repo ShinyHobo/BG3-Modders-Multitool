@@ -1,0 +1,29 @@
+﻿<Window x:Class="bg3_mod_packer.Views.IndexingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bg3_mod_packer.Views"
+        mc:Ignorable="d"
+        Title="Index Search" Height="450" Width="800">
+    <Grid>
+        <Grid Margin="531,5,10,372">
+            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="132,4,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click"/>
+            <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="10,4,0,0" TextWrapping="Wrap" Text="{Binding IndexFileCount}" VerticalAlignment="Top" Width="50" Height="21"/>
+            <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="65,4,0,0" TextWrapping="Wrap" Text="/" VerticalAlignment="Top" Height="21" Width="7"/>
+            <TextBlock x:Name="indexFileTotal" HorizontalAlignment="Left" Margin="77,4,0,0" TextWrapping="Wrap" Text="{Binding IndexFileTotal}" VerticalAlignment="Top" Width="50" Height="21"/>
+        </Grid>
+
+        <Button x:Name="searchFilesButton" Content="Search Files" HorizontalAlignment="Left" Margin="417,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click"/>
+        <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="407"/>
+        <ListView x:Name="searchResults" HorizontalAlignment="Left" Height="362" Margin="10,47,0,0" VerticalAlignment="Top" Width="772" ItemsSource="{Binding Results}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Path}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Window>
