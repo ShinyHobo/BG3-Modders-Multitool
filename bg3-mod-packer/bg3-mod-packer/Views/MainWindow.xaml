@@ -15,12 +15,12 @@
         <!--TODO move file selectors to separate view-->
         <Grid Margin="273,10,121,340">
             <Label x:Name="divineLabel" Content="divine.exe location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310"/>
+            <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding DivineLocation, Mode=TwoWay}"/>
             <Button x:Name="divineSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23"/>
         </Grid>
         <Grid Margin="273,63,121,287">
             <Label x:Name="divineLabel1" Content="bg3.exe location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310"/>
+            <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding Bg3ExeLocation, Mode=TwoWay}"/>
             <Button x:Name="bg3exeSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click"/>
         </Grid>
         <ScrollViewer x:Name="ConsoleScroller" Margin="10,267,6,6" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged">
