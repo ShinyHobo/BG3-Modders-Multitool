@@ -104,16 +104,37 @@ namespace bg3_mod_packer.Helpers
                 XmlDocument doc = new XmlDocument();
                 doc.Load(meta);
 
+                var moduleInfo = doc.SelectSingleNode("//node[@id='ModuleInfo']");
                 var metadata = new MetaLsx
                 {
-                    Author = doc.SelectSingleNode("//attribute[@id='Author']").Attributes["value"].InnerText,
-                    Name = doc.SelectSingleNode("//attribute[@id='Name']").Attributes["value"].InnerText,
-                    Description = doc.SelectSingleNode("//attribute[@id='Description']").Attributes["value"].InnerText,
-                    Version = doc.SelectSingleNode("//attribute[@id='Version']").Attributes["value"].InnerText,
-                    Folder = doc.SelectSingleNode("//attribute[@id='Folder']").Attributes["value"].InnerText,
-                    UUID = doc.SelectSingleNode("//attribute[@id='UUID']").Attributes["value"].InnerText,
-                    Created = created
+                    Author = moduleInfo.SelectSingleNode("attribute[@id='Author']").Attributes["value"].InnerText,
+                    Name = moduleInfo.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
+                    modName = moduleInfo.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
+                    Description = moduleInfo.SelectSingleNode("attribute[@id='Description']").Attributes["value"].InnerText,
+                    Version = moduleInfo.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText,
+                    Folder = moduleInfo.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
+                    folderName = moduleInfo.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
+                    UUID = moduleInfo.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText,
+                    Created = created,
+                    Dependencies = new List<ModuleShortDesc>()
                 };
+
+                var dependencies = doc.SelectSingleNode("//node[@id='Dependencies']");
+                if(dependencies != null)
+                {
+                    var moduleDescriptions = dependencies.SelectNodes("node[@id='ModuleShortDesc']");
+                    foreach(XmlNode moduleDescription in moduleDescriptions)
+                    {
+                        var depInfo = new ModuleShortDesc
+                        {
+                            Name = moduleDescription.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
+                            Version = moduleDescription.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText,
+                            Folder = moduleDescription.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
+                            UUID = moduleDescription.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText
+                        };
+                        metadata.Dependencies.Add(depInfo);
+                    }
+                }
 
                 mods.Add(metadata);
                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Metadata for {metadata.Name} created.\n";
