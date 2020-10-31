@@ -39,5 +39,6 @@
         </ScrollViewer>
         <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand"/>
         <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
+        <Button x:Name="searchButton" Content="Index/Search" HorizontalAlignment="Left" Margin="666,242,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click"/>
     </Grid>
 </Window>
