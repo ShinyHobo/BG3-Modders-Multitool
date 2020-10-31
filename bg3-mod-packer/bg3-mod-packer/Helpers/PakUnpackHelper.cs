@@ -8,38 +8,68 @@ namespace bg3_mod_packer.Helpers
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
 
     public class PakUnpackHelper
     {
-        List<int> Processes;
+        private List<int> Processes;
+
+        public bool Cancelled = true;
 
         /// <summary>
         /// Unpacks all the .pak files in the game data directory and places them in a folder next to divine.exe
         /// </summary>
-        public void UnpackAllPakFiles()
+        public async Task UnpackAllPakFiles()
         {
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes starting. Files found:\n";
-            this.Processes = new List<int>();
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes starting. Files found:\n";
+            });
+            Processes = new List<int>();
             var pathToDivine = Properties.Settings.Default.divineExe;
-            var unpackPath = $"{pathToDivine}\\..\\UnpackedData";
+            var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\",@"..\Data");
-            var files = Directory.GetFiles(dataDir,"*.pak").ToList();
-            files.AddRange(Directory.GetFiles($"{dataDir}\\Localization", "*.pak").ToList());
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += string.Join("\n",files) + "\n";
+            var files = Directory.GetFiles(dataDir, "*.pak").Select(file=> Path.GetFullPath(file)).ToList();
+            var localizationDir = $"{dataDir}\\Localization";
+            if (Directory.Exists(localizationDir))
+            {
+                files.AddRange(Directory.GetFiles(localizationDir, "*.pak").Select(file => Path.GetFullPath(file)).ToList());
+            }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += string.Join("\n", files) + "\n";
+            });
+            var pakSelection = new Views.PakSelection(files);
+            pakSelection.ShowDialog();
+            pakSelection.Closed += (sender,e) => pakSelection.Dispatcher.InvokeShutdown();
+            var paks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak=>pak.IsSelected).Select(pak=>pak.Name).ToList();
             var startInfo = new ProcessStartInfo
             {
                 FileName = pathToDivine
             };
-            foreach (string file in files)
-            {
-                var process = new Process();
-                startInfo.Arguments =  $" -g \"bg3\" --action \"extract-package\" --source \"{file}\" --destination \"{unpackPath}\" -l \"all\" --use-package-name";
-                process.StartInfo = startInfo;
-                process.Start();
-                Processes.Add(process.Id);
-            }
+            await Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file => {
+                startInfo.Arguments = $" -g \"bg3\" --action \"extract-package\" --source \"{file}\" --destination \"{unpackPath}\" -l \"all\" --use-package-name";
+                await RunProcessAsync(startInfo);
+            }));
+        }
+
+        private Task<int> RunProcessAsync(ProcessStartInfo startInfo)
+        {
+            var tcs = new TaskCompletionSource<int>();
+            var process = new Process {
+                StartInfo = startInfo,
+                EnableRaisingEvents = true
+            };
+
+            process.Exited += (sender, args) => {
+                tcs.SetResult(process.ExitCode);
+                process.Dispose();
+            };
+
+            process.Start();
+            Processes.Add(process.Id);
+
+            return tcs.Task;
         }
 
         /// <summary>
@@ -47,6 +77,7 @@ namespace bg3_mod_packer.Helpers
         /// </summary>
         public void CancelUpacking()
         {
+            Cancelled = true;
             if(Processes != null && Processes.Count>0)
             {
                 foreach (int process in Processes)
@@ -62,7 +93,7 @@ namespace bg3_mod_packer.Helpers
                     }
                     catch { }// only exception should be "Process with ID #### not found", safe to ignore
                 }
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes cancelled successfully\n";
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes cancelled successfully!\n";
             }
         }
     }

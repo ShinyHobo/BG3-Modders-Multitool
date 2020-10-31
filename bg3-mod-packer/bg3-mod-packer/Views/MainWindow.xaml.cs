@@ -60,15 +60,26 @@
             Properties.Settings.Default.Save();
         }
 
-        private void UnpackAll_Click(object sender, RoutedEventArgs e)
+        private void Unpack_Click(object sender, RoutedEventArgs e)
         {
-            ((Models.MainWindow)this.DataContext).UnpackingProcess = new PakUnpackHelper();
-            ((Models.MainWindow)this.DataContext).UnpackingProcess.UnpackAllPakFiles();
+            unpack.Visibility = Visibility.Hidden;
+            unpack_Cancel.Visibility = Visibility.Visible;
+            ((Models.MainWindow)DataContext).UnpackingProcess = new PakUnpackHelper();
+            ((Models.MainWindow)DataContext).UnpackingProcess.UnpackAllPakFiles().ContinueWith(delegate {
+                Application.Current.Dispatcher.Invoke(() => {
+                    if(!((Models.MainWindow)DataContext).UnpackingProcess.Cancelled)
+                        ((Models.MainWindow)DataContext).ConsoleOutput += "Unpacking complete!\n";
+                    unpack.Visibility = Visibility.Visible;
+                    unpack_Cancel.Visibility = Visibility.Hidden;
+                });
+            });
         }
 
-        private void UnpackAll_Cancel_Click(object sender, RoutedEventArgs e)
+        private void Unpack_Cancel_Click(object sender, RoutedEventArgs e)
         {
-            ((Models.MainWindow)this.DataContext).UnpackingProcess.CancelUpacking();
+            ((Models.MainWindow)DataContext).UnpackingProcess.CancelUpacking();
+            unpack.Visibility = Visibility.Visible;
+            unpack_Cancel.Visibility = Visibility.Hidden;
         }
 
         private void IndexFiles_Click(object sender, RoutedEventArgs e)
