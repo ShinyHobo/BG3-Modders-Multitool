@@ -31,6 +31,10 @@
         public static List<string> DirectorySearch(string directory)
         {
             var fileList = new List<string>();
+            if (!System.IO.Directory.Exists(directory))
+            {
+                System.IO.Directory.CreateDirectory(directory);
+            }
             foreach (string dir in System.IO.Directory.GetDirectories(directory))
             {
                 foreach (string file in System.IO.Directory.GetFiles(dir))
@@ -38,6 +42,10 @@
                     fileList.Add(Path.GetFullPath(file));
                 }
                 fileList.AddRange(DirectorySearch(dir));
+            }
+            if(fileList.Count==0)
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No files unpacked for indexing!\n";
             }
             return fileList;
         }
