@@ -75,6 +75,7 @@
             unpack_Cancel.Visibility = Visibility.Hidden;
         }
 
+        #region UUID Generation
         private void GuidGenerate_Click(object sender, RoutedEventArgs e)
         {
             guidText.Content = System.Guid.NewGuid();
@@ -103,6 +104,13 @@
                 Clipboard.SetText(handleText.Content.ToString());
                 ((Models.MainWindow)DataContext).ConsoleOutput += $"TranslationString handle [{handleText.Content}] copied to clipboard!\n";
             }
+        }
+        #endregion
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            var searchWindow = new IndexingWindow();
+            searchWindow.Show();
         }
     }
 }

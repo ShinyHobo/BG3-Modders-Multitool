@@ -19,6 +19,7 @@ namespace bg3_mod_packer.Models
             }
         }
 
+
         private string _divineLocation = Properties.Settings.Default.divineExe;
 
         public string DivineLocation {
@@ -35,6 +36,26 @@ namespace bg3_mod_packer.Models
             get { return _bg3exeLocation; }
             set {
                 _divineLocation = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _indexFileCount;
+
+        public int IndexFileCount {
+            get { return _indexFileCount; }
+            set {
+                _indexFileCount = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _indexFileTotal;
+
+        public int IndexFileTotal {
+            get { return _indexFileTotal; }
+            set {
+                _indexFileTotal = value;
                 OnNotifyPropertyChanged();
             }
         }
