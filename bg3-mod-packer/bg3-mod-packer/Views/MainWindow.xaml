@@ -27,7 +27,7 @@
             <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
                      IsReadOnly="True" Background="Black" Foreground="White"/>
         </ScrollViewer>
-        <Button x:Name="unpackAll" Content="Unpack All Files" HorizontalAlignment="Left" Margin="666,75,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="UnpackAll_Click"/>
-        <Button x:Name="unpackAll_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,105,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="UnpackAll_Cancel_Click"/>
+        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click"/>
+        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden"/>
     </Grid>
 </Window>

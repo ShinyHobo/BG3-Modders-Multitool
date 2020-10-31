@@ -115,11 +115,17 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\DragAndDropHelper.cs" />
     <Compile Include="Helpers\PakUnpackHelper.cs" />
+    <Compile Include="Models\CheckBox.cs" />
     <Compile Include="Models\InfoJson.cs" />
     <Compile Include="Models\MainWindow.cs" />
     <Compile Include="Models\MetaLsx.cs" />
     <Compile Include="Models\ModuleShortDesc.cs" />
+    <Compile Include="Models\PakSelection.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\DragAndDropBox.cs" />
+    <Compile Include="Views\PakSelection.xaml.cs">
+      <DependentUpon>PakSelection.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\DragAndDropBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -140,6 +146,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PakSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
