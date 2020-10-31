@@ -3,11 +3,9 @@
 /// </summary>
 namespace bg3_mod_packer.Models
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using bg3_mod_packer.Helpers;
 
-    public class MainWindow : INotifyPropertyChanged
+    public class MainWindow : ViewModels.BaseViewModel
     {
         private string _consoleOutput;
 
@@ -17,10 +15,8 @@ namespace bg3_mod_packer.Models
             get { return _consoleOutput; }
             set {
                 _consoleOutput = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ConsoleOutput"));
+                OnNotifyPropertyChanged();
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
