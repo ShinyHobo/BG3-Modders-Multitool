@@ -70,9 +70,9 @@
             return Task.Run(() =>
             {
                 // .lsf files do not have spaces to use as token separators, they must use shingles
-                var lsfFiles = filelist.Where(f => Path.GetExtension(f) == ".lsf").ToList();
+                //var lsfFiles = filelist.Where(f => Path.GetExtension(f) == ".lsf").ToList();
                 // all other allowed files use spaces or line endings as token separators
-                var allOtherFiles = filelist.Where(f => Path.GetExtension(f) != ".lsf").ToList();
+                //var allOtherFiles = filelist.Where(f => Path.GetExtension(f) != ".lsf").ToList();
 
                 // Display total file count being indexed
                 Application.Current.Dispatcher.Invoke(() =>
@@ -83,8 +83,8 @@
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(lsfFiles, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
-                IndexFiles(allOtherFiles, new StandardAnalyzer(LuceneVersion.LUCENE_48));
+                IndexFiles(filelist, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
+                //IndexFiles(allOtherFiles, new StandardAnalyzer(LuceneVersion.LUCENE_48));
             });
         }
 
@@ -140,42 +140,46 @@
         /// Searches for and displays results.
         /// </summary>
         /// <param name="search">The text to search for. Supports file title and contents.</param>
-        public List<string> SearchFiles(string search)
+        public Task<List<string>> SearchFiles(string search)
         {
-            var matches = new List<string>();
-            using (FSDirectory dir = FSDirectory.Open(luceneIndex))
-            using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
-            using (IndexReader reader = DirectoryReader.Open(dir))
-            {
-                IndexSearcher searcher = new IndexSearcher(reader);
-                MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title","body" }, analyzer);
-                Query searchTermQuery = queryParser.Parse(QueryParserBase.Escape(search));
-
-                BooleanQuery aggregateQuery = new BooleanQuery() {
-                    { searchTermQuery, Occur.MUST }
-                };
-
-                // perform search
-                TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
-
-                Console.WriteLine();
-                Application.Current.Dispatcher.Invoke(() => {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
-                });
-
-                // display results
-                foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
+            return Task.Run(() => { 
+                var matches = new List<string>();
+                using (FSDirectory dir = FSDirectory.Open(luceneIndex))
+                using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
+                using (IndexReader reader = DirectoryReader.Open(dir))
                 {
-                    float score = scoreDoc.Score;
-                    int docId = scoreDoc.Doc;
+                    IndexSearcher searcher = new IndexSearcher(reader);
+                    MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
+                    {
+                        AllowLeadingWildcard = true
+                    };
+                    Query searchTermQuery = queryParser.Parse('*'+search+'*');
 
-                    Document doc = searcher.Doc(docId);
+                    BooleanQuery aggregateQuery = new BooleanQuery() {
+                        { searchTermQuery, Occur.MUST }
+                    };
 
-                    matches.Add(doc.Get("path"));
+                    // perform search
+                    TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
+
+                    Console.WriteLine();
+                    Application.Current.Dispatcher.Invoke(() => {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
+                    });
+
+                    // display results
+                    foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
+                    {
+                        float score = scoreDoc.Score;
+                        int docId = scoreDoc.Doc;
+
+                        Document doc = searcher.Doc(docId);
+
+                        matches.Add(doc.Get("path"));
+                    }
                 }
-            }
-            return matches;
-
+                return matches;
+            });
         }
     }
 }

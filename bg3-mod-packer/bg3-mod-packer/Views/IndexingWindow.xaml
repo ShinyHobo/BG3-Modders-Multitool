@@ -5,22 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bg3_mod_packer.Views"
         mc:Ignorable="d"
-        Title="Index Search" Height="450" Width="800">
+        MinWidth="800"
+        MinHeight="250"
+        Title="Index Search" Height="430.637" Width="800">
     <Grid>
-        <Grid Margin="531,5,10,372">
-            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="132,4,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click"/>
-            <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="10,4,0,0" TextWrapping="Wrap" Text="{Binding IndexFileCount}" VerticalAlignment="Top" Width="50" Height="21"/>
-            <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="65,4,0,0" TextWrapping="Wrap" Text="/" VerticalAlignment="Top" Height="21" Width="7"/>
-            <TextBlock x:Name="indexFileTotal" HorizontalAlignment="Left" Margin="77,4,0,0" TextWrapping="Wrap" Text="{Binding IndexFileTotal}" VerticalAlignment="Top" Width="50" Height="21"/>
-        </Grid>
-
+        <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="644,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click"/>
+        <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="522,12,0,0" TextWrapping="Wrap" Text="{Binding IndexFileCount}" VerticalAlignment="Top" Width="50" Height="21"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="577,14,0,0" TextWrapping="Wrap" Text="/" VerticalAlignment="Top" Height="21" Width="7"/>
+        <TextBlock x:Name="indexFileTotal" HorizontalAlignment="Left" Margin="589,14,0,0" TextWrapping="Wrap" Text="{Binding IndexFileTotal}" VerticalAlignment="Top" Width="50" Height="21"/>
         <Button x:Name="searchFilesButton" Content="Search Files" HorizontalAlignment="Left" Margin="417,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click"/>
-        <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="407"/>
-        <ListView x:Name="searchResults" HorizontalAlignment="Left" Height="362" Margin="10,47,0,0" VerticalAlignment="Top" Width="772" ItemsSource="{Binding Results}">
+        <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="407" KeyDown="Search_KeyDown"/>
+        <ListView x:Name="searchResults" Margin="10,50,10,10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"  ItemsSource="{Binding Results}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Path}"/>
+                        <Button x:Name="path" MouseDoubleClick="Path_MouseDoubleClick" Background="White" BorderBrush="White" HorizontalContentAlignment="Stretch">
+                            <TextBlock Text="{Binding Path}" HorizontalAlignment="Stretch"></TextBlock>
+                        </Button>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
