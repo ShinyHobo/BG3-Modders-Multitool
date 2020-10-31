@@ -11,11 +11,6 @@
         public MainWindow()
         {
             InitializeComponent();
-            // TODO move to model
-            divineLocation.Text = Properties.Settings.Default.divineExe;
-            divineLocation.ToolTip = divineLocation.Text;
-            bg3exeLocation.Text = Properties.Settings.Default.bg3Exe;
-            bg3exeLocation.ToolTip = bg3exeLocation.Text;
             DataContext = new Models.MainWindow();
         }
 
