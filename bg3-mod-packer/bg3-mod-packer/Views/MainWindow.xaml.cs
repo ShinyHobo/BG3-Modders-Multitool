@@ -84,8 +84,7 @@
 
         private void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
-            var unpackPath = $"{Properties.Settings.Default.divineExe}\\..\\UnpackedData";
-            var fileList = IndexHelper.DirectorySearch(unpackPath);
+            var fileList = IndexHelper.DirectorySearch("UnpackedData");
             var fileExtensions = IndexHelper.GetFileExtensions(fileList);
             new System.Threading.Tasks.Task(() => { IndexHelper.Index(fileList); }).Start();
         }
