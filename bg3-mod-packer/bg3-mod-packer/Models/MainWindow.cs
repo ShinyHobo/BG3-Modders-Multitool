@@ -3,11 +3,9 @@
 /// </summary>
 namespace bg3_mod_packer.Models
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using bg3_mod_packer.Helpers;
 
-    public class MainWindow : INotifyPropertyChanged
+    public class MainWindow : ViewModels.BaseViewModel
     {
         private string _consoleOutput;
 
@@ -17,7 +15,7 @@ namespace bg3_mod_packer.Models
             get { return _consoleOutput; }
             set {
                 _consoleOutput = value;
-                PropertyChangedEvent("ConsoleOutput");
+                OnNotifyPropertyChanged();
             }
         }
 
@@ -27,7 +25,7 @@ namespace bg3_mod_packer.Models
             get { return _indexFileCount; }
             set {
                 _indexFileCount = value;
-                PropertyChangedEvent("IndexFileCount");
+                OnNotifyPropertyChanged();
             }
         }
 
@@ -37,15 +35,8 @@ namespace bg3_mod_packer.Models
             get { return _indexFileTotal; }
             set {
                 _indexFileTotal = value;
-                PropertyChangedEvent("IndexFileTotal");
+                OnNotifyPropertyChanged();
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void PropertyChangedEvent(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
     }
 }
