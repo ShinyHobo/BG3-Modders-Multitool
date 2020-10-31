@@ -75,19 +75,7 @@
             unpack_Cancel.Visibility = Visibility.Hidden;
         }
 
-        private void IndexFiles_Click(object sender, RoutedEventArgs e)
-        {
-            var fileList = IndexHelper.DirectorySearch("UnpackedData");
-            var fileExtensions = IndexHelper.GetFileExtensions(fileList);
-            new System.Threading.Tasks.Task(() => { IndexHelper.Index(fileList); }).Start();
-        }
-
-        private void SearchFiles_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO add search field
-            IndexHelper.SearchFiles("hobgoblin");
-        }
-
+        #region UUID Generation
         private void GuidGenerate_Click(object sender, RoutedEventArgs e)
         {
             guidText.Content = System.Guid.NewGuid();
@@ -116,6 +104,13 @@
                 Clipboard.SetText(handleText.Content.ToString());
                 ((Models.MainWindow)DataContext).ConsoleOutput += $"TranslationString handle [{handleText.Content}] copied to clipboard!\n";
             }
+        }
+        #endregion
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            var searchWindow = new IndexingWindow();
+            searchWindow.Show();
         }
     }
 }

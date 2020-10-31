@@ -39,12 +39,6 @@
         </ScrollViewer>
         <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand"/>
         <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
-        <Grid Margin="273,225,177,159">
-            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click"/>
-            <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="110,0,0,0" TextWrapping="Wrap" Text="{Binding IndexFileCount}" VerticalAlignment="Top" Width="50" Height="21"/>
-            <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="165,0,0,0" TextWrapping="Wrap" Text="/" VerticalAlignment="Top" Height="21" Width="7"/>
-            <TextBlock x:Name="indexFileTotal" HorizontalAlignment="Left" Margin="177,0,0,0" TextWrapping="Wrap" Text="{Binding IndexFileTotal}" VerticalAlignment="Top" Width="50" Height="21"/>
-            <Button x:Name="searchFiles" Content="Search Files" HorizontalAlignment="Left" Margin="232,0,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click"/>
-        </Grid>
+        <Button x:Name="searchButton" Content="Index/Search" HorizontalAlignment="Left" Margin="666,242,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click"/>
     </Grid>
 </Window>

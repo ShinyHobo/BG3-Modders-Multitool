@@ -15,11 +15,13 @@
     using Lucene.Net.Search;
     using Lucene.Net.QueryParsers.Classic;
     using Lucene.Net.Analysis.Shingle;
+    using System.Threading.Tasks;
 
-    public static class IndexHelper
+    public class IndexHelper
     {
-        private static string[] extensionsToExclude = { ".png", ".DDS", ".lsfx", ".lsbc", ".lsbs", ".ttf", ".gr2", ".GR2", ".tga" };
-        private static readonly string luceneIndex = "lucene/index";
+        private string[] extensionsToExclude = { ".png", ".DDS", ".lsfx", ".lsbc", ".lsbs", ".ttf", ".gr2", ".GR2", ".tga" };
+        private readonly string luceneIndex = "lucene/index";
+        public SearchResults DataContext;
 
         /// <summary>
         /// Recursively searches for all files within the given directory.
@@ -41,26 +43,49 @@
         }
 
         /// <summary>
+        /// Gets the complete list of extensions of the files in the given file list.
+        /// </summary>
+        /// <param name="fileList">The file list to scan.</param>
+        /// <returns>The list of file extensions.</returns>
+        public static object GetFileExtensions(List<string> fileList)
+        {
+            var extensions = new List<string>();
+            foreach (var file in fileList)
+            {
+                var extension = Path.GetExtension(file);
+                if (!extensions.Contains(extension))
+                {
+                    extensions.Add(extension);
+                }
+            }
+            return extensions;
+        }
+
+        /// <summary>
         /// Generates an index using the given filelist.
         /// </summary>
         /// <param name="filelist">The list of files to index.</param>
-        public static void Index(List<string> filelist)
+        public Task Index(List<string> filelist)
         {
-            // .lsf files do not have spaces to use as token separators, they must use shingles
-            var lsfFiles = filelist.Where(f => Path.GetExtension(f) == ".lsf").ToList();
-            // all other allowed files use spaces or line endings as token separators
-            var allOtherFiles = filelist.Where(f => Path.GetExtension(f) != ".lsf").ToList();
+            return Task.Run(() =>
+            {
+                // .lsf files do not have spaces to use as token separators, they must use shingles
+                var lsfFiles = filelist.Where(f => Path.GetExtension(f) == ".lsf").ToList();
+                // all other allowed files use spaces or line endings as token separators
+                var allOtherFiles = filelist.Where(f => Path.GetExtension(f) != ".lsf").ToList();
 
-            // Display total file count being indexed
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileCount = 0;
-                ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileTotal = filelist.Count;
+                // Display total file count being indexed
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IndexFileCount = 0;
+                    DataContext.IndexFileTotal = filelist.Count;
+                });
+
+                if (System.IO.Directory.Exists(luceneIndex))
+                    System.IO.Directory.Delete(luceneIndex, true);
+                IndexFiles(lsfFiles, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
+                IndexFiles(allOtherFiles, new StandardAnalyzer(LuceneVersion.LUCENE_48));
             });
-
-            if(System.IO.Directory.Exists(luceneIndex))
-                System.IO.Directory.Delete(luceneIndex, true);
-            IndexFiles(lsfFiles, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
-            IndexFiles(allOtherFiles, new StandardAnalyzer(LuceneVersion.LUCENE_48));
         }
 
         /// <summary>
@@ -68,7 +93,7 @@
         /// </summary>
         /// <param name="files">The file list to index.</param>
         /// <param name="analyzer">The analyzer to use when indexing.</param>
-        private static void IndexFiles(List<string> files, Analyzer analyzer)
+        private void IndexFiles(List<string> files, Analyzer analyzer)
         {
             using (FSDirectory dir = FSDirectory.Open(luceneIndex))
             using (Analyzer a = analyzer)
@@ -90,7 +115,7 @@
         /// </summary>
         /// <param name="file">The file to add.</param>
         /// <param name="writer">The index to write to.</param>
-        private static void IndexLuceneFile(string file, IndexWriter writer)
+        private void IndexLuceneFile(string file, IndexWriter writer)
         {
             var fileName = Path.GetFileName(file);
             var extension = Path.GetExtension(file);
@@ -99,14 +124,15 @@
             var doc = new Document
             {
                 //new Int64Field("id", id, Field.Store.YES),
-                new TextField("path", QueryParserBase.Escape(file), Field.Store.YES),
-                new TextField("title", QueryParserBase.Escape(fileName), Field.Store.YES),
+                new TextField("path", file, Field.Store.YES),
+                new TextField("title", fileName, Field.Store.YES),
                 new TextField("body", contents, Field.Store.NO)
             };
             writer.AddDocument(doc);
-            
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).IndexFileCount++;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                DataContext.IndexFileCount++;
             });
         }
 
@@ -114,8 +140,9 @@
         /// Searches for and displays results.
         /// </summary>
         /// <param name="search">The text to search for. Supports file title and contents.</param>
-        public static void SearchFiles(string search)
+        public List<string> SearchFiles(string search)
         {
+            var matches = new List<string>();
             using (FSDirectory dir = FSDirectory.Open(luceneIndex))
             using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
             using (IndexReader reader = DirectoryReader.Open(dir))
@@ -144,31 +171,11 @@
 
                     Document doc = searcher.Doc(docId);
 
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"{doc.Get("path")}\n";
-                    });
+                    matches.Add(doc.Get("path"));
                 }
             }
+            return matches;
 
-        }
-
-        /// <summary>
-        /// Gets the complete list of extensions of the files in the given file list.
-        /// </summary>
-        /// <param name="fileList">The file list to scan.</param>
-        /// <returns>The list of file extensions.</returns>
-        public static object GetFileExtensions(List<string> fileList)
-        {
-            var extensions = new List<string>();
-            foreach (var file in fileList)
-            {
-                var extension = Path.GetExtension(file);
-                if (!extensions.Contains(extension))
-                {
-                    extensions.Add(extension);
-                }
-            }
-            return extensions;
         }
     }
 }
