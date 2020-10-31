@@ -4,6 +4,8 @@
 namespace bg3_mod_packer.Models
 {
     using System;
+    using System.Collections.Generic;
+
     public class MetaLsx
     {
         public string Author { get; set; }
@@ -13,6 +15,7 @@ namespace bg3_mod_packer.Models
         public string Description { get; set; }
         public string UUID { get; set; }
         public DateTime Created { get; set; }
+        public List<ModuleShortDesc> Dependencies {get; set; }
 
         // Legacy fields - TODO remove at later date
         public string modName { get; set; }

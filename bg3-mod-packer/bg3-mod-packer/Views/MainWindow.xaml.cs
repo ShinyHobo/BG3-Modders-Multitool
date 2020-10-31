@@ -11,11 +11,6 @@
         public MainWindow()
         {
             InitializeComponent();
-            // TODO move to model
-            divineLocation.Text = Properties.Settings.Default.divineExe;
-            divineLocation.ToolTip = divineLocation.Text;
-            bg3exeLocation.Text = Properties.Settings.Default.bg3Exe;
-            bg3exeLocation.ToolTip = bg3exeLocation.Text;
             DataContext = new Models.MainWindow();
         }
 
@@ -48,27 +43,74 @@
                 case System.Windows.Forms.DialogResult.OK:
                     var file = fileDialog.FileName;
                     location.Text = file;
-                    location.ToolTip = location.Text;
                     break;
                 case System.Windows.Forms.DialogResult.Cancel:
                 default:
                     location.Text = null;
-                    location.ToolTip = location.Text;
                     break;
             }
             Properties.Settings.Default[property] = location.Text;
             Properties.Settings.Default.Save();
         }
 
-        private void UnpackAll_Click(object sender, RoutedEventArgs e)
+        private void Unpack_Click(object sender, RoutedEventArgs e)
         {
-            ((Models.MainWindow)this.DataContext).UnpackingProcess = new PakUnpackHelper();
-            ((Models.MainWindow)this.DataContext).UnpackingProcess.UnpackAllPakFiles();
+            unpack.Visibility = Visibility.Hidden;
+            unpack_Cancel.Visibility = Visibility.Visible;
+            ((Models.MainWindow)DataContext).UnpackingProcess = new PakUnpackHelper();
+            ((Models.MainWindow)DataContext).UnpackingProcess.UnpackAllPakFiles().ContinueWith(delegate {
+                Application.Current.Dispatcher.Invoke(() => {
+                    if(!((Models.MainWindow)DataContext).UnpackingProcess.Cancelled)
+                        ((Models.MainWindow)DataContext).ConsoleOutput += "Unpacking complete!\n";
+                    unpack.Visibility = Visibility.Visible;
+                    unpack_Cancel.Visibility = Visibility.Hidden;
+                });
+            });
         }
 
-        private void UnpackAll_Cancel_Click(object sender, RoutedEventArgs e)
+        private void Unpack_Cancel_Click(object sender, RoutedEventArgs e)
         {
-            ((Models.MainWindow)this.DataContext).UnpackingProcess.CancelUpacking();
+            ((Models.MainWindow)DataContext).UnpackingProcess.CancelUpacking();
+            unpack.Visibility = Visibility.Visible;
+            unpack_Cancel.Visibility = Visibility.Hidden;
+        }
+
+        #region UUID Generation
+        private void GuidGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            guidText.Content = System.Guid.NewGuid();
+        }
+
+        private void GuidText_Click(object sender, RoutedEventArgs e)
+        {
+            if(guidText.Content != null)
+            {
+                Clipboard.SetText(guidText.Content.ToString());
+                ((Models.MainWindow)DataContext).ConsoleOutput += $"v4 UUID [{guidText.Content}] copied to clipboard!\n";
+            }
+        }
+
+        private void HandleGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            var guid = System.Guid.NewGuid().ToString();
+            var handle = $"h{guid}".Replace('-', 'g');
+            handleText.Content = handle;
+        }
+
+        private void HandleText_Click(object sender, RoutedEventArgs e)
+        {
+            if(handleText.Content != null)
+            {
+                Clipboard.SetText(handleText.Content.ToString());
+                ((Models.MainWindow)DataContext).ConsoleOutput += $"TranslationString handle [{handleText.Content}] copied to clipboard!\n";
+            }
+        }
+        #endregion
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            var searchWindow = new IndexingWindow();
+            searchWindow.Show();
         }
     }
 }
