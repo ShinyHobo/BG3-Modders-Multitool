@@ -31,9 +31,7 @@
 
         private async void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
-            var fileList = IndexHelper.DirectorySearch("UnpackedData");
-            var fileExtensions = IndexHelper.GetFileExtensions(fileList);
-            await ((SearchResults)DataContext).IndexHelper.Index(fileList);
+            await ((SearchResults)DataContext).IndexHelper.Index();
         }
 
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)
