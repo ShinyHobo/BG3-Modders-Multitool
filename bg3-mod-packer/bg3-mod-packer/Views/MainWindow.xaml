@@ -29,7 +29,7 @@
             <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand"/>
         </Grid>
         <Grid Margin="273,167,121,183">
-            <Label x:Name="handleLabel" Content="TranslationString Handle Generator (Click field to copy to clipboard)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="handleLabel" Content="TranslatedString Handle Generator (Click field to copy to clipboard)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <Button x:Name="handleGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="HandleGenerate_Click" Cursor="Hand"/>
             <Button x:Name="handleText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="HandleText_Click" Cursor="Hand"/>
         </Grid>
