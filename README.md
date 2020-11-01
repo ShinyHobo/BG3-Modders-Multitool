@@ -7,7 +7,12 @@ To use:
 * Drag and drop your unpacked workspace into the large blue box to generate an info.json file and .pak with the same name as your workspace.
 
 Extras:
-* Utility for extracting all game assets at once. It can take more than an hour, but will place all the extracted files in a folder in the same directory as divine.exe
+* Utility for extracting some/all game assets at once. It can take more than an hour for the complete set, but will place all the extracted files in a folder in the same directory as divine.exe
+* Unpacked file indexer
+* Index search functionality
+* File previews
+* UUID generator
+* TranslationString handle generator
 
 meta.lsx template:
 ```
