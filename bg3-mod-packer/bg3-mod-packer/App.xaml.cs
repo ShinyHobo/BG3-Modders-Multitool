@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace bg3_mod_packer
 {
@@ -13,5 +8,10 @@ namespace bg3_mod_packer
     /// </summary>
     public partial class App : Application
     {
+        App()
+        {
+            ToolTipService.ShowDurationProperty.OverrideMetadata(
+                typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
+        }
     }
 }
