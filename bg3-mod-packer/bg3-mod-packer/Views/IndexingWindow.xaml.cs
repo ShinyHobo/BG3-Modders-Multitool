@@ -51,10 +51,17 @@
         private void Path_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var path = ((TextBlock)((Button)sender).Content).Text;
-            System.Diagnostics.Process fileopener = new System.Diagnostics.Process();
-            fileopener.StartInfo.FileName = "explorer";
-            fileopener.StartInfo.Arguments = $"{Directory.GetCurrentDirectory()}\\UnpackedData\\{path}";
-            fileopener.Start();
+            if(File.Exists(path))
+            {
+                System.Diagnostics.Process fileopener = new System.Diagnostics.Process();
+                fileopener.StartInfo.FileName = "explorer";
+                fileopener.StartInfo.Arguments = $"{Directory.GetCurrentDirectory()}\\UnpackedData\\{path}";
+                fileopener.Start();
+            }
+            else
+            {
+                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "File does not exist on the given path.\n";
+            }
         }
     }
 }
