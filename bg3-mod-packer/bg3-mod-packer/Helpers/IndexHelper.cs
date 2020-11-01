@@ -34,10 +34,15 @@
         /// Generates an index using the given filelist.
         /// </summary>
         /// <param name="filelist">The list of files to index.</param>
-        public Task Index(List<string> filelist)
+        public Task Index(List<string> filelist = null)
         {
             return Task.Run(() =>
             {
+                if(filelist==null)
+                {
+                    filelist = DirectorySearch("UnpackedData");
+                }
+
                 // Display total file count being indexed
                 Application.Current.Dispatcher.Invoke(() =>
                 {
