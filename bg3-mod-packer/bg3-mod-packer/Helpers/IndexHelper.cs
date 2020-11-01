@@ -22,7 +22,8 @@
         private string[] extensionsToExclude = { ".png", ".DDS", ".lsfx", ".lsbc", ".lsbs", ".ttf", ".gr2", ".GR2", ".tga" };
         private readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
-        private FSDirectory FSDirectory;
+        private readonly FSDirectory FSDirectory;
+        private string searchText;
 
         public IndexHelper()
         {
@@ -37,11 +38,6 @@
         {
             return Task.Run(() =>
             {
-                // .lsf files do not have spaces to use as token separators, they must use shingles
-                //var lsfFiles = filelist.Where(f => Path.GetExtension(f) == ".lsf").ToList();
-                // all other allowed files use spaces or line endings as token separators
-                //var allOtherFiles = filelist.Where(f => Path.GetExtension(f) != ".lsf").ToList();
-
                 // Display total file count being indexed
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -52,7 +48,6 @@
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
                 IndexFiles(filelist, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
-                //IndexFiles(allOtherFiles, new StandardAnalyzer(LuceneVersion.LUCENE_48));
             });
         }
 
@@ -109,6 +104,7 @@
         /// <param name="search">The text to search for. Supports file title and contents.</param>
         public Task<List<string>> SearchFiles(string search)
         {
+            searchText = search;
             return Task.Run(() => { 
                 var matches = new List<string>();
                 if(!System.IO.Directory.Exists(luceneIndex)||!System.IO.Directory.EnumerateFiles(luceneIndex).Any())
@@ -174,6 +170,33 @@
             });
         }
 
+        /// <summary>
+        /// Gets a list of matching lines within a given file.
+        /// </summary>
+        /// <param name="path">The file path to read from.</param>
+        /// <returns>A list of file line and trimmed contents.</returns>
+        public Dictionary<int, string> GetFileContents(string path)
+        {
+            var lines = new Dictionary<int, string>();
+            var lineCount = 1;
+            if (File.Exists(path))
+            {
+                foreach (string line in File.ReadLines(path))
+                {
+                    if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase)>=0)
+                    {
+                        lines.Add(lineCount, line);
+                    }
+                    lineCount++;
+                }
+                if(lines.Count==0)
+                {
+                    lines.Add(0, "No lines found; search returned filename only.");
+                }
+            }
+            return lines;
+        }
+
         #region Static Methods
 
         /// <summary>
@@ -231,6 +254,36 @@
                 }
             }
             return extensions;
+        }
+
+        /// <summary>
+        /// Gets a standard path for files.
+        /// </summary>
+        /// <param name="file">The file to generate a path for.</param>
+        /// <returns></returns>
+        public static string GetPath(string file)
+        {
+            return $"{System.IO.Directory.GetCurrentDirectory()}\\UnpackedData\\{file}";
+        }
+
+        /// <summary>
+        /// Opens the given file path in the default program.
+        /// </summary>
+        /// <param name="file">The file to open.</param>
+        public static void OpenFile(string file)
+        {
+            var path = GetPath(file);
+            if (File.Exists(path))
+            {
+                System.Diagnostics.Process fileopener = new System.Diagnostics.Process();
+                fileopener.StartInfo.FileName = "explorer";
+                fileopener.StartInfo.Arguments = path;
+                fileopener.Start();
+            }
+            else
+            {
+                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "File does not exist on the given path.\n";
+            }
         }
 
         #endregion
