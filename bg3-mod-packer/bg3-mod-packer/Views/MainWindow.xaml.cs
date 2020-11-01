@@ -103,7 +103,7 @@
             if(handleText.Content != null)
             {
                 Clipboard.SetText(handleText.Content.ToString());
-                ((Models.MainWindow)DataContext).ConsoleOutput += $"TranslationString handle [{handleText.Content}] copied to clipboard!\n";
+                ((Models.MainWindow)DataContext).ConsoleOutput += $"TranslatedString handle [{handleText.Content}] copied to clipboard!\n";
             }
         }
         #endregion
