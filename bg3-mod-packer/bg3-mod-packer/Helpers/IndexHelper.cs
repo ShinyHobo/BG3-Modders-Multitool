@@ -41,8 +41,9 @@
                 // Display total file count being indexed
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    DataContext.IndexFileCount = 0;
                     DataContext.IndexFileTotal = filelist.Count;
+                    DataContext.IndexStartTime = DateTime.Now;
+                    DataContext.IndexFileCount = 0;
                 });
 
                 if (System.IO.Directory.Exists(luceneIndex))
