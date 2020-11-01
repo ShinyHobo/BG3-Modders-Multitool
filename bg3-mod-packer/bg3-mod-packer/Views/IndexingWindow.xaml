@@ -9,13 +9,14 @@
         MinHeight="250"
         Title="Index Search" Height="430.637" Width="800">
     <Grid>
-        <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="644,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click" Cursor="Hand"/>
+        <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="644,11,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click" Cursor="Hand"/>
         <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="522,12,0,0" TextWrapping="Wrap" Text="{Binding IndexFileCount}" VerticalAlignment="Top" Width="50" Height="21"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="577,14,0,0" TextWrapping="Wrap" Text="/" VerticalAlignment="Top" Height="21" Width="7"/>
         <TextBlock x:Name="indexFileTotal" HorizontalAlignment="Left" Margin="589,14,0,0" TextWrapping="Wrap" Text="{Binding IndexFileTotal}" VerticalAlignment="Top" Width="50" Height="21"/>
         <Button x:Name="searchFilesButton" Content="Search Files" HorizontalAlignment="Left" Margin="417,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand"/>
         <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="407" KeyDown="Search_KeyDown"/>
-        <ListView x:Name="searchResults" Margin="10,50,10,10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"  ItemsSource="{Binding Results}">
+        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="522,0,0,0" TextWrapping="Wrap"  Text="{Binding IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="117" TextAlignment="Right"/>
+        <ListView x:Name="searchResults" Margin="10,40,10,10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"  ItemsSource="{Binding Results}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
