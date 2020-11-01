@@ -23,7 +23,7 @@ namespace bg3_mod_packer.Helpers
         public async Task UnpackAllPakFiles()
         {
             Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes starting. Files found:\n";
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes starting.\n";
             });
             Processes = new List<int>();
             var pathToDivine = Properties.Settings.Default.divineExe;
@@ -36,9 +36,6 @@ namespace bg3_mod_packer.Helpers
             {
                 files.AddRange(Directory.GetFiles(localizationDir, "*.pak").Select(file => Path.GetFullPath(file)).ToList());
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += string.Join("\n", files) + "\n";
-            });
             var pakSelection = new Views.PakSelection(files);
             pakSelection.ShowDialog();
             pakSelection.Closed += (sender,e) => pakSelection.Dispatcher.InvokeShutdown();
@@ -50,7 +47,11 @@ namespace bg3_mod_packer.Helpers
             await Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file => {
                 startInfo.Arguments = $" -g \"bg3\" --action \"extract-package\" --source \"{file}\" --destination \"{unpackPath}\" -l \"all\" --use-package-name";
                 await RunProcessAsync(startInfo);
-            }));
+            })).ContinueWith(delegate {
+                Application.Current.Dispatcher.Invoke(() => {
+                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes finished.\n";
+                });
+            });
         }
 
         private Task<int> RunProcessAsync(ProcessStartInfo startInfo)

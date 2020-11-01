@@ -22,51 +22,11 @@
         private string[] extensionsToExclude = { ".png", ".DDS", ".lsfx", ".lsbc", ".lsbs", ".ttf", ".gr2", ".GR2", ".tga" };
         private readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
+        private FSDirectory FSDirectory;
 
-        /// <summary>
-        /// Recursively searches for all files within the given directory.
-        /// </summary>
-        /// <param name="directory">The directory root to search.</param>
-        /// <returns>A list of files in the directory.</returns>
-        public static List<string> DirectorySearch(string directory)
+        public IndexHelper()
         {
-            var fileList = new List<string>();
-            if (!System.IO.Directory.Exists(directory))
-            {
-                System.IO.Directory.CreateDirectory(directory);
-            }
-            foreach (string dir in System.IO.Directory.GetDirectories(directory))
-            {
-                foreach (string file in System.IO.Directory.GetFiles(dir))
-                {
-                    fileList.Add(Path.GetFullPath(file));
-                }
-                fileList.AddRange(DirectorySearch(dir));
-            }
-            if(fileList.Count==0)
-            {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No files unpacked for indexing!\n";
-            }
-            return fileList;
-        }
-
-        /// <summary>
-        /// Gets the complete list of extensions of the files in the given file list.
-        /// </summary>
-        /// <param name="fileList">The file list to scan.</param>
-        /// <returns>The list of file extensions.</returns>
-        public static object GetFileExtensions(List<string> fileList)
-        {
-            var extensions = new List<string>();
-            foreach (var file in fileList)
-            {
-                var extension = Path.GetExtension(file);
-                if (!extensions.Contains(extension))
-                {
-                    extensions.Add(extension);
-                }
-            }
-            return extensions;
+            FSDirectory = FSDirectory.Open(luceneIndex);
         }
 
         /// <summary>
@@ -103,11 +63,10 @@
         /// <param name="analyzer">The analyzer to use when indexing.</param>
         private void IndexFiles(List<string> files, Analyzer analyzer)
         {
-            using (FSDirectory dir = FSDirectory.Open(luceneIndex))
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                using (IndexWriter writer = new IndexWriter(dir, config))
+                using (IndexWriter writer = new IndexWriter(FSDirectory, config))
                 {
                     foreach (string file in files)
                     {
@@ -159,50 +118,121 @@
                     });
                     return matches;
                 }
-                using (FSDirectory dir = FSDirectory.Open(luceneIndex))
-                using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
-                using (IndexReader reader = DirectoryReader.Open(dir))
+
+                if(DirectoryReader.IndexExists(FSDirectory))
                 {
-                    IndexSearcher searcher = new IndexSearcher(reader);
-                    MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
+                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
+                    using (IndexReader reader = DirectoryReader.Open(FSDirectory))
                     {
-                        AllowLeadingWildcard = true
-                    };
-                    Query searchTermQuery = queryParser.Parse('*'+search+'*');
-
-                    BooleanQuery aggregateQuery = new BooleanQuery() {
-                        { searchTermQuery, Occur.MUST }
-                    };
-
-                    if(reader.MaxDoc != 0)
-                    {
-                        // perform search
-                        TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
-
-                        Application.Current.Dispatcher.Invoke(() => {
-                            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
-                        });
-
-                        // display results
-                        foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
+                        IndexSearcher searcher = new IndexSearcher(reader);
+                        MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
                         {
-                            float score = scoreDoc.Score;
-                            int docId = scoreDoc.Doc;
+                            AllowLeadingWildcard = true
+                        };
+                        Query searchTermQuery = queryParser.Parse('*' + search + '*');
 
-                            Document doc = searcher.Doc(docId);
+                        BooleanQuery aggregateQuery = new BooleanQuery() {
+                            { searchTermQuery, Occur.MUST }
+                        };
 
-                            matches.Add(doc.Get("path"));
+                        if (reader.MaxDoc != 0)
+                        {
+                            // perform search
+                            TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
+
+                            Application.Current.Dispatcher.Invoke(() => {
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
+                            });
+
+                            // display results
+                            foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
+                            {
+                                float score = scoreDoc.Score;
+                                int docId = scoreDoc.Doc;
+
+                                Document doc = searcher.Doc(docId);
+
+                                matches.Add(doc.Get("path"));
+                            }
+                        }
+                        else
+                        {
+                            Application.Current.Dispatcher.Invoke(() => {
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "No documents available. Please generate the index again.\n";
+                            });
                         }
                     }
-                    else
-                    {
-                        Application.Current.Dispatcher.Invoke(() => {
-                            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "No documents available. Please generate the index again.";
-                        });
-                    }
                 }
+                else
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Index does not exist yet.\n";
+                    });
+                }
+                
                 return matches;
             });
         }
+
+        #region Static Methods
+
+        /// <summary>
+        /// Gets a list of files in a directory.
+        /// </summary>
+        /// <param name="directory">The directory root to search.</param>
+        /// <returns>A list of files in the directory.</returns>
+        public static List<string> DirectorySearch(string directory)
+        {
+            if (!System.IO.Directory.Exists(directory))
+            {
+                System.IO.Directory.CreateDirectory(directory);
+            }
+            var fileList = RecurisiveFileSearch(directory);
+            if (fileList.Count == 0)
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No files unpacked for indexing!\n";
+            }
+            return fileList;
+        }
+
+        /// <summary>
+        /// Recursively searches for all files within the given directory.
+        /// </summary>
+        /// <param name="directory">The directory root to search.</param>
+        /// <returns>A list of files in the directory.</returns>
+        private static List<string> RecurisiveFileSearch(string directory)
+        {
+            var fileList = new List<string>();
+            foreach (string dir in System.IO.Directory.GetDirectories(directory))
+            {
+                foreach (string file in System.IO.Directory.GetFiles(dir))
+                {
+                    fileList.Add(Path.GetFullPath(file));
+                }
+                fileList.AddRange(RecurisiveFileSearch(dir));
+            }
+            return fileList;
+        }
+
+        /// <summary>
+        /// Gets the complete list of extensions of the files in the given file list.
+        /// </summary>
+        /// <param name="fileList">The file list to scan.</param>
+        /// <returns>The list of file extensions.</returns>
+        public static List<string> GetFileExtensions(List<string> fileList)
+        {
+            var extensions = new List<string>();
+            foreach (var file in fileList)
+            {
+                var extension = Path.GetExtension(file);
+                if (!extensions.Contains(extension))
+                {
+                    extensions.Add(extension);
+                }
+            }
+            return extensions;
+        }
+
+        #endregion
     }
 }
