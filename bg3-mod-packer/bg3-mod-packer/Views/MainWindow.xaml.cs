@@ -17,11 +17,13 @@
         private void DivineSelect_Click(object sender, RoutedEventArgs e)
         {
             FileLocationDialog(divineLocation, "divineExe");
+            ((Models.MainWindow)DataContext).DivineLocation = divineLocation.Text;
         }
 
         private void Bg3exeSelect_Click(object sender, RoutedEventArgs e)
         {
             FileLocationDialog(bg3exeLocation, "bg3Exe");
+            ((Models.MainWindow)DataContext).Bg3ExeLocation = bg3exeLocation.Text;
         }
 
         private void ConsoleScroller_ScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e)
