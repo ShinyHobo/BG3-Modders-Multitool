@@ -65,7 +65,16 @@
                 {
                     foreach (string file in files)
                     {
-                        IndexLuceneFile(file, writer);
+                        try
+                        {
+                            IndexLuceneFile(file, writer);
+                        }
+                        catch(OutOfMemoryException ex)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => {
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"{ex.Message}\n";
+                            });
+                        }
                     }
                     writer.Commit();
                 }
@@ -230,7 +239,7 @@
             {
                 foreach (string file in System.IO.Directory.GetFiles(dir))
                 {
-                    fileList.Add(Path.GetFullPath(file));
+                    fileList.Add(@"\\?\" + Path.GetFullPath(file));
                 }
                 fileList.AddRange(RecurisiveFileSearch(dir));
             }
@@ -282,7 +291,7 @@
             }
             else
             {
-                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "File does not exist on the given path.\n";
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "File does not exist on the given path.\n";
             }
         }
 
