@@ -7,6 +7,12 @@ namespace bg3_mod_packer.Models
 
     public class MainWindow : ViewModels.BaseViewModel
     {
+        public MainWindow()
+        {
+            DivineLocation = Properties.Settings.Default.divineExe;
+            Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
+        }
+
         public PakUnpackHelper UnpackingProcess { get; internal set; }
 
         private string _consoleOutput;
@@ -19,8 +25,17 @@ namespace bg3_mod_packer.Models
             }
         }
 
+        private bool _unpackAllowed;
 
-        private string _divineLocation = Properties.Settings.Default.divineExe;
+        public bool UnpackAllowed {
+            get { return _unpackAllowed; }
+            set {
+                _unpackAllowed = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _divineLocation;
 
         public string DivineLocation {
             get { return _divineLocation; }
@@ -30,12 +45,13 @@ namespace bg3_mod_packer.Models
             }
         }
 
-        private string _bg3exeLocation = Properties.Settings.Default.bg3Exe;
+        private string _bg3exeLocation;
 
         public string Bg3ExeLocation {
             get { return _bg3exeLocation; }
             set {
-                _divineLocation = value;
+                _bg3exeLocation = value;
+                UnpackAllowed = !string.IsNullOrEmpty(value);
                 OnNotifyPropertyChanged();
             }
         }
