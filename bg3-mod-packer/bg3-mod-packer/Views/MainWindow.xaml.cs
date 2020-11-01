@@ -14,7 +14,6 @@
             DataContext = new Models.MainWindow();
         }
 
-        // TODO add TextChanged events to save as well
         private void DivineSelect_Click(object sender, RoutedEventArgs e)
         {
             FileLocationDialog(divineLocation, "divineExe");

@@ -19,8 +19,24 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <Button x:Name="path" MouseDoubleClick="Path_MouseDoubleClick" Background="White" BorderBrush="White" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Cursor="Hand">
+                        <Button x:Name="path" MouseDoubleClick="Path_MouseDoubleClick" Background="White" BorderBrush="White" HorizontalContentAlignment="Stretch" 
+                                VerticalContentAlignment="Stretch" Cursor="Hand" MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave">
                             <TextBlock Text="{Binding Path}" HorizontalAlignment="Stretch"></TextBlock>
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <ListView ItemsSource="{Binding FileContents}">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock FontWeight="Bold" Text="{Binding Key}"></TextBlock>
+                                                    <TextBlock Text=": "></TextBlock>
+                                                    <TextBlock Text="{Binding Text}"></TextBlock>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </ToolTip>
+                            </Button.ToolTip>
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <TextBlock TextDecorations="Underline">
