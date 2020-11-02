@@ -23,7 +23,7 @@ namespace bg3_mod_packer.Helpers
         /// <summary>
         /// Generates a list of meta.lsx files, representing the mods present.
         /// </summary>
-        /// <param name="pathlist">The list of directories within the /Mods folder.</param>
+        /// <param name="pathlist">The list of directories within the \Mods folder.</param>
         /// <returns></returns>
         public static List<string> GetMetalsxList(string[] pathlist)
         {
@@ -43,7 +43,7 @@ namespace bg3_mod_packer.Helpers
             if (metaList.Count == 0)
             {
                 // meta.lsx not found, discontinue
-                throw new Exception("meta.lsx not found in /Mods/ModName/ as expected. Discontinuing process.\n");
+                throw new Exception("meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.\n");
             }
             return metaList;
         }

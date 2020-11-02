@@ -2,6 +2,7 @@
 {
     using bg3_mod_packer.Helpers;
     using bg3_mod_packer.ViewModels;
+    using System;
     using System.Collections.ObjectModel;
 
     /// <summary>
@@ -25,6 +26,13 @@
             get { return _resultCount; }
             set {
                 _resultCount = value;
+                var filesRemaining = IndexFileTotal - IndexFileCount;
+                var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(IndexStartTime).Ticks);
+                var timeRemaining = timeTaken.TotalMinutes / value * filesRemaining;
+                if(timeRemaining < TimeSpan.MaxValue.TotalMinutes)
+                {
+                    IndexTimeRemaining = TimeSpan.FromMinutes(timeRemaining);
+                }
                 OnNotifyPropertyChanged();
             }
         }
@@ -40,6 +48,26 @@
         }
 
         public IndexHelper IndexHelper = new IndexHelper();
+
+        private DateTime _indexStartTime;
+
+        public DateTime IndexStartTime {
+            get { return _indexStartTime; }
+            set {
+                _indexStartTime = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private TimeSpan _indexTimeRemaining;
+
+        public TimeSpan IndexTimeRemaining {
+            get { return _indexTimeRemaining; }
+            set {
+                _indexTimeRemaining = value;
+                OnNotifyPropertyChanged();
+            }
+        }
     }
 
     /// <summary>

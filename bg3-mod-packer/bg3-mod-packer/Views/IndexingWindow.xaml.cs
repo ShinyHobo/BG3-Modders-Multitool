@@ -31,9 +31,7 @@
 
         private async void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
-            var fileList = IndexHelper.DirectorySearch("UnpackedData");
-            var fileExtensions = IndexHelper.GetFileExtensions(fileList);
-            await ((SearchResults)DataContext).IndexHelper.Index(fileList);
+            await ((SearchResults)DataContext).IndexHelper.Index();
         }
 
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)
@@ -43,7 +41,7 @@
                 var results = new ObservableCollection<SearchResult>();
                 foreach (string result in await ((SearchResults)DataContext).IndexHelper.SearchFiles(search.Text))
                 {
-                    results.Add(new SearchResult { Path = result.Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
+                    results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
                 ((SearchResults)DataContext).Results = results;
             }
