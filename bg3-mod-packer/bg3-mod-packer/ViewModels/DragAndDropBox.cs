@@ -32,7 +32,7 @@ namespace bg3_mod_packer.ViewModels
                                 var dirName = new DirectoryInfo(fullPath).Name;
                                 var destination = DragAndDropHelper.TempFolder + $"\\{dirName}.pak";
                                 DragAndDropHelper.PackMod(fullPath, destination);
-                                var metaList = DragAndDropHelper.GetMetalsxList(Directory.GetDirectories(fullPath + "/Mods"));
+                                var metaList = DragAndDropHelper.GetMetalsxList(Directory.GetDirectories(fullPath + "\\Mods"));
                                 DragAndDropHelper.GenerateInfoJson(destination, metaList);
                                 DragAndDropHelper.GenerateZip(fullPath, dirName);
                                 DragAndDropHelper.CleanTempDirectory();

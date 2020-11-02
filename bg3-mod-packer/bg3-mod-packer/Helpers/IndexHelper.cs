@@ -19,30 +19,38 @@
 
     public class IndexHelper
     {
-        private string[] extensionsToExclude = { ".png", ".DDS", ".lsfx", ".lsbc", ".lsbs", ".ttf", ".gr2", ".GR2", ".tga" };
+        // images: .png
+        // models: .DDS, .ttf, .gr2, .GR2, .tga, .gtp, .dds
+        // audio: .wem
+        // video: .bk2
+        private string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
         private readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
-        private readonly FSDirectory FSDirectory;
         private string searchText;
-
-        public IndexHelper()
-        {
-            FSDirectory = FSDirectory.Open(luceneIndex);
-        }
 
         /// <summary>
         /// Generates an index using the given filelist.
         /// </summary>
         /// <param name="filelist">The list of files to index.</param>
-        public Task Index(List<string> filelist)
+        public Task Index(List<string> filelist = null)
         {
             return Task.Run(() =>
             {
+                if(filelist==null)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Retrieving file list.\n";
+                    });
+                    filelist = DirectorySearch("UnpackedData");
+                }
+
                 // Display total file count being indexed
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    DataContext.IndexFileCount = 0;
+                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File list retrieved.\n";
                     DataContext.IndexFileTotal = filelist.Count;
+                    DataContext.IndexStartTime = DateTime.Now;
+                    DataContext.IndexFileCount = 0;
                 });
 
                 if (System.IO.Directory.Exists(luceneIndex))
@@ -61,11 +69,20 @@
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                using (IndexWriter writer = new IndexWriter(FSDirectory, config))
+                using (IndexWriter writer = new IndexWriter(FSDirectory.Open(luceneIndex), config))
                 {
                     foreach (string file in files)
                     {
-                        IndexLuceneFile(file, writer);
+                        try
+                        {
+                            IndexLuceneFile(file, writer);
+                        }
+                        catch(OutOfMemoryException ex)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => {
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"OOME: Failed to index {file}\n";
+                            });
+                        }
                     }
                     writer.Commit();
                 }
@@ -115,10 +132,13 @@
                     return matches;
                 }
 
-                if(DirectoryReader.IndexExists(FSDirectory))
+                if(DirectoryReader.IndexExists(FSDirectory.Open(luceneIndex)))
                 {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Search started.\n";
+                    });
                     using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
-                    using (IndexReader reader = DirectoryReader.Open(FSDirectory))
+                    using (IndexReader reader = DirectoryReader.Open(FSDirectory.Open(luceneIndex)))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
@@ -179,6 +199,7 @@
         {
             var lines = new Dictionary<int, string>();
             var lineCount = 1;
+            path = @"\\?\" + path;
             if (File.Exists(path))
             {
                 foreach (string line in File.ReadLines(path))
@@ -230,7 +251,7 @@
             {
                 foreach (string file in System.IO.Directory.GetFiles(dir))
                 {
-                    fileList.Add(Path.GetFullPath(file));
+                    fileList.Add(@"\\?\" + Path.GetFullPath(file));
                 }
                 fileList.AddRange(RecurisiveFileSearch(dir));
             }
@@ -273,16 +294,13 @@
         public static void OpenFile(string file)
         {
             var path = GetPath(file);
-            if (File.Exists(path))
+            if (File.Exists(@"\\?\" +  path))
             {
-                System.Diagnostics.Process fileopener = new System.Diagnostics.Process();
-                fileopener.StartInfo.FileName = "explorer";
-                fileopener.StartInfo.Arguments = path;
-                fileopener.Start();
+                System.Diagnostics.Process.Start(path);
             }
             else
             {
-                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "File does not exist on the given path.\n";
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File does not exist on the given path ({path}).\n";
             }
         }
 
