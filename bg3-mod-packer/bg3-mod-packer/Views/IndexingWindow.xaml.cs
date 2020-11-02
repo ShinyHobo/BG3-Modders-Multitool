@@ -41,7 +41,7 @@
                 var results = new ObservableCollection<SearchResult>();
                 foreach (string result in await ((SearchResults)DataContext).IndexHelper.SearchFiles(search.Text))
                 {
-                    results.Add(new SearchResult { Path = result.Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
+                    results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
                 ((SearchResults)DataContext).Results = results;
             }
