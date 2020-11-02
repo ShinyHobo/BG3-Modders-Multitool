@@ -12,7 +12,7 @@ Extras:
 * Index search functionality
 * File previews
 * UUID generator
-* TranslationString handle generator
+* TranslatedString handle generator
 
 meta.lsx template:
 ```
