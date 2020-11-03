@@ -30,7 +30,10 @@ namespace bg3_mod_packer.ViewModels
                             if (Directory.Exists(fullPath))
                             {
                                 var dirName = new DirectoryInfo(fullPath).Name;
+                                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Directory name: {dirName}\n";
                                 var destination = DragAndDropHelper.TempFolder + $"\\{dirName}.pak";
+                                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Destination: {destination}\n";
+                                ((Models.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Attempting to pack mod.\n";
                                 DragAndDropHelper.PackMod(fullPath, destination);
                                 var metaList = DragAndDropHelper.GetMetalsxList(Directory.GetDirectories(fullPath + "\\Mods"));
                                 DragAndDropHelper.GenerateInfoJson(destination, metaList);
