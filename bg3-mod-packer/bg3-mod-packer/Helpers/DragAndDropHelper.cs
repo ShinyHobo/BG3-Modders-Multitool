@@ -57,13 +57,13 @@ namespace bg3_mod_packer.Helpers
         {
             Directory.CreateDirectory(TempFolder);
             var pathToDivine = Properties.Settings.Default.divineExe;
-            var divine = @"/c " + pathToDivine + $" -g \"bg3\" --action \"create-package\" --source \"{fullpath}\" --destination \"{destination}\" -l \"all\"";
+            var divine = $" -g \"bg3\" --action \"create-package\" --source \"{fullpath}\" --destination \"{destination}\" -l \"all\"";
 
             // generate .pak files
             var process = new System.Diagnostics.Process();
             var startInfo = new System.Diagnostics.ProcessStartInfo
             {
-                FileName = "cmd.exe",
+                FileName = pathToDivine,
                 Arguments = divine,
                 WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
                 CreateNoWindow = true,
@@ -74,6 +74,7 @@ namespace bg3_mod_packer.Helpers
             process.StartInfo = startInfo;
             process.Start();
             ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardOutput.ReadToEnd();
+            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardError.ReadToEnd();
             process.WaitForExit();
         }
 
