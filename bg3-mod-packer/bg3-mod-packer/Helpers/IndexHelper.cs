@@ -202,13 +202,17 @@
             path = @"\\?\" + path;
             if (File.Exists(path))
             {
-                foreach (string line in File.ReadLines(path))
+                using (StreamReader r = new StreamReader(path))
                 {
-                    if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase)>=0)
+                    string line;
+                    while ((line = r.ReadLine()) != null)
                     {
-                        lines.Add(lineCount, line);
+                        if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            lines.Add(lineCount, line);
+                        }
+                        lineCount++;
                     }
-                    lineCount++;
                 }
                 if(lines.Count==0)
                 {
