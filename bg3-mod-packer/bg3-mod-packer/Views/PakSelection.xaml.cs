@@ -1,4 +1,7 @@
-﻿namespace bg3_mod_packer.Views
+﻿/// <summary>
+/// The pak selection code behind.
+/// </summary>
+namespace bg3_mod_packer.Views
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -18,10 +21,10 @@
 
         public PakSelection(List<string> files) : this()
         {
-            var pakList = new ObservableCollection<Models.CheckBox>();
+            var pakList = new ObservableCollection<ViewModels.CheckBox>();
             foreach(string file in files)
             {
-                pakList.Add(new Models.CheckBox {
+                pakList.Add(new ViewModels.CheckBox {
                     Name = Path.GetFileName(file),
                     IsSelected = false
                 });
@@ -36,7 +39,7 @@
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            ((Models.PakSelection)DataContext).PakList = new ObservableCollection<Models.CheckBox>();
+            ((Models.PakSelection)DataContext).PakList = new ObservableCollection<ViewModels.CheckBox>();
             Close();
         }
 

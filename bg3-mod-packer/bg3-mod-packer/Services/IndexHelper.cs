@@ -1,9 +1,11 @@
-﻿namespace bg3_mod_packer.Helpers
+﻿/// <summary>
+/// The indexer/searcher service.
+/// </summary>
+namespace bg3_mod_packer.Services
 {
     using System;
     using System.IO;
     using System.Collections.Generic;
-    using bg3_mod_packer.Models;
     using System.Windows;
     using System.Linq;
     using Lucene.Net.Store;
@@ -16,6 +18,7 @@
     using Lucene.Net.QueryParsers.Classic;
     using Lucene.Net.Analysis.Shingle;
     using System.Threading.Tasks;
+    using bg3_mod_packer.ViewModels;
 
     public class IndexHelper
     {

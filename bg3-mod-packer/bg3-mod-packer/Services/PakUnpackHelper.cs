@@ -1,9 +1,10 @@
 ﻿/// <summary>
 /// For helping with rapidly unpacking all game assets at once.
 /// </summary>
-namespace bg3_mod_packer.Helpers
+namespace bg3_mod_packer.Services
 {
     using bg3_mod_packer.Models;
+    using bg3_mod_packer.ViewModels;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -83,16 +84,19 @@ namespace bg3_mod_packer.Helpers
             {
                 foreach (int process in Processes)
                 {
-                    try
+                    if(Process.GetProcesses().Any(x => x.Id == process))
                     {
-                        var proc = Process.GetProcessById(process);
-                        if (!proc.HasExited)
+                        try
                         {
-                            proc.Kill();
-                            proc.WaitForExit();
+                            var proc = Process.GetProcessById(process);
+                            if (!proc.HasExited)
+                            {
+                                proc.Kill();
+                                proc.WaitForExit();
+                            }
                         }
+                        catch { }// only exception should be "Process with ID #### not found", safe to ignore
                     }
-                    catch { }// only exception should be "Process with ID #### not found", safe to ignore
                 }
                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes cancelled successfully!\n";
             }

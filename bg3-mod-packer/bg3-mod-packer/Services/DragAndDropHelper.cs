@@ -1,9 +1,10 @@
 ﻿/// <summary>
 /// Helper for processing drag and drop events
 /// </summary>
-namespace bg3_mod_packer.Helpers
+namespace bg3_mod_packer.Services
 {
     using bg3_mod_packer.Models;
+    using bg3_mod_packer.ViewModels;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -178,6 +179,51 @@ namespace bg3_mod_packer.Helpers
                 file.Delete();
             }
             ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Temp files cleaned.\n";
+        }
+
+        /// <summary>
+        /// Process the file/folder drop.
+        /// </summary>
+        /// <param name="data">Drop data, should be a folder</param>
+        /// <returns>Success</returns>
+        public static void ProcessDrop(IDataObject data)
+        {
+            try
+            {
+                if (data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    var fileDrop = data.GetData(DataFormats.FileDrop, true);
+                    if (fileDrop is string[] filesOrDirectories && filesOrDirectories.Length > 0)
+                    {
+                        foreach (string fullPath in filesOrDirectories)
+                        {
+                            // Only accept directory
+                            if (Directory.Exists(fullPath))
+                            {
+                                var dirName = new DirectoryInfo(fullPath).Name;
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Directory name: {dirName}\n";
+                                var destination = DragAndDropHelper.TempFolder + $"\\{dirName}.pak";
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Destination: {destination}\n";
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Attempting to pack mod.\n";
+                                DragAndDropHelper.PackMod(fullPath, destination);
+                                var metaList = DragAndDropHelper.GetMetalsxList(Directory.GetDirectories(fullPath + "\\Mods"));
+                                DragAndDropHelper.GenerateInfoJson(destination, metaList);
+                                DragAndDropHelper.GenerateZip(fullPath, dirName);
+                                DragAndDropHelper.CleanTempDirectory();
+                            }
+                            else
+                            {
+                                // File dropping unsupported
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File dropping is not yet supported.";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += ex.Message;
+            }
         }
     }
 }
