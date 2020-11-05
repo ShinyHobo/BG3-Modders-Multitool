@@ -1,7 +1,9 @@
-﻿namespace bg3_mod_packer.Models
+﻿/// <summary>
+/// The searcher view model.
+/// </summary>
+namespace bg3_mod_packer.ViewModels
 {
-    using bg3_mod_packer.Helpers;
-    using bg3_mod_packer.ViewModels;
+    using bg3_mod_packer.Services;
     using System;
     using System.Collections.ObjectModel;
 

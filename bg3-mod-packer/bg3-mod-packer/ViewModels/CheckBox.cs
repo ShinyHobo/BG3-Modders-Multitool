@@ -1,9 +1,9 @@
 ﻿/// <summary>
 /// Model for checkboxes.
 /// </summary>
-namespace bg3_mod_packer.Models
+namespace bg3_mod_packer.ViewModels
 {
-    public class CheckBox : ViewModels.BaseViewModel
+    public class CheckBox : BaseViewModel
     {
         public string Name { get; set; }
 

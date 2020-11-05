@@ -1,8 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-
+﻿/// <summary>
+/// The drag and drop box code behind.
+/// </summary>
 namespace bg3_mod_packer.Views
 {
+    using System.Windows;
+    using System.Windows.Controls;
+
     /// <summary>
     /// Interaction logic for DragAndDropBox.xaml
     /// </summary>
@@ -18,9 +21,13 @@ namespace bg3_mod_packer.Views
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Process a drop.
+        /// </summary>
+        /// <param name="e">The event args.</param>
         protected override void OnDrop(DragEventArgs e)
         {
-            ViewModels.DragAndDropBox.ProcessDrop(e.Data);
+            Services.DragAndDropHelper.ProcessDrop(e.Data);
         }
     }
 }

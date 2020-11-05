@@ -1,6 +1,6 @@
 ﻿namespace bg3_mod_packer.Views
 {
-    using bg3_mod_packer.Helpers;
+    using bg3_mod_packer.Services;
     using System.Windows;
 
     /// <summary>
@@ -11,19 +11,19 @@
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new Models.MainWindow();
+            DataContext = new ViewModels.MainWindow();
         }
 
         private void DivineSelect_Click(object sender, RoutedEventArgs e)
         {
             FileLocationDialog(divineLocation, "divineExe");
-            ((Models.MainWindow)DataContext).DivineLocation = divineLocation.Text;
+            ((ViewModels.MainWindow)DataContext).DivineLocation = divineLocation.Text;
         }
 
         private void Bg3exeSelect_Click(object sender, RoutedEventArgs e)
         {
             FileLocationDialog(bg3exeLocation, "bg3Exe");
-            ((Models.MainWindow)DataContext).Bg3ExeLocation = bg3exeLocation.Text;
+            ((ViewModels.MainWindow)DataContext).Bg3ExeLocation = bg3exeLocation.Text;
         }
 
         private void ConsoleScroller_ScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e)
@@ -58,11 +58,11 @@
         {
             unpack.Visibility = Visibility.Hidden;
             unpack_Cancel.Visibility = Visibility.Visible;
-            ((Models.MainWindow)DataContext).UnpackingProcess = new PakUnpackHelper();
-            ((Models.MainWindow)DataContext).UnpackingProcess.UnpackAllPakFiles().ContinueWith(delegate {
+            ((ViewModels.MainWindow)DataContext).UnpackingProcess = new PakUnpackHelper();
+            ((ViewModels.MainWindow)DataContext).UnpackingProcess.UnpackAllPakFiles().ContinueWith(delegate {
                 Application.Current.Dispatcher.Invoke(() => {
-                    if(!((Models.MainWindow)DataContext).UnpackingProcess.Cancelled)
-                        ((Models.MainWindow)DataContext).ConsoleOutput += "Unpacking complete!\n";
+                    if(!((ViewModels.MainWindow)DataContext).UnpackingProcess.Cancelled)
+                        ((ViewModels.MainWindow)DataContext).ConsoleOutput += "Unpacking complete!\n";
                     unpack.Visibility = Visibility.Visible;
                     unpack_Cancel.Visibility = Visibility.Hidden;
                 });
@@ -71,7 +71,7 @@
 
         private void Unpack_Cancel_Click(object sender, RoutedEventArgs e)
         {
-            ((Models.MainWindow)DataContext).UnpackingProcess.CancelUpacking();
+            ((ViewModels.MainWindow)DataContext).UnpackingProcess.CancelUpacking();
             unpack.Visibility = Visibility.Visible;
             unpack_Cancel.Visibility = Visibility.Hidden;
         }
@@ -87,7 +87,7 @@
             if(guidText.Content != null)
             {
                 Clipboard.SetText(guidText.Content.ToString());
-                ((Models.MainWindow)DataContext).ConsoleOutput += $"v4 UUID [{guidText.Content}] copied to clipboard!\n";
+                ((ViewModels.MainWindow)DataContext).ConsoleOutput += $"v4 UUID [{guidText.Content}] copied to clipboard!\n";
             }
         }
 
@@ -103,7 +103,7 @@
             if(handleText.Content != null)
             {
                 Clipboard.SetText(handleText.Content.ToString());
-                ((Models.MainWindow)DataContext).ConsoleOutput += $"TranslatedString handle [{handleText.Content}] copied to clipboard!\n";
+                ((ViewModels.MainWindow)DataContext).ConsoleOutput += $"TranslatedString handle [{handleText.Content}] copied to clipboard!\n";
             }
         }
         #endregion
