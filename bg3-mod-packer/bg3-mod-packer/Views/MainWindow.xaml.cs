@@ -13,7 +13,10 @@ namespace bg3_mod_packer.Views
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ViewModels.MainWindow();
+            DataContext = new ViewModels.MainWindow
+            {
+                DragAndDropBox = (ViewModels.DragAndDropBox)dragAndDropBox.DataContext
+            };
         }
 
         #region File Selection
