@@ -11,9 +11,40 @@ namespace bg3_mod_packer.ViewModels
         {
             DivineLocation = Properties.Settings.Default.divineExe;
             Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
+            Unpacker = new PakUnpackHelper();
         }
 
-        public PakUnpackHelper UnpackingProcess { get; internal set; }
+        /// <summary>
+        /// Sets file location in application settings.
+        /// </summary>
+        /// <param name="property">The property to update.</param>
+        /// <param name="title">The title to give the file selection window.</param>
+        /// <returns>Returns the file location.</returns>
+        public string FileLocationDialog(string property, string title)
+        {
+            var fileDialog = new System.Windows.Forms.OpenFileDialog
+            {
+                Title = title
+            };
+            var result = fileDialog.ShowDialog();
+            var file = string.Empty;
+            switch (result)
+            {
+                case System.Windows.Forms.DialogResult.OK:
+                    file = fileDialog.FileName;
+                    break;
+                case System.Windows.Forms.DialogResult.Cancel:
+                default:
+                    file = null;
+                    break;
+            }
+            Properties.Settings.Default[property] = file;
+            Properties.Settings.Default.Save();
+            return file;
+        }
+
+        #region Properties
+        public PakUnpackHelper Unpacker { get; internal set; }
 
         private string _consoleOutput;
 
@@ -75,5 +106,6 @@ namespace bg3_mod_packer.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+        #endregion
     }
 }

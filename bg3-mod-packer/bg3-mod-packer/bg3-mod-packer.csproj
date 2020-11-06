@@ -248,7 +248,7 @@
     <Compile Include="ViewModels\MainWindow.cs" />
     <Compile Include="Models\MetaLsx.cs" />
     <Compile Include="Models\ModuleShortDesc.cs" />
-    <Compile Include="Models\PakSelection.cs" />
+    <Compile Include="ViewModels\PakSelection.cs" />
     <Compile Include="ViewModels\SearchResults.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="Views\IndexingWindow.xaml.cs">
