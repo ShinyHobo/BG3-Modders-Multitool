@@ -6,12 +6,22 @@ namespace bg3_mod_packer.ViewModels
     using bg3_mod_packer.Services;
     using System;
     using System.Collections.ObjectModel;
+    using System.Windows;
 
     /// <summary>
     /// The model for search results
     /// </summary>
     public class SearchResults : BaseViewModel
     {
+        public SearchResults()
+        {
+            IndexHelper = new IndexHelper();
+            IndexHelper.DataContext = this;
+            IsIndexing = Visibility.Hidden;
+        }
+
+        public IndexHelper IndexHelper { get; set; }
+
         private int _resultTotal;
 
         public int IndexFileTotal {
@@ -49,8 +59,6 @@ namespace bg3_mod_packer.ViewModels
             }
         }
 
-        public IndexHelper IndexHelper = new IndexHelper();
-
         private DateTime _indexStartTime;
 
         public DateTime IndexStartTime {
@@ -67,6 +75,16 @@ namespace bg3_mod_packer.ViewModels
             get { return _indexTimeRemaining; }
             set {
                 _indexTimeRemaining = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private Visibility _isIndexing;
+
+        public Visibility IsIndexing {
+            get { return _isIndexing; }
+            set {
+                _isIndexing = value;
                 OnNotifyPropertyChanged();
             }
         }

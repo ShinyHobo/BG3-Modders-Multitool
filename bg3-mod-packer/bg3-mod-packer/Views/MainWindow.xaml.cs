@@ -15,7 +15,8 @@ namespace bg3_mod_packer.Views
             InitializeComponent();
             DataContext = new ViewModels.MainWindow
             {
-                DragAndDropBox = (ViewModels.DragAndDropBox)dragAndDropBox.DataContext
+                DragAndDropBox = (ViewModels.DragAndDropBox)dragAndDropBox.DataContext,
+                SearchResults = new ViewModels.SearchResults()
             };
         }
 
@@ -117,6 +118,12 @@ namespace bg3_mod_packer.Views
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             new IndexingWindow().Show();
+        }
+
+        private async void IndexFiles_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            await vm.SearchResults.IndexHelper.Index();
         }
     }
 }

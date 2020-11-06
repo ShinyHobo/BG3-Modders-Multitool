@@ -31,6 +31,11 @@ namespace bg3_mod_packer.Services
         public SearchResults DataContext;
         private string searchText;
 
+        public IndexHelper()
+        {
+
+        }
+
         /// <summary>
         /// Generates an index using the given filelist.
         /// </summary>
@@ -69,6 +74,9 @@ namespace bg3_mod_packer.Services
         /// <param name="analyzer">The analyzer to use when indexing.</param>
         private void IndexFiles(List<string> files, Analyzer analyzer)
         {
+            Application.Current.Dispatcher.Invoke(() => {
+                DataContext.IsIndexing = Visibility.Visible;
+            });
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
@@ -90,6 +98,9 @@ namespace bg3_mod_packer.Services
                     writer.Commit();
                 }
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                DataContext.IsIndexing = Visibility.Hidden;
+            });
         }
 
         /// <summary>
