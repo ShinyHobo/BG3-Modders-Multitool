@@ -26,12 +26,12 @@
         <Grid Margin="273,114,121,236">
             <Label x:Name="guidLabel" Content="v4 UUID Generator (Click field to copy to clipboard)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <Button x:Name="guidGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
-            <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand"/>
+            <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
         </Grid>
         <Grid Margin="273,167,121,183">
             <Label x:Name="handleLabel" Content="TranslatedString Handle Generator (Click field to copy to clipboard)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <Button x:Name="handleGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="HandleGenerate_Click" Cursor="Hand"/>
-            <Button x:Name="handleText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="HandleText_Click" Cursor="Hand"/>
+            <Button x:Name="handleText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="HandleText_Click" Cursor="Hand" Content="{Binding HandleText}"/>
         </Grid>
         <ScrollViewer x:Name="ConsoleScroller" Margin="10,267,6,6" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged">
             <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 

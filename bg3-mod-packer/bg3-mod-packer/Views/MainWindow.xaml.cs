@@ -85,42 +85,35 @@ namespace bg3_mod_packer.Views
         }
         #endregion
 
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
-        {
-            var searchWindow = new IndexingWindow();
-            searchWindow.Show();
-        }
-
         #region UUID Generation
         private void GuidGenerate_Click(object sender, RoutedEventArgs e)
         {
-            guidText.Content = System.Guid.NewGuid();
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.GenerateGuid(false);
         }
 
         private void GuidText_Click(object sender, RoutedEventArgs e)
         {
-            if(guidText.Content != null)
-            {
-                Clipboard.SetText(guidText.Content.ToString());
-                ((ViewModels.MainWindow)DataContext).ConsoleOutput += $"v4 UUID [{guidText.Content}] copied to clipboard!\n";
-            }
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.CopyGuid(false);
         }
 
         private void HandleGenerate_Click(object sender, RoutedEventArgs e)
         {
-            var guid = System.Guid.NewGuid().ToString();
-            var handle = $"h{guid}".Replace('-', 'g');
-            handleText.Content = handle;
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.GenerateGuid(true);
         }
 
         private void HandleText_Click(object sender, RoutedEventArgs e)
         {
-            if(handleText.Content != null)
-            {
-                Clipboard.SetText(handleText.Content.ToString());
-                ((ViewModels.MainWindow)DataContext).ConsoleOutput += $"TranslatedString handle [{handleText.Content}] copied to clipboard!\n";
-            }
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.CopyGuid(true);
         }
         #endregion
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            new IndexingWindow().Show();
+        }
     }
 }

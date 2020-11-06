@@ -4,6 +4,7 @@
 namespace bg3_mod_packer.ViewModels
 {
     using bg3_mod_packer.Services;
+    using System.Windows;
 
     public class MainWindow : BaseViewModel
     {
@@ -42,6 +43,40 @@ namespace bg3_mod_packer.ViewModels
             Properties.Settings.Default.Save();
             return file;
         }
+
+        #region UUID Generation Methods
+        /// <summary>
+        /// Generates a guid for copying.
+        /// </summary>
+        /// <param name="isHandle">Whether the guid is a TranslatedString handle.</param>
+        public void GenerateGuid(bool isHandle)
+        {
+            var guid = System.Guid.NewGuid();
+            if(isHandle)
+            {
+                HandleText = $"h{guid}".Replace('-', 'g');
+            }
+            else
+            {
+                GuidText = guid.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Copies the guid to the clipboard.
+        /// </summary>
+        /// <param name="isHandle">Whether the guid is a TranslatedString handle.</param>
+        public void CopyGuid(bool isHandle)
+        {
+            var guidText = isHandle ? HandleText : GuidText;
+            var type = isHandle ? "TranslatedString handle" : "v4 UUID";
+            if (guidText != null)
+            {
+                Clipboard.SetText(guidText);
+                ConsoleOutput += $"{type} [{guidText}] copied to clipboard!\n";
+            }
+        }
+        #endregion
 
         #region Properties
         public PakUnpackHelper Unpacker { get; internal set; }
@@ -103,6 +138,26 @@ namespace bg3_mod_packer.ViewModels
             get { return _indexFileTotal; }
             set {
                 _indexFileTotal = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _guidText;
+
+        public string GuidText {
+            get { return _guidText;  }
+            set {
+                _guidText = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _handleText;
+
+        public string HandleText {
+            get { return _handleText; }
+            set {
+                _handleText = value;
                 OnNotifyPropertyChanged();
             }
         }
