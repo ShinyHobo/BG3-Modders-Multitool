@@ -28,7 +28,20 @@ namespace bg3_mod_packer.Views
         /// <param name="e">The event args.</param>
         protected override void OnDrop(DragEventArgs e)
         {
-            Services.DragAndDropHelper.ProcessDrop(e.Data);
+            var vm = DataContext as ViewModels.DragAndDropBox;
+            vm.ProcessDrop(e.Data);
+        }
+
+        private void Grid_DragEnter(object sender, DragEventArgs e)
+        {
+            var vm = DataContext as ViewModels.DragAndDropBox;
+            vm.Darken();
+        }
+
+        private void Grid_DragLeave(object sender, DragEventArgs e)
+        {
+            var vm = DataContext as ViewModels.DragAndDropBox;
+            vm.Lighten();
         }
     }
 }

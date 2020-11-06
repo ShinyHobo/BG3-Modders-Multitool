@@ -7,10 +7,10 @@
              xmlns:viewModels="clr-namespace:bg3_mod_packer.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
-    <Grid>
+    <Grid DragEnter="Grid_DragEnter" DragLeave="Grid_DragLeave">
         <Rectangle  HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" AllowDrop="True" Fill="{Binding PackBoxColor}" Stroke="#FF000000" 
                     StrokeThickness="1" StrokeDashArray="4 4" SnapsToDevicePixels="True" RadiusX="10" RadiusY="10" IsEnabled="{Binding PackAllowed}"/>
-        <TextBlock Text="{Binding PackBoxInstructions}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,27,10,19" 
+        <TextBlock Text="{Binding PackBoxInstructions}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,27,10,19" Foreground="{Binding DescriptionColor}"
                    Width="80" Height="54" TextWrapping="Wrap" TextAlignment="Center" AllowDrop="True" IsEnabled="{Binding PackAllowed}"/>
     </Grid>
 </UserControl>
