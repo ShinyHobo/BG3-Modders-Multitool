@@ -243,7 +243,7 @@
     <Compile Include="Services\DragAndDropHelper.cs" />
     <Compile Include="Services\IndexHelper.cs" />
     <Compile Include="Services\PakUnpackHelper.cs" />
-    <Compile Include="ViewModels\CheckBox.cs" />
+    <Compile Include="ViewModels\Reusables\CheckBox.cs" />
     <Compile Include="Models\InfoJson.cs" />
     <Compile Include="ViewModels\MainWindow.cs" />
     <Compile Include="Models\MetaLsx.cs" />

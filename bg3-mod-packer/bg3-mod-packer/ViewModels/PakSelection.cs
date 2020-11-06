@@ -6,6 +6,7 @@ namespace bg3_mod_packer.ViewModels
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
+    using bg3_mod_packer.ViewModels.Reusables;
 
     public class PakSelection : BaseViewModel
     {
