@@ -82,67 +82,79 @@ namespace bg3_mod_packer.Services
         /// <summary>
         /// Creates the metadata info.json file.
         /// </summary>
-        /// <param name="destination">The destination for the .json file to be created.</param>
+        /// <param name="destination"></param>
         /// <param name="metaList">The list of meta.lsx file paths.</param>
-        public static void GenerateInfoJson(string destination, List<string> metaList)
+        public static void GenerateInfoJson(Dictionary<string, List<string>> metaList)
         {
-            var info = new InfoJson();
+            var info = new InfoJson {
+                Mods = new List<MetaLsx>()
+            };
+            var created = DateTime.Now;
+            
+            foreach(KeyValuePair<string, List<string>> modGroup in metaList)
+            {
+                var mods = new List<MetaLsx>();
+                foreach (var meta in modGroup.Value)
+                {
+                    // generate info.json section
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(meta);
 
-            // calculate md5 hash of .pak
+                    var moduleInfo = doc.SelectSingleNode("//node[@id='ModuleInfo']");
+                    var metadata = new MetaLsx
+                    {
+                        Author = moduleInfo.SelectSingleNode("attribute[@id='Author']").Attributes["value"].InnerText,
+                        Name = moduleInfo.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
+                        Description = moduleInfo.SelectSingleNode("attribute[@id='Description']").Attributes["value"].InnerText,
+                        Version = moduleInfo.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText,
+                        Folder = moduleInfo.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
+                        UUID = moduleInfo.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText,
+                        Created = created,
+                        Group = modGroup.Key,
+                        Dependencies = new List<ModuleShortDesc>()
+                    };
+
+                    var dependencies = doc.SelectSingleNode("//node[@id='Dependencies']");
+                    if (dependencies != null)
+                    {
+                        var moduleDescriptions = dependencies.SelectNodes("node[@id='ModuleShortDesc']");
+                        foreach (XmlNode moduleDescription in moduleDescriptions)
+                        {
+                            var depInfo = new ModuleShortDesc
+                            {
+                                Name = moduleDescription.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
+                                Version = moduleDescription.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText,
+                                Folder = moduleDescription.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
+                                UUID = moduleDescription.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText
+                            };
+                            metadata.Dependencies.Add(depInfo);
+                        }
+                    }
+
+                    mods.Add(metadata);
+                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Metadata for {metadata.Name} created.\n";
+                }
+
+                info.Mods.AddRange(mods);
+            }
+
+            // calculate md5 hash of .pak(s)
             using (var md5 = MD5.Create())
             {
-                using (var stream = File.OpenRead(destination))
+                var paks = Directory.GetFiles(TempFolder);
+                var pakCount = 1;
+                foreach (var pak in paks)
                 {
-                    var hash = md5.ComputeHash(stream);
-                    info.MD5 = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    byte[] contentBytes = File.ReadAllBytes(pak);
+                    if (pakCount == paks.Length)
+                        md5.TransformFinalBlock(contentBytes, 0, contentBytes.Length);
+                    else
+                        md5.TransformBlock(contentBytes, 0, contentBytes.Length, contentBytes, 0);
+                    pakCount++;
                 }
+                info.MD5 = BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
             }
 
-            var created = DateTime.Now;
-            var mods = new List<MetaLsx>();
-            foreach (string meta in metaList)
-            {
-                // generate info.json section
-                XmlDocument doc = new XmlDocument();
-                doc.Load(meta);
-
-                var moduleInfo = doc.SelectSingleNode("//node[@id='ModuleInfo']");
-                var metadata = new MetaLsx
-                {
-                    Author = moduleInfo.SelectSingleNode("attribute[@id='Author']").Attributes["value"].InnerText,
-                    Name = moduleInfo.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
-                    modName = moduleInfo.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
-                    Description = moduleInfo.SelectSingleNode("attribute[@id='Description']").Attributes["value"].InnerText,
-                    Version = moduleInfo.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText,
-                    Folder = moduleInfo.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
-                    folderName = moduleInfo.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
-                    UUID = moduleInfo.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText,
-                    Created = created,
-                    Dependencies = new List<ModuleShortDesc>()
-                };
-
-                var dependencies = doc.SelectSingleNode("//node[@id='Dependencies']");
-                if(dependencies != null)
-                {
-                    var moduleDescriptions = dependencies.SelectNodes("node[@id='ModuleShortDesc']");
-                    foreach(XmlNode moduleDescription in moduleDescriptions)
-                    {
-                        var depInfo = new ModuleShortDesc
-                        {
-                            Name = moduleDescription.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
-                            Version = moduleDescription.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText,
-                            Folder = moduleDescription.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
-                            UUID = moduleDescription.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText
-                        };
-                        metadata.Dependencies.Add(depInfo);
-                    }
-                }
-
-                mods.Add(metadata);
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Metadata for {metadata.Name} created.\n";
-            }
-
-            info.Mods = mods;
             var json = JsonConvert.SerializeObject(info);
             File.WriteAllText(TempFolder + @"\info.json", json);
             ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"info.json generated.\n";
@@ -195,26 +207,36 @@ namespace bg3_mod_packer.Services
                     var fileDrop = data.GetData(DataFormats.FileDrop, true);
                     if (fileDrop is string[] filesOrDirectories && filesOrDirectories.Length > 0)
                     {
+                        var mw = Application.Current.MainWindow.DataContext as MainWindow;
                         foreach (string fullPath in filesOrDirectories)
                         {
                             // Only accept directory
                             if (Directory.Exists(fullPath))
                             {
+                                var metaList = new Dictionary<string,List<string>>();
                                 var dirName = new DirectoryInfo(fullPath).Name;
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Directory name: {dirName}\n";
-                                var destination = DragAndDropHelper.TempFolder + $"\\{dirName}.pak";
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Destination: {destination}\n";
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Attempting to pack mod.\n";
-                                DragAndDropHelper.PackMod(fullPath, destination);
-                                var metaList = DragAndDropHelper.GetMetalsxList(Directory.GetDirectories(fullPath + "\\Mods"));
-                                DragAndDropHelper.GenerateInfoJson(destination, metaList);
-                                DragAndDropHelper.GenerateZip(fullPath, dirName);
-                                DragAndDropHelper.CleanTempDirectory();
+                                mw.ConsoleOutput += $"Directory name: {dirName}\n";
+                                if (Directory.Exists(fullPath + "\\Mods"))
+                                {
+                                    // single mod directory
+                                    metaList.Add(Guid.NewGuid().ToString(), ProcessMod(fullPath, dirName));
+                                }
+                                else
+                                {
+                                    // multiple mod directories?
+                                    foreach (string dir in Directory.GetDirectories(fullPath))
+                                    {
+                                        metaList.Add(Guid.NewGuid().ToString(), ProcessMod(dir, new DirectoryInfo(dir).Name));
+                                    }
+                                }
+                                GenerateInfoJson(metaList);
+                                GenerateZip(fullPath, dirName);
+                                CleanTempDirectory();
                             }
                             else
                             {
                                 // File dropping unsupported
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File dropping is not yet supported.";
+                                mw.ConsoleOutput += $"File dropping is not yet supported.";
                             }
                         }
                     }
@@ -224,6 +246,22 @@ namespace bg3_mod_packer.Services
             {
                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += ex.Message;
             }
+        }
+
+        /// <summary>
+        /// Process mod for packing.
+        /// </summary>
+        /// <param name="path">The path to process.</param>
+        /// <param name="dirName">The name of the parent directory.</param>
+        /// <returns></returns>
+        private static List<string> ProcessMod(string path, string dirName)
+        {
+            var mw = Application.Current.MainWindow.DataContext as MainWindow;
+            var destination = TempFolder + $"\\{dirName}.pak";
+            mw.ConsoleOutput += $"Destination: {destination}\n";
+            mw.ConsoleOutput += $"Attempting to pack mod.\n";
+            PackMod(path, destination);
+            return GetMetalsxList(Directory.GetDirectories(path + "\\Mods"));
         }
     }
 }
