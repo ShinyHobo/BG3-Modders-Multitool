@@ -16,9 +16,6 @@ namespace bg3_mod_packer.Models
         public string UUID { get; set; }
         public DateTime Created { get; set; }
         public List<ModuleShortDesc> Dependencies {get; set; }
-
-        // Legacy fields - TODO remove at later date
-        public string modName { get; set; }
-        public string folderName { get; set; }
+        public string Group { get; set; }
     }
 }
