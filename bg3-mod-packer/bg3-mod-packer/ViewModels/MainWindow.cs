@@ -15,6 +15,7 @@ namespace bg3_mod_packer.ViewModels
             Unpacker = new PakUnpackHelper();
         }
 
+        #region File Selection Methods
         /// <summary>
         /// Sets file location in application settings.
         /// </summary>
@@ -28,21 +29,19 @@ namespace bg3_mod_packer.ViewModels
                 Title = title
             };
             var result = fileDialog.ShowDialog();
-            var file = string.Empty;
+            var file = (string)Properties.Settings.Default[property];
             switch (result)
             {
                 case System.Windows.Forms.DialogResult.OK:
                     file = fileDialog.FileName;
-                    break;
-                case System.Windows.Forms.DialogResult.Cancel:
-                default:
-                    file = null;
+                    Properties.Settings.Default[property] = file;
+                    Properties.Settings.Default.Save();
                     break;
             }
-            Properties.Settings.Default[property] = file;
-            Properties.Settings.Default.Save();
+            
             return file;
         }
+        #endregion
 
         #region UUID Generation Methods
         /// <summary>
@@ -79,7 +78,9 @@ namespace bg3_mod_packer.ViewModels
         #endregion
 
         #region Properties
-        public PakUnpackHelper Unpacker { get; internal set; }
+        public PakUnpackHelper Unpacker { get; set; }
+
+        public DragAndDropBox DragAndDropBox { get; set; }
 
         private string _consoleOutput;
 
@@ -107,6 +108,11 @@ namespace bg3_mod_packer.ViewModels
             get { return _divineLocation; }
             set {
                 _divineLocation = value;
+                UnpackAllowed = !string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(Bg3ExeLocation);
+                if (DragAndDropBox != null)
+                {
+                    DragAndDropBox.PackAllowed = !string.IsNullOrEmpty(value);
+                }
                 OnNotifyPropertyChanged();
             }
         }
@@ -117,7 +123,7 @@ namespace bg3_mod_packer.ViewModels
             get { return _bg3exeLocation; }
             set {
                 _bg3exeLocation = value;
-                UnpackAllowed = !string.IsNullOrEmpty(value);
+                UnpackAllowed = !string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(DivineLocation);
                 OnNotifyPropertyChanged();
             }
         }

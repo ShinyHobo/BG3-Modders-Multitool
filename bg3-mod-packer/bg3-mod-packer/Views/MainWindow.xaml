@@ -10,7 +10,7 @@
         Title="Baldur's Gate 3 Mod Helper" Height="450" Width="800">
     <Grid>
         <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,10,526,159">
-            <views:DragAndDropBox />
+            <views:DragAndDropBox x:Name="dragAndDropBox"/>
         </Viewbox>
         <!--TODO move file selectors to separate view-->
         <Grid Margin="273,10,121,340">

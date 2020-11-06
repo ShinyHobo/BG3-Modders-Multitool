@@ -14,6 +14,7 @@ namespace bg3_mod_packer.Views
         public DragAndDropBox()
         {
             InitializeComponent();
+            DataContext = new ViewModels.DragAndDropBox();
         }
 
         public DragAndDropBox(DragAndDropBox c)
