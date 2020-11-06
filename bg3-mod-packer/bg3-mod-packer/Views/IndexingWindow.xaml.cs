@@ -1,7 +1,7 @@
 ﻿namespace bg3_mod_packer.Views
 {
-    using bg3_mod_packer.Helpers;
-    using bg3_mod_packer.Models;
+    using bg3_mod_packer.Services;
+    using bg3_mod_packer.ViewModels;
     using System;
     using System.Collections.ObjectModel;
     using System.IO;
@@ -27,11 +27,6 @@
             ((SearchResults)DataContext).IndexHelper.DataContext = (SearchResults)DataContext;
             timer.Interval = TimeSpan.FromMilliseconds(400);
             timer.Tick += Timer_Tick;
-        }
-
-        private async void IndexFiles_Click(object sender, RoutedEventArgs e)
-        {
-            await ((SearchResults)DataContext).IndexHelper.Index();
         }
 
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)

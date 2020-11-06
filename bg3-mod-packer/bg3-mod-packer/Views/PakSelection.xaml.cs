@@ -1,8 +1,9 @@
-﻿namespace bg3_mod_packer.Views
+﻿/// <summary>
+/// The pak selection code behind.
+/// </summary>
+namespace bg3_mod_packer.Views
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.IO;
     using System.Windows;
 
     /// <summary>
@@ -13,20 +14,13 @@
         public PakSelection()
         {
             InitializeComponent();
-            DataContext = new Models.PakSelection();
+            DataContext = new ViewModels.PakSelection();
         }
 
         public PakSelection(List<string> files) : this()
         {
-            var pakList = new ObservableCollection<Models.CheckBox>();
-            foreach(string file in files)
-            {
-                pakList.Add(new Models.CheckBox {
-                    Name = Path.GetFileName(file),
-                    IsSelected = false
-                });
-            }
-            ((Models.PakSelection)DataContext).PakList = pakList;
+            var vm = DataContext as ViewModels.PakSelection;
+            vm.CreateFileList(files);
         }
 
         private void Confirm_Click(object sender, RoutedEventArgs e)
@@ -36,24 +30,21 @@
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            ((Models.PakSelection)DataContext).PakList = new ObservableCollection<Models.CheckBox>();
+            var vm = DataContext as ViewModels.PakSelection;
+            vm.PakList.Clear();
             Close();
         }
 
         private void DeselectAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var pak in ((Models.PakSelection)DataContext).PakList)
-            {
-                pak.IsSelected = false;
-            }
+            var vm = DataContext as ViewModels.PakSelection;
+            vm.SelectAll(false);
         }
 
         private void SelectAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach(var pak in ((Models.PakSelection)DataContext).PakList)
-            {
-                pak.IsSelected = true;
-            }
+            var vm = DataContext as ViewModels.PakSelection;
+            vm.SelectAll(true);
         }
     }
 }

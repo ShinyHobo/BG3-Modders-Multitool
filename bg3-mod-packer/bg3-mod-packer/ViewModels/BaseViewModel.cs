@@ -1,4 +1,7 @@
-﻿namespace bg3_mod_packer.ViewModels
+﻿/// <summary>
+/// The base view model. Sets up INotifyPropertyChanged.
+/// </summary>
+namespace bg3_mod_packer.ViewModels
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;

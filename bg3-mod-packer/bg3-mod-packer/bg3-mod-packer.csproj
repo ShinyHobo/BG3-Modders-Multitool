@@ -240,18 +240,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Helpers\DragAndDropHelper.cs" />
-    <Compile Include="Helpers\IndexHelper.cs" />
-    <Compile Include="Helpers\PakUnpackHelper.cs" />
-    <Compile Include="Models\CheckBox.cs" />
+    <Compile Include="Services\DragAndDropHelper.cs" />
+    <Compile Include="Services\IndexHelper.cs" />
+    <Compile Include="Services\PakUnpackHelper.cs" />
+    <Compile Include="ViewModels\DragAndDropBox.cs" />
+    <Compile Include="ViewModels\Reusables\CheckBox.cs" />
     <Compile Include="Models\InfoJson.cs" />
-    <Compile Include="Models\MainWindow.cs" />
+    <Compile Include="ViewModels\MainWindow.cs" />
     <Compile Include="Models\MetaLsx.cs" />
     <Compile Include="Models\ModuleShortDesc.cs" />
-    <Compile Include="Models\PakSelection.cs" />
-    <Compile Include="Models\SearchResults.cs" />
+    <Compile Include="ViewModels\PakSelection.cs" />
+    <Compile Include="ViewModels\SearchResults.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\DragAndDropBox.cs" />
     <Compile Include="Views\IndexingWindow.xaml.cs">
       <DependentUpon>IndexingWindow.xaml</DependentUpon>
     </Compile>
@@ -274,7 +274,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModels\MainWindow.cs" />
     <Compile Include="Views\DragAndDropBox.xaml.cs">
       <DependentUpon>DragAndDropBox.xaml</DependentUpon>
     </Compile>
@@ -339,6 +338,7 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
