@@ -26,7 +26,7 @@ namespace bg3_mod_packer.Services
         // models: .DDS, .ttf, .gr2, .GR2, .tga, .gtp, .dds
         // audio: .wem
         // video: .bk2
-        private string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
+        private readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
         private readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
         private string searchText;
@@ -99,6 +99,8 @@ namespace bg3_mod_packer.Services
                         }
                     }
                     writer.Commit();
+                    analyzer.Dispose();
+                    writer.Dispose();
                 }
             }
             Application.Current.Dispatcher.Invoke(() => {
