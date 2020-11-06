@@ -3,7 +3,6 @@
 /// </summary>
 namespace bg3_mod_packer.Services
 {
-    using bg3_mod_packer.Models;
     using bg3_mod_packer.ViewModels;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -21,17 +20,15 @@ namespace bg3_mod_packer.Services
         /// <summary>
         /// Unpacks all the .pak files in the game data directory and places them in a folder next to divine.exe
         /// </summary>
-        public async Task UnpackAllPakFiles()
+        public Task UnpackAllPakFiles()
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes starting.\n";
-            });
+            var dataContext = Application.Current.MainWindow.DataContext as MainWindow;
+            dataContext.ConsoleOutput += "Unpacking processes starting.\n";
             Processes = new List<int>();
-            var pathToDivine = Properties.Settings.Default.divineExe;
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\",@"..\Data");
-            var files = Directory.GetFiles(dataDir, "*.pak").Select(file=> Path.GetFullPath(file)).ToList();
+            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            var files = Directory.GetFiles(dataDir, "*.pak").Select(file => Path.GetFullPath(file)).ToList();
             var localizationDir = $"{dataDir}\\Localization";
             if (Directory.Exists(localizationDir))
             {
@@ -39,24 +36,41 @@ namespace bg3_mod_packer.Services
             }
             var pakSelection = new Views.PakSelection(files);
             pakSelection.ShowDialog();
-            pakSelection.Closed += (sender,e) => pakSelection.Dispatcher.InvokeShutdown();
-            var paks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak=>pak.IsSelected).Select(pak=>pak.Name).ToList();
-            var startInfo = new ProcessStartInfo
+            pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
+            var paks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+            return Task.Run(() =>
             {
-                FileName = pathToDivine
-            };
-            await Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file => {
-                startInfo.Arguments = $" -g \"bg3\" --action \"extract-package\" --source \"{file}\" --destination \"{unpackPath}\" -l \"all\" --use-package-name";
-                await RunProcessAsync(startInfo);
-            })).ContinueWith(delegate {
-                Application.Current.Dispatcher.Invoke(() => {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes finished.\n";
+                return Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file =>
+                {
+                    await RunProcessAsync(file, unpackPath);
+                }));
+            }).ContinueWith(delegate
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    dataContext.ConsoleOutput += "All unpacking processes finished.\n";
+                    if (!Cancelled)
+                    {
+                        dataContext.ConsoleOutput += "Unpacking complete!\n";
+                    }
                 });
             });
         }
 
-        private Task<int> RunProcessAsync(ProcessStartInfo startInfo)
+        /// <summary>
+        /// Creates and runs a process window. Adds the process to a list for cancellation.
+        /// </summary>
+        /// <param name="file">The file to unpack.</param>
+        /// <param name="unpackpath">The folder path to unpack the file to.</param>
+        /// <returns></returns>
+        private Task<int> RunProcessAsync(string file, string unpackpath)
         {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Properties.Settings.Default.divineExe,
+                Arguments = $" -g \"bg3\" --action \"extract-package\" --source \"{file}\" --destination \"{unpackpath}\" -l \"all\" --use-package-name"
+            };
+
             var tcs = new TaskCompletionSource<int>();
             var process = new Process {
                 StartInfo = startInfo,
@@ -79,6 +93,7 @@ namespace bg3_mod_packer.Services
         /// </summary>
         public void CancelUpacking()
         {
+            var dataContext = Application.Current.MainWindow.DataContext as MainWindow;
             Cancelled = true;
             if(Processes != null && Processes.Count>0)
             {
@@ -98,7 +113,7 @@ namespace bg3_mod_packer.Services
                         catch { }// only exception should be "Process with ID #### not found", safe to ignore
                     }
                 }
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Unpacking processes cancelled successfully!\n";
+                dataContext.ConsoleOutput += "Unpacking processes cancelled successfully!\n";
             }
         }
     }
