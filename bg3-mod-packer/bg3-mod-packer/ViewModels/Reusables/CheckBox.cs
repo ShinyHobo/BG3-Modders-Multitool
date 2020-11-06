@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Model for checkboxes.
 /// </summary>
-namespace bg3_mod_packer.ViewModels
+namespace bg3_mod_packer.ViewModels.Reusables
 {
     public class CheckBox : BaseViewModel
     {
