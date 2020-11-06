@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System;
+using System.Windows;
+/// <summary>
 /// The drag and drop box view model.
 /// </summary>
 namespace bg3_mod_packer.ViewModels
@@ -10,6 +12,25 @@ namespace bg3_mod_packer.ViewModels
             PackAllowed = !string.IsNullOrEmpty(Properties.Settings.Default.divineExe);
         }
 
+        public void ProcessDrop(IDataObject data)
+        {
+            Services.DragAndDropHelper.ProcessDrop(data);
+            Lighten();
+        }
+
+        internal void Darken()
+        {
+            PackBoxColor = PackAllowed ? "LightGreen" : "MidnightBlue";
+            DescriptionColor = PackAllowed ? "Black" : "White";
+        }
+
+        internal void Lighten()
+        {
+            PackBoxColor = "LightBlue";
+            DescriptionColor = "Black";
+        }
+
+        #region Properties
         private string _packBoxColor;
 
         public string PackBoxColor {
@@ -20,13 +41,26 @@ namespace bg3_mod_packer.ViewModels
             }
         }
 
+        private string _descriptionColor;
+
+        public string DescriptionColor {
+            get { return _descriptionColor; }
+            set {
+                _descriptionColor = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         private bool _packAllowed;
 
         public bool PackAllowed {
             get { return _packAllowed; }
             set {
                 _packAllowed = value;
-                PackBoxColor = value ? "LightBlue" : "#FF265868";
+                if (value)
+                    Lighten();
+                else
+                    Darken();
                 PackBoxInstructions = value ? "Drop mod workspace folder here" : "Select divine.exe location";
                 OnNotifyPropertyChanged();
             }
@@ -41,5 +75,6 @@ namespace bg3_mod_packer.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+        #endregion
     }
 }
