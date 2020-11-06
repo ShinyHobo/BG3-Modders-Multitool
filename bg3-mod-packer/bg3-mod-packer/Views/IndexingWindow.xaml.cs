@@ -29,11 +29,6 @@
             timer.Tick += Timer_Tick;
         }
 
-        private async void IndexFiles_Click(object sender, RoutedEventArgs e)
-        {
-            await ((SearchResults)DataContext).IndexHelper.Index();
-        }
-
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)
         {
             if(!string.IsNullOrEmpty(search.Text))

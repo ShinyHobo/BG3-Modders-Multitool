@@ -4,6 +4,7 @@
 namespace bg3_mod_packer.ViewModels
 {
     using bg3_mod_packer.Services;
+    using System;
     using System.Windows;
 
     public class MainWindow : BaseViewModel
@@ -82,6 +83,8 @@ namespace bg3_mod_packer.ViewModels
 
         public DragAndDropBox DragAndDropBox { get; set; }
 
+        public SearchResults SearchResults { get; set; }
+
         private string _consoleOutput;
 
         public string ConsoleOutput {
@@ -92,6 +95,7 @@ namespace bg3_mod_packer.ViewModels
             }
         }
 
+        #region File Selection Properties
         private bool _unpackAllowed;
 
         public bool UnpackAllowed {
@@ -127,27 +131,9 @@ namespace bg3_mod_packer.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+        #endregion
 
-        private int _indexFileCount;
-
-        public int IndexFileCount {
-            get { return _indexFileCount; }
-            set {
-                _indexFileCount = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-
-        private int _indexFileTotal;
-
-        public int IndexFileTotal {
-            get { return _indexFileTotal; }
-            set {
-                _indexFileTotal = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-
+        #region UUID Generation Properties
         private string _guidText;
 
         public string GuidText {
@@ -167,6 +153,7 @@ namespace bg3_mod_packer.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+        #endregion
         #endregion
     }
 }
