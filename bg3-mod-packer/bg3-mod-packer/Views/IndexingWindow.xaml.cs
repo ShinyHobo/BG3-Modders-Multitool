@@ -73,12 +73,12 @@
         {
             if (isMouseOver)
             {
-                var contents = new ObservableCollection<SearchToolTip>();
-                foreach(var content in ((SearchResults)DataContext).IndexHelper.GetFileContents(hoverFile))
+                var vm = DataContext as SearchResults;
+                vm.FileContents = new ObservableCollection<SearchResult>();
+                foreach(var content in vm.IndexHelper.GetFileContents(hoverFile))
                 {
-                    contents.Add(new SearchToolTip { Key = content.Key, Text = content.Value.Trim()});
+                    vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim()});
                 }
-                ((SearchResult)pathButton.DataContext).FileContents = contents;
             }
             timer.Stop();
         }

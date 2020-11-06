@@ -31,6 +31,16 @@ namespace bg3_mod_packer.ViewModels
             return TimeSpan.FromTicks(DateTime.Now.Subtract(IndexStartTime).Ticks);
         }
 
+        private ObservableCollection<SearchResult> _fileContents;
+
+        public ObservableCollection<SearchResult> FileContents {
+            get { return _fileContents; }
+            set {
+                _fileContents = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         #region Properties
         public IndexHelper IndexHelper { get; set; }
 
@@ -140,22 +150,6 @@ namespace bg3_mod_packer.ViewModels
             }
         }
 
-        private ObservableCollection<SearchToolTip> _fileContents;
-
-        public ObservableCollection<SearchToolTip> FileContents {
-            get { return _fileContents; }
-            set {
-                _fileContents = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-    }
-
-    /// <summary>
-    /// The model for search result tooltips.
-    /// </summary>
-    public class SearchToolTip : BaseViewModel
-    {
         private int _key;
 
         public int Key {
