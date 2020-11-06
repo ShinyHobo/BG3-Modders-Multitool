@@ -1,9 +1,11 @@
-﻿namespace bg3_mod_packer.Helpers
+﻿/// <summary>
+/// The indexer/searcher service.
+/// </summary>
+namespace bg3_mod_packer.Services
 {
     using System;
     using System.IO;
     using System.Collections.Generic;
-    using bg3_mod_packer.Models;
     using System.Windows;
     using System.Linq;
     using Lucene.Net.Store;
@@ -16,6 +18,7 @@
     using Lucene.Net.QueryParsers.Classic;
     using Lucene.Net.Analysis.Shingle;
     using System.Threading.Tasks;
+    using bg3_mod_packer.ViewModels;
 
     public class IndexHelper
     {
@@ -28,6 +31,11 @@
         public SearchResults DataContext;
         private string searchText;
 
+        public IndexHelper()
+        {
+
+        }
+
         /// <summary>
         /// Generates an index using the given filelist.
         /// </summary>
@@ -36,7 +44,10 @@
         {
             return Task.Run(() =>
             {
-                if(filelist==null)
+                Application.Current.Dispatcher.Invoke(() => {
+                    DataContext.IsIndexing = true;
+                });
+                if (filelist==null)
                 {
                     Application.Current.Dispatcher.Invoke(() => {
                         ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Retrieving file list.\n";
@@ -66,6 +77,9 @@
         /// <param name="analyzer">The analyzer to use when indexing.</param>
         private void IndexFiles(List<string> files, Analyzer analyzer)
         {
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Starting index process.\n";
+            });
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
@@ -87,6 +101,10 @@
                     writer.Commit();
                 }
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Indexing process finished in {DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss")}.\n";
+                DataContext.IsIndexing = false;
+            });
         }
 
         /// <summary>
