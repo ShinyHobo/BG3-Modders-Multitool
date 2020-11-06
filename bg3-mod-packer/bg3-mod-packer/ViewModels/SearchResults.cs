@@ -15,11 +15,23 @@ namespace bg3_mod_packer.ViewModels
     {
         public SearchResults()
         {
-            IndexHelper = new IndexHelper();
-            IndexHelper.DataContext = this;
-            IsIndexing = Visibility.Hidden;
+            IndexHelper = new IndexHelper
+            {
+                DataContext = this
+            };
+            IsIndexing = false;
         }
 
+        /// <summary>
+        /// Gets the time that has passed since indexing began.
+        /// </summary>
+        /// <returns>The time taken.</returns>
+        public TimeSpan GetTimeTaken()
+        {
+            return TimeSpan.FromTicks(DateTime.Now.Subtract(IndexStartTime).Ticks);
+        }
+
+        #region Properties
         public IndexHelper IndexHelper { get; set; }
 
         private int _resultTotal;
@@ -39,7 +51,7 @@ namespace bg3_mod_packer.ViewModels
             set {
                 _resultCount = value;
                 var filesRemaining = IndexFileTotal - IndexFileCount;
-                var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(IndexStartTime).Ticks);
+                var timeTaken = GetTimeTaken();
                 var timeRemaining = timeTaken.TotalMinutes / value * filesRemaining;
                 if(timeRemaining < TimeSpan.MaxValue.TotalMinutes)
                 {
@@ -79,15 +91,38 @@ namespace bg3_mod_packer.ViewModels
             }
         }
 
-        private Visibility _isIndexing;
+        private Visibility _indexingVisibility;
 
-        public Visibility IsIndexing {
-            get { return _isIndexing; }
+        public Visibility IndexingVisibility {
+            get { return _indexingVisibility; }
             set {
-                _isIndexing = value;
+                _indexingVisibility = value;
                 OnNotifyPropertyChanged();
             }
         }
+
+        private bool _allowIndexing;
+
+        public bool AllowIndexing {
+            get { return _allowIndexing; }
+            set {
+                _allowIndexing = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _isIndexing;
+
+        public bool IsIndexing {
+            get { return _isIndexing; }
+            set {
+                _isIndexing = value;
+                IndexingVisibility = value ? Visibility.Visible : Visibility.Hidden;
+                AllowIndexing = !value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        #endregion
     }
 
     /// <summary>

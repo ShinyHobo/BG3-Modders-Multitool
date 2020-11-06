@@ -44,7 +44,10 @@ namespace bg3_mod_packer.Services
         {
             return Task.Run(() =>
             {
-                if(filelist==null)
+                Application.Current.Dispatcher.Invoke(() => {
+                    DataContext.IsIndexing = true;
+                });
+                if (filelist==null)
                 {
                     Application.Current.Dispatcher.Invoke(() => {
                         ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Retrieving file list.\n";
@@ -75,7 +78,7 @@ namespace bg3_mod_packer.Services
         private void IndexFiles(List<string> files, Analyzer analyzer)
         {
             Application.Current.Dispatcher.Invoke(() => {
-                DataContext.IsIndexing = Visibility.Visible;
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Starting index process.\n";
             });
             using (Analyzer a = analyzer)
             {
@@ -99,7 +102,8 @@ namespace bg3_mod_packer.Services
                 }
             }
             Application.Current.Dispatcher.Invoke(() => {
-                DataContext.IsIndexing = Visibility.Hidden;
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Indexing process finished in {DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss")}.\n";
+                DataContext.IsIndexing = false;
             });
         }
 
