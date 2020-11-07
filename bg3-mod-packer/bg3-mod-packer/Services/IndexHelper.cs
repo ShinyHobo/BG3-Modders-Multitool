@@ -1,9 +1,11 @@
-﻿namespace bg3_mod_packer.Helpers
+﻿/// <summary>
+/// The indexer/searcher service.
+/// </summary>
+namespace bg3_mod_packer.Services
 {
     using System;
     using System.IO;
     using System.Collections.Generic;
-    using bg3_mod_packer.Models;
     using System.Windows;
     using System.Linq;
     using Lucene.Net.Store;
@@ -16,6 +18,7 @@
     using Lucene.Net.QueryParsers.Classic;
     using Lucene.Net.Analysis.Shingle;
     using System.Threading.Tasks;
+    using bg3_mod_packer.ViewModels;
 
     public class IndexHelper
     {
@@ -23,11 +26,20 @@
         // models: .DDS, .ttf, .gr2, .GR2, .tga, .gtp, .dds
         // audio: .wem
         // video: .bk2
-        private string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
+        private readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
         private readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
         private string searchText;
+        private readonly ShingleAnalyzerWrapper analyzerWrapper;
+        private readonly FSDirectory fSDirectory;
 
+        public IndexHelper()
+        {
+            analyzerWrapper = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty);
+            fSDirectory = FSDirectory.Open(luceneIndex);
+        }
+
+        #region Indexing
         /// <summary>
         /// Generates an index using the given filelist.
         /// </summary>
@@ -36,7 +48,10 @@
         {
             return Task.Run(() =>
             {
-                if(filelist==null)
+                Application.Current.Dispatcher.Invoke(() => {
+                    DataContext.IsIndexing = true;
+                });
+                if (filelist==null)
                 {
                     Application.Current.Dispatcher.Invoke(() => {
                         ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Retrieving file list.\n";
@@ -55,7 +70,7 @@
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
+                IndexFiles(filelist, analyzerWrapper);
             });
         }
 
@@ -66,10 +81,13 @@
         /// <param name="analyzer">The analyzer to use when indexing.</param>
         private void IndexFiles(List<string> files, Analyzer analyzer)
         {
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Starting index process.\n";
+            });
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                using (IndexWriter writer = new IndexWriter(FSDirectory.Open(luceneIndex), config))
+                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                 {
                     foreach (string file in files)
                     {
@@ -85,8 +103,14 @@
                         }
                     }
                     writer.Commit();
+                    analyzer.Dispose();
+                    writer.Dispose();
                 }
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Indexing process finished in {DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss")}.\n";
+                DataContext.IsIndexing = false;
+            });
         }
 
         /// <summary>
@@ -114,7 +138,9 @@
                 DataContext.IndexFileCount++;
             });
         }
+        #endregion
 
+        #region Searching
         /// <summary>
         /// Searches for and displays results.
         /// </summary>
@@ -132,13 +158,10 @@
                     return matches;
                 }
 
-                if(DirectoryReader.IndexExists(FSDirectory.Open(luceneIndex)))
+                if(DirectoryReader.IndexExists(fSDirectory))
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Search started.\n";
-                    });
-                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
-                    using (IndexReader reader = DirectoryReader.Open(FSDirectory.Open(luceneIndex)))
+                    using (Analyzer analyzer = analyzerWrapper)
+                    using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
@@ -153,11 +176,17 @@
 
                         if (reader.MaxDoc != 0)
                         {
+                            var start = DateTime.Now;
+                            Application.Current.Dispatcher.Invoke(() => {
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Search started.\n";
+                            });
+
                             // perform search
                             TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
                             Application.Current.Dispatcher.Invoke(() => {
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
+                                var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks);
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.ToString("mm\\:ss")}\n";
                             });
 
                             // display results
@@ -189,6 +218,7 @@
                 return matches;
             });
         }
+        #endregion
 
         /// <summary>
         /// Gets a list of matching lines within a given file.
@@ -202,16 +232,20 @@
             path = @"\\?\" + path;
             if (File.Exists(path))
             {
-                using (StreamReader r = new StreamReader(path))
+                var isExcluded = extensionsToExclude.Contains(Path.GetExtension(path));
+                if (!isExcluded)
                 {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
+                    using (StreamReader r = new StreamReader(path))
                     {
-                        if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                        string line;
+                        while ((line = r.ReadLine()) != null)
                         {
-                            lines.Add(lineCount, line);
+                            if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                lines.Add(lineCount, line);
+                            }
+                            lineCount++;
                         }
-                        lineCount++;
                     }
                 }
                 if(lines.Count==0)
@@ -222,8 +256,7 @@
             return lines;
         }
 
-        #region Static Methods
-
+        #region Static Utilities
         /// <summary>
         /// Gets a list of files in a directory.
         /// </summary>
@@ -307,7 +340,6 @@
                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File does not exist on the given path ({path}).\n";
             }
         }
-
         #endregion
     }
 }
