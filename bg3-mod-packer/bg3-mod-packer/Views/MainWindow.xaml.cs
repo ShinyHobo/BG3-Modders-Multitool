@@ -1,6 +1,8 @@
-﻿namespace bg3_mod_packer.Views
+﻿/// <summary>
+/// The main window code behind.
+/// </summary>
+namespace bg3_mod_packer.Views
 {
-    using bg3_mod_packer.Helpers;
     using System.Windows;
 
     /// <summary>
@@ -11,107 +13,117 @@
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new Models.MainWindow();
+            DataContext = new ViewModels.MainWindow
+            {
+                DragAndDropBox = (ViewModels.DragAndDropBox)dragAndDropBox.DataContext,
+                SearchResults = new ViewModels.SearchResults()
+            };
         }
 
+        #region File Selection
+        /// <summary>
+        /// Opens dialog for selecting divine.exe location.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void DivineSelect_Click(object sender, RoutedEventArgs e)
         {
-            FileLocationDialog(divineLocation, "divineExe");
-            ((Models.MainWindow)DataContext).DivineLocation = divineLocation.Text;
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.DivineLocation = vm.FileLocationDialog("divineExe", "Select divine.exe location");
         }
 
+        /// <summary>
+        /// Opens dialog for selecting bg3.exe location.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">The event arguments.</param>
         private void Bg3exeSelect_Click(object sender, RoutedEventArgs e)
         {
-            FileLocationDialog(bg3exeLocation, "bg3Exe");
-            ((Models.MainWindow)DataContext).Bg3ExeLocation = bg3exeLocation.Text;
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.Bg3ExeLocation = vm.FileLocationDialog("bg3Exe", "Select bg3.exe or bg3_dx11.exe location");
         }
+        #endregion
 
-        private void ConsoleScroller_ScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e)
-        {
-            if (ConsoleScroller.VerticalOffset == ConsoleScroller.ScrollableHeight && e.ExtentHeightChange != 0)
-            {   
-                ConsoleScroller.ScrollToEnd();
-            }
-        }
-
-        // TODO move to viewmodel
-        private void FileLocationDialog(System.Windows.Controls.TextBox location, string property)
-        {
-            var fileDialog = new System.Windows.Forms.OpenFileDialog();
-            var result = fileDialog.ShowDialog();
-            switch (result)
-            {
-                case System.Windows.Forms.DialogResult.OK:
-                    var file = fileDialog.FileName;
-                    location.Text = file;
-                    break;
-                case System.Windows.Forms.DialogResult.Cancel:
-                default:
-                    location.Text = null;
-                    break;
-            }
-            Properties.Settings.Default[property] = location.Text;
-            Properties.Settings.Default.Save();
-        }
-
-        private void Unpack_Click(object sender, RoutedEventArgs e)
+        #region File Unpacker
+        /// <summary>
+        /// Opens dialog for selecting and unpacking .pak game assets.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private async void Unpack_Click(object sender, RoutedEventArgs e)
         {
             unpack.Visibility = Visibility.Hidden;
             unpack_Cancel.Visibility = Visibility.Visible;
-            ((Models.MainWindow)DataContext).UnpackingProcess = new PakUnpackHelper();
-            ((Models.MainWindow)DataContext).UnpackingProcess.UnpackAllPakFiles().ContinueWith(delegate {
+            var vm = DataContext as ViewModels.MainWindow;
+            await vm.Unpacker.UnpackAllPakFiles().ContinueWith(delegate {
                 Application.Current.Dispatcher.Invoke(() => {
-                    if(!((Models.MainWindow)DataContext).UnpackingProcess.Cancelled)
-                        ((Models.MainWindow)DataContext).ConsoleOutput += "Unpacking complete!\n";
                     unpack.Visibility = Visibility.Visible;
                     unpack_Cancel.Visibility = Visibility.Hidden;
                 });
             });
         }
 
+        /// <summary>
+        /// Cancels the current process set for unpacking .pak game assets.
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void Unpack_Cancel_Click(object sender, RoutedEventArgs e)
         {
-            ((Models.MainWindow)DataContext).UnpackingProcess.CancelUpacking();
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.Unpacker.CancelUpacking();
             unpack.Visibility = Visibility.Visible;
             unpack_Cancel.Visibility = Visibility.Hidden;
         }
 
+        /// <summary>
+        /// Scrolls to the bottom of the console window on update if already scrolled to the bottom.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The scroll changed event arguments.</param>
+        private void ConsoleScroller_ScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e)
+        {
+            if (ConsoleScroller.VerticalOffset == ConsoleScroller.ScrollableHeight && e.ExtentHeightChange != 0)
+            {
+                ConsoleScroller.ScrollToEnd();
+            }
+        }
+        #endregion
+
         #region UUID Generation
         private void GuidGenerate_Click(object sender, RoutedEventArgs e)
         {
-            guidText.Content = System.Guid.NewGuid();
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.GenerateGuid(false);
         }
 
         private void GuidText_Click(object sender, RoutedEventArgs e)
         {
-            if(guidText.Content != null)
-            {
-                Clipboard.SetText(guidText.Content.ToString());
-                ((Models.MainWindow)DataContext).ConsoleOutput += $"v4 UUID [{guidText.Content}] copied to clipboard!\n";
-            }
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.CopyGuid(false);
         }
 
         private void HandleGenerate_Click(object sender, RoutedEventArgs e)
         {
-            var guid = System.Guid.NewGuid().ToString();
-            var handle = $"h{guid}".Replace('-', 'g');
-            handleText.Content = handle;
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.GenerateGuid(true);
         }
 
         private void HandleText_Click(object sender, RoutedEventArgs e)
         {
-            if(handleText.Content != null)
-            {
-                Clipboard.SetText(handleText.Content.ToString());
-                ((Models.MainWindow)DataContext).ConsoleOutput += $"TranslatedString handle [{handleText.Content}] copied to clipboard!\n";
-            }
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.CopyGuid(true);
         }
         #endregion
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var searchWindow = new IndexingWindow();
-            searchWindow.Show();
+            new IndexingWindow().Show();
+        }
+
+        private async void IndexFiles_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            await vm.SearchResults.IndexHelper.Index();
         }
     }
 }

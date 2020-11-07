@@ -1,7 +1,7 @@
 ﻿namespace bg3_mod_packer.Views
 {
-    using bg3_mod_packer.Helpers;
-    using bg3_mod_packer.Models;
+    using bg3_mod_packer.Services;
+    using bg3_mod_packer.ViewModels;
     using System;
     using System.Collections.ObjectModel;
     using System.IO;
@@ -29,21 +29,16 @@
             timer.Tick += Timer_Tick;
         }
 
-        private async void IndexFiles_Click(object sender, RoutedEventArgs e)
-        {
-            await ((SearchResults)DataContext).IndexHelper.Index();
-        }
-
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)
         {
             if(!string.IsNullOrEmpty(search.Text))
             {
-                var results = new ObservableCollection<SearchResult>();
-                foreach (string result in await ((SearchResults)DataContext).IndexHelper.SearchFiles(search.Text))
+                var vm = DataContext as SearchResults;
+                vm.Results = new ObservableCollection<SearchResult>();
+                foreach (string result in await vm.IndexHelper.SearchFiles(search.Text))
                 {
-                    results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
+                    vm.Results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
-                ((SearchResults)DataContext).Results = results;
             }
         }
 
@@ -78,12 +73,13 @@
         {
             if (isMouseOver)
             {
-                var contents = new ObservableCollection<SearchToolTip>();
-                foreach(var content in ((SearchResults)DataContext).IndexHelper.GetFileContents(hoverFile))
+                var vm = DataContext as SearchResults;
+                vm.FileContents = new ObservableCollection<SearchResult>();
+                vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
+                foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
                 {
-                    contents.Add(new SearchToolTip { Key = content.Key, Text = content.Value.Trim()});
+                    vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim()});
                 }
-                ((SearchResult)pathButton.DataContext).FileContents = contents;
             }
             timer.Stop();
         }

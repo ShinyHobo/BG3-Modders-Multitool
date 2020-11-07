@@ -10,7 +10,7 @@
         Title="Baldur's Gate 3 Mod Helper" Height="450" Width="800">
     <Grid>
         <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,10,526,159">
-            <views:DragAndDropBox />
+            <views:DragAndDropBox x:Name="dragAndDropBox"/>
         </Viewbox>
         <!--TODO move file selectors to separate view-->
         <Grid Margin="273,10,121,340">
@@ -26,12 +26,12 @@
         <Grid Margin="273,114,121,236">
             <Label x:Name="guidLabel" Content="v4 UUID Generator (Click field to copy to clipboard)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <Button x:Name="guidGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
-            <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand"/>
+            <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
         </Grid>
         <Grid Margin="273,167,121,183">
             <Label x:Name="handleLabel" Content="TranslatedString Handle Generator (Click field to copy to clipboard)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <Button x:Name="handleGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="HandleGenerate_Click" Cursor="Hand"/>
-            <Button x:Name="handleText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="HandleText_Click" Cursor="Hand"/>
+            <Button x:Name="handleText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="HandleText_Click" Cursor="Hand" Content="{Binding HandleText}"/>
         </Grid>
         <ScrollViewer x:Name="ConsoleScroller" Margin="10,267,6,6" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged">
             <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
@@ -39,6 +39,16 @@
         </ScrollViewer>
         <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}"/>
         <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
-        <Button x:Name="searchButton" Content="Index/Search" HorizontalAlignment="Left" Margin="666,242,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand"/>
+        <Grid Margin="331,221,20,154">
+            <Grid Visibility="{Binding SearchResults.IndexingVisibility}">
+                <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="30,10,0,0" TextWrapping="Wrap" Text="{Binding SearchResults.IndexFileCount}" VerticalAlignment="Top" Width="50" Height="21"/>
+                <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="85,8,0,0" TextWrapping="Wrap" Text="/" VerticalAlignment="Top" Height="21" Width="7"/>
+                <TextBlock x:Name="indexFileTotal" HorizontalAlignment="Left" Margin="97,10,0,0" TextWrapping="Wrap" Text="{Binding SearchResults.IndexFileTotal}" VerticalAlignment="Top" Width="50" Height="21"/>
+                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="152,10,0,0" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
+            </Grid>
+            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="228,10,0,0" VerticalAlignment="Top" Width="100" Height="23" MouseDoubleClick="IndexFiles_Click" 
+                    Cursor="Hand" ToolTip="Double-click to begin indexing" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
+            <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"/>
+        </Grid>
     </Grid>
 </Window>
