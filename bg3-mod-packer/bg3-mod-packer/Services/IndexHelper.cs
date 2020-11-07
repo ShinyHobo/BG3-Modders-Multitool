@@ -26,16 +26,20 @@ namespace bg3_mod_packer.Services
         // models: .DDS, .ttf, .gr2, .GR2, .tga, .gtp, .dds
         // audio: .wem
         // video: .bk2
-        private string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
+        private readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
         private readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
         private string searchText;
+        private readonly ShingleAnalyzerWrapper analyzerWrapper;
+        private readonly FSDirectory fSDirectory;
 
         public IndexHelper()
         {
-
+            analyzerWrapper = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty);
+            fSDirectory = FSDirectory.Open(luceneIndex);
         }
 
+        #region Indexing
         /// <summary>
         /// Generates an index using the given filelist.
         /// </summary>
@@ -66,7 +70,7 @@ namespace bg3_mod_packer.Services
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
+                IndexFiles(filelist, analyzerWrapper);
             });
         }
 
@@ -83,7 +87,7 @@ namespace bg3_mod_packer.Services
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                using (IndexWriter writer = new IndexWriter(FSDirectory.Open(luceneIndex), config))
+                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                 {
                     foreach (string file in files)
                     {
@@ -99,6 +103,8 @@ namespace bg3_mod_packer.Services
                         }
                     }
                     writer.Commit();
+                    analyzer.Dispose();
+                    writer.Dispose();
                 }
             }
             Application.Current.Dispatcher.Invoke(() => {
@@ -132,7 +138,9 @@ namespace bg3_mod_packer.Services
                 DataContext.IndexFileCount++;
             });
         }
+        #endregion
 
+        #region Searching
         /// <summary>
         /// Searches for and displays results.
         /// </summary>
@@ -150,13 +158,10 @@ namespace bg3_mod_packer.Services
                     return matches;
                 }
 
-                if(DirectoryReader.IndexExists(FSDirectory.Open(luceneIndex)))
+                if(DirectoryReader.IndexExists(fSDirectory))
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Search started.\n";
-                    });
-                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
-                    using (IndexReader reader = DirectoryReader.Open(FSDirectory.Open(luceneIndex)))
+                    using (Analyzer analyzer = analyzerWrapper)
+                    using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
@@ -171,11 +176,17 @@ namespace bg3_mod_packer.Services
 
                         if (reader.MaxDoc != 0)
                         {
+                            var start = DateTime.Now;
+                            Application.Current.Dispatcher.Invoke(() => {
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Search started.\n";
+                            });
+
                             // perform search
                             TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
                             Application.Current.Dispatcher.Invoke(() => {
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results\n";
+                                var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks);
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.ToString("mm\\:ss")}\n";
                             });
 
                             // display results
@@ -207,6 +218,7 @@ namespace bg3_mod_packer.Services
                 return matches;
             });
         }
+        #endregion
 
         /// <summary>
         /// Gets a list of matching lines within a given file.
@@ -220,16 +232,20 @@ namespace bg3_mod_packer.Services
             path = @"\\?\" + path;
             if (File.Exists(path))
             {
-                using (StreamReader r = new StreamReader(path))
+                var isExcluded = extensionsToExclude.Contains(Path.GetExtension(path));
+                if (!isExcluded)
                 {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
+                    using (StreamReader r = new StreamReader(path))
                     {
-                        if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                        string line;
+                        while ((line = r.ReadLine()) != null)
                         {
-                            lines.Add(lineCount, line);
+                            if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                lines.Add(lineCount, line);
+                            }
+                            lineCount++;
                         }
-                        lineCount++;
                     }
                 }
                 if(lines.Count==0)
@@ -240,8 +256,7 @@ namespace bg3_mod_packer.Services
             return lines;
         }
 
-        #region Static Methods
-
+        #region Static Utilities
         /// <summary>
         /// Gets a list of files in a directory.
         /// </summary>
@@ -325,7 +340,6 @@ namespace bg3_mod_packer.Services
                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File does not exist on the given path ({path}).\n";
             }
         }
-
         #endregion
     }
 }

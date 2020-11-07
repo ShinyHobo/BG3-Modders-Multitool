@@ -32,6 +32,8 @@ namespace bg3_mod_packer.ViewModels
         }
 
         #region Properties
+
+        #region Indexing
         public IndexHelper IndexHelper { get; set; }
 
         private int _resultTotal;
@@ -123,6 +125,30 @@ namespace bg3_mod_packer.ViewModels
             }
         }
         #endregion
+
+        #region Search Result
+        private ObservableCollection<SearchResult> _fileContents;
+
+        public ObservableCollection<SearchResult> FileContents {
+            get { return _fileContents; }
+            set {
+                _fileContents = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _selectedPath;
+
+        public string SelectedPath {
+            get { return _selectedPath; }
+            set {
+                _selectedPath = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        #endregion
+
+        #endregion
     }
 
     /// <summary>
@@ -140,22 +166,6 @@ namespace bg3_mod_packer.ViewModels
             }
         }
 
-        private ObservableCollection<SearchToolTip> _fileContents;
-
-        public ObservableCollection<SearchToolTip> FileContents {
-            get { return _fileContents; }
-            set {
-                _fileContents = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-    }
-
-    /// <summary>
-    /// The model for search result tooltips.
-    /// </summary>
-    public class SearchToolTip : BaseViewModel
-    {
         private int _key;
 
         public int Key {
