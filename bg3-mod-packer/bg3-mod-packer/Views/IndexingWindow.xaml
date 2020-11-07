@@ -5,34 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bg3_mod_packer.Views"
         mc:Ignorable="d"
-        MinWidth="800"
+        MinWidth="1250"
         MinHeight="250"
-        Title="Index Search" Height="430.637" Width="800">
+        Title="Index Search" Height="430" Width="1250">
     <Grid>
         <Button x:Name="searchFilesButton" Content="Search Files" HorizontalAlignment="Left" Margin="668,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand"/>
         <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="653" KeyDown="Search_KeyDown"/>
-        <ListView x:Name="searchResults" Margin="10,40,10,10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"  ItemsSource="{Binding Results}">
+        <ListView x:Name="searchResults" Margin="10,38,0,10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Left" HorizontalAlignment="Left" MinWidth="758" Width="758" ItemsSource="{Binding Results}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
                         <Button x:Name="path" MouseDoubleClick="Path_MouseDoubleClick" Background="White" BorderBrush="White" HorizontalContentAlignment="Stretch" 
                                 VerticalContentAlignment="Stretch" Cursor="Hand" MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave">
                             <TextBlock Text="{Binding Path}" HorizontalAlignment="Stretch"></TextBlock>
-                            <Button.ToolTip>
-                                <ToolTip>
-                                    <ListView ItemsSource="{Binding FileContents}">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock FontWeight="Bold" Text="{Binding Key}"></TextBlock>
-                                                    <TextBlock Text=": "></TextBlock>
-                                                    <TextBlock Text="{Binding Text}"></TextBlock>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </ToolTip>
-                            </Button.ToolTip>
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <TextBlock TextDecorations="Underline">
@@ -51,6 +36,19 @@
                                 </Style>
                             </Button.Style>
                         </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBox IsReadOnly="True" Text="{Binding SelectedPath}"  Margin="773,10,10,0" VerticalAlignment="Top" Height="23" MinWidth="450" HorizontalAlignment="Stretch"
+                 Background="Transparent"/>
+        <ListView ItemsSource="{Binding FileContents}" Margin="773,38,10,10">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="Bold" Text="{Binding Key}"></TextBlock>
+                        <TextBlock Text=": "></TextBlock>
+                        <TextBox IsReadOnly="True" Text="{Binding Text, Mode=OneWay}" BorderThickness="0" Background="Transparent"></TextBox>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
