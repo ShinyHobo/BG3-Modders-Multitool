@@ -40,13 +40,15 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ListView ItemsSource="{Binding FileContents}" Margin="773,10,10,10">
+        <TextBox IsReadOnly="True" Text="{Binding SelectedPath}"  Margin="773,10,10,0" VerticalAlignment="Top" Height="23" MinWidth="450" HorizontalAlignment="Stretch"
+                 Background="Transparent"/>
+        <ListView ItemsSource="{Binding FileContents}" Margin="773,38,10,10">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontWeight="Bold" Text="{Binding Key}"></TextBlock>
                         <TextBlock Text=": "></TextBlock>
-                        <TextBlock Text="{Binding Text}"></TextBlock>
+                        <TextBox IsReadOnly="True" Text="{Binding Text, Mode=OneWay}" BorderThickness="0" Background="Transparent"></TextBox>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

@@ -33,12 +33,12 @@
         {
             if(!string.IsNullOrEmpty(search.Text))
             {
-                var results = new ObservableCollection<SearchResult>();
-                foreach (string result in await ((SearchResults)DataContext).IndexHelper.SearchFiles(search.Text))
+                var vm = DataContext as SearchResults;
+                vm.Results = new ObservableCollection<SearchResult>();
+                foreach (string result in await vm.IndexHelper.SearchFiles(search.Text))
                 {
-                    results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
+                    vm.Results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
-                ((SearchResults)DataContext).Results = results;
             }
         }
 
@@ -75,7 +75,8 @@
             {
                 var vm = DataContext as SearchResults;
                 vm.FileContents = new ObservableCollection<SearchResult>();
-                foreach(var content in vm.IndexHelper.GetFileContents(hoverFile))
+                vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
+                foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
                 {
                     vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim()});
                 }

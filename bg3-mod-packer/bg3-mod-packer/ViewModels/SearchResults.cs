@@ -31,17 +31,9 @@ namespace bg3_mod_packer.ViewModels
             return TimeSpan.FromTicks(DateTime.Now.Subtract(IndexStartTime).Ticks);
         }
 
-        private ObservableCollection<SearchResult> _fileContents;
-
-        public ObservableCollection<SearchResult> FileContents {
-            get { return _fileContents; }
-            set {
-                _fileContents = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-
         #region Properties
+
+        #region Indexing
         public IndexHelper IndexHelper { get; set; }
 
         private int _resultTotal;
@@ -132,6 +124,30 @@ namespace bg3_mod_packer.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+        #endregion
+
+        #region Search Result
+        private ObservableCollection<SearchResult> _fileContents;
+
+        public ObservableCollection<SearchResult> FileContents {
+            get { return _fileContents; }
+            set {
+                _fileContents = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _selectedPath;
+
+        public string SelectedPath {
+            get { return _selectedPath; }
+            set {
+                _selectedPath = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        #endregion
+
         #endregion
     }
 
