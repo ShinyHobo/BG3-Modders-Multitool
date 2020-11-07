@@ -23,7 +23,7 @@ namespace bg3_mod_packer.Services
         public Task UnpackAllPakFiles()
         {
             var dataContext = Application.Current.MainWindow.DataContext as MainWindow;
-            dataContext.ConsoleOutput += "Unpacking processes starting.\n";
+            dataContext.ConsoleOutput += "Unpacking processes starting. This could take awhile; please wait for all console processes to close on their own.\n";
             Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
