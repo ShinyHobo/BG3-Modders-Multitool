@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bg3_mod_packer.Views"
+        xmlns:helpers="clr-namespace:bg3_mod_packer.XAMLHelpers"
         mc:Ignorable="d"
         MinWidth="1250"
         MinHeight="250"
@@ -45,13 +46,25 @@
         <ListView ItemsSource="{Binding FileContents}" Margin="773,38,10,10">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold" Text="{Binding Key}"></TextBlock>
-                        <TextBlock Text=": "></TextBlock>
-                        <TextBox IsReadOnly="True" Text="{Binding Text, Mode=OneWay}" BorderThickness="0" Background="Transparent"></TextBox>
+                    <StackPanel Orientation="Horizontal" Name="stack">
+                        <TextBlock FontWeight="Bold" Text="{Binding Key, StringFormat={}{0}:}" MinWidth="40"></TextBlock>
+                        <TextBlock helpers:TextBlockFormatter.FormattedText="{Binding Text, Mode=OneWay}" Background="Transparent"></TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+
         </ListView>
     </Grid>
 </Window>

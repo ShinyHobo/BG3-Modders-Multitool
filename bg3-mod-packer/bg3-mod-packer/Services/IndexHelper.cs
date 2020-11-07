@@ -29,13 +29,11 @@ namespace bg3_mod_packer.Services
         private readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
         private readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
-        private string searchText;
-        private readonly ShingleAnalyzerWrapper analyzerWrapper;
+        public string SearchText;
         private readonly FSDirectory fSDirectory;
 
         public IndexHelper()
         {
-            analyzerWrapper = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty);
             fSDirectory = FSDirectory.Open(luceneIndex);
         }
 
@@ -70,7 +68,7 @@ namespace bg3_mod_packer.Services
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, analyzerWrapper);
+                IndexFiles(filelist, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
             });
         }
 
@@ -147,7 +145,7 @@ namespace bg3_mod_packer.Services
         /// <param name="search">The text to search for. Supports file title and contents.</param>
         public Task<List<string>> SearchFiles(string search)
         {
-            searchText = search;
+            SearchText = search;
             return Task.Run(() => { 
                 var matches = new List<string>();
                 if(!System.IO.Directory.Exists(luceneIndex)||!System.IO.Directory.EnumerateFiles(luceneIndex).Any())
@@ -160,7 +158,7 @@ namespace bg3_mod_packer.Services
 
                 if(DirectoryReader.IndexExists(fSDirectory))
                 {
-                    using (Analyzer analyzer = analyzerWrapper)
+                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
@@ -238,9 +236,24 @@ namespace bg3_mod_packer.Services
                     using (StreamReader r = new StreamReader(path))
                     {
                         string line;
+                        var searchArray = SearchText.Split(' ');
                         while ((line = r.ReadLine()) != null)
                         {
-                            if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                            var matched = false;
+                            foreach(var s in searchArray)
+                            {
+                                if (line.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    if(!matched)
+                                    {
+                                        line = System.Security.SecurityElement.Escape(line);
+                                    }
+                                    var text = line.Substring(line.IndexOf(s, StringComparison.OrdinalIgnoreCase), s.Length);
+                                    line = line.Replace(text, $"<Bold>{text}</Bold>");
+                                    matched = true;
+                                }
+                            }
+                            if(matched)
                             {
                                 lines.Add(lineCount, line);
                             }
