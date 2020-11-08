@@ -34,6 +34,7 @@
             if(!string.IsNullOrEmpty(search.Text))
             {
                 var vm = DataContext as SearchResults;
+                vm.SelectedPath = string.Empty;
                 vm.FileContents = new ObservableCollection<SearchResult>();
                 vm.Results = new ObservableCollection<SearchResult>();
                 foreach (string result in await vm.IndexHelper.SearchFiles(search.Text))
