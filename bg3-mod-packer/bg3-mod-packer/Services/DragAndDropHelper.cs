@@ -57,14 +57,13 @@ namespace bg3_mod_packer.Services
         public static void PackMod(string fullpath, string destination)
         {
             Directory.CreateDirectory(TempFolder);
-            var pathToDivine = Properties.Settings.Default.divineExe;
             var divine = $" -g \"bg3\" --action \"create-package\" --source \"{fullpath}\" --destination \"{destination}\" -l \"all\"";
 
             // generate .pak files
             var process = new System.Diagnostics.Process();
             var startInfo = new System.Diagnostics.ProcessStartInfo
             {
-                FileName = pathToDivine,
+                FileName = Properties.Settings.Default.divineExe,
                 Arguments = divine,
                 WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
                 CreateNoWindow = true,
