@@ -53,14 +53,14 @@
 
         private void Path_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            IndexHelper.OpenFile(((TextBlock)((Button)sender).Content).Text);
+            FileHelper.OpenFile(((TextBlock)((Button)sender).Content).Text);
         }
 
         private void Path_MouseEnter(object sender, MouseEventArgs e)
         {
             isMouseOver = true;
             pathButton = (Button)sender;
-            hoverFile = IndexHelper.GetPath(((TextBlock)pathButton.Content).Text);
+            hoverFile = FileHelper.GetPath(((TextBlock)pathButton.Content).Text);
             timer.Start();
         }
 
@@ -83,9 +83,20 @@
                     {
                         vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
                     }
+                    convertAndOpenButton.IsEnabled = true;
+                    convertAndOpenButton.Content = FileHelper.CanConvertToLsx(vm.SelectedPath) ? "Convert & Open" : "Open";
                 }
             }
             timer.Stop();
+        }
+
+        private void ConvertAndOpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            convertAndOpenButton.IsEnabled = false;
+            var vm = DataContext as SearchResults;
+            var newFile = FileHelper.ConvertToLsx(vm.SelectedPath);
+            FileHelper.OpenFile(newFile);
+            convertAndOpenButton.IsEnabled = true;
         }
     }
 }
