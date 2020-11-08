@@ -249,7 +249,7 @@ namespace bg3_mod_packer.Services
                                         line = System.Security.SecurityElement.Escape(line);
                                     }
                                     var text = line.Substring(line.IndexOf(s, StringComparison.OrdinalIgnoreCase), s.Length);
-                                    line = line.Replace(text, $"<Bold>{text}</Bold>");
+                                    line = line.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
                                     matched = true;
                                 }
                             }
