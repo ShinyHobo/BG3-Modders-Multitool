@@ -34,6 +34,7 @@
             if(!string.IsNullOrEmpty(search.Text))
             {
                 var vm = DataContext as SearchResults;
+                vm.FileContents = new ObservableCollection<SearchResult>();
                 vm.Results = new ObservableCollection<SearchResult>();
                 foreach (string result in await vm.IndexHelper.SearchFiles(search.Text))
                 {
@@ -52,14 +53,14 @@
 
         private void Path_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            IndexHelper.OpenFile(((TextBlock)((Button)sender).Content).Text);
+            FileHelper.OpenFile(((TextBlock)((Button)sender).Content).Text);
         }
 
         private void Path_MouseEnter(object sender, MouseEventArgs e)
         {
             isMouseOver = true;
             pathButton = (Button)sender;
-            hoverFile = IndexHelper.GetPath(((TextBlock)pathButton.Content).Text);
+            hoverFile = FileHelper.GetPath(((TextBlock)pathButton.Content).Text);
             timer.Start();
         }
 
@@ -74,14 +75,28 @@
             if (isMouseOver)
             {
                 var vm = DataContext as SearchResults;
-                vm.FileContents = new ObservableCollection<SearchResult>();
-                vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
-                foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
+                if (string.IsNullOrEmpty(vm.SelectedPath)||!hoverFile.Contains(vm.SelectedPath))
                 {
-                    vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim()});
+                    vm.FileContents = new ObservableCollection<SearchResult>();
+                    vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
+                    foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
+                    {
+                        vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
+                    }
+                    convertAndOpenButton.IsEnabled = true;
+                    convertAndOpenButton.Content = FileHelper.CanConvertToLsx(vm.SelectedPath) ? "Convert & Open" : "Open";
                 }
             }
             timer.Stop();
+        }
+
+        private void ConvertAndOpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            convertAndOpenButton.IsEnabled = false;
+            var vm = DataContext as SearchResults;
+            var newFile = FileHelper.ConvertToLsx(vm.SelectedPath);
+            FileHelper.OpenFile(newFile);
+            convertAndOpenButton.IsEnabled = true;
         }
     }
 }
