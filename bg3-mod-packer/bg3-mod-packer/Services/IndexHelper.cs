@@ -13,12 +13,15 @@ namespace bg3_mod_packer.Services
     using Lucene.Net.Util;
     using Lucene.Net.Index;
     using Lucene.Net.Documents;
-    using Lucene.Net.Analysis.Standard;
     using Lucene.Net.Search;
     using Lucene.Net.QueryParsers.Classic;
     using Lucene.Net.Analysis.Shingle;
     using System.Threading.Tasks;
     using bg3_mod_packer.ViewModels;
+    using Lucene.Net.Analysis.Core;
+    using Lucene.Net.Analysis.En;
+    using Lucene.Net.Analysis.Util;
+    using J2N;
 
     public class IndexHelper
     {
@@ -68,7 +71,7 @@ namespace bg3_mod_packer.Services
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty));
+                IndexFiles(filelist, new ShingleAnalyzerWrapper(new CustomAnalyzer(), 2, 2, string.Empty, true, true, string.Empty));
             });
         }
 
@@ -158,7 +161,7 @@ namespace bg3_mod_packer.Services
 
                 if(DirectoryReader.IndexExists(fSDirectory))
                 {
-                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), 2, 2, string.Empty, true, true, string.Empty))
+                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new CustomAnalyzer(), 2, 2, string.Empty, true, true, string.Empty))
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
@@ -269,4 +272,37 @@ namespace bg3_mod_packer.Services
             return lines;
         }
     }
+
+    /// <summary>
+    /// Custom analyzer for handling UUIDs. Forces lowercase and ignores common stop words
+    /// </summary>
+    public class CustomAnalyzer : Analyzer
+    {
+        protected override TokenStreamComponents CreateComponents(string fieldName,TextReader reader)
+        {
+            Tokenizer tokenizer = new CustomTokenizer(LuceneVersion.LUCENE_48, reader);
+            TokenStream result = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
+            result = new StopFilter(LuceneVersion.LUCENE_48, result, EnglishAnalyzer.DefaultStopSet);
+            return new TokenStreamComponents(tokenizer, result);
+        }
+    }
+
+    /// <summary>
+    /// Custom tokenizer for handling UUIDs.
+    /// </summary>
+    public class CustomTokenizer : CharTokenizer
+    {
+        public CustomTokenizer(LuceneVersion matchVersion, TextReader input) : base(matchVersion, input) { }
+
+        /// <summary>
+        /// Split tokens on non alphanumeric characters, and '-' (for UUIDs)
+        /// </summary>
+        /// <param name="c">The character to compare</param>
+        /// <returns>Whether the token should be split.</returns>
+        protected override bool IsTokenChar(int c)
+        {
+            return Character.IsLetterOrDigit(c) || c == '-';
+        }
+    }
+
 }
