@@ -34,6 +34,7 @@
             if(!string.IsNullOrEmpty(search.Text))
             {
                 var vm = DataContext as SearchResults;
+                vm.FileContents = new ObservableCollection<SearchResult>();
                 vm.Results = new ObservableCollection<SearchResult>();
                 foreach (string result in await vm.IndexHelper.SearchFiles(search.Text))
                 {
@@ -74,11 +75,14 @@
             if (isMouseOver)
             {
                 var vm = DataContext as SearchResults;
-                vm.FileContents = new ObservableCollection<SearchResult>();
-                vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
-                foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
+                if (string.IsNullOrEmpty(vm.SelectedPath)||!hoverFile.Contains(vm.SelectedPath))
                 {
-                    vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim()});
+                    vm.FileContents = new ObservableCollection<SearchResult>();
+                    vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
+                    foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
+                    {
+                        vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
+                    }
                 }
             }
             timer.Stop();
