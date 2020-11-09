@@ -37,7 +37,7 @@
             <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
                      IsReadOnly="True" Background="Black" Foreground="White"/>
         </ScrollViewer>
-        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}"/>
+        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}"/>
         <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
         <Grid Margin="331,221,20,154">
             <Grid Visibility="{Binding SearchResults.IndexingVisibility}">
@@ -50,5 +50,6 @@
                     Cursor="Hand" ToolTip="Double-click to begin indexing" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
             <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"/>
         </Grid>
+        <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="666,109,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"/>
     </Grid>
 </Window>

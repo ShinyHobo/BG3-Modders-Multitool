@@ -125,5 +125,11 @@ namespace bg3_mod_packer.Views
             var vm = DataContext as ViewModels.MainWindow;
             await vm.SearchResults.IndexHelper.Index();
         }
+
+        private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            System.Diagnostics.Process.Start(vm.Bg3ExeLocation);
+        }
     }
 }

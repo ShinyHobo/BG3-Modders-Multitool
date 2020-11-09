@@ -14,6 +14,7 @@ namespace bg3_mod_packer.ViewModels
             DivineLocation = Properties.Settings.Default.divineExe;
             Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
             Unpacker = new PakUnpackHelper();
+            LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
         }
 
         #region File Selection Methods
@@ -128,6 +129,17 @@ namespace bg3_mod_packer.ViewModels
             set {
                 _bg3exeLocation = value;
                 UnpackAllowed = !string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(DivineLocation);
+                LaunchGameAllowed = !string.IsNullOrEmpty(value);
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _launchGameAllowed;
+
+        public bool LaunchGameAllowed {
+            get { return _launchGameAllowed; }
+            set {
+                _launchGameAllowed = value;
                 OnNotifyPropertyChanged();
             }
         }

@@ -169,7 +169,7 @@ namespace bg3_mod_packer.Services
                         {
                             AllowLeadingWildcard = true
                         };
-                        Query searchTermQuery = queryParser.Parse('*' + search + '*');
+                        Query searchTermQuery = queryParser.Parse('*' + QueryParser.Escape(search.Trim()) + '*');
 
                         BooleanQuery aggregateQuery = new BooleanQuery() {
                             { searchTermQuery, Occur.MUST }
@@ -295,13 +295,13 @@ namespace bg3_mod_packer.Services
         public CustomTokenizer(LuceneVersion matchVersion, TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters, and '-' (for UUIDs)
+        /// Split tokens on non alphanumeric characters, '-' (for UUIDs), '"', '_', '(', and ')'
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>
         protected override bool IsTokenChar(int c)
         {
-            return Character.IsLetterOrDigit(c) || c == '-';
+            return Character.IsLetterOrDigit(c) || c == '-' || c == '(' || c == ')' || c == '"' || c == '_';
         }
     }
 
