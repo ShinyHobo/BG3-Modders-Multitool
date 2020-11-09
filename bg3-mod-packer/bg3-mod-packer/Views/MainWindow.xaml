@@ -38,7 +38,7 @@
                      IsReadOnly="True" Background="Black" Foreground="White"/>
         </ScrollViewer>
         <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}"/>
-        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,91,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
+        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
         <Grid Margin="331,221,20,154">
             <Grid Visibility="{Binding SearchResults.IndexingVisibility}">
                 <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="30,10,0,0" TextWrapping="Wrap" Text="{Binding SearchResults.IndexFileCount}" VerticalAlignment="Top" Width="50" Height="21"/>
