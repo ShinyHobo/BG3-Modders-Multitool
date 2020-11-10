@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_mod_packer.Views
 {
+    using System.IO;
     using System.Windows;
 
     /// <summary>
@@ -130,6 +131,15 @@ namespace bg3_mod_packer.Views
         {
             var vm = DataContext as ViewModels.MainWindow;
             System.Diagnostics.Process.Start(vm.Bg3ExeLocation);
+        }
+
+        private void RaceButton_Click(object sender, RoutedEventArgs e)
+        {
+            var rootTemplates = Directory.GetCurrentDirectory() + @"\UnpackedData\Shared\Public\Shared\RootTemplates\_merged.lsf";
+            if(File.Exists(rootTemplates))
+            {
+
+            }
         }
     }
 }
