@@ -243,22 +243,29 @@ namespace bg3_mod_packer.Services
                         while ((line = r.ReadLine()) != null)
                         {
                             var matched = false;
-                            foreach(var s in searchArray)
+                            var escapedLine = line;
+                            foreach(var searchText in searchArray)
                             {
-                                if (line.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+                                if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
                                 {
                                     if(!matched)
                                     {
-                                        line = System.Security.SecurityElement.Escape(line);
+                                        escapedLine = System.Security.SecurityElement.Escape(line);
+                                        matched = true;
                                     }
-                                    var text = line.Substring(line.IndexOf(s, StringComparison.OrdinalIgnoreCase), s.Length);
-                                    line = line.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
-                                    matched = true;
+                                    for (int index = 0; ; index += searchText.Length)
+                                    {
+                                        index = line.IndexOf(searchText, index, StringComparison.OrdinalIgnoreCase);
+                                        if (index == -1)
+                                            break;
+                                        var text = System.Security.SecurityElement.Escape(line.Substring(index, searchText.Length));
+                                        escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
+                                    }
                                 }
                             }
                             if(matched)
                             {
-                                lines.Add(lineCount, line);
+                                lines.Add(lineCount, escapedLine);
                             }
                             lineCount++;
                         }
@@ -292,16 +299,18 @@ namespace bg3_mod_packer.Services
     /// </summary>
     public class CustomTokenizer : CharTokenizer
     {
+        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';'};
+
         public CustomTokenizer(LuceneVersion matchVersion, TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters, '-' (for UUIDs), '"', '_', '(', and ')'
+        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';')
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>
         protected override bool IsTokenChar(int c)
         {
-            return Character.IsLetterOrDigit(c) || c == '-' || c == '(' || c == ')' || c == '"' || c == '_';
+            return Character.IsLetterOrDigit(c) || allowedSpecialCharacters.Contains(c);
         }
     }
 
