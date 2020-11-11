@@ -132,9 +132,9 @@ namespace bg3_mod_packer.Views
             System.Diagnostics.Process.Start(vm.Bg3ExeLocation);
         }
 
-        private void RaceButton_Click(object sender, RoutedEventArgs e)
+        private void GameObjectButton_Click(object sender, RoutedEventArgs e)
         {
-            new Services.RootTemplateHelper().LoadRelevent("character");
+            new GameObjectWindow().Show();
         }
     }
 }
