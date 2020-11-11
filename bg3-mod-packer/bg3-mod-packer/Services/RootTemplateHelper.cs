@@ -53,12 +53,12 @@
         private List<GameObject> GenerateGameObjects(IEnumerable<XElement> nodes)
         {
             var gameObjectList = new List<GameObject>();
-            foreach (var node in nodes)
+            Parallel.ForEach(nodes, node =>
             {
                 var gameObject = GenerateGameObject(node);
                 gameObject.Children = GetChildren(gameObject.MapKey);
                 gameObjectList.Add(gameObject);
-            }
+            });
             return gameObjectList;
         }
 
