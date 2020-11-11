@@ -4,6 +4,7 @@
 namespace bg3_mod_packer.Models
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class GameObject
     {
@@ -14,5 +15,13 @@ namespace bg3_mod_packer.Models
         public string Icon { get; set; }
         public string Stats { get; set; }
         public List<GameObject> Children { get; set; }
+
+        public int Depth {
+            get {
+                if (Children.Count == 0)
+                    return 0;
+                return Children.Select(x => x.Depth).DefaultIfEmpty().Max() + 1;
+            }
+        }
     }
 }
