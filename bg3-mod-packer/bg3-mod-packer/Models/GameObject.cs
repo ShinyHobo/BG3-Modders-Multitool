@@ -28,6 +28,8 @@ namespace bg3_mod_packer.Models
 
         public int Count {
             get {
+                if (Children == null)
+                    return 0;
                 return Children.Sum(x => x.Count) + Children.Count;
             }
         }
