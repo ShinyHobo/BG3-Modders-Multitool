@@ -15,7 +15,6 @@
         private static string[] GameObjectTypes = { "character","item","scenery","prefab","trigger","surface","projectile","decal","TileConstruction","light","LevelTemplate","SplineConstruction","lightProbe","Spline","terrain" };
 
         private List<GameObject> gameObjects;
-        private IEnumerable<XElement> gameObjectElements;
 
         public RootTemplateHelper()
         {
@@ -89,6 +88,15 @@
                         }
                     }
                 }
+                gameObjects = gameObjects.OrderBy(go => go.Name).ToList();
+                var temp = gameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+
+                foreach(var gameObject in temp)
+                {
+                    gameObject.Children = GetChildren(gameObject);
+                }
+
+                gameObjects = temp;
 
                 return DateTime.Now.Subtract(start).TotalSeconds;
             }
@@ -100,71 +108,26 @@
             return await Task.Run(() => {
                 var start = DateTime.Now;
                 CheckForValidGameObjectType(gameObjectType);
-                var rootTemplates = @"Shared\Public\Shared\RootTemplates\_merged.lsf";
-                if (File.Exists(FileHelper.GetPath(rootTemplates)))
-                {
-                    rootTemplates = FileHelper.GetPath(FileHelper.ConvertToLsx(rootTemplates));
-                    gameObjects = new List<GameObject>();
-                    XDocument doc = XDocument.Load(rootTemplates);
-                    gameObjectElements = doc.Descendants("node").Where(node => node.Attribute("id").Value == "GameObjects" &&
-                        node.Elements("attribute").FirstOrDefault(n => n.Attribute("id").Value == "Type" && n.Attribute("value").Value == gameObjectType) != null);
-                    var toplevelGameObjects = gameObjectElements.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && !string.IsNullOrEmpty(a.Attribute("value").Value)) == null);
-                    var gameObjectList = GenerateGameObjects(toplevelGameObjects);
-                    var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
-                    return gameObjectList;
-                }
-                return null;
+                var returnObjects = gameObjects.Where(go => go.Type == gameObjectType).ToList();
+                var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
+                return returnObjects;
             });
         }
 
         #region Private Methods
         /// <summary> 
-        /// Generates game objects for each child of the given parent template.
+        /// Generates game objects for each child of the given game object.
         /// </summary>
-        /// <param name="parentTemplateId">The parent template UUID.</param>
+        /// <param name="gameObject">The parent game object.</param>
         /// <returns>The list of child game objects.</returns>
-        private List<GameObject> GetChildren(string parentTemplateId)
+        private List<GameObject> GetChildren(GameObject gameObject)
         {
-            var nodes = gameObjectElements.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && a.Attribute("value").Value == parentTemplateId) != null);
-            return GenerateGameObjects(nodes);
-        }
-
-        /// <summary>
-        /// Generates a list of game objects.
-        /// </summary>
-        /// <param name="nodes">The nodes to generate game objects for.</param>
-        /// <returns>The generated game object list.</returns>
-        private List<GameObject> GenerateGameObjects(IEnumerable<XElement> nodes)
-        {
-            var gameObjectList = new ConcurrentBag<GameObject>();
-            Parallel.ForEach(nodes, node =>
+            var matchingGameObjects = gameObjects.Where(go => go.ParentTemplateId == gameObject.MapKey).ToList();
+            foreach (var matchingGameObject in matchingGameObjects)
             {
-                var gameObject = GenerateGameObject(node);
-                gameObject.Children = GetChildren(gameObject.MapKey);
-                gameObjectList.Add(gameObject);
-            });
-            return gameObjectList.OrderBy(go => go.Name).ToList();
-        }
-
-        /// <summary>
-        /// Generates a game object for an xml node.
-        /// </summary>
-        /// <param name="node">The node to generate a game object for.</param>
-        /// <returns>The generated game object.</returns>
-        private GameObject GenerateGameObject(XElement node)
-        {
-            var attributes = node.Elements("attribute");
-            return new GameObject
-            {
-                MapKey = attributes.FirstOrDefault(a => a.Attribute("id").Value == "MapKey")?.Attribute("value").Value,
-                ParentTemplateId = attributes.Where(a => a.Attribute("id").Value == "ParentTemplateId").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
-                DisplayName = attributes.Where(a => a.Attribute("id").Value == "DisplayName").Select(a => a.Attribute("handle")?.Value).FirstOrDefault(),
-                Description = attributes.Where(a => a.Attribute("id").Value == "Description").Select(a => a.Attribute("handle")?.Value).FirstOrDefault(),
-                Name = attributes.Where(a => a.Attribute("id").Value == "Name").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
-                Type = attributes.Where(a => a.Attribute("id").Value == "Type").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
-                Icon = attributes.Where(a => a.Attribute("id").Value == "Icon").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
-                Stats = attributes.Where(a => a.Attribute("id").Value == "Stats").Select(a => a.Attribute("value")?.Value).FirstOrDefault()
-            };
+                matchingGameObject.Children = GetChildren(matchingGameObject);
+            }
+            return matchingGameObjects;
         }
 
         /// <summary>
