@@ -7,13 +7,93 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Xml;
     using System.Xml.Linq;
 
     public class RootTemplateHelper
     {
         private static string[] GameObjectTypes = { "character","item","scenery","prefab","trigger","surface","projectile","decal","TileConstruction","light","LevelTemplate","SplineConstruction","lightProbe","Spline","terrain" };
 
-        private IEnumerable<XElement> gameObjects;
+        private List<GameObject> gameObjects;
+        private IEnumerable<XElement> gameObjectElements;
+
+        public RootTemplateHelper()
+        {
+            ReadRootTemplate();
+        }
+
+        /// <summary>
+        /// Reads the root template and converts it into a GameObject list.
+        /// </summary>
+        /// <returns>The time to complete.</returns>
+        private double ReadRootTemplate()
+        {
+            var start = DateTime.Now;
+            var rootTemplates = @"Shared\Public\Shared\RootTemplates\_merged.lsf";
+            if (File.Exists(FileHelper.GetPath(rootTemplates)))
+            {
+                rootTemplates = FileHelper.GetPath(FileHelper.ConvertToLsx(rootTemplates));
+                gameObjects = new List<GameObject>();
+                using (XmlReader reader = XmlReader.Create(rootTemplates))
+                {
+                    GameObject gameObject = null;
+                    while (reader.Read())
+                    {
+                        switch (reader.NodeType)
+                        {
+                            case XmlNodeType.Element:
+                                var id = reader.GetAttribute("id");
+                                if (id == "GameObjects")
+                                {
+                                    gameObject = new GameObject();
+                                }
+                                var value = reader.GetAttribute("value") ?? reader.GetAttribute("handle");
+                                if (reader.Depth == 5) // GameObject attributes
+                                {
+                                    switch (id)
+                                    {
+                                        case "MapKey":
+                                            gameObject.MapKey = value;
+                                            break;
+                                        case "ParentTemplateId":
+                                            gameObject.ParentTemplateId = value;
+                                            break;
+                                        case "Name":
+                                            gameObject.Name = value;
+                                            break;
+                                        case "DisplayName":
+                                            gameObject.DisplayName = value;
+                                            break;
+                                        case "Description":
+                                            gameObject.Description = value;
+                                            break;
+                                        case "Type":
+                                            CheckForValidGameObjectType(value);
+                                            gameObject.Type = value;
+                                            break;
+                                        case "Icon":
+                                            gameObject.Icon = value;
+                                            break;
+                                        case "Stats":
+                                            gameObject.Stats = value;
+                                            break;
+                                    }
+                                }
+                                break;
+                            case XmlNodeType.EndElement:
+                                if (reader.Depth == 4) // end of GameObject
+                                {
+                                    gameObjects.Add(gameObject);
+                                }
+                                break;
+                        }
+                    }
+                }
+
+                return DateTime.Now.Subtract(start).TotalSeconds;
+            }
+            return -1;
+        }
 
         public async Task<List<GameObject>> LoadRelevent(string gameObjectType)
         {
@@ -24,10 +104,11 @@
                 if (File.Exists(FileHelper.GetPath(rootTemplates)))
                 {
                     rootTemplates = FileHelper.GetPath(FileHelper.ConvertToLsx(rootTemplates));
+                    gameObjects = new List<GameObject>();
                     XDocument doc = XDocument.Load(rootTemplates);
-                    gameObjects = doc.Descendants("node").Where(node => node.Attribute("id").Value == "GameObjects" &&
+                    gameObjectElements = doc.Descendants("node").Where(node => node.Attribute("id").Value == "GameObjects" &&
                         node.Elements("attribute").FirstOrDefault(n => n.Attribute("id").Value == "Type" && n.Attribute("value").Value == gameObjectType) != null);
-                    var toplevelGameObjects = gameObjects.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && !string.IsNullOrEmpty(a.Attribute("value").Value)) == null);
+                    var toplevelGameObjects = gameObjectElements.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && !string.IsNullOrEmpty(a.Attribute("value").Value)) == null);
                     var gameObjectList = GenerateGameObjects(toplevelGameObjects);
                     var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
                     return gameObjectList;
@@ -44,7 +125,7 @@
         /// <returns>The list of child game objects.</returns>
         private List<GameObject> GetChildren(string parentTemplateId)
         {
-            var nodes = gameObjects.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && a.Attribute("value").Value == parentTemplateId) != null);
+            var nodes = gameObjectElements.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && a.Attribute("value").Value == parentTemplateId) != null);
             return GenerateGameObjects(nodes);
         }
 
@@ -75,7 +156,7 @@
             var attributes = node.Elements("attribute");
             return new GameObject
             {
-                MapKey = attributes.Where(a => a.Attribute("id").Value == "MapKey").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
+                MapKey = attributes.FirstOrDefault(a => a.Attribute("id").Value == "MapKey")?.Attribute("value").Value,
                 ParentTemplateId = attributes.Where(a => a.Attribute("id").Value == "ParentTemplateId").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
                 DisplayName = attributes.Where(a => a.Attribute("id").Value == "DisplayName").Select(a => a.Attribute("handle")?.Value).FirstOrDefault(),
                 Description = attributes.Where(a => a.Attribute("id").Value == "Description").Select(a => a.Attribute("handle")?.Value).FirstOrDefault(),
