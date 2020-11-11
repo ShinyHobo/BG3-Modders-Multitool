@@ -1,7 +1,6 @@
 ﻿namespace bg3_mod_packer.Views
 {
     using bg3_mod_packer.Services;
-    using System;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -23,14 +22,7 @@
             treeView.Items.Clear();
             var vm = DataContext as RootTemplateHelper;
             var characters = await vm.LoadRelevent("character");
-            var all = new TreeViewItem
-            {
-                Header = $"All Characters ({characters.Sum(x => x.Count) + characters.Count})",
-                IsExpanded = true
-            };
-            all.Collapsed += All_Collapsed;
-            AddTreeViewItems(characters, all);
-            treeView.Items.Add(all);
+            DisplayTree(characters, "Characters");
             ToggleButtons(sender);
         }
 
@@ -40,20 +32,30 @@
             treeView.Items.Clear();
             var vm = DataContext as RootTemplateHelper;
             var items = await vm.LoadRelevent("item");
-            var all = new TreeViewItem
-            {
-                Header = $"All Items ({items.Sum(x => x.Count) + items.Count})",
-                IsExpanded = true
-            };
-            all.Collapsed += All_Collapsed;
-            AddTreeViewItems(items, all);
-            treeView.Items.Add(all);
+            DisplayTree(items, "Items");
             ToggleButtons(sender);
         }
 
-        private void All_Collapsed(object sender, RoutedEventArgs e)
+        private void Collapsed(object sender, RoutedEventArgs e)
         {
             (sender as TreeViewItem).IsExpanded = true;
+        }
+
+        /// <summary>
+        /// Generates the treeview.
+        /// </summary>
+        /// <param name="gameObjects">The list of game objects to display.</param>
+        /// <param name="type">The type of game objects being displayed.</param>
+        private void DisplayTree(System.Collections.Generic.List<Models.GameObject> gameObjects, string type)
+        {
+            var all = new TreeViewItem
+            {
+                Header = $"All {type} ({gameObjects.Sum(x => x.Count) + gameObjects.Count})",
+                IsExpanded = true
+            };
+            all.Collapsed += Collapsed;
+            AddTreeViewItems(gameObjects, all);
+            treeView.Items.Add(all);
         }
 
         /// <summary>
@@ -65,10 +67,17 @@
         {
             foreach (var gameObject in gameObjects)
             {
-                var item = new TreeViewItem
-                {
-                    Header = gameObject.Name
-                };
+                var infoContents = new StackPanel { Orientation = Orientation.Vertical };
+                infoContents.Children.Add(new TextBox { Text = $"Name: {gameObject.Name}", BorderThickness = new Thickness(0,0,0,0), IsReadOnly = true });
+                infoContents.Children.Add(new TextBox { Text = $"DisplayName: {gameObject.DisplayName}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                infoContents.Children.Add(new TextBox { Text = $"Description: {gameObject.Description}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                infoContents.Children.Add(new TextBox { Text = $"MapKey: {gameObject.MapKey}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                infoContents.Children.Add(new TextBox { Text = $"ParentTemplateId: {gameObject.ParentTemplateId}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                infoContents.Children.Add(new TextBox { Text = $"Stats: {gameObject.Stats}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                var info = new TreeViewItem { Header = "Info" };
+                info.Items.Add(infoContents);
+                var item = new TreeViewItem { Header = gameObject.Name };
+                item.Items.Add(info);
                 AddTreeViewItems(gameObject.Children, item);
                 treeViewItem.Items.Add(item);
             }

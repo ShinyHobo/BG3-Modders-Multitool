@@ -37,7 +37,7 @@
         }
 
         #region Private Methods
-        /// <summary>
+        /// <summary> 
         /// Generates game objects for each child of the given parent template.
         /// </summary>
         /// <param name="parentTemplateId">The parent template UUID.</param>
@@ -75,11 +75,14 @@
             var attributes = node.Elements("attribute");
             return new GameObject
             {
-                MapKey = attributes.Where(a => a.Attribute("id").Value == "MapKey").Select(a => a.Attribute("value").Value).FirstOrDefault(),
-                Name = attributes.Where(a => a.Attribute("id").Value == "Name").Select(a => a.Attribute("value").Value).FirstOrDefault(),
-                Type = attributes.Where(a => a.Attribute("id").Value == "Type").Select(a => a.Attribute("value").Value).FirstOrDefault(),
-                Icon = attributes.Where(a => a.Attribute("id").Value == "Icon").Select(a => a.Attribute("value").Value).FirstOrDefault(),
-                Stats = attributes.Where(a => a.Attribute("id").Value == "Stats").Select(a => a.Attribute("value").Value).FirstOrDefault()
+                MapKey = attributes.Where(a => a.Attribute("id").Value == "MapKey").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
+                ParentTemplateId = attributes.Where(a => a.Attribute("id").Value == "ParentTemplateId").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
+                DisplayName = attributes.Where(a => a.Attribute("id").Value == "DisplayName").Select(a => a.Attribute("handle")?.Value).FirstOrDefault(),
+                Description = attributes.Where(a => a.Attribute("id").Value == "Description").Select(a => a.Attribute("handle")?.Value).FirstOrDefault(),
+                Name = attributes.Where(a => a.Attribute("id").Value == "Name").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
+                Type = attributes.Where(a => a.Attribute("id").Value == "Type").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
+                Icon = attributes.Where(a => a.Attribute("id").Value == "Icon").Select(a => a.Attribute("value")?.Value).FirstOrDefault(),
+                Stats = attributes.Where(a => a.Attribute("id").Value == "Stats").Select(a => a.Attribute("value")?.Value).FirstOrDefault()
             };
         }
 
