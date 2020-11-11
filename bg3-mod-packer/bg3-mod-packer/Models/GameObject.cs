@@ -11,6 +11,8 @@ namespace bg3_mod_packer.Models
         public string MapKey { get; set; }
         public string ParentTemplateId { get; set; }
         public string Name { get; set; }
+        public string DisplayName { get; set; }
+        public string Description { get; set; }
         public string Type { get; set; }
         public string Icon { get; set; }
         public string Stats { get; set; }
@@ -21,6 +23,12 @@ namespace bg3_mod_packer.Models
                 if (Children.Count == 0)
                     return 0;
                 return Children.Select(x => x.Depth).DefaultIfEmpty().Max() + 1;
+            }
+        }
+
+        public int Count {
+            get {
+                return Children.Sum(x => x.Count) + Children.Count;
             }
         }
     }

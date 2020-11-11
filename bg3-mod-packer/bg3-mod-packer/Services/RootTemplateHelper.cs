@@ -2,6 +2,7 @@
 {
     using bg3_mod_packer.Models;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -54,14 +55,14 @@
         /// <returns>The generated game object list.</returns>
         private List<GameObject> GenerateGameObjects(IEnumerable<XElement> nodes)
         {
-            var gameObjectList = new List<GameObject>();
+            var gameObjectList = new ConcurrentBag<GameObject>();
             Parallel.ForEach(nodes, node =>
             {
                 var gameObject = GenerateGameObject(node);
                 gameObject.Children = GetChildren(gameObject.MapKey);
                 gameObjectList.Add(gameObject);
             });
-            return gameObjectList;
+            return gameObjectList.OrderBy(go => go.Name).ToList();
         }
 
         /// <summary>
