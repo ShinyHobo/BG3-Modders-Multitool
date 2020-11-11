@@ -134,7 +134,7 @@ namespace bg3_mod_packer.Views
 
         private void RaceButton_Click(object sender, RoutedEventArgs e)
         {
-            Services.RootTemplateHelper.LoadRelevent("character");
+            new Services.RootTemplateHelper().LoadRelevent("character");
         }
     }
 }
