@@ -1,58 +1,83 @@
 ﻿namespace bg3_mod_packer.Services
 {
+    using bg3_mod_packer.Models;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Xml;
-    public static class RootTemplateHelper
+    using System.Threading.Tasks;
+    using System.Xml.Linq;
+
+    public class RootTemplateHelper
     {
         private static string[] GameObjectTypes = { "character","item","scenery","prefab","trigger","surface","projectile","decal","TileConstruction","light","LevelTemplate","SplineConstruction","lightProbe","Spline","terrain" };
 
-        public static void LoadRelevent(string gameObjectType)
+        private IEnumerable<XElement> gameObjects;
+
+        public async void LoadRelevent(string gameObjectType)
         {
-            CheckForValidGameObjectType(gameObjectType);
-            var rootTemplates = @"Shared\Public\Shared\RootTemplates\_merged.lsf";
-            if (File.Exists(FileHelper.GetPath(rootTemplates)))
-            {
-                rootTemplates = FileHelper.GetPath(FileHelper.ConvertToLsx(rootTemplates));
-                XmlDocument doc = new XmlDocument();
-                using (var fs = new FileStream(rootTemplates, FileMode.Open))
+            await Task.Run(() => {
+                var start = DateTime.Now;
+                CheckForValidGameObjectType(gameObjectType);
+                var rootTemplates = @"Shared\Public\Shared\RootTemplates\_merged.lsf";
+                if (File.Exists(FileHelper.GetPath(rootTemplates)))
                 {
-                    doc.Load(fs);
+                    rootTemplates = FileHelper.GetPath(FileHelper.ConvertToLsx(rootTemplates));
+                    XDocument doc = XDocument.Load(rootTemplates);
+                    gameObjects = doc.Descendants("node").Where(node => node.Attribute("id").Value == "GameObjects" &&
+                        node.Elements("attribute").FirstOrDefault(n => n.Attribute("id").Value == "Type" && n.Attribute("value").Value == gameObjectType) != null);
+                    var toplevelGameObjects = gameObjects.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && !string.IsNullOrEmpty(a.Attribute("value").Value)) == null);
+                    var gameObjectList = GenerateGameObjects(toplevelGameObjects);
+                    var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
                 }
-                var gameObjects = doc.SelectNodes("//node[@id='GameObjects']");
-                var sortedGameObjects = new List<XmlNode>();
-                var topLevelGameObjects = new List<XmlNode>();
-                var topLevelGameObjectNames = new List<string>();
-                foreach (XmlNode gameObject in gameObjects)
-                {
-                    var type = GetAttributeValue(gameObject, "Type");
-                    CheckForValidGameObjectType(type);
-                    if(type == gameObjectType)
-                    {
-                        sortedGameObjects.Add(gameObject);
-                        var bler = GetAttributeValue(gameObject, "ParentTemplateId");
-                        if(string.IsNullOrEmpty(bler))
-                        {
-                            topLevelGameObjects.Add(gameObject);
-                            topLevelGameObjectNames.Add(GetAttributeValue(gameObject, "Name"));
-                        }
-                    }
-                }
-            }
+            });
         }
 
         #region Private Methods
         /// <summary>
-        /// Gets the given attribute by id.
+        /// Generates game objects for each child of the given parent template.
         /// </summary>
-        /// <param name="node">The xml node to get the attribute of.</param>
-        /// <param name="id">The xml node id.</param>
-        /// <returns></returns>
-        private static string GetAttributeValue(XmlNode node, string id)
+        /// <param name="parentTemplateId">The parent template UUID.</param>
+        /// <returns>The list of child game objects.</returns>
+        private List<GameObject> GetChildren(string parentTemplateId)
         {
-            return node.SelectSingleNode($"attribute[@id='{id}']").Attributes["value"].InnerText;
+            var nodes = gameObjects.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && a.Attribute("value").Value == parentTemplateId) != null);
+            return GenerateGameObjects(nodes);
+        }
+
+        /// <summary>
+        /// Generates a list of game objects.
+        /// </summary>
+        /// <param name="nodes">The nodes to generate game objects for.</param>
+        /// <returns>The generated game object list.</returns>
+        private List<GameObject> GenerateGameObjects(IEnumerable<XElement> nodes)
+        {
+            var gameObjectList = new List<GameObject>();
+            foreach (var node in nodes)
+            {
+                var gameObject = GenerateGameObject(node);
+                gameObject.Children = GetChildren(gameObject.MapKey);
+                gameObjectList.Add(gameObject);
+            }
+            return gameObjectList;
+        }
+
+        /// <summary>
+        /// Generates a game object for an xml node.
+        /// </summary>
+        /// <param name="node">The node to generate a game object for.</param>
+        /// <returns>The generated game object.</returns>
+        private GameObject GenerateGameObject(XElement node)
+        {
+            var attributes = node.Elements("attribute");
+            return new GameObject
+            {
+                MapKey = attributes.Where(a => a.Attribute("id").Value == "MapKey").Select(a => a.Attribute("value").Value).FirstOrDefault(),
+                Name = attributes.Where(a => a.Attribute("id").Value == "Name").Select(a => a.Attribute("value").Value).FirstOrDefault(),
+                Type = attributes.Where(a => a.Attribute("id").Value == "Type").Select(a => a.Attribute("value").Value).FirstOrDefault(),
+                Icon = attributes.Where(a => a.Attribute("id").Value == "Icon").Select(a => a.Attribute("value").Value).FirstOrDefault(),
+                Stats = attributes.Where(a => a.Attribute("id").Value == "Stats").Select(a => a.Attribute("value").Value).FirstOrDefault()
+            };
         }
 
         /// <summary>
