@@ -43,7 +43,7 @@
                                 var id = reader.GetAttribute("id");
                                 if (id == "GameObjects")
                                 {
-                                    gameObject = new GameObject();
+                                    gameObject = new GameObject { Children = new List<GameObject>() };
                                 }
                                 var value = reader.GetAttribute("value") ?? reader.GetAttribute("handle");
                                 if (reader.Depth == 5) // GameObject attributes
@@ -88,14 +88,15 @@
                     }
                 }
                 gameObjects = gameObjects.OrderBy(go => go.Name).ToList();
-                var temp = gameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
 
-                foreach(var gameObject in temp)
+                // Groups children by MapKey and ParentTemplateId
+                var children = gameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+                var lookup = gameObjects.ToDictionary(go => go.MapKey);
+                foreach (var gameObject in children)
                 {
-                    gameObject.Children = GetChildren(gameObject);
+                    lookup[gameObject.ParentTemplateId].Children.Add(gameObject);
                 }
-
-                gameObjects = temp;
+                gameObjects = gameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
 
                 return DateTime.Now.Subtract(start).TotalSeconds;
             }
@@ -114,21 +115,6 @@
         }
 
         #region Private Methods
-        /// <summary> 
-        /// Generates game objects for each child of the given game object.
-        /// </summary>
-        /// <param name="gameObject">The parent game object.</param>
-        /// <returns>The list of child game objects.</returns>
-        private List<GameObject> GetChildren(GameObject gameObject)
-        {
-            var matchingGameObjects = gameObjects.Where(go => go.ParentTemplateId == gameObject.MapKey).ToList();
-            foreach (var matchingGameObject in matchingGameObjects)
-            {
-                matchingGameObject.Children = GetChildren(matchingGameObject);
-            }
-            return matchingGameObjects;
-        }
-
         /// <summary>
         /// Checks for game object types and forces them to be accounted for.
         /// </summary>
