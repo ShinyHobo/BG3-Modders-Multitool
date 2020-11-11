@@ -65,21 +65,24 @@
         /// <param name="treeViewItem">The treeview item to append to.</param>
         private void AddTreeViewItems(System.Collections.Generic.List<Models.GameObject> gameObjects, TreeViewItem treeViewItem)
         {
-            foreach (var gameObject in gameObjects)
+            if(gameObjects != null)
             {
-                var infoContents = new StackPanel { Orientation = Orientation.Vertical };
-                infoContents.Children.Add(new TextBox { Text = $"Name: {gameObject.Name}", BorderThickness = new Thickness(0,0,0,0), IsReadOnly = true });
-                infoContents.Children.Add(new TextBox { Text = $"DisplayName: {gameObject.DisplayName}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
-                infoContents.Children.Add(new TextBox { Text = $"Description: {gameObject.Description}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
-                infoContents.Children.Add(new TextBox { Text = $"MapKey: {gameObject.MapKey}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
-                infoContents.Children.Add(new TextBox { Text = $"ParentTemplateId: {gameObject.ParentTemplateId}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
-                infoContents.Children.Add(new TextBox { Text = $"Stats: {gameObject.Stats}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
-                var info = new TreeViewItem { Header = "Info" };
-                info.Items.Add(infoContents);
-                var item = new TreeViewItem { Header = gameObject.Name };
-                item.Items.Add(info);
-                AddTreeViewItems(gameObject.Children, item);
-                treeViewItem.Items.Add(item);
+                foreach (var gameObject in gameObjects)
+                {
+                    var infoContents = new StackPanel { Orientation = Orientation.Vertical };
+                    infoContents.Children.Add(new TextBox { Text = $"Name: {gameObject.Name}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                    infoContents.Children.Add(new TextBox { Text = $"DisplayName: {gameObject.DisplayName}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                    infoContents.Children.Add(new TextBox { Text = $"Description: {gameObject.Description}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                    infoContents.Children.Add(new TextBox { Text = $"MapKey: {gameObject.MapKey}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                    infoContents.Children.Add(new TextBox { Text = $"ParentTemplateId: {gameObject.ParentTemplateId}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                    infoContents.Children.Add(new TextBox { Text = $"Stats: {gameObject.Stats}", BorderThickness = new Thickness(0, 0, 0, 0), IsReadOnly = true });
+                    var info = new TreeViewItem { Header = "Info" };
+                    info.Items.Add(infoContents);
+                    var item = new TreeViewItem { Header = gameObject.Name };
+                    item.Items.Add(info);
+                    AddTreeViewItems(gameObject.Children, item);
+                    treeViewItem.Items.Add(item);
+                }
             }
         }
 
