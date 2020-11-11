@@ -27,7 +27,10 @@
                     gameObjects = doc.Descendants("node").Where(node => node.Attribute("id").Value == "GameObjects" &&
                         node.Elements("attribute").FirstOrDefault(n => n.Attribute("id").Value == "Type" && n.Attribute("value").Value == gameObjectType) != null);
                     var toplevelGameObjects = gameObjects.Where(go => go.Elements("attribute").FirstOrDefault(a => a.Attribute("id").Value == "ParentTemplateId" && !string.IsNullOrEmpty(a.Attribute("value").Value)) == null);
-                    var gameObjectList = GenerateGameObjects(toplevelGameObjects);
+                    var gameObjectList = new GameObject {
+                        Name = "All",
+                        Children = GenerateGameObjects(toplevelGameObjects)
+                    };
                     var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
                 }
             });
