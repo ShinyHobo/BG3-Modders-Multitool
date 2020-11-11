@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="GameObject Explorer" Height="450" Width="800">
     <Grid>
-        <Button x:Name="raceButton" Content="Characters" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="CharacterButton_Click" Cursor="Hand"/>
+        <Button x:Name="characterButton" Content="Characters" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="CharacterButton_Click" Cursor="Hand"/>
         <Button x:Name="itemButton" Content="Items" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="ItemButton_Click" Cursor="Hand"/>
+        <TreeView x:Name="treeView" Margin="95,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
     </Grid>
 </Window>
