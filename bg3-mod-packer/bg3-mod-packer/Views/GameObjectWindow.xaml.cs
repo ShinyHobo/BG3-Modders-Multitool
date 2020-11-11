@@ -2,6 +2,7 @@
 {
     using bg3_mod_packer.Services;
     using System.Windows;
+    using System.Windows.Controls;
 
     /// <summary>
     /// Interaction logic for GameObjectWindow.xaml
@@ -14,16 +15,49 @@
             DataContext = new RootTemplateHelper();
         }
 
-        private void CharacterButton_Click(object sender, RoutedEventArgs e)
+        private async void CharacterButton_Click(object sender, RoutedEventArgs e)
         {
+            ToggleButtons();
+            treeView.Items.Clear();
             var vm = DataContext as RootTemplateHelper;
-            vm.LoadRelevent("character");
+            var characters = await vm.LoadRelevent("character");
+            foreach(var character in characters)
+            {
+                var item = new TreeViewItem
+                {
+                    Header = character.Name
+                };
+                treeView.Items.Add(item);
+            }
+            ToggleButtons(sender);
         }
 
-        private void ItemButton_Click(object sender, RoutedEventArgs e)
+        private async void ItemButton_Click(object sender, RoutedEventArgs e)
         {
+            ToggleButtons();
+            treeView.Items.Clear();
             var vm = DataContext as RootTemplateHelper;
-            vm.LoadRelevent("item");
+            var items = await vm.LoadRelevent("item");
+            foreach (var character in items)
+            {
+                var item = new TreeViewItem
+                {
+                    Header = character.Name
+                };
+                treeView.Items.Add(item);
+            }
+            ToggleButtons(sender);
+        }
+
+        /// <summary>
+        /// Toggles buttons on or off.
+        /// </summary>
+        /// <param name="sender">The sender to ignore.</param>
+        private void ToggleButtons(object sender = null)
+        {
+            var enable = sender != null;
+            characterButton.IsEnabled = enable && characterButton != sender;
+            itemButton.IsEnabled = enable && itemButton != sender;
         }
     }
 }
