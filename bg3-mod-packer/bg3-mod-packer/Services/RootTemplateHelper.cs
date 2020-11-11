@@ -2,13 +2,12 @@
 {
     using bg3_mod_packer.Models;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
-    using System.Xml.Linq;
 
     public class RootTemplateHelper
     {
@@ -103,12 +102,12 @@
             return -1;
         }
 
-        public async Task<List<GameObject>> LoadRelevent(string gameObjectType)
+        public async Task<ObservableCollection<GameObject>> LoadRelevent(string gameObjectType)
         {
             return await Task.Run(() => {
                 var start = DateTime.Now;
                 CheckForValidGameObjectType(gameObjectType);
-                var returnObjects = gameObjects.Where(go => go.Type == gameObjectType).ToList();
+                var returnObjects = new ObservableCollection<GameObject>(gameObjects.Where(go => go.Type == gameObjectType));
                 var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
                 return returnObjects;
             });

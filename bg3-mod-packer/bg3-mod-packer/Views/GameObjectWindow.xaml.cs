@@ -1,6 +1,7 @@
 ﻿namespace bg3_mod_packer.Views
 {
     using bg3_mod_packer.Services;
+    using bg3_mod_packer.ViewModels;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -13,26 +14,22 @@
         public GameObjectWindow()
         {
             InitializeComponent();
-            DataContext = new RootTemplateHelper();
+            DataContext = new GameObjectViewModel();
         }
 
         private async void CharacterButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleButtons();
-            treeView.Items.Clear();
-            var vm = DataContext as RootTemplateHelper;
-            var characters = await vm.LoadRelevent("character");
-            DisplayTree(characters, "Characters");
+            var vm = DataContext as GameObjectViewModel;
+            vm.GameObjects = await vm.RootTemplateHelper.LoadRelevent("character");
             ToggleButtons(sender);
         }
 
         private async void ItemButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleButtons();
-            treeView.Items.Clear();
-            var vm = DataContext as RootTemplateHelper;
-            var items = await vm.LoadRelevent("item");
-            DisplayTree(items, "Items");
+            var vm = DataContext as GameObjectViewModel;
+            vm.GameObjects = await vm.RootTemplateHelper.LoadRelevent("item");
             ToggleButtons(sender);
         }
 

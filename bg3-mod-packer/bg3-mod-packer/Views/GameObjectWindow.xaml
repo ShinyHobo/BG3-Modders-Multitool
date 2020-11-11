@@ -4,11 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bg3_mod_packer.Views"
+        xmlns:model="clr-namespace:bg3_mod_packer.Models"
+        xmlns:viewModel="clr-namespace:bg3_mod_packer.ViewModels"
         mc:Ignorable="d"
         Title="GameObject Explorer" Height="450" Width="800">
     <Grid>
         <Button x:Name="characterButton" Content="Characters" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="CharacterButton_Click" Cursor="Hand"/>
         <Button x:Name="itemButton" Content="Items" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="ItemButton_Click" Cursor="Hand"/>
-        <TreeView x:Name="treeView" Margin="95,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+        <TreeView x:Name="treeView" Margin="95,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSource="{Binding GameObjects}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                        <TextBlock Text="{Binding MapKey}"></TextBlock>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
     </Grid>
 </Window>

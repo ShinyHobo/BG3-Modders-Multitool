@@ -247,6 +247,7 @@
     <Compile Include="Services\PakUnpackHelper.cs" />
     <Compile Include="Services\RootTemplateHelper.cs" />
     <Compile Include="ViewModels\DragAndDropBox.cs" />
+    <Compile Include="ViewModels\GameObjectViewModel.cs" />
     <Compile Include="ViewModels\Reusables\CheckBox.cs" />
     <Compile Include="Models\InfoJson.cs" />
     <Compile Include="ViewModels\MainWindow.cs" />
