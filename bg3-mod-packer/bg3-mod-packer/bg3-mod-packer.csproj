@@ -261,6 +261,9 @@
     <Compile Include="Views\PakSelection.xaml.cs">
       <DependentUpon>PakSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GameObjectWindow.xaml.cs">
+      <DependentUpon>GameObjectWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="XAMLHelpers\TextBoxFormatter.cs" />
     <Page Include="Views\DragAndDropBox.xaml">
       <SubType>Designer</SubType>
@@ -286,6 +289,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\PakSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GameObjectWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
