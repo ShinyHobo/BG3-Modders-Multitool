@@ -11,7 +11,9 @@ namespace bg3_mod_packer.Models
         public string MapKey { get; set; }
         public string ParentTemplateId { get; set; }
         public string Name { get; set; }
+        public string DisplayNameHandle { get; set; }
         public string DisplayName { get; set; }
+        public string DescriptionHandle { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
         public string Icon { get; set; }

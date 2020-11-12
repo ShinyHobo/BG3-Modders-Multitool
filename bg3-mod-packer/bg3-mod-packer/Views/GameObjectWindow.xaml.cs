@@ -1,6 +1,5 @@
 ﻿namespace bg3_mod_packer.Views
 {
-    using bg3_mod_packer.Services;
     using bg3_mod_packer.ViewModels;
     using System.Linq;
     using System.Windows;
@@ -92,6 +91,18 @@
             var enable = sender != null;
             characterButton.IsEnabled = enable && characterButton != sender;
             itemButton.IsEnabled = enable && itemButton != sender;
+        }
+
+        private void ExploreMore_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var vm = DataContext as GameObjectViewModel;
+            if(vm.DisabledButton != null)
+                vm.DisabledButton.IsEnabled = true;
+            vm.DisabledButton = button;
+            button.IsEnabled = false;
+            var MapKey = ((Button)sender).Uid;
+            vm.Info = vm.RootTemplateHelper.FlatGameObjects.Single(go => go.MapKey == MapKey);
         }
     }
 }

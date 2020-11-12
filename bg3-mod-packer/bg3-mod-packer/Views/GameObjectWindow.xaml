@@ -7,19 +7,71 @@
         xmlns:model="clr-namespace:bg3_mod_packer.Models"
         xmlns:viewModel="clr-namespace:bg3_mod_packer.ViewModels"
         mc:Ignorable="d"
-        Title="GameObject Explorer" Height="450" Width="800">
+        Title="GameObject Explorer" MinHeight="450" MinWidth="1000" Height="450" Width="1000">
     <Grid>
         <Button x:Name="characterButton" Content="Characters" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="CharacterButton_Click" Cursor="Hand"/>
         <Button x:Name="itemButton" Content="Items" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="ItemButton_Click" Cursor="Hand"/>
-        <TreeView x:Name="treeView" Margin="95,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSource="{Binding GameObjects}">
+        <TreeView x:Name="treeView" Margin="95,40,0,190" Width="450" HorizontalAlignment="left" VerticalContentAlignment="Stretch" ItemsSource="{Binding GameObjects}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}"></TextBlock>
-                        <TextBlock Text="{Binding MapKey}"></TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" Margin="0,0,5,0" Background="Transparent"></TextBlock>
+                        <Button x:Name="exploreMore" Background="White" BorderBrush="White" Uid="{Binding MapKey}" Cursor="Hand" Click="ExploreMore_Click">
+                            <TextBlock Text="(+)" HorizontalAlignment="Stretch"></TextBlock>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <TextBlock>
+                                        <ContentPresenter />
+                                    </TextBlock>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter Property="Foreground" Value="Red" />
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Foreground" Value="Gray" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="Focusable" Value="False"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
         </TreeView>
+        <TabControl x:Name="tabBox" Margin="550,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <TabItem Header="Race"></TabItem>
+            <TabItem Header="Progressions"></TabItem>
+            <TabItem Header="Feats"></TabItem>
+            <TabItem Header="Stats"></TabItem>
+        </TabControl>
+        <Border BorderBrush="Black" BorderThickness="1" Margin="95,0,10,10" Width="450" Height="175" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Grid x:Name="infoGrid" Margin="0,0,0,0" Width="450" Height="175" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <StackPanel Margin="5,5,5,5">
+                        <TextBlock Text="{Binding Info.Name, StringFormat=Name: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding Info.MapKey, StringFormat=MapKey: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding Info.ParentTemplateId, StringFormat=ParentTemplateId: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding Info.DisplayNameHandle, StringFormat=DisplayNameHandle: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding Info.DisplayName, StringFormat=DisplayName: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding Info.DescriptionHandle, StringFormat=DescriptionHandle: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding Info.Description, StringFormat=Description: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding Info.Icon, StringFormat=Icon: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding Info.Stats, StringFormat=Stats: {0}}"></TextBlock>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="95,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="369" IsEnabled="False"/>
+        <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="469,10,0,0" VerticalAlignment="Top" Width="75" Height="25" IsEnabled="False"/>
     </Grid>
 </Window>

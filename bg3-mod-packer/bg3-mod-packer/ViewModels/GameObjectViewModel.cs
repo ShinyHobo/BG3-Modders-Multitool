@@ -3,6 +3,7 @@
     using bg3_mod_packer.Models;
     using bg3_mod_packer.Services;
     using System.Collections.ObjectModel;
+    using System.Windows.Controls;
 
     public class GameObjectViewModel : BaseViewModel
     {
@@ -23,5 +24,16 @@
             }
         }
 
+        private GameObject _info;
+
+        public GameObject Info {
+            get { return _info; }
+            set {
+                _info = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        public Button DisabledButton { get; set; }
     }
 }
