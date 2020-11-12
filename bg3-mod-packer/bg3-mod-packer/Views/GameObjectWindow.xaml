@@ -54,7 +54,7 @@
             <TabItem Header="Feats"></TabItem>
             <TabItem Header="Stats"></TabItem>
         </TabControl>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="95,244,0,10" HorizontalAlignment="Left" Width="449"/>
+        <Border BorderBrush="Gray" BorderThickness="1" Margin="95,244,0,10" HorizontalAlignment="Left" Width="449"/>
         <ScrollViewer Margin="96,245,0,11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Stretch" Width="447" HorizontalAlignment="Left">
             <StackPanel Margin="5,5,5,5">
                 <TextBlock Text="{Binding Info.Name, StringFormat=Name: {0}}"></TextBlock>
