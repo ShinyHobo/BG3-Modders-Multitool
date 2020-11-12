@@ -14,19 +14,22 @@
         private static string[] GameObjectTypes = { "character","item","scenery","prefab","trigger","surface","projectile","decal","TileConstruction","light","LevelTemplate","SplineConstruction","lightProbe","Spline","terrain" };
 
         private List<GameObject> gameObjects;
+        public List<GameObject> FlatGameObjects { get; private set; }
+        private List<Translation> translations;
+        public List<Translation> Translations { get; private set; }
 
         public RootTemplateHelper()
         {
+            ReadTranslations();
             ReadRootTemplate();
         }
 
         /// <summary>
         /// Reads the root template and converts it into a GameObject list.
         /// </summary>
-        /// <returns>The time to complete.</returns>
-        private double ReadRootTemplate()
+        /// <returns>Whether the root template was read.</returns>
+        private bool ReadRootTemplate()
         {
-            var start = DateTime.Now;
             var rootTemplates = @"Shared\Public\Shared\RootTemplates\_merged.lsf";
             if (File.Exists(FileHelper.GetPath(rootTemplates)))
             {
@@ -35,6 +38,7 @@
                 using (XmlReader reader = XmlReader.Create(rootTemplates))
                 {
                     GameObject gameObject = null;
+                    var translationLookup = translations.ToDictionary(go => go.ContentUid);
                     while (reader.Read())
                     {
                         switch (reader.NodeType)
@@ -60,10 +64,12 @@
                                             gameObject.Name = value;
                                             break;
                                         case "DisplayName":
-                                            gameObject.DisplayName = value;
+                                            gameObject.DisplayName = translationLookup.ContainsKey(value) ? translationLookup[value].Value : string.Empty;
+                                            gameObject.DisplayNameHandle = value;
                                             break;
                                         case "Description":
-                                            gameObject.Description = value;
+                                            gameObject.DescriptionHandle = value;
+                                            gameObject.Description = translationLookup.ContainsKey(value) ? translationLookup[value].Value : string.Empty;
                                             break;
                                         case "Type":
                                             CheckForValidGameObjectType(value);
@@ -88,6 +94,7 @@
                     }
                 }
                 gameObjects = gameObjects.OrderBy(go => go.Name).ToList();
+                FlatGameObjects = gameObjects;
 
                 // Groups children by MapKey and ParentTemplateId
                 var children = gameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
@@ -98,9 +105,36 @@
                 }
                 gameObjects = gameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
 
-                return DateTime.Now.Subtract(start).TotalSeconds;
+                return true;
             }
-            return -1;
+            return false;
+        }
+
+        /// <summary>
+        /// Reads translation file into translation list.
+        /// </summary>
+        /// <returns>Whether the translation file was read.</returns>
+        private bool ReadTranslations()
+        {
+            var translationFile = FileHelper.GetPath(@"English\Localization\English\english.xml");
+            if (File.Exists(translationFile))
+            {
+                translations = new List<Translation>();
+                using (XmlReader reader = XmlReader.Create(translationFile))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.Name == "content")
+                        {
+                            var id = reader.GetAttribute("contentuid");
+                            var text = reader.ReadInnerXml();
+                            translations.Add(new Translation { ContentUid = id, Value = text });
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
 
         public async Task<ObservableCollection<GameObject>> LoadRelevent(string gameObjectType)
