@@ -11,7 +11,7 @@
     <Grid>
         <Button x:Name="characterButton" Content="Characters" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="CharacterButton_Click" Cursor="Hand"/>
         <Button x:Name="itemButton" Content="Items" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="ItemButton_Click" Cursor="Hand"/>
-        <TreeView x:Name="treeView" Margin="95,40,0,190" Width="450" HorizontalAlignment="left" VerticalContentAlignment="Stretch" ItemsSource="{Binding GameObjects}">
+        <TreeView x:Name="treeView" Margin="95,40,0,0" Width="450" HorizontalAlignment="Left" Height="199" VerticalAlignment="Top" ItemsSource="{Binding GameObjects}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
                     <StackPanel Orientation="Horizontal">
@@ -54,23 +54,20 @@
             <TabItem Header="Feats"></TabItem>
             <TabItem Header="Stats"></TabItem>
         </TabControl>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="95,0,10,10" Width="450" Height="175" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-            <Grid x:Name="infoGrid" Margin="0,0,0,0" Width="450" Height="175" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <StackPanel Margin="5,5,5,5">
-                        <TextBlock Text="{Binding Info.Name, StringFormat=Name: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding Info.MapKey, StringFormat=MapKey: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding Info.ParentTemplateId, StringFormat=ParentTemplateId: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding Info.DisplayNameHandle, StringFormat=DisplayNameHandle: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding Info.DisplayName, StringFormat=DisplayName: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding Info.DescriptionHandle, StringFormat=DescriptionHandle: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding Info.Description, StringFormat=Description: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding Info.Icon, StringFormat=Icon: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding Info.Stats, StringFormat=Stats: {0}}"></TextBlock>
-                    </StackPanel>
-                </ScrollViewer>
-            </Grid>
-        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" Margin="95,244,0,10" HorizontalAlignment="Left" Width="449"/>
+        <ScrollViewer Margin="96,245,0,11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Stretch" Width="447" HorizontalAlignment="Left">
+            <StackPanel Margin="5,5,5,5">
+                <TextBlock Text="{Binding Info.Name, StringFormat=Name: {0}}"></TextBlock>
+                <TextBlock Text="{Binding Info.MapKey, StringFormat=MapKey: {0}}"></TextBlock>
+                <TextBlock Text="{Binding Info.ParentTemplateId, StringFormat=ParentTemplateId: {0}}"></TextBlock>
+                <TextBlock Text="{Binding Info.DisplayNameHandle, StringFormat=DisplayNameHandle: {0}}"></TextBlock>
+                <TextBlock Text="{Binding Info.DisplayName, StringFormat=DisplayName: {0}}"></TextBlock>
+                <TextBlock Text="{Binding Info.DescriptionHandle, StringFormat=DescriptionHandle: {0}}"></TextBlock>
+                <TextBlock Text="{Binding Info.Description, StringFormat=Description: {0}}"></TextBlock>
+                <TextBlock Text="{Binding Info.Icon, StringFormat=Icon: {0}}"></TextBlock>
+                <TextBlock Text="{Binding Info.Stats, StringFormat=Stats: {0}}"></TextBlock>
+            </StackPanel>
+        </ScrollViewer>
         <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="95,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="369" IsEnabled="False"/>
         <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="469,10,0,0" VerticalAlignment="Top" Width="75" Height="25" IsEnabled="False"/>
     </Grid>
