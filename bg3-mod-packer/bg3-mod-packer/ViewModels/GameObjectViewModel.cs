@@ -12,6 +12,11 @@
             RootTemplateHelper = new RootTemplateHelper();
         }
 
+        public void Clear()
+        {
+            RootTemplateHelper.Clear();
+        }
+
         public RootTemplateHelper RootTemplateHelper;
 
         private ObservableCollection<GameObject> _gameObjects;

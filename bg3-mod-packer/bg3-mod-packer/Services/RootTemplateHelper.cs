@@ -26,6 +26,18 @@
             ReadRaces();
         }
 
+        public void Clear()
+        {
+            gameObjects.Clear();
+            TranslationLookup.Clear();
+            FlatGameObjects.Clear();
+            Translations.Clear();
+            Races.Clear();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
+
         private bool ReadRaces()
         {
             var raceFile = FileHelper.GetPath(@"Shared\Public\Shared\Races\Races.lsx");
