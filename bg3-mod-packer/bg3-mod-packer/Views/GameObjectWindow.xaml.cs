@@ -104,5 +104,11 @@
             var MapKey = ((Button)sender).Uid;
             vm.Info = vm.RootTemplateHelper.FlatGameObjects.Single(go => go.MapKey == MapKey);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var vm = DataContext as GameObjectViewModel;
+            vm.Clear();
+        }
     }
 }
