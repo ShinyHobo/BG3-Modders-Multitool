@@ -71,7 +71,7 @@ namespace bg3_mod_packer.Services
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, new ShingleAnalyzerWrapper(new CustomAnalyzer(), 2, 2, string.Empty, true, true, string.Empty));
+                IndexFiles(filelist, new CustomAnalyzer());
             });
         }
 
@@ -161,7 +161,7 @@ namespace bg3_mod_packer.Services
 
                 if(DirectoryReader.IndexExists(fSDirectory))
                 {
-                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new CustomAnalyzer(), 2, 2, string.Empty, true, true, string.Empty))
+                    using (Analyzer analyzer = new CustomAnalyzer())
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
@@ -299,12 +299,12 @@ namespace bg3_mod_packer.Services
     /// </summary>
     public class CustomTokenizer : CharTokenizer
     {
-        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';'};
+        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':'};
 
         public CustomTokenizer(LuceneVersion matchVersion, TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';')
+        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':')
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>
