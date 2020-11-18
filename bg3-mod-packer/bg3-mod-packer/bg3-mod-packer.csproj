@@ -259,7 +259,9 @@
     <Compile Include="Views\PakSelection.xaml.cs">
       <DependentUpon>PakSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XAMLHelpers\SelectableTextBlock.cs" />
     <Compile Include="XAMLHelpers\TextBoxFormatter.cs" />
+    <Compile Include="XAMLHelpers\TextEditorWrapper.cs" />
     <Page Include="Views\DragAndDropBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

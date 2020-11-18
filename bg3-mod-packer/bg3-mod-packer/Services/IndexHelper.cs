@@ -71,7 +71,7 @@ namespace bg3_mod_packer.Services
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, new ShingleAnalyzerWrapper(new CustomAnalyzer(), 2, 2, string.Empty, true, true, string.Empty));
+                IndexFiles(filelist, new CustomAnalyzer());
             });
         }
 
@@ -161,7 +161,7 @@ namespace bg3_mod_packer.Services
 
                 if(DirectoryReader.IndexExists(fSDirectory))
                 {
-                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new CustomAnalyzer(), 2, 2, string.Empty, true, true, string.Empty))
+                    using (Analyzer analyzer = new CustomAnalyzer())
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
@@ -187,7 +187,7 @@ namespace bg3_mod_packer.Services
 
                             Application.Current.Dispatcher.Invoke(() => {
                                 var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks);
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.ToString("mm\\:ss")}\n";
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.TotalMilliseconds} ms\n";
                             });
 
                             // display results
@@ -228,6 +228,9 @@ namespace bg3_mod_packer.Services
         /// <returns>A list of file line and trimmed contents.</returns>
         public Dictionary<int, string> GetFileContents(string path)
         {
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Looking up file contents.\n";
+            });
             var lines = new Dictionary<int, string>();
             var lineCount = 1;
             path = @"\\?\" + path;
@@ -276,6 +279,9 @@ namespace bg3_mod_packer.Services
                     lines.Add(0, "No lines found; search returned filename only.");
                 }
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Lookup complete.\n";
+            });
             return lines;
         }
     }
@@ -299,12 +305,12 @@ namespace bg3_mod_packer.Services
     /// </summary>
     public class CustomTokenizer : CharTokenizer
     {
-        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';'};
+        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':'};
 
         public CustomTokenizer(LuceneVersion matchVersion, TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';')
+        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':')
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>
