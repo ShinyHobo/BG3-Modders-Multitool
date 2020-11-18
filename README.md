@@ -1,4 +1,4 @@
-# bg3-mod-packer
+# BG3 Mod Helper
 Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace.
 
 To use:
