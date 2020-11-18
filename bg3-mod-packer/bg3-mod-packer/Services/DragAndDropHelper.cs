@@ -248,6 +248,43 @@ namespace bg3_mod_packer.Services
         }
 
         /// <summary>
+        /// Builds a pack from converted files.
+        /// </summary>
+        /// <param name="path">The mod root path.</param>
+        /// <returns>The new mod build directory.</returns>
+        private static string BuildPack(string path)
+        {
+            var fileList = FileHelper.DirectorySearch(path);
+            var modDir = $"{TempFolder}\\{new DirectoryInfo(path).Name}";
+            foreach (var file in fileList)
+            {
+                var fileParent = file.Replace(path, string.Empty).Replace("\\\\?\\",string.Empty);
+                var fileName = Path.GetFileName(file);
+                var extension = Path.GetExtension(fileName);
+                var conversionFile = fileName.Replace(extension, string.Empty);
+                var secondExtension = Path.GetExtension(conversionFile);
+                // copy to temp dir
+                var mod = $"\\\\?\\{modDir}{fileParent}";
+                var modParent = new DirectoryInfo(mod).Parent.FullName;
+                if (string.IsNullOrEmpty(secondExtension))
+                {
+                    if(!Directory.Exists(modParent))
+                    {
+                        Directory.CreateDirectory(modParent);
+                    }
+                    File.Copy(file, mod);
+                }
+                else
+                {
+                    // convert and save to temp dir
+                    FileHelper.Convert(file, secondExtension.Remove(0,1), $"{modParent}\\{conversionFile}");
+                }
+            }
+            
+            return modDir;
+        }
+
+        /// <summary>
         /// Process mod for packing.
         /// </summary>
         /// <param name="path">The path to process.</param>
@@ -256,10 +293,12 @@ namespace bg3_mod_packer.Services
         private static List<string> ProcessMod(string path, string dirName)
         {
             var mw = Application.Current.MainWindow.DataContext as MainWindow;
-            var destination = TempFolder + $"\\{dirName}.pak";
+            var destination =  $"{TempFolder}\\{dirName}.pak";
             mw.ConsoleOutput += $"Destination: {destination}\n";
             mw.ConsoleOutput += $"Attempting to pack mod.\n";
-            PackMod(path, destination);
+            var buildDir = BuildPack(path);
+            PackMod(buildDir, destination);
+            Directory.Delete(buildDir,true);
             return GetMetalsxList(Directory.GetDirectories(path + "\\Mods"));
         }
     }
