@@ -99,5 +99,11 @@
             FileHelper.OpenFile(newFile);
             convertAndOpenButton.IsEnabled = true;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var vm = DataContext as SearchResults;
+            vm.Clear();
+        }
     }
 }

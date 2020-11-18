@@ -15,7 +15,6 @@ namespace bg3_mod_packer.Services
     using Lucene.Net.Documents;
     using Lucene.Net.Search;
     using Lucene.Net.QueryParsers.Classic;
-    using Lucene.Net.Analysis.Shingle;
     using System.Threading.Tasks;
     using bg3_mod_packer.ViewModels;
     using Lucene.Net.Analysis.Core;
@@ -38,6 +37,14 @@ namespace bg3_mod_packer.Services
         public IndexHelper()
         {
             fSDirectory = FSDirectory.Open(luceneIndex);
+        }
+
+        public void Clear()
+        {
+            fSDirectory.Dispose();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
         }
 
         #region Indexing
