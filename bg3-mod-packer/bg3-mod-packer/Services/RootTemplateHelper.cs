@@ -160,7 +160,7 @@
             var rootTemplates = @"Shared\Public\Shared\RootTemplates\_merged.lsf";
             if (File.Exists(FileHelper.GetPath(rootTemplates)))
             {
-                rootTemplates = FileHelper.GetPath(FileHelper.ConvertToLsx(rootTemplates));
+                rootTemplates = FileHelper.GetPath(FileHelper.Convert(rootTemplates,"lsx"));
                 gameObjects = new List<GameObject>();
                 using (XmlReader reader = XmlReader.Create(rootTemplates))
                 {
