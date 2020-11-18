@@ -26,10 +26,10 @@ namespace bg3_mod_packer.Views
         /// Process a drop.
         /// </summary>
         /// <param name="e">The event args.</param>
-        protected override void OnDrop(DragEventArgs e)
+        protected async override void OnDrop(DragEventArgs e)
         {
             var vm = DataContext as ViewModels.DragAndDropBox;
-            vm.ProcessDrop(e.Data);
+            await vm.ProcessDrop(e.Data);
         }
 
         private void Grid_DragEnter(object sender, DragEventArgs e)
