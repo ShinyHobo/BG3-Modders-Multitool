@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bg3_mod_packer.Views"
         xmlns:helpers="clr-namespace:bg3_mod_packer.XAMLHelpers"
         mc:Ignorable="d"
         MinWidth="1250"
@@ -49,7 +48,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Name="stack">
                         <TextBlock FontWeight="Bold" Text="{Binding Key, StringFormat={}{0}:}" MinWidth="40"></TextBlock>
-                        <TextBlock helpers:TextBlockFormatter.FormattedText="{Binding Text, Mode=OneWay}" Background="Transparent"></TextBlock>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Text, Mode=OneWay}" Background="Transparent" Cursor="IBeam"></helpers:SelectableTextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
