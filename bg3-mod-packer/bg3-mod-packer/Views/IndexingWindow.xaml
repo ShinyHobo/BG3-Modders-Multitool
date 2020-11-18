@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         MinWidth="1250"
         MinHeight="250"
-        Title="Index Search" Height="430" Width="1250">
+        Title="Index Search" Height="430" Width="1250" Closing="Window_Closing">
     <Grid>
         <Button x:Name="searchFilesButton" Content="Search Files" HorizontalAlignment="Left" Margin="668,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand"/>
         <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="653" KeyDown="Search_KeyDown"/>
