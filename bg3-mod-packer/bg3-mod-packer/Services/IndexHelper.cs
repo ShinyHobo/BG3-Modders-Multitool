@@ -96,7 +96,7 @@ namespace bg3_mod_packer.Services
                         {
                             IndexLuceneFile(file, writer);
                         }
-                        catch(OutOfMemoryException ex)
+                        catch(OutOfMemoryException)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
                                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"OOME: Failed to index {file}\n";

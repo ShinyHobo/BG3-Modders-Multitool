@@ -19,16 +19,25 @@ namespace bg3_mod_packer.Services
         /// </summary>
         /// <param name="file">The file to convert.</param>
         /// <returns>The new file path.</returns>
-        public static string ConvertToLsx(string file)
+        public static string Convert(string file, string extension, string newPath = null)
         {
-            var path = GetPath(file);
-            var extension = Path.GetExtension(file);
-            var newFile = file.Replace(extension, ".lsx");
-            var newPath = GetPath(newFile);
-            var isConvertable = CanConvertToLsx(file);
+            var path = string.Empty;
+            var originalExtension = Path.GetExtension(file);
+            var newFile = file.Replace(originalExtension, $".{extension}");
+            var isConvertable = true;
+            if (string.IsNullOrEmpty(newPath))
+            {
+                path = GetPath(file);
+                newPath = GetPath(newFile);
+                isConvertable = CanConvertToLsx(file);
+            }
+            else
+            {
+                path = file;
+            }
             if (!File.Exists(newPath) && isConvertable)
             {
-                var divine = $" -g \"bg3\" --action \"convert-resource\" --output-format \"lsx\" --source \"{path}\" --destination \"{newPath}\" -l \"all\"";
+                var divine = $" -g \"bg3\" --action \"convert-resource\" --output-format \"{extension}\" --source \"{path}\" --destination \"{newPath}\" -l \"all\"";
                 var process = new Process();
                 var startInfo = new ProcessStartInfo
                 {
@@ -45,8 +54,11 @@ namespace bg3_mod_packer.Services
                 process.WaitForExit();
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardOutput.ReadToEnd();
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardError.ReadToEnd();
+                    if(string.IsNullOrEmpty(newPath))
+                    {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardOutput.ReadToEnd();
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardError.ReadToEnd();
+                    }
                 });
             }
 
@@ -70,12 +82,12 @@ namespace bg3_mod_packer.Services
             {
                 Directory.CreateDirectory(directory);
             }
-            var fileList = RecurisiveFileSearch(directory);
+            var fileList = RecursiveFileSearch(directory);
             if (fileList.Count == 0)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No files unpacked for indexing!\n";
+                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No files found!\n";
                 });
             }
             return fileList;
@@ -86,7 +98,7 @@ namespace bg3_mod_packer.Services
         /// </summary>
         /// <param name="directory">The directory root to search.</param>
         /// <returns>A list of files in the directory.</returns>
-        private static List<string> RecurisiveFileSearch(string directory)
+        private static List<string> RecursiveFileSearch(string directory)
         {
             var fileList = new List<string>();
             foreach (string dir in Directory.GetDirectories(directory))
@@ -95,7 +107,7 @@ namespace bg3_mod_packer.Services
                 {
                     fileList.Add(@"\\?\" + Path.GetFullPath(file));
                 }
-                fileList.AddRange(RecurisiveFileSearch(dir));
+                fileList.AddRange(RecursiveFileSearch(dir));
             }
             return fileList;
         }

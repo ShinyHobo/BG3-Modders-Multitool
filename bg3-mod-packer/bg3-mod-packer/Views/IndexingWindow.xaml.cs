@@ -95,7 +95,7 @@
         {
             convertAndOpenButton.IsEnabled = false;
             var vm = DataContext as SearchResults;
-            var newFile = FileHelper.ConvertToLsx(vm.SelectedPath);
+            var newFile = FileHelper.Convert(vm.SelectedPath,"lsx");
             FileHelper.OpenFile(newFile);
             convertAndOpenButton.IsEnabled = true;
         }
