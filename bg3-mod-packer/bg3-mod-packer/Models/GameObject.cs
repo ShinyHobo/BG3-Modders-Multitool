@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_mod_packer.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -34,6 +35,11 @@ namespace bg3_mod_packer.Models
                     return 0;
                 return Children.Sum(x => x.Count) + Children.Count;
             }
+        }
+
+        public GameObject Clone()
+        {
+            return (GameObject)MemberwiseClone();
         }
     }
 }
