@@ -15,7 +15,6 @@ namespace bg3_mod_packer.Services
     using Lucene.Net.Documents;
     using Lucene.Net.Search;
     using Lucene.Net.QueryParsers.Classic;
-    using Lucene.Net.Analysis.Shingle;
     using System.Threading.Tasks;
     using bg3_mod_packer.ViewModels;
     using Lucene.Net.Analysis.Core;
@@ -38,6 +37,14 @@ namespace bg3_mod_packer.Services
         public IndexHelper()
         {
             fSDirectory = FSDirectory.Open(luceneIndex);
+        }
+
+        public void Clear()
+        {
+            fSDirectory.Dispose();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
         }
 
         #region Indexing
@@ -96,7 +103,7 @@ namespace bg3_mod_packer.Services
                         {
                             IndexLuceneFile(file, writer);
                         }
-                        catch(OutOfMemoryException ex)
+                        catch(OutOfMemoryException)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
                                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"OOME: Failed to index {file}\n";
@@ -187,7 +194,7 @@ namespace bg3_mod_packer.Services
 
                             Application.Current.Dispatcher.Invoke(() => {
                                 var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks);
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.ToString("mm\\:ss")}\n";
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.TotalMilliseconds} ms\n";
                             });
 
                             // display results
@@ -228,6 +235,9 @@ namespace bg3_mod_packer.Services
         /// <returns>A list of file line and trimmed contents.</returns>
         public Dictionary<int, string> GetFileContents(string path)
         {
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Looking up file contents.\n";
+            });
             var lines = new Dictionary<int, string>();
             var lineCount = 1;
             path = @"\\?\" + path;
@@ -276,6 +286,9 @@ namespace bg3_mod_packer.Services
                     lines.Add(0, "No lines found; search returned filename only.");
                 }
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Lookup complete.\n";
+            });
             return lines;
         }
     }

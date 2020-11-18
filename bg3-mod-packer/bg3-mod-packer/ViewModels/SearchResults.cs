@@ -22,6 +22,11 @@ namespace bg3_mod_packer.ViewModels
             IsIndexing = false;
         }
 
+        public void Clear()
+        {
+            IndexHelper.Clear();
+        }
+
         /// <summary>
         /// Gets the time that has passed since indexing began.
         /// </summary>

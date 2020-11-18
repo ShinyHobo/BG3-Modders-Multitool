@@ -115,6 +115,7 @@ namespace bg3_mod_packer.Views
         }
         #endregion
 
+        #region Indexing
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             new IndexingWindow().Show();
@@ -125,6 +126,7 @@ namespace bg3_mod_packer.Views
             var vm = DataContext as ViewModels.MainWindow;
             await vm.SearchResults.IndexHelper.Index();
         }
+        #endregion
 
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {

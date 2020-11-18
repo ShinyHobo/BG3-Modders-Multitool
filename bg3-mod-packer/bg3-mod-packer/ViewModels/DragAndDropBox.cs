@@ -1,21 +1,26 @@
-﻿using System;
-using System.Windows;
-/// <summary>
+﻿/// <summary>
 /// The drag and drop box view model.
 /// </summary>
 namespace bg3_mod_packer.ViewModels
 {
+    using System.Threading.Tasks;
+    using System.Windows;
+
     public class DragAndDropBox : BaseViewModel
     {
         public DragAndDropBox()
         {
             PackAllowed = !string.IsNullOrEmpty(Properties.Settings.Default.divineExe);
+            _packAllowedDrop = PackAllowed;
         }
 
-        public void ProcessDrop(IDataObject data)
+        public async Task ProcessDrop(IDataObject data)
         {
-            Services.DragAndDropHelper.ProcessDrop(data);
-            Lighten();
+            PackAllowed = false;
+            _packAllowedDrop = false;
+            await Services.DragAndDropHelper.ProcessDrop(data).ContinueWith(delegate {
+                PackAllowed = true;
+            });
         }
 
         internal void Darken()
@@ -52,16 +57,22 @@ namespace bg3_mod_packer.ViewModels
         }
 
         private bool _packAllowed;
+        private bool _packAllowedDrop;
 
         public bool PackAllowed {
             get { return _packAllowed; }
             set {
                 _packAllowed = value;
                 if (value)
+                {
                     Lighten();
+                    _packAllowedDrop = value;
+                }
                 else
+                {
                     Darken();
-                PackBoxInstructions = value ? "Drop mod workspace folder here" : "Select divine.exe location";
+                }
+                PackBoxInstructions = value || _packAllowedDrop ? "Drop mod workspace folder here" : "Select divine.exe location";
                 OnNotifyPropertyChanged();
             }
         }
