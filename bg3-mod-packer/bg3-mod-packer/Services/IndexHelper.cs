@@ -187,7 +187,7 @@ namespace bg3_mod_packer.Services
 
                             Application.Current.Dispatcher.Invoke(() => {
                                 var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks);
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.ToString("mm\\:ss")}\n";
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.TotalMilliseconds} ms\n";
                             });
 
                             // display results
