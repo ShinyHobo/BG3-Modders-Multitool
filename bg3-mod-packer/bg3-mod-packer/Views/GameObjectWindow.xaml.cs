@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
 
     /// <summary>
     /// Interaction logic for GameObjectWindow.xaml
@@ -16,25 +17,37 @@
             DataContext = new GameObjectViewModel();
         }
 
-        private async void CharacterButton_Click(object sender, RoutedEventArgs e)
+        private void CharacterButton_Click(object sender, RoutedEventArgs e)
         {
+            LoadRelevant("character", sender);
+        }
+
+        private void ItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadRelevant("item", sender);
+        }
+
+        private async void LoadRelevant(string type, object sender)
+        {
+            searchBox.Text = string.Empty;
             ToggleButtons();
             var vm = DataContext as GameObjectViewModel;
-            vm.GameObjects = await vm.RootTemplateHelper.LoadRelevent("character");
+            vm.GameObjects = vm.UnfilteredGameObjects = await vm.RootTemplateHelper.LoadRelevent(type);
             ToggleButtons(sender);
         }
 
-        private async void ItemButton_Click(object sender, RoutedEventArgs e)
+        private void Search_Click(object sender, RoutedEventArgs e)
         {
-            ToggleButtons();
             var vm = DataContext as GameObjectViewModel;
-            vm.GameObjects = await vm.RootTemplateHelper.LoadRelevent("item");
-            ToggleButtons(sender);
+            vm.GameObjects = vm.Filter(searchBox.Text ?? string.Empty);
         }
 
-        private void Collapsed(object sender, RoutedEventArgs e)
+        private void Search_KeyDown(object sender, KeyEventArgs e)
         {
-            (sender as TreeViewItem).IsExpanded = true;
+            if (e.Key == Key.Enter)
+            {
+                Search_Click(sender, e);
+            }
         }
 
         /// <summary>
@@ -52,6 +65,11 @@
             all.Collapsed += Collapsed;
             AddTreeViewItems(gameObjects, all);
             treeView.Items.Add(all);
+        }
+
+        private void Collapsed(object sender, RoutedEventArgs e)
+        {
+            (sender as TreeViewItem).IsExpanded = true;
         }
 
         /// <summary>
@@ -91,8 +109,15 @@
             var enable = sender != null;
             characterButton.IsEnabled = enable && characterButton != sender;
             itemButton.IsEnabled = enable && itemButton != sender;
+            search.IsEnabled = enable && search != sender;
+            searchBox.IsEnabled = enable && searchBox != sender;
         }
 
+        /// <summary>
+        /// Displays information for the selected game object.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void ExploreMore_Click(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;

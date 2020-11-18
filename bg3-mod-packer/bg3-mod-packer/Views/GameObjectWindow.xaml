@@ -56,6 +56,7 @@
             <TabItem Header="Stats"></TabItem>
         </TabControl>
         <Border BorderBrush="Gray" BorderThickness="1" Margin="95,244,0,10" HorizontalAlignment="Left" Width="449"/>
+        <!--TODO - Put scrollviewer contents in separate view-->
         <ScrollViewer Margin="96,245,0,11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Stretch" Width="447" HorizontalAlignment="Left">
             <StackPanel Margin="5,5,5,5" MaxWidth="425">
                 <Grid Background="AliceBlue" Margin="0,1,0,1">
@@ -114,7 +115,7 @@
                 </Grid>
             </StackPanel>
         </ScrollViewer>
-        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="95,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="369" IsEnabled="False"/>
-        <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="469,10,0,0" VerticalAlignment="Top" Width="75" Height="25" IsEnabled="False"/>
+        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="95,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="369" IsEnabled="False" KeyDown="Search_KeyDown"/>
+        <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="469,10,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
     </Grid>
 </Window>
