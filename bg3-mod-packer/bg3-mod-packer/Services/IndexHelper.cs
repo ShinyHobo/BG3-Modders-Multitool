@@ -24,11 +24,12 @@ namespace bg3_mod_packer.Services
 
     public class IndexHelper
     {
-        // images: .png
-        // models: .DDS, .ttf, .gr2, .GR2, .tga, .gtp, .dds
+        // images: .png, .DDS, .dds
+        // models: .ttf, .gr2, .GR2, .tga, .gtp
         // audio: .wem
         // video: .bk2
         private readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".tga", ".gtp", ".wem", ".bk2" };
+        private readonly string[] imageExtensions = { ".png", ".dds", ".DDS" };
         private readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
         public string SearchText;
@@ -243,7 +244,8 @@ namespace bg3_mod_packer.Services
             path = @"\\?\" + path;
             if (File.Exists(path))
             {
-                var isExcluded = extensionsToExclude.Contains(Path.GetExtension(path));
+                var extension = Path.GetExtension(path);
+                var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
                     using (StreamReader r = new StreamReader(path))
@@ -281,9 +283,23 @@ namespace bg3_mod_packer.Services
                         }
                     }
                 }
-                if(lines.Count==0)
+                if (lines.Count == 0)
                 {
-                    lines.Add(0, "No lines found; search returned filename only.");
+                    if(imageExtensions.Contains(extension))
+                    {
+                        lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
+                    }
+                    else
+                    {
+                        lines.Add(0, "No lines found; search returned filename only.");
+                    }
+                }
+            }
+            else
+            {
+                if (lines.Count == 0)
+                {
+                    lines.Add(0, "File not found.");
                 }
             }
             Application.Current.Dispatcher.Invoke(() => {

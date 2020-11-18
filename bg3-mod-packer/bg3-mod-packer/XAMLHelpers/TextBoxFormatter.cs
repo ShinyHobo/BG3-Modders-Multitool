@@ -38,12 +38,19 @@ namespace bg3_mod_packer.XAMLHelpers
             // Create new formatted text
             string formattedText = (string)e.NewValue ?? string.Empty;
             string @namespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-            //formattedText = $@"<Span xml:space=""preserve"" xmlns=""{@namespace}"">{XmlConvert.EncodeName(formattedText)}</Span>";
-            formattedText = new string(formattedText.Where(ch => XmlConvert.IsXmlChar(ch)).ToArray());
-            formattedText = $@"<Span xml:space=""preserve"" xmlns=""{@namespace}"">{formattedText}</Span>";
-            // Inject to inlines
-            var result = (Span)XamlReader.Parse(formattedText);
-            textBlock.Inlines.Add(result);
+            if(formattedText.Contains("InlineUIContainer"))
+            {
+                var result = (InlineUIContainer)XamlReader.Parse(formattedText);
+                textBlock.Inlines.Add(result);
+            }
+            else
+            {
+                formattedText = new string(formattedText.Where(ch => XmlConvert.IsXmlChar(ch)).ToArray());
+                formattedText = $@"<Span xml:space=""preserve"" xmlns=""{@namespace}"">{formattedText}</Span>";
+                // Inject to inlines
+                var result = (Span)XamlReader.Parse(formattedText);
+                textBlock.Inlines.Add(result);
+            }
         }
 
     }
