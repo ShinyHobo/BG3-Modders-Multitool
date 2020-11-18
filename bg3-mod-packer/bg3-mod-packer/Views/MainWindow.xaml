@@ -14,7 +14,7 @@
         </Viewbox>
         <!--TODO move file selectors to separate view-->
         <Grid Margin="273,10,121,340">
-            <Label x:Name="divineLabel" Content="divine.exe location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="divineLabel" Content="divine.exe location (1.15.2+ Required)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding DivineLocation, Mode=TwoWay}" IsReadOnly="True"/>
             <Button x:Name="divineSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23" Cursor="Hand"/>
         </Grid>
