@@ -15,7 +15,6 @@ namespace bg3_mod_packer.Services
     using Lucene.Net.Documents;
     using Lucene.Net.Search;
     using Lucene.Net.QueryParsers.Classic;
-    using Lucene.Net.Analysis.Shingle;
     using System.Threading.Tasks;
     using bg3_mod_packer.ViewModels;
     using Lucene.Net.Analysis.Core;
@@ -38,6 +37,14 @@ namespace bg3_mod_packer.Services
         public IndexHelper()
         {
             fSDirectory = FSDirectory.Open(luceneIndex);
+        }
+
+        public void Clear()
+        {
+            fSDirectory.Dispose();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
         }
 
         #region Indexing
@@ -71,7 +78,7 @@ namespace bg3_mod_packer.Services
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, new ShingleAnalyzerWrapper(new CustomAnalyzer(), 2, 2, string.Empty, true, true, string.Empty));
+                IndexFiles(filelist, new CustomAnalyzer());
             });
         }
 
@@ -96,7 +103,7 @@ namespace bg3_mod_packer.Services
                         {
                             IndexLuceneFile(file, writer);
                         }
-                        catch(OutOfMemoryException ex)
+                        catch(OutOfMemoryException)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
                                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"OOME: Failed to index {file}\n";
@@ -161,7 +168,7 @@ namespace bg3_mod_packer.Services
 
                 if(DirectoryReader.IndexExists(fSDirectory))
                 {
-                    using (Analyzer analyzer = new ShingleAnalyzerWrapper(new CustomAnalyzer(), 2, 2, string.Empty, true, true, string.Empty))
+                    using (Analyzer analyzer = new CustomAnalyzer())
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
@@ -187,7 +194,7 @@ namespace bg3_mod_packer.Services
 
                             Application.Current.Dispatcher.Invoke(() => {
                                 var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks);
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.ToString("mm\\:ss")}\n";
+                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.TotalMilliseconds} ms\n";
                             });
 
                             // display results
@@ -228,6 +235,9 @@ namespace bg3_mod_packer.Services
         /// <returns>A list of file line and trimmed contents.</returns>
         public Dictionary<int, string> GetFileContents(string path)
         {
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Looking up file contents.\n";
+            });
             var lines = new Dictionary<int, string>();
             var lineCount = 1;
             path = @"\\?\" + path;
@@ -243,22 +253,29 @@ namespace bg3_mod_packer.Services
                         while ((line = r.ReadLine()) != null)
                         {
                             var matched = false;
-                            foreach(var s in searchArray)
+                            var escapedLine = line;
+                            foreach(var searchText in searchArray)
                             {
-                                if (line.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+                                if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
                                 {
                                     if(!matched)
                                     {
-                                        line = System.Security.SecurityElement.Escape(line);
+                                        escapedLine = System.Security.SecurityElement.Escape(line);
+                                        matched = true;
                                     }
-                                    var text = line.Substring(line.IndexOf(s, StringComparison.OrdinalIgnoreCase), s.Length);
-                                    line = line.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
-                                    matched = true;
+                                    for (int index = 0; ; index += searchText.Length)
+                                    {
+                                        index = line.IndexOf(searchText, index, StringComparison.OrdinalIgnoreCase);
+                                        if (index == -1)
+                                            break;
+                                        var text = System.Security.SecurityElement.Escape(line.Substring(index, searchText.Length));
+                                        escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
+                                    }
                                 }
                             }
                             if(matched)
                             {
-                                lines.Add(lineCount, line);
+                                lines.Add(lineCount, escapedLine);
                             }
                             lineCount++;
                         }
@@ -269,6 +286,9 @@ namespace bg3_mod_packer.Services
                     lines.Add(0, "No lines found; search returned filename only.");
                 }
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Lookup complete.\n";
+            });
             return lines;
         }
     }
@@ -292,16 +312,18 @@ namespace bg3_mod_packer.Services
     /// </summary>
     public class CustomTokenizer : CharTokenizer
     {
+        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':'};
+
         public CustomTokenizer(LuceneVersion matchVersion, TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters, '-' (for UUIDs), '"', '_', '(', and ')'
+        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':')
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>
         protected override bool IsTokenChar(int c)
         {
-            return Character.IsLetterOrDigit(c) || c == '-' || c == '(' || c == ')' || c == '"' || c == '_';
+            return Character.IsLetterOrDigit(c) || allowedSpecialCharacters.Contains(c);
         }
     }
 

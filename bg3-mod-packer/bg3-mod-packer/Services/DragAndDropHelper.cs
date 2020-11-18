@@ -11,6 +11,7 @@ namespace bg3_mod_packer.Services
     using System.IO;
     using System.IO.Compression;
     using System.Security.Cryptography;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Xml;
 
@@ -36,7 +37,10 @@ namespace bg3_mod_packer.Services
                     if (Path.GetFileName(file).Equals("meta.lsx"))
                     {
                         metaList.Add(file);
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"meta.lsx file found in {mod}.\n";
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"meta.lsx file found in {mod}.\n";
+                        });
                     }
                 }
             }
@@ -73,8 +77,11 @@ namespace bg3_mod_packer.Services
             };
             process.StartInfo = startInfo;
             process.Start();
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardOutput.ReadToEnd();
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardError.ReadToEnd();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardOutput.ReadToEnd();
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardError.ReadToEnd();
+            });
             process.WaitForExit();
         }
 
@@ -131,7 +138,10 @@ namespace bg3_mod_packer.Services
                     }
 
                     mods.Add(metadata);
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Metadata for {metadata.Name} created.\n";
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Metadata for {metadata.Name} created.\n";
+                    });
                 }
 
                 info.Mods.AddRange(mods);
@@ -156,7 +166,10 @@ namespace bg3_mod_packer.Services
 
             var json = JsonConvert.SerializeObject(info);
             File.WriteAllText(TempFolder + @"\info.json", json);
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"info.json generated.\n";
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"info.json generated.\n";
+            });
         }
 
         /// <summary>
@@ -174,7 +187,10 @@ namespace bg3_mod_packer.Services
                 File.Delete(zip);
             }
             ZipFile.CreateFromDirectory(TempFolder, zip);
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"{name}.zip created.\n";
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"{name}.zip created.\n";
+            });
         }
 
         /// <summary>
@@ -189,7 +205,10 @@ namespace bg3_mod_packer.Services
             {
                 file.Delete();
             }
-            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Temp files cleaned.\n";
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Temp files cleaned.\n";
+            });
         }
 
         /// <summary>
@@ -197,54 +216,99 @@ namespace bg3_mod_packer.Services
         /// </summary>
         /// <param name="data">Drop data, should be a folder</param>
         /// <returns>Success</returns>
-        public static void ProcessDrop(IDataObject data)
+        public async static Task ProcessDrop(IDataObject data)
         {
-            try
-            {
-                if (data.GetDataPresent(DataFormats.FileDrop))
+            await Task.Run(() => {
+                try
                 {
-                    var fileDrop = data.GetData(DataFormats.FileDrop, true);
-                    if (fileDrop is string[] filesOrDirectories && filesOrDirectories.Length > 0)
+                    if (data.GetDataPresent(DataFormats.FileDrop))
                     {
-                        var mw = Application.Current.MainWindow.DataContext as MainWindow;
-                        foreach (string fullPath in filesOrDirectories)
+                        var fileDrop = data.GetData(DataFormats.FileDrop, true);
+                        if (fileDrop is string[] filesOrDirectories && filesOrDirectories.Length > 0)
                         {
-                            // Only accept directory
-                            if (Directory.Exists(fullPath))
+                            foreach (string fullPath in filesOrDirectories)
                             {
-                                var metaList = new Dictionary<string,List<string>>();
-                                var dirName = new DirectoryInfo(fullPath).Name;
-                                mw.ConsoleOutput += $"Directory name: {dirName}\n";
-                                if (Directory.Exists(fullPath + "\\Mods"))
+                                // Only accept directory
+                                if (Directory.Exists(fullPath))
                                 {
-                                    // single mod directory
-                                    metaList.Add(Guid.NewGuid().ToString(), ProcessMod(fullPath, dirName));
+                                    var metaList = new Dictionary<string, List<string>>();
+                                    var dirName = new DirectoryInfo(fullPath).Name;
+                                    Application.Current.Dispatcher.Invoke(() => {
+                                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Directory name: {dirName}\n";
+                                    });
+                                    if (Directory.Exists(fullPath + "\\Mods"))
+                                    {
+                                        // single mod directory
+                                        metaList.Add(Guid.NewGuid().ToString(), ProcessMod(fullPath, dirName));
+                                    }
+                                    else
+                                    {
+                                        // multiple mod directories?
+                                        foreach (string dir in Directory.GetDirectories(fullPath))
+                                        {
+                                            metaList.Add(Guid.NewGuid().ToString(), ProcessMod(dir, new DirectoryInfo(dir).Name));
+                                        }
+                                    }
+                                    GenerateInfoJson(metaList);
+                                    GenerateZip(fullPath, dirName);
+                                    CleanTempDirectory();
                                 }
                                 else
                                 {
-                                    // multiple mod directories?
-                                    foreach (string dir in Directory.GetDirectories(fullPath))
-                                    {
-                                        metaList.Add(Guid.NewGuid().ToString(), ProcessMod(dir, new DirectoryInfo(dir).Name));
-                                    }
+                                    // File dropping unsupported
+                                    Application.Current.Dispatcher.Invoke(() => {
+                                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File dropping is not yet supported.";
+                                    });
                                 }
-                                GenerateInfoJson(metaList);
-                                GenerateZip(fullPath, dirName);
-                                CleanTempDirectory();
-                            }
-                            else
-                            {
-                                // File dropping unsupported
-                                mw.ConsoleOutput += $"File dropping is not yet supported.";
                             }
                         }
                     }
                 }
-            }
-            catch (Exception ex)
+                catch (Exception ex)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += ex.Message;
+                    });
+                    CleanTempDirectory();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Builds a pack from converted files.
+        /// </summary>
+        /// <param name="path">The mod root path.</param>
+        /// <returns>The new mod build directory.</returns>
+        private static string BuildPack(string path)
+        {
+            var fileList = FileHelper.DirectorySearch(path);
+            var modDir = $"{TempFolder}\\{new DirectoryInfo(path).Name}";
+            foreach (var file in fileList)
             {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += ex.Message;
+                var fileParent = file.Replace(path, string.Empty).Replace("\\\\?\\",string.Empty);
+                var fileName = Path.GetFileName(file);
+                var extension = Path.GetExtension(fileName);
+                var conversionFile = fileName.Replace(extension, string.Empty);
+                var secondExtension = Path.GetExtension(conversionFile);
+                // copy to temp dir
+                var mod = $"\\\\?\\{modDir}{fileParent}";
+                var modParent = new DirectoryInfo(mod).Parent.FullName;
+                if (string.IsNullOrEmpty(secondExtension))
+                {
+                    if(!Directory.Exists(modParent))
+                    {
+                        Directory.CreateDirectory(modParent);
+                    }
+                    File.Copy(file, mod);
+                }
+                else
+                {
+                    // convert and save to temp dir
+                    FileHelper.Convert(file, secondExtension.Remove(0,1), $"{modParent}\\{conversionFile}");
+                }
             }
+            
+            return modDir;
         }
 
         /// <summary>
@@ -255,11 +319,15 @@ namespace bg3_mod_packer.Services
         /// <returns></returns>
         private static List<string> ProcessMod(string path, string dirName)
         {
-            var mw = Application.Current.MainWindow.DataContext as MainWindow;
-            var destination = TempFolder + $"\\{dirName}.pak";
-            mw.ConsoleOutput += $"Destination: {destination}\n";
-            mw.ConsoleOutput += $"Attempting to pack mod.\n";
-            PackMod(path, destination);
+            var destination =  $"{TempFolder}\\{dirName}.pak";
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Destination: {destination}\n";
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Attempting to pack mod.\n";
+            });
+            var buildDir = BuildPack(path);
+            PackMod(buildDir, destination);
+            Directory.Delete(buildDir,true);
             return GetMetalsxList(Directory.GetDirectories(path + "\\Mods"));
         }
     }

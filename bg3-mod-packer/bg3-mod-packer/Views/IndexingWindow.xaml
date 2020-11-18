@@ -3,12 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bg3_mod_packer.Views"
         xmlns:helpers="clr-namespace:bg3_mod_packer.XAMLHelpers"
         mc:Ignorable="d"
         MinWidth="1250"
         MinHeight="250"
-        Title="Index Search" Height="430" Width="1250">
+        Title="Index Search" Height="430" Width="1250" Closing="Window_Closing">
     <Grid>
         <Button x:Name="searchFilesButton" Content="Search Files" HorizontalAlignment="Left" Margin="668,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand"/>
         <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="653" KeyDown="Search_KeyDown"/>
@@ -49,7 +48,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Name="stack">
                         <TextBlock FontWeight="Bold" Text="{Binding Key, StringFormat={}{0}:}" MinWidth="40"></TextBlock>
-                        <TextBlock helpers:TextBlockFormatter.FormattedText="{Binding Text, Mode=OneWay}" Background="Transparent"></TextBlock>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Text, Mode=OneWay}" Background="Transparent" Cursor="IBeam"></helpers:SelectableTextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
