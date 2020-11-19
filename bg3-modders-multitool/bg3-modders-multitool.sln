@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bg3-mod-packer", "bg3-mod-packer\bg3-mod-packer.csproj", "{DEE07D4E-CD36-43D0-A3DD-96D4D611B4E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bg3-modders-multitool", "bg3-modders-multitool\bg3-modders-multitool.csproj", "{DEE07D4E-CD36-43D0-A3DD-96D4D611B4E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
