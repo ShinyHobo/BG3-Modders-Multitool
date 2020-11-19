@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:bg3_mod_packer.Views"
-        xmlns:viewModels="clr-namespace:bg3_mod_packer.ViewModels"
+        xmlns:root="clr-namespace:bg3_mod_packer"
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="Baldur's Gate 3 Modder's Multitool" Height="450" Width="800">
@@ -47,6 +47,6 @@
             <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"/>
         </Grid>
         <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="666,109,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"/>
-        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="644,196,0,0" VerticalAlignment="Top" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand"/>
+        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="642,196,0,0" VerticalAlignment="Top" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand"/>
     </Grid>
 </Window>
