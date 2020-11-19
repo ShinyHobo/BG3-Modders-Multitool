@@ -1,4 +1,7 @@
-﻿namespace bg3_mod_packer.Views
+﻿/// <summary>
+/// The index search window.
+/// </summary>
+namespace bg3_mod_packer.Views
 {
     using bg3_mod_packer.Services;
     using bg3_mod_packer.ViewModels;

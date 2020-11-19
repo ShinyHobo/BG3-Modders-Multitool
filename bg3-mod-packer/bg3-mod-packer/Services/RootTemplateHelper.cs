@@ -1,4 +1,8 @@
-﻿namespace bg3_mod_packer.Services
+﻿/// <summary>
+/// The root template helper service.
+/// Loads information from various unpacked game assets and organizes them for use.
+/// </summary>
+namespace bg3_mod_packer.Services
 {
     using bg3_mod_packer.Models;
     using bg3_mod_packer.ViewModels;

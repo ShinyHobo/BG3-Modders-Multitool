@@ -1,4 +1,7 @@
-﻿namespace bg3_mod_packer.Models
+﻿/// <summary>
+/// The translation model
+/// </summary>
+namespace bg3_mod_packer.Models
 {
     public class Translation
     {
