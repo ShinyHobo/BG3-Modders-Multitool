@@ -1,4 +1,7 @@
-﻿namespace bg3_mod_packer.Models
+﻿/// <summary>
+/// The race model.
+/// </summary>
+namespace bg3_mod_packer.Models
 {
     public class Race
     {

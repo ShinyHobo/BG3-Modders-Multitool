@@ -17,7 +17,7 @@
                 </CompositeCollection>
             </ComboBox.ItemsSource>
         </ComboBox>
-        <TreeView x:Name="treeView" Margin="10,68,0,0" Width="535" HorizontalAlignment="Left" Height="171" VerticalAlignment="Top" ItemsSource="{Binding GameObjects}">
+        <TreeView x:Name="treeView" Margin="10,68,0,0" Width="535" HorizontalAlignment="Left" Height="171" VerticalAlignment="Top" ItemsSource="{Binding GameObjects}" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
             <TreeView.Resources>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
                     <StackPanel Orientation="Horizontal">
