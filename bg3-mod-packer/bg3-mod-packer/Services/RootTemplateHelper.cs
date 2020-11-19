@@ -17,10 +17,9 @@ namespace bg3_mod_packer.Services
 
     public class RootTemplateHelper
     {
-        public static readonly string[] GameObjectTypes = { "character","item","scenery","prefab","trigger","surface","projectile","decal","TileConstruction","light","LevelTemplate","SplineConstruction","lightProbe","Spline","terrain" };
-
-        private List<GameObject> gameObjects;
+        private List<GameObject> GameObjects;
         private Dictionary<string, Translation> TranslationLookup;
+        public List<string> GameObjectTypes { get; private set; }
         public List<GameObject> FlatGameObjects { get; private set; }
         public List<Translation> Translations { get; private set; }
         public List<Race> Races { get; private set; }
@@ -34,7 +33,7 @@ namespace bg3_mod_packer.Services
 
         public void Clear()
         {
-            gameObjects.Clear();
+            GameObjects.Clear();
             TranslationLookup.Clear();
             FlatGameObjects.Clear();
             Translations.Clear();
@@ -124,7 +123,7 @@ namespace bg3_mod_packer.Services
             return await Task.Run(() => {
                 var start = DateTime.Now;
                 CheckForValidGameObjectType(gameObjectType);
-                var returnObjects = new ObservableCollection<GameObject>(gameObjects.Where(go => go.Type == gameObjectType));
+                var returnObjects = new ObservableCollection<GameObject>(GameObjects.Where(go => go.Type == gameObjectType));
                 var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
                 return returnObjects;
             });
@@ -173,7 +172,8 @@ namespace bg3_mod_packer.Services
             if (File.Exists(FileHelper.GetPath(rootTemplates)))
             {
                 rootTemplates = FileHelper.GetPath(FileHelper.Convert(rootTemplates,"lsx"));
-                gameObjects = new List<GameObject>();
+                GameObjects = new List<GameObject>();
+                GameObjectTypes = new List<string>();
                 using (XmlReader reader = XmlReader.Create(rootTemplates))
                 {
                     GameObject gameObject = null;
@@ -226,23 +226,24 @@ namespace bg3_mod_packer.Services
                             case XmlNodeType.EndElement:
                                 if (reader.Depth == 4) // end of GameObject
                                 {
-                                    gameObjects.Add(gameObject);
+                                    GameObjects.Add(gameObject);
                                 }
                                 break;
                         }
                     }
                 }
-                gameObjects = gameObjects.OrderBy(go => go.Name).ToList();
-                FlatGameObjects = gameObjects;
+                GameObjectTypes = GameObjectTypes.OrderBy(got => got).ToList();
+                GameObjects = GameObjects.OrderBy(go => go.Name).ToList();
+                FlatGameObjects = GameObjects;
 
                 // Groups children by MapKey and ParentTemplateId
-                var children = gameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
-                var lookup = gameObjects.ToDictionary(go => go.MapKey);
+                var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+                var lookup = GameObjects.ToDictionary(go => go.MapKey);
                 foreach (var gameObject in children)
                 {
                     lookup[gameObject.ParentTemplateId].Children.Add(gameObject);
                 }
-                gameObjects = gameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+                GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
 
                 return true;
             }
@@ -256,11 +257,11 @@ namespace bg3_mod_packer.Services
         /// Checks for game object types and forces them to be accounted for.
         /// </summary>
         /// <param name="type">The game object type.</param>
-        private static void CheckForValidGameObjectType(string type)
+        private void CheckForValidGameObjectType(string type)
         {
             if (!GameObjectTypes.Contains(type))
             {
-                throw new Exception($"RootTemplate type '{type}' not accounted for.");
+                GameObjectTypes.Add(type);
             }
         }
         #endregion

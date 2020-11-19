@@ -11,7 +11,7 @@
         <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="455" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded">
             <ComboBox.ItemsSource>
                 <CompositeCollection>
-                    <ComboBoxItem x:Name="defaultType" Content="Please Select" Focusable="False" IsHitTestVisible="False" IsEnabled="False"></ComboBoxItem>
+                    <ComboBoxItem x:Name="defaultType" Content="Please Select GameObject Type" Focusable="False" IsHitTestVisible="False" IsEnabled="False"></ComboBoxItem>
                     <CollectionContainer x:Name="typeOptions"/>
                 </CompositeCollection>
             </ComboBox.ItemsSource>
