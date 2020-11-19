@@ -13,7 +13,7 @@
 
     public class RootTemplateHelper
     {
-        private static string[] GameObjectTypes = { "character","item","scenery","prefab","trigger","surface","projectile","decal","TileConstruction","light","LevelTemplate","SplineConstruction","lightProbe","Spline","terrain" };
+        public static readonly string[] GameObjectTypes = { "character","item","scenery","prefab","trigger","surface","projectile","decal","TileConstruction","light","LevelTemplate","SplineConstruction","lightProbe","Spline","terrain" };
 
         private List<GameObject> gameObjects;
         private Dictionary<string, Translation> TranslationLookup;

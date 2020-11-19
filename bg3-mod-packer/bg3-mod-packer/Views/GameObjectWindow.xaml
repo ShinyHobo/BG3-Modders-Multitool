@@ -5,14 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bg3_mod_packer.Views"
         xmlns:model="clr-namespace:bg3_mod_packer.Models"
-        xmlns:viewModel="clr-namespace:bg3_mod_packer.ViewModels"
         xmlns:helpers="clr-namespace:bg3_mod_packer.XAMLHelpers"
         mc:Ignorable="d"
         Title="GameObject Explorer" MinHeight="450" MinWidth="1000" Height="450" Width="1000" Closing="Window_Closing">
     <Grid>
-        <Button x:Name="characterButton" Content="Characters" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="CharacterButton_Click" Cursor="Hand"/>
-        <Button x:Name="itemButton" Content="Items" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="ItemButton_Click" Cursor="Hand"/>
-        <TreeView x:Name="treeView" Margin="95,40,0,0" Width="450" HorizontalAlignment="Left" Height="199" VerticalAlignment="Top" ItemsSource="{Binding GameObjects}">
+        <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="455" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded">
+            <ComboBox.ItemsSource>
+                <CompositeCollection>
+                    <ComboBoxItem x:Name="defaultType" Content="Please Select" Focusable="False" IsHitTestVisible="False" IsEnabled="False"></ComboBoxItem>
+                    <CollectionContainer x:Name="typeOptions"/>
+                </CompositeCollection>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+        <TreeView x:Name="treeView" Margin="10,68,0,0" Width="535" HorizontalAlignment="Left" Height="171" VerticalAlignment="Top" ItemsSource="{Binding GameObjects}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
                     <StackPanel Orientation="Horizontal">
@@ -55,10 +60,10 @@
             <TabItem Header="Feats"></TabItem>
             <TabItem Header="Stats"></TabItem>
         </TabControl>
-        <Border BorderBrush="Gray" BorderThickness="1" Margin="95,244,0,10" HorizontalAlignment="Left" Width="449"/>
+        <Border BorderBrush="Gray" BorderThickness="1" Margin="10,244,0,10" HorizontalAlignment="Left" Width="535"/>
         <!--TODO - Put scrollviewer contents in separate view-->
-        <ScrollViewer Margin="96,245,0,11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Stretch" Width="447" HorizontalAlignment="Left">
-            <StackPanel Margin="5,5,5,5" MaxWidth="425">
+        <ScrollViewer Margin="10,245,0,11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Stretch" Width="533" HorizontalAlignment="Left">
+            <StackPanel Margin="5,5,5,5" MaxWidth="525">
                 <Grid Background="AliceBlue" Margin="0,1,0,1">
                     <Border BorderBrush="Black" BorderThickness="1 1 1 1" Margin="-3,-1,-3,-1"></Border>
                     <TextBlock Text="Name:" FontWeight="Bold" VerticalAlignment="Top"/>
@@ -115,7 +120,8 @@
                 </Grid>
             </StackPanel>
         </ScrollViewer>
-        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="95,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="369" IsEnabled="False" KeyDown="Search_KeyDown"/>
-        <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="469,10,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
+        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="455" IsEnabled="False" KeyDown="Search_KeyDown"/>
+        <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="470,38,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
+        <TextBlock x:Name="listCountBlock" HorizontalAlignment="Left" Margin="470,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="73"/>
     </Grid>
 </Window>
