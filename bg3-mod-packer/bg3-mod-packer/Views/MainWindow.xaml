@@ -23,15 +23,11 @@
             <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding Bg3ExeLocation, Mode=TwoWay}" IsReadOnly="True"/>
             <Button x:Name="bg3exeSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click" Cursor="Hand"/>
         </Grid>
-        <Grid Margin="273,114,121,236">
-            <Label x:Name="guidLabel" Content="v4 UUID Generator (Click field to copy to clipboard)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+        <Grid Margin="273,114,28,236">
+            <Label x:Name="guidLabel" Content="v4 UUID/TranslatedString Handle Generator" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <Button x:Name="guidGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
             <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
-        </Grid>
-        <Grid Margin="273,167,121,183">
-            <Label x:Name="handleLabel" Content="TranslatedString Handle Generator (Click field to copy to clipboard)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
-            <Button x:Name="handleGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="HandleGenerate_Click" Cursor="Hand"/>
-            <Button x:Name="handleText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="HandleText_Click" Cursor="Hand" Content="{Binding HandleText}"/>
+            <CheckBox x:Name="typeSwitch" Content="Handle" HorizontalAlignment="Left" Margin="390,33,0,0" VerticalAlignment="Top" Cursor="Hand"/>
         </Grid>
         <ScrollViewer x:Name="ConsoleScroller" Margin="10,267,6,6" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged">
             <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
@@ -51,6 +47,6 @@
             <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"/>
         </Grid>
         <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="666,109,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"/>
-        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="644,10,0,0" VerticalAlignment="Top" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand"/>
+        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="644,196,0,0" VerticalAlignment="Top" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand"/>
     </Grid>
 </Window>
