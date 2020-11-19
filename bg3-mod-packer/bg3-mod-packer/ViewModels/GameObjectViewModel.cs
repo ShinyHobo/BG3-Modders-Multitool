@@ -50,34 +50,53 @@ namespace bg3_mod_packer.ViewModels
         /// Recursively searches through the game object's children to find matching object names.
         /// </summary>
         /// <param name="filter">The filter.</param>
-        /// <param name="go">The game object to search through.</param>
+        /// <param name="gameObject">The game object to search through.</param>
         /// <returns>The filtered game object.</returns>
-        private GameObject Search(string filter, GameObject go)
+        private GameObject Search(string filter, GameObject gameObject)
         {
-            if (go == null)
+            if (gameObject == null)
                 return null;
             var filteredList = new List<GameObject>();
-            foreach (var subItem in go.Children)
+            foreach (var subItem in gameObject.Children)
             {
                 var filterItem = Search(filter, subItem);
                 if (filterItem != null)
                     filteredList.Add(filterItem);
             }
-            var filterGo = go.Clone();
+            var filterGo = gameObject.Clone();
             filterGo.Children = filteredList;
-            if (filterGo.Name.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+            if (FindMatch(filter, filterGo))
                 return filterGo;
             else
             {
                 foreach (var subItem in filterGo.Children)
                 {
-                    if (subItem.Name.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 || subItem.Children.Count > 0)
+                    if (FindMatch(filter, subItem) || subItem.Children.Count > 0)
                     {
                         return filterGo;
                     }
                 }
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Finds a match to a game object property value.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <param name="gameObject">The game object to filter on.</param>
+        /// <returns></returns>
+        private bool FindMatch(string filter, GameObject gameObject)
+        {
+            return gameObject.Name.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   gameObject.MapKey?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   gameObject.ParentTemplateId?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   gameObject.DisplayNameHandle?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   gameObject.DisplayName?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   gameObject.DescriptionHandle?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   gameObject.Description?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   gameObject.Icon?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   gameObject.Stats?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0;
         }
 
         #region Properties
