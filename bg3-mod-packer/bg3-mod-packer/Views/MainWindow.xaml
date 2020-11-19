@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:bg3_mod_packer.ViewModels"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Baldur's Gate 3 Mod Helper" Height="450" Width="800">
+        Title="Baldur's Gate 3 Modder's Multitool" Height="450" Width="800">
     <Grid>
         <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,10,526,159">
             <views:DragAndDropBox x:Name="dragAndDropBox"/>

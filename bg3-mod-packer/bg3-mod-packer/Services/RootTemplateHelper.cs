@@ -1,12 +1,14 @@
 ﻿namespace bg3_mod_packer.Services
 {
     using bg3_mod_packer.Models;
+    using bg3_mod_packer.ViewModels;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Windows;
     using System.Xml;
 
     public class RootTemplateHelper
@@ -102,6 +104,9 @@
                 }
                 return true;
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load Races.lsx. Please unpack Shared.pak\n";
+            });
             return false;
         }
 
@@ -148,6 +153,9 @@
                     return true;
                 }
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load english.xml. Please unpack English.pak to generate translations.\n";
+            });
             return false;
         }
 
@@ -234,6 +242,9 @@
 
                 return true;
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load root template _merged.lsf. Please unpack Shared.pak\n";
+            });
             return false;
         }
 
