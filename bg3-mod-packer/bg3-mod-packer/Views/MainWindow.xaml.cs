@@ -93,25 +93,13 @@ namespace bg3_mod_packer.Views
         private void GuidGenerate_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            vm.GenerateGuid(false);
+            vm.GenerateGuid(typeSwitch.IsChecked??false);
         }
 
         private void GuidText_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            vm.CopyGuid(false);
-        }
-
-        private void HandleGenerate_Click(object sender, RoutedEventArgs e)
-        {
-            var vm = DataContext as ViewModels.MainWindow;
-            vm.GenerateGuid(true);
-        }
-
-        private void HandleText_Click(object sender, RoutedEventArgs e)
-        {
-            var vm = DataContext as ViewModels.MainWindow;
-            vm.CopyGuid(true);
+            vm.CopyGuid(typeSwitch.IsChecked ?? false);
         }
         #endregion
 

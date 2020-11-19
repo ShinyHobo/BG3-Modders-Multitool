@@ -52,15 +52,8 @@ namespace bg3_mod_packer.ViewModels
         /// <param name="isHandle">Whether the guid is a TranslatedString handle.</param>
         public void GenerateGuid(bool isHandle)
         {
-            var guid = System.Guid.NewGuid();
-            if(isHandle)
-            {
-                HandleText = $"h{guid}".Replace('-', 'g');
-            }
-            else
-            {
-                GuidText = guid.ToString();
-            }
+            var guid = Guid.NewGuid();
+            GuidText = isHandle ? $"h{guid}".Replace('-', 'g') : guid.ToString();
         }
 
         /// <summary>
