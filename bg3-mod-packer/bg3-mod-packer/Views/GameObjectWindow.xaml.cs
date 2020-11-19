@@ -85,7 +85,8 @@ namespace bg3_mod_packer.Views
         private void TypeComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
-            typeOptions.Collection = Services.RootTemplateHelper.GameObjectTypes;
+            var vm = DataContext as GameObjectViewModel;
+            typeOptions.Collection = vm.RootTemplateHelper.GameObjectTypes;
             combo.SelectedIndex = 0;
         }
 
