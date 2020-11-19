@@ -17,29 +17,25 @@
             DataContext = new GameObjectViewModel();
         }
 
-        private void CharacterButton_Click(object sender, RoutedEventArgs e)
+        private async void Type_Change(object sender, RoutedEventArgs e)
         {
-            LoadRelevant("character", sender);
-        }
-
-        private void ItemButton_Click(object sender, RoutedEventArgs e)
-        {
-            LoadRelevant("item", sender);
-        }
-
-        private async void LoadRelevant(string type, object sender)
-        {
-            searchBox.Text = string.Empty;
-            ToggleButtons();
-            var vm = DataContext as GameObjectViewModel;
-            vm.GameObjects = vm.UnfilteredGameObjects = await vm.RootTemplateHelper.LoadRelevent(type);
-            ToggleButtons(sender);
+            var combo = (ComboBox)sender;
+            if(combo.SelectedIndex != 0)
+            {
+                searchBox.Text = string.Empty;
+                ToggleControls();
+                var vm = DataContext as GameObjectViewModel;
+                vm.GameObjects = vm.UnfilteredGameObjects = await vm.RootTemplateHelper.LoadRelevent(combo.SelectedItem.ToString());
+                listCountBlock.Text = $"{vm.GameObjects.Sum(x => x.Count) + vm.GameObjects.Count} Results";
+                ToggleControls(true);
+            }
         }
 
         private void Search_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as GameObjectViewModel;
             vm.GameObjects = vm.Filter(searchBox.Text ?? string.Empty);
+            listCountBlock.Text = $"{vm.GameObjects.Sum(x => x.Count) + vm.GameObjects.Count} Results";
         }
 
         private void Search_KeyDown(object sender, KeyEventArgs e)
@@ -101,16 +97,14 @@
         }
 
         /// <summary>
-        /// Toggles buttons on or off.
+        /// Toggles controls on or off.
         /// </summary>
-        /// <param name="sender">The sender to ignore.</param>
-        private void ToggleButtons(object sender = null)
+        /// <param name="enable">The sender to ignore.</param>
+        private void ToggleControls(bool enable = false)
         {
-            var enable = sender != null;
-            characterButton.IsEnabled = enable && characterButton != sender;
-            itemButton.IsEnabled = enable && itemButton != sender;
-            search.IsEnabled = enable && search != sender;
-            searchBox.IsEnabled = enable && searchBox != sender;
+            typeComboBox.IsEnabled = enable;
+            search.IsEnabled = enable;
+            searchBox.IsEnabled = enable;
         }
 
         /// <summary>
@@ -134,6 +128,13 @@
         {
             var vm = DataContext as GameObjectViewModel;
             vm.Clear();
+        }
+
+        private void TypeComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            var combo = sender as ComboBox;
+            typeOptions.Collection = Services.RootTemplateHelper.GameObjectTypes;
+            combo.SelectedIndex = 0;
         }
     }
 }
