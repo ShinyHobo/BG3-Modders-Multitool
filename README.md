@@ -1,4 +1,4 @@
-# BG3 Mod Helper
+# BG3 Modder's Multitool
 Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace.
 
 To use:
