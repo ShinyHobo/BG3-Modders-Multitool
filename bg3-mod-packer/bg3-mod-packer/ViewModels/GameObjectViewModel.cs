@@ -71,7 +71,7 @@ namespace bg3_mod_packer.ViewModels
             {
                 foreach (var subItem in filterGo.Children)
                 {
-                    if (subItem.Name.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                    if (subItem.Name.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 || subItem.Children.Count > 0)
                     {
                         return filterGo;
                     }
