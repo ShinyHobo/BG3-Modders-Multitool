@@ -65,7 +65,7 @@ namespace bg3_mod_packer.Services
                     Application.Current.Dispatcher.Invoke(() => {
                         ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Retrieving file list.\n";
                     });
-                    filelist = FileHelper.DirectorySearch("UnpackedData");
+                    filelist = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
                 }
 
                 // Display total file count being indexed

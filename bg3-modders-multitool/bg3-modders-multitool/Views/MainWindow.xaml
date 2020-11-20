@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:bg3_mod_packer.Views"
-        xmlns:root="clr-namespace:bg3_mod_packer"
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="Baldur's Gate 3 Modder's Multitool" Height="450" Width="800">
@@ -37,9 +36,11 @@
         <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
         <Grid Margin="331,221,20,154">
             <Grid Visibility="{Binding SearchResults.IndexingVisibility}">
-                <TextBlock x:Name="indexFileCount" HorizontalAlignment="Left" Margin="30,10,0,0" TextWrapping="Wrap" Text="{Binding SearchResults.IndexFileCount}" VerticalAlignment="Top" Width="50" Height="21"/>
-                <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="85,8,0,0" TextWrapping="Wrap" Text="/" VerticalAlignment="Top" Height="21" Width="7"/>
-                <TextBlock x:Name="indexFileTotal" HorizontalAlignment="Left" Margin="97,10,0,0" TextWrapping="Wrap" Text="{Binding SearchResults.IndexFileTotal}" VerticalAlignment="Top" Width="50" Height="21"/>
+                <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="105" Margin="30,0,0,0" HorizontalAlignment="Left" Height="10" VerticalAlignment="Bottom"/>
+                <TextBlock Margin="40,10,0,0" >
+                    <Run Text="{Binding SearchResults.IndexFileCount, Mode=OneWay}"/> /
+                    <Run Text="{Binding SearchResults.IndexFileTotal, Mode=OneWay}"/>
+                </TextBlock>
                 <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="152,10,0,0" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
             </Grid>
             <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="228,10,0,0" VerticalAlignment="Top" Width="100" Height="23" MouseDoubleClick="IndexFiles_Click" 
