@@ -1,9 +1,9 @@
 ﻿/// <summary>
 /// The searcher view model.
 /// </summary>
-namespace bg3_mod_packer.ViewModels
+namespace bg3_modders_multitool.ViewModels
 {
-    using bg3_mod_packer.Services;
+    using bg3_modders_multitool.Services;
     using System;
     using System.Collections.ObjectModel;
     using System.Windows;

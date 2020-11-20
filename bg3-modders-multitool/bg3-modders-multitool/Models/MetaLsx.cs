@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// The structure of the needed data from meta.lsx
 /// </summary>
-namespace bg3_mod_packer.Models
+namespace bg3_modders_multitool.Models
 {
     using System;
     using System.Collections.Generic;

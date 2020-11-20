@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// The indexer/searcher service.
 /// </summary>
-namespace bg3_mod_packer.Services
+namespace bg3_modders_multitool.Services
 {
     using System;
     using System.IO;
@@ -16,7 +16,7 @@ namespace bg3_mod_packer.Services
     using Lucene.Net.Search;
     using Lucene.Net.QueryParsers.Classic;
     using System.Threading.Tasks;
-    using bg3_mod_packer.ViewModels;
+    using bg3_modders_multitool.ViewModels;
     using Lucene.Net.Analysis.Core;
     using Lucene.Net.Analysis.En;
     using Lucene.Net.Analysis.Util;

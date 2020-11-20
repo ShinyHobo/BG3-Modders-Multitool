@@ -2,7 +2,7 @@
 /// Converts formatted text binding to XAML
 /// https://stackoverflow.com/questions/34095182/xaml-convert-textblock-text-to-inlines
 /// </summary>
-namespace bg3_mod_packer.XAMLHelpers
+namespace bg3_modders_multitool.XAMLHelpers
 {
     using System.Linq;
     using System.Windows;

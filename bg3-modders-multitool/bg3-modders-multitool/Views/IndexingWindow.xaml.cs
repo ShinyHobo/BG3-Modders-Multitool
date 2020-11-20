@@ -1,10 +1,10 @@
 ﻿/// <summary>
 /// The index search window.
 /// </summary>
-namespace bg3_mod_packer.Views
+namespace bg3_modders_multitool.Views
 {
-    using bg3_mod_packer.Services;
-    using bg3_mod_packer.ViewModels;
+    using bg3_modders_multitool.Services;
+    using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
     using System.IO;

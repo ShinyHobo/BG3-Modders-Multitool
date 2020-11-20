@@ -2,10 +2,11 @@
 /// The root template helper service.
 /// Loads information from various unpacked game assets and organizes them for use.
 /// </summary>
-namespace bg3_mod_packer.Services
+namespace bg3_modders_multitool.Services
 {
-    using bg3_mod_packer.Models;
-    using bg3_mod_packer.ViewModels;
+    using bg3_modders_multitool.Models;
+    using bg3_modders_multitool.Models.Races;
+    using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -41,76 +42,6 @@ namespace bg3_mod_packer.Services
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-        }
-
-        private bool ReadRaces()
-        {
-            var raceFile = FileHelper.GetPath(@"Shared\Public\Shared\Races\Races.lsx");
-            if(File.Exists(raceFile))
-            {
-                Races = new List<Race>();
-                using (XmlReader reader = XmlReader.Create(raceFile))
-                {
-                    Race race = null;
-                    while (reader.Read())
-                    {
-                        switch (reader.NodeType)
-                        {
-                            case XmlNodeType.Element:
-                                var id = reader.GetAttribute("id");
-                                if (id == "Race")
-                                {
-                                    race = new Race();
-                                }
-                                var value = reader.GetAttribute("value");
-                                if(reader.Depth == 5) // top level
-                                {
-                                    switch(id)
-                                    {
-                                        case "Description":
-                                            race.Description = value;
-                                            break;
-                                        case "DisplayName":
-                                            race.DisplayName = value;
-                                            break;
-                                        case "Name":
-                                            race.Name = value;
-                                            break;
-                                        case "ParentGuid":
-                                            race.ParentGuid = value;
-                                            break;
-                                        case "ProgressionTableUUID":
-                                            race.ProgressionTableUUID = value;
-                                            break;
-                                        case "UUID":
-                                            race.UUID = value;
-                                            break;
-                                    }
-                                }
-                                if(reader.Depth == 6) // eye colors, hair colors, tags, makeup colors, skin colors, tattoo colors, visuals
-                                {
-
-                                }
-                                if(reader.Depth == 7) // previous level values
-                                {
-
-                                }
-                                break;
-                            case XmlNodeType.EndElement:
-                                if (reader.Depth == 4)
-                                {
-                                    Races.Add(race);
-                                }
-                                break;
-                        }
-                    }
-                }
-                return true;
-            }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load Races.lsx. Please unpack Shared.pak\n";
-            });
-            return false;
         }
 
         /// <summary>
@@ -249,6 +180,80 @@ namespace bg3_mod_packer.Services
             }
             Application.Current.Dispatcher.Invoke(() => {
                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load root template _merged.lsf. Please unpack Shared.pak\n";
+            });
+            return false;
+        }
+
+        /// <summary>
+        /// Reads the Races.lsx file and converts it into a Race list.
+        /// </summary>
+        /// <returns>Whether the root template was read.</returns>
+        private bool ReadRaces()
+        {
+            var raceFile = FileHelper.GetPath(@"Shared\Public\Shared\Races\Races.lsx");
+            if (File.Exists(raceFile))
+            {
+                Races = new List<Race>();
+                using (XmlReader reader = XmlReader.Create(raceFile))
+                {
+                    Race race = null;
+                    while (reader.Read())
+                    {
+                        switch (reader.NodeType)
+                        {
+                            case XmlNodeType.Element:
+                                var id = reader.GetAttribute("id");
+                                if (id == "Race")
+                                {
+                                    race = new Race { Components = new List<Component>() };
+                                }
+                                var value = reader.GetAttribute("value");
+                                if (reader.Depth == 5) // top level
+                                {
+                                    switch (id)
+                                    {
+                                        case "Description":
+                                            race.Description = value;
+                                            break;
+                                        case "DisplayName":
+                                            race.DisplayName = value;
+                                            break;
+                                        case "Name":
+                                            race.Name = value;
+                                            break;
+                                        case "ParentGuid":
+                                            race.ParentGuid = value;
+                                            break;
+                                        case "ProgressionTableUUID":
+                                            race.ProgressionTableUUID = value;
+                                            break;
+                                        case "UUID":
+                                            race.UUID = value;
+                                            break;
+                                    }
+                                }
+                                if (reader.Depth == 6) // eye colors, hair colors, tags, makeup colors, skin colors, tattoo colors, visuals
+                                {
+                                    race.Components.Add(new Component { Type = id });
+                                }
+                                if (reader.Depth == 7) // previous level values
+                                {
+                                    race.Components.Last().Guid = value;
+                                }
+                                break;
+                            case XmlNodeType.EndElement:
+                                if (reader.Depth == 4)
+                                {
+                                    Races.Add(race);
+                                }
+                                break;
+                        }
+                    }
+                }
+                return true;
+            }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load Races.lsx. Please unpack Shared.pak\n";
             });
             return false;
         }

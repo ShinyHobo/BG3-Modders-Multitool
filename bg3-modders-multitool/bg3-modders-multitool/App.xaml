@@ -1,7 +1,7 @@
-﻿<Application x:Class="bg3_mod_packer.App"
+﻿<Application x:Class="bg3_modders_multitool.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:bg3_mod_packer"
+             xmlns:local="clr-namespace:bg3_modders_multitool"
              ShutdownMode="OnMainWindowClose"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>

@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// The module short description model.
 /// </summary>
-namespace bg3_mod_packer.Models
+namespace bg3_modders_multitool.Models
 {
     public class ModuleShortDesc
     {

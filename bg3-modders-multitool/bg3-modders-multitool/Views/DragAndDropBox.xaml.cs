@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// The drag and drop box code behind.
 /// </summary>
-namespace bg3_mod_packer.Views
+namespace bg3_modders_multitool.Views
 {
     using System.Windows;
     using System.Windows.Controls;

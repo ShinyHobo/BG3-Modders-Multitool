@@ -1,8 +1,10 @@
 ﻿/// <summary>
 /// The race model.
 /// </summary>
-namespace bg3_mod_packer.Models
+namespace bg3_modders_multitool.Models.Races
 {
+    using System.Collections.Generic;
+
     public class Race
     {
         public string Description { get; set; }
@@ -11,5 +13,6 @@ namespace bg3_mod_packer.Models
         public string ParentGuid { get; set; }
         public string UUID { get; set; }
         public string ProgressionTableUUID { get; set; }
+        public List<Component> Components { get; set; }
     }
 }

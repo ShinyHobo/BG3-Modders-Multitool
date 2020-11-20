@@ -1,10 +1,10 @@
 ﻿/// <summary>
 /// Helper for processing drag and drop events
 /// </summary>
-namespace bg3_mod_packer.Services
+namespace bg3_modders_multitool.Services
 {
-    using bg3_mod_packer.Models;
-    using bg3_mod_packer.ViewModels;
+    using bg3_modders_multitool.Models;
+    using bg3_modders_multitool.ViewModels;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
