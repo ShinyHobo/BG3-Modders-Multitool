@@ -105,7 +105,7 @@ namespace bg3_mod_packer.Services
             {
                 foreach (string file in Directory.GetFiles(dir))
                 {
-                    fileList.Add(@"\\?\" + Path.GetFullPath(file));
+                    fileList.Add(file);
                 }
                 fileList.AddRange(RecursiveFileSearch(dir));
             }
