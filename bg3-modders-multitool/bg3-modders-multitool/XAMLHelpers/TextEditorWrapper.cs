@@ -2,7 +2,7 @@
 /// Wrapper for textblocks allowing them to be selectable with native selection features: keyboard support, context menu etc.
 /// https://stackoverflow.com/a/45627524
 /// </summary>
-namespace bg3_mod_packer.XAMLHelpers
+namespace bg3_modders_multitool.XAMLHelpers
 {
     using System;
     using System.Reflection;

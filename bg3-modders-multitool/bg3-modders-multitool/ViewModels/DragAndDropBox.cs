@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// The drag and drop box view model.
 /// </summary>
-namespace bg3_mod_packer.ViewModels
+namespace bg3_modders_multitool.ViewModels
 {
     using System.Threading.Tasks;
     using System.Windows;

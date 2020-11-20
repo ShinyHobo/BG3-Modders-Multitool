@@ -1,9 +1,9 @@
 ﻿/// <summary>
 /// For helping with rapidly unpacking all game assets at once.
 /// </summary>
-namespace bg3_mod_packer.Services
+namespace bg3_modders_multitool.Services
 {
-    using bg3_mod_packer.ViewModels;
+    using bg3_modders_multitool.ViewModels;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;

@@ -241,7 +241,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\GameObject.cs" />
-    <Compile Include="Models\Race.cs" />
+    <Compile Include="Models\Races\Component.cs" />
+    <Compile Include="Models\Races\Race.cs" />
     <Compile Include="Models\Translation.cs" />
     <Compile Include="Services\DragAndDropHelper.cs" />
     <Compile Include="Services\FileHelper.cs" />

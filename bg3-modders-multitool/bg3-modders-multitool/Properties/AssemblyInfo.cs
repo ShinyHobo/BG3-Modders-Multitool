@@ -1,17 +1,15 @@
 ﻿using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("bg3-mod-packer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("bg3-modders-multitool")]
+[assembly: AssemblyDescription("Community tool for creating mods for Baldur's Gate 3")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("bg3-mod-packer")]
+[assembly: AssemblyProduct("bg3-modders-multitool")]
 [assembly: AssemblyCopyright("Copyright © ShinyHobo 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

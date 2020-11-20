@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// The pak selection code behind.
 /// </summary>
-namespace bg3_mod_packer.Views
+namespace bg3_modders_multitool.Views
 {
     using System.Collections.Generic;
     using System.Windows;

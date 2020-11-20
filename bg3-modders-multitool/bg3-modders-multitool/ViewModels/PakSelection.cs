@@ -1,12 +1,12 @@
 ﻿/// <summary>
 /// The .pak selection window view model.
 /// </summary>
-namespace bg3_mod_packer.ViewModels
+namespace bg3_modders_multitool.ViewModels
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
-    using bg3_mod_packer.ViewModels.Reusables;
+    using bg3_modders_multitool.ViewModels.Reusables;
 
     public class PakSelection : BaseViewModel
     {

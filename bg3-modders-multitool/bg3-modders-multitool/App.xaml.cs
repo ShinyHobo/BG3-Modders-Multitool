@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace bg3_mod_packer
+namespace bg3_modders_multitool
 {
     /// <summary>
     /// Interaction logic for App.xaml

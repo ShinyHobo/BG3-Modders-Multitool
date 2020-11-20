@@ -2,7 +2,7 @@
 /// Adds text selection to text block.
 /// https://stackoverflow.com/a/45627524
 /// </summary>
-namespace bg3_mod_packer.XAMLHelpers
+namespace bg3_modders_multitool.XAMLHelpers
 {
     using System.Windows;
     using System.Windows.Controls;
