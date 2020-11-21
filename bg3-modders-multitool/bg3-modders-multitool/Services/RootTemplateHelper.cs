@@ -88,7 +88,12 @@ namespace bg3_modders_multitool.Services
                                 }
                                 else if (propertyType.Name == "List`1")
                                 {
-                                    // load list, split on ;
+                                    var paramList = paramPair[1].Split(';').ToList();
+                                    var arg = propertyType.GenericTypeArguments.First();
+                                    var enums = paramList.Select(p => Enum.Parse(arg, p)).ToList();
+                                    var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { enums });
+                                    var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { cast });
+                                    property.SetValue(item, Convert.ChangeType(enumList, property.PropertyType), null);
                                 }
                                 else if (propertyType == typeof(bool))
                                 {
