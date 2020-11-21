@@ -9,6 +9,7 @@ namespace bg3_modders_multitool.Models
 
     public class GameObject
     {
+        public string Pak { get; set; }
         public string MapKey { get; set; }
         public string ParentTemplateId { get; set; }
         public string Name { get; set; }
@@ -19,6 +20,7 @@ namespace bg3_modders_multitool.Models
         public string Type { get; set; }
         public string Icon { get; set; }
         public string Stats { get; set; }
+        public string RaceUUID { get; set; }
         public List<GameObject> Children { get; set; }
 
         /// <summary>
@@ -90,6 +92,7 @@ namespace bg3_modders_multitool.Models
         private bool FindMatch(string filter)
         {
             return Name.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   Pak.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    MapKey?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    ParentTemplateId?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    DisplayNameHandle?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
