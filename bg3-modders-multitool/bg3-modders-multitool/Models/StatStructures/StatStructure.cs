@@ -52,29 +52,41 @@ namespace bg3_modders_multitool.Models.StatStructures
         /// </summary>
         /// <param name="fileType">The type of stat structure to create.</param>
         /// <returns>The new stat structure.</returns>
-        public static StatStructure New(Enums.StatStructure fileType)
+        public static StatStructure New(Enums.StatStructure fileType, string name)
         {
+            StatStructure newEntry = null;
             switch (fileType)
             {
                 case Enums.StatStructure.Armor:
-                    return new Armor();
+                    newEntry = new Armor();
+                    break;
                 case Enums.StatStructure.Character:
-                    return new Character();
+                    newEntry = new Character();
+                    break;
                 case Enums.StatStructure.Object:
-                    return new Object();
+                    newEntry = new Object();
+                    break;
                 case Enums.StatStructure.PassiveData:
-                    return new PassiveData();
+                    newEntry = new PassiveData();
+                    break;
                 case Enums.StatStructure.SpellData:
-                    return new SpellData();
+                    newEntry = new SpellData();
+                    break;
                 case Enums.StatStructure.StatusData:
-                    return new StatusData();
+                    newEntry = new StatusData();
+                    break;
                 case Enums.StatStructure.Weapon:
-                    return new Weapon();
+                    newEntry = new Weapon();
+                    break;
                 default:
                     throw new Exception($"Stats structure {fileType} not recognized.");
             }
+            newEntry.Entry = name.Replace("\"", "");
+            return newEntry;
         }
 
         public Enums.StatStructure Type { get; set; }
+
+        public string Entry { get; set; }
     }
 }

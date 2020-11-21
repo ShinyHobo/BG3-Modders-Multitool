@@ -94,7 +94,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int StableRollDC { get; set; }
         public string RemoveConditions { get; set; } // Conditions
         public int NumStableSuccess { get; set; }
-        public StatusEvent RemoveEvents { get; set; }
+        public List<StatusEvent> RemoveEvents { get; set; }
         public int NumStableFailed { get; set; }
         public string TickFunctors { get; set; } // StatsFunctors
         public string OnSuccess { get; set; } // StatsFunctors
