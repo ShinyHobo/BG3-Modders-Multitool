@@ -190,5 +190,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string RootSpellID { get; set; }
         public int PowerLevel { get; set; }
         public int SourceLimbIndex { get; set; }
+
+        public override StatStructure Clone()
+        {
+            return (SpellData)MemberwiseClone();
+        }
     }
 }

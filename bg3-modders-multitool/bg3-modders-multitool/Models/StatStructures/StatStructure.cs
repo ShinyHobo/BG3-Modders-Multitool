@@ -85,8 +85,10 @@ namespace bg3_modders_multitool.Models.StatStructures
             return newEntry;
         }
 
-        public Enums.StatStructure Type { get; set; }
+        public abstract StatStructure Clone();
 
+        public Enums.StatStructure Type { get; set; }
         public string Entry { get; set; }
+        public string Using { get; set; }
     }
 }
