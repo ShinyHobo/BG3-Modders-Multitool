@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
+    using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -76,6 +77,17 @@ namespace bg3_modders_multitool.ViewModels
             set {
                 _info = value;
                 Race = RootTemplateHelper.Races.FirstOrDefault(race => race.UUID == value.RaceUUID);
+                Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private StatStructure _stats;
+
+        public StatStructure Stats {
+            get { return _stats; }
+            set {
+                _stats = value;
                 OnNotifyPropertyChanged();
             }
         }

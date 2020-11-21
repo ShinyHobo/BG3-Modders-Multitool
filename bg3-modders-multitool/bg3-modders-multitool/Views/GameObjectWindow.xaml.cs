@@ -80,7 +80,6 @@ namespace bg3_modders_multitool.Views
             button.IsEnabled = false;
             var MapKey = ((Button)sender).Uid;
             vm.Info = vm.RootTemplateHelper.FlatGameObjects.Single(go => go.MapKey == MapKey);
-            var stats = vm.RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == vm.Info.Stats);
         }
 
         private void TypeComboBox_Loaded(object sender, RoutedEventArgs e)
