@@ -9,7 +9,6 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.ViewModels;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
