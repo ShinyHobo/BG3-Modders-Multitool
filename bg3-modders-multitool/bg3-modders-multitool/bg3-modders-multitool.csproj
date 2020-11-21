@@ -300,6 +300,7 @@
     <Compile Include="Models\StatStructures\Object.cs" />
     <Compile Include="Models\StatStructures\PassiveData.cs" />
     <Compile Include="Models\StatStructures\SpellData.cs" />
+    <Compile Include="Models\StatStructures\StatStructure.cs" />
     <Compile Include="Models\StatStructures\StatusData.cs" />
     <Compile Include="Models\StatStructures\Weapon.cs" />
     <Compile Include="Models\Translation.cs" />

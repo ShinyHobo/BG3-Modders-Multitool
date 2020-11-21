@@ -7,7 +7,7 @@ namespace bg3_modders_multitool.Models.StatStructures
     using System;
     using System.Collections.Generic;
 
-    class Object
+    class Object : StatStructure
     {
         public string RootTemplate { get; set; }
         public int Level { get; set; }

@@ -6,7 +6,7 @@ namespace bg3_modders_multitool.Models.StatStructures
     using bg3_modders_multitool.Enums.ValueLists;
     using System.Collections.Generic;
 
-    public class SpellData
+    public class SpellData : StatStructure
     {
         public string SpellType { get; set; }
         public int Level { get; set; }

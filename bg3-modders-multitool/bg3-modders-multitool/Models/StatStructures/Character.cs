@@ -7,7 +7,7 @@ namespace bg3_modders_multitool.Models.StatStructures
     using System;
     using System.Collections.Generic;
 
-    public class Character
+    public class Character : StatStructure
     {
         public int Level { get; set; }
         public int Strength { get; set; }
