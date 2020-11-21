@@ -47,7 +47,7 @@ namespace bg3_modders_multitool.Services
             if(Directory.Exists(dataDir))
             {
                 var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
-                StatStructures = new List<StatStructure>();
+                StatStructures = StatStructures ?? new List<StatStructure>();
                 foreach(var file in dataFiles)
                 {
                     var fileType = StatStructure.FileType(file);
@@ -57,10 +57,15 @@ namespace bg3_modders_multitool.Services
                     {
                         if(line.Contains("new entry"))
                         {
-
+                            StatStructures.Add(StatStructure.New(fileType));
+                        }
+                        else if(line.IndexOf("type") == 0)
+                        {
+                            StatStructures.Last().Type = fileType;
                         }
                     }
                 }
+                return true;
             }
             return false;
         }
