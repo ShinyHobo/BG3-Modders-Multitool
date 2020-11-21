@@ -7,7 +7,7 @@ namespace bg3_modders_multitool.Models.StatStructures
     using System;
     using System.Collections.Generic;
 
-    public class Weapon
+    public class Weapon : StatStructure
     {
         public string RootTemplate { get; set; }
         public string ItemGroup { get; set; }

@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Services
 {
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
+    using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
@@ -20,11 +21,13 @@ namespace bg3_modders_multitool.Services
     {
         private List<GameObject> GameObjects;
         private Dictionary<string, Translation> TranslationLookup;
-        private readonly string[] Paks = { "Shared", "Gustav" };
+        private readonly string[] Paks = { "Shared","Gustav" };
+        private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
         public List<string> GameObjectTypes { get; private set; }
         public List<GameObject> FlatGameObjects { get; private set; }
         public List<Translation> Translations { get; private set; }
         public List<Race> Races { get; private set; }
+        public List<StatStructure> StatStructures { get; private set; }
 
         public RootTemplateHelper()
         {
@@ -33,8 +36,33 @@ namespace bg3_modders_multitool.Services
             {
                 ReadRootTemplate(pak);
                 ReadRaces(pak);
+                ReadData(pak);
             }
             SortRootTemplate();
+        }
+
+        private bool ReadData(string pak)
+        {
+            var dataDir = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Stats\\Generated\\Data");
+            if(Directory.Exists(dataDir))
+            {
+                var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
+                StatStructures = new List<StatStructure>();
+                foreach(var file in dataFiles)
+                {
+                    var fileType = StatStructure.FileType(file);
+                    var line = string.Empty;
+                    var fileStream = new StreamReader(file);
+                    while((line = fileStream.ReadLine()) != null)
+                    {
+                        if(line.Contains("new entry"))
+                        {
+
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>

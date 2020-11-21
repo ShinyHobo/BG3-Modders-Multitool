@@ -6,7 +6,7 @@ namespace bg3_modders_multitool.Models.StatStructures
     using bg3_modders_multitool.Enums.ValueLists;
     using System.Collections.Generic;
 
-    public class PassiveData
+    public class PassiveData : StatStructure
     {
         public string DisplayName { get; set; }
         public string DisplayNameRef { get; set; }

@@ -6,7 +6,7 @@ namespace bg3_modders_multitool.Models.StatStructures
     using bg3_modders_multitool.Enums.ValueLists;
     using System.Collections.Generic;
 
-    public class StatusData
+    public class StatusData : StatStructure
     {
         public string StatusType { get; set; }
         public string DisplayName { get; set; }
