@@ -244,8 +244,11 @@
     <Compile Include="Enums\ValueLists\AIFlag.cs" />
     <Compile Include="Enums\ValueLists\ArmorType.cs" />
     <Compile Include="Enums\ValueLists\AtmosphereType.cs" />
+    <Compile Include="Enums\ValueLists\AttributeFlag.cs" />
+    <Compile Include="Enums\ValueLists\InventoryTabs.cs" />
     <Compile Include="Enums\ValueLists\ObjectSize.cs" />
     <Compile Include="Enums\ValueLists\PassiveFlag.cs" />
+    <Compile Include="Enums\ValueLists\Rarity.cs" />
     <Compile Include="Enums\ValueLists\StatsFunctorContext.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Races\Component.cs" />
