@@ -1,189 +1,194 @@
-﻿
+﻿/// <summary>
+/// The spell data model.
+/// </summary>
 namespace bg3_modders_multitool.Models.StatStructures
 {
-    class SpellData
+    using bg3_modders_multitool.Enums.ValueLists;
+    using System.Collections.Generic;
+
+    public class SpellData
     {
-        //modifier "SpellType","FixedString"
-        //modifier "Level","ConstantInt"
-        //modifier "SpellSchool","SpellSchool"
-        //modifier "SpellContainerID","FixedString"
-        //modifier "Cooldown","CooldownType"
-        //modifier "ContainerSpells","FixedString"
-        //modifier "Requirement","SpellRequirement"
-        //modifier "AIFlags","AIFlags"
-        //modifier "SpellProperties","StatsFunctors"
-        //modifier "TargetRadius","FixedString"
-        //modifier "Damage","FixedString"
-        //modifier "AreaRadius","ConstantInt"
-        //modifier "Damage Range","ConstantInt"
-        //modifier "AddRangeFromAbility","FixedString"
-        //modifier "SurfaceType","Surface Type"
-        //modifier "DamageType","Damage Type"
-        //modifier "DeathType","Death Type"
-        //modifier "SurfaceLifetime","ConstantInt"
-        //modifier "ExplodeRadius","ConstantInt"
-        //modifier "SurfaceGrowStep","ConstantInt"
-        //modifier "AmountOfTargets","ConstantInt"
-        //modifier "StrikeCount","ConstantInt"
-        //modifier "SurfaceGrowInterval","ConstantInt"
-        //modifier "MaxDistance","ConstantInt"
-        //modifier "Acceleration","ConstantInt"
-        //modifier "AutoAim","YesNo"
-        //modifier "StrikeDelay","ConstantInt"
-        //modifier "TeleportDelay","ConstantInt"
-        //modifier "AuraSelf","FixedString"
-        //modifier "SpellRoll","RollConditions"
-        //modifier "AuraAllies","FixedString"
-        //modifier "SpellSuccess","StatsFunctors"
-        //modifier "MaxAttacks","ConstantInt"
-        //modifier "MovementSpeed","ConstantInt"
-        //modifier "GrowSpeed","ConstantInt"
-        //modifier "AuraNeutrals","FixedString"
-        //modifier "SpellFail","StatsFunctors"
-        //modifier "NextAttackChance","ConstantInt"
-        //modifier "GrowTimeout","ConstantInt"
-        //modifier "AuraEnemies","FixedString"
-        //modifier "TargetConditions","TargetConditions"
-        //modifier "AoEConditions","TargetConditions"
-        //modifier "NextAttackChanceDivider","ConstantInt"
-        //modifier "RandomPoints","ConstantInt"
-        //modifier "Offset","ConstantInt"
-        //modifier "AuraItems","FixedString"
-        //modifier "ProjectileCount","ConstantInt"
-        //modifier "TargetProjectiles","YesNo"
-        //modifier "EndPosRadius","ConstantInt"
-        //modifier "OverrideSpellLevel","YesNo"
-        //modifier "TotalSurfaceCells","ConstantInt"
-        //modifier "ProjectileDelay","ConstantInt"
-        //modifier "JumpDelay","ConstantInt"
-        //modifier "TeleportSelf","YesNo"
-        //modifier "Angle","ConstantInt"
-        //modifier "HitRadius","ConstantInt"
-        //modifier "TeleportSurface","YesNo"
-        //modifier "TravelSpeed","ConstantInt"
-        //modifier "Template","FixedString"
-        //modifier "MemorizationRequirements","MemorizationRequirements"
-        //modifier "Lifetime","ConstantInt"
-        //modifier "Icon","FixedString"
-        //modifier "Height","ConstantInt"
-        //modifier "MinHitsPerTurn","ConstantInt"
-        //modifier "SurfaceStatusChance","ConstantInt"
-        //modifier "DisplayName","FixedString"
-        //modifier "DisplayNameRef","FixedString"
-        //modifier "SingleSource","YesNo"
-        //modifier "MaxHitsPerTurn","ConstantInt"
-        //modifier "PointsMaxOffset","ConstantInt"
-        //modifier "Description","FixedString"
-        //modifier "DescriptionRef","FixedString"
-        //modifier "HitDelay","ConstantInt"
-        //modifier "DescriptionParams","FixedString"
-        //modifier "ExtraDescription","FixedString"
-        //modifier "ExtraDescriptionRef","FixedString"
-        //modifier "UseWeaponDamage","YesNo"
-        //modifier "ExtraDescriptionParams","FixedString"
-        //modifier "UseWeaponProperties","YesNo"
-        //modifier "TooltipDamageList","FixedString"
-        //modifier "FXScale","ConstantInt"
-        //modifier "TooltipAttackSave","FixedString"
-        //modifier "TooltipStatusApply","FixedString"
-        //modifier "CastSelfAnimation","FixedString"
-        //modifier "PrepareEffect","FixedString"
-        //modifier "CastEffect","FixedString"
-        //modifier "PreviewEffect","FixedString"
-        //modifier "TargetEffect","FixedString"
-        //modifier "HitEffect","FixedString"
-        //modifier "TargetHitEffect","FixedString"
-        //modifier "TargetGroundEffect","FixedString"
-        //modifier "PositionEffect","FixedString"
-        //modifier "BeamEffect","FixedString"
-        //modifier "SpellEffect","FixedString"
-        //modifier "SelectedCharacterEffect","FixedString"
-        //modifier "SelectedObjectEffect","FixedString"
-        //modifier "SelectedPositionEffect","FixedString"
-        //modifier "DisappearEffect","FixedString"
-        //modifier "ReappearEffect","FixedString"
-        //modifier "ImpactEffect","FixedString"
-        //modifier "PrepareSound","FixedString"
-        //modifier "SourceTargetEffect","FixedString"
-        //modifier "PreviewCursor","CursorMode"
-        //modifier "CastEffectTextEvent","FixedString"
-        //modifier "TargetTargetEffect","FixedString"
-        //modifier "FlyEffect","FixedString"
-        //modifier "CastTextEvent","FixedString"
-        //modifier "PrepareEffectBone","FixedString"
-        //modifier "Template1","FixedString"
-        //modifier "AlternativeCastTextEvents","FixedString"
-        //modifier "WeaponBones","FixedString"
-        //modifier "Shape","FixedString"
-        //modifier "Template2","FixedString"
-        //modifier "CastSound","FixedString"
-        //modifier "Distribution","ProjectileDistribution"
-        //modifier "TargetSound","FixedString"
-        //modifier "FrontOffset","ConstantInt"
-        //modifier "Template3","FixedString"
-        //modifier "DomeEffect","FixedString"
-        //modifier "VocalComponentSound","FixedString"
-        //modifier "Shuffle","YesNo"
-        //modifier "Autocast","YesNo"
-        //modifier "Range","ConstantInt"
-        //modifier "StormEffect","FixedString"
-        //modifier "SpawnEffect","FixedString"
-        //modifier "ProjectileTerrainOffset","YesNo"
-        //modifier "PreviewStrikeHits","YesNo"
-        //modifier "Base","ConstantInt"
-        //modifier "CleanseStatuses","FixedString"
-        //modifier "MovingObject","FixedString"
-        //modifier "MaleImpactEffects","FixedString"
-        //modifier "TargetCastEffect","FixedString"
-        //modifier "StatusClearChance","ConstantInt"
-        //modifier "ProjectileType","ProjectileType"
-        //modifier "FemaleImpactEffects","FixedString"
-        //modifier "Spellbook","FixedString"
-        //modifier "StartTextEvent","FixedString"
-        //modifier "AiCalculationSpellOverride","FixedString"
-        //modifier "ReappearEffectTextEvent","FixedString"
-        //modifier "StopTextEvent","FixedString"
-        //modifier "RainEffect","FixedString"
-        //modifier "CycleConditions","TargetConditions"
-        //modifier "Memory Cost","ConstantInt"
-        //modifier "ProjectileSpells","FixedString"
-        //modifier "Atmosphere","AtmosphereType"
-        //modifier "UseCosts","FixedString"
-        //modifier "Magic Cost","ConstantInt"
-        //modifier "ConsequencesStartTime","ConstantInt"
-        //modifier "DualWieldingUseCosts","FixedString"
-        //modifier "Stealth","YesNo"
-        //modifier "ConsequencesDuration","ConstantInt"
-        //modifier "ThrowableTargetConditions","TargetConditions"
-        //modifier "HitCosts","FixedString"
-        //modifier "SpellAnimationArcaneMagic","FixedString"
-        //modifier "SurfaceRadius","ConstantInt"
-        //modifier "SpellAnimationDivineMagic","FixedString"
-        //modifier "SpellAnimationNoneMagic","FixedString"
-        //modifier "DualWieldingSpellAnimationArcaneMagic","FixedString"
-        //modifier "DualWieldingSpellAnimationDivineMagic","FixedString"
-        //modifier "DualWieldingSpellAnimationNoneMagic","FixedString"
-        //modifier "RequirementConditions","TargetConditions"
-        //modifier "VerbalIntent","VerbalIntent"
-        //modifier "WeaponTypes","WeaponFlags"
-        //modifier "SpellFlags","SpellFlagList"
-        //modifier "MaximumTotalTargetHP","ConstantInt"
-        //modifier "SpellActionType","SpellActionType"
-        //modifier "SpellAnimationType","SpellAnimationType"
-        //modifier "SpellHitAnimationType","SpellHitAnimationType"
-        //modifier "SpellAnimationIntentType","SpellAnimationIntentType"
-        //modifier "SpellJumpType","SpellJumpType"
-        //modifier "MaximumTargets","ConstantInt"
-        //modifier "RechargeValues","FixedString"
-        //modifier "Requirements","Requirements"
-        //modifier "ForkChance","ConstantInt"
-        //modifier "MaxForkCount","ConstantInt"
-        //modifier "ForkLevels","ConstantInt"
-        //modifier "LineOfSightFlags","LineOfSightFlags"
-        //modifier "ForkingConditions","TargetConditions"
-        //modifier "MemoryCost","ConstantInt"
-        //modifier "RootSpellID","FixedString"
-        //modifier "PowerLevel","ConstantInt"
-        //modifier "SourceLimbIndex","ConstantInt"
+        public string SpellType { get; set; }
+        public int Level { get; set; }
+        public SpellSchool SpellSchool { get; set; }
+        public string SpellContainerID { get; set; }
+        public CooldownType Cooldown { get; set; }
+        public string ContainerSpells { get; set; }
+        //modifier Requirement SpellRequirement
+        public List<AIFlag> AIFlags { get; set; }
+        public string SpellProperties { get; set; } // StatsFunctors
+        public string TargetRadius { get; set; }
+        public int Damage { get; set; }
+        public int AreaRadius { get; set; }
+        public int DamageRange { get; set; }
+        public string AddRangeFromAbility { get; set; }
+        //modifier SurfaceType Surface Type
+        //modifier DamageType Damage Type
+        //modifier DeathType Death Type
+        public int SurfaceLifetime { get; set; }
+        public int ExplodeRadius { get; set; }
+        public int SurfaceGrowStep { get; set; }
+        public int AmountOfTargets { get; set; }
+        public int StrikeCount { get; set; }
+        public int SurfaceGrowInterval { get; set; }
+        public int MaxDistance { get; set; }
+        public int Acceleration { get; set; }
+        public bool AutoAim { get; set; }
+        public int StrikeDelay { get; set; }
+        public int TeleportDelay { get; set; }
+        public string AuraSelf { get; set; }
+        //modifier SpellRoll RollConditions
+        public string AuraAllies { get; set; }
+        public string SpellSuccess { get; set; } // StatsFunctors
+        public int MaxAttacks { get; set; }
+        public int MovementSpeed { get; set; }
+        public int GrowSpeed { get; set; }
+        public string AuraNeutrals { get; set; }
+        public string SpellFail { get; set; } // StatsFunctors
+        public int NextAttackChance { get; set; }
+        public int GrowTimeout { get; set; }
+        public string AuraEnemies { get; set; }
+        public string TargetConditions { get; set; } // TargetConditions
+        public string AoECondtions { get; set; } // TargetConditions
+        public int NextAttackChanceDivider { get; set; }
+        public int RandomPoints { get; set; }
+        public int Offset { get; set; }
+        public string AuraItems { get; set; }
+        public int ProjectileCount { get; set; }
+        public bool TargetProjectiles { get; set; }
+        public int EndPosRadius { get; set; }
+        public bool OverrideSpellLevel { get; set; }
+        public int TotalSurfaceCells { get; set; }
+        public int ProjectileDelay { get; set; }
+        public int JumpDelay { get; set; }
+        public bool TeleportSelf { get; set; }
+        public int Angle { get; set; }
+        public int HitRadius { get; set; }
+        public bool TeleportSurface { get; set; }
+        public int TravelSpeed { get; set; }
+        public string Template { get; set; }
+        //modifier MemorizationRequirements MemorizationRequirements
+        public int Lifetime { get; set; }
+        public string Icon { get; set; }
+        public int Height { get; set; }
+        public int MinHitsPerTurn { get; set; }
+        public int SurfaceStatusChance { get; set; }
+        public string DisplayName { get; set; }
+        public string DisplayNameRef { get; set; }
+        public bool SingleSource { get; set; }
+        public int MaxHitsPerTurn { get; set; }
+        public int PointsMaxOffset { get; set; }
+        public string Description { get; set; }
+        public string DescriptionRef { get; set; }
+        public int HitDelay { get; set; }
+        public string DescriptionParams { get; set; }
+        public string ExtraDescription { get; set; }
+        public string ExtraDescriptionRef { get; set; }
+        public bool UseWeaponDamage { get; set; }
+        public string ExtraDescriptionParams { get; set; }
+        public bool UseWeaponProperties { get; set; }
+        public string TooltipDamageList { get; set; }
+        public int FXScale { get; set; }
+        public string TooltipAttackSave { get; set; }
+        public string TooltipStatusApply { get; set; }
+        public string CastSelfAnimation { get; set; }
+        public string PrepareEffect { get; set; }
+        public string CastEffect { get; set; }
+        public string PreviewEffect { get; set; }
+        public string TargetEffect { get; set; }
+        public string HitEffect { get; set; }
+        public string TargetHitEffect { get; set; }
+        public string TargetGroundEffect { get; set; }
+        public string PositionEffect { get; set; }
+        public string BeamEffect { get; set; }
+        public string SpellEffect { get; set; }
+        public string SelectedCharacterEffect { get; set; }
+        public string SelectedObjectEffect { get; set; }
+        public string SelectedPositionEffect { get; set; }
+        public string DisappearEffect { get; set; }
+        public string ReappearEffect { get; set; }
+        public string ImpactEffect { get; set; }
+        public string PrepareSound { get; set; }
+        public string SourceTargetEffect { get; set; }
+        public CursorMode PreviewCursor { get; set; }
+        public string CastEffectTextEvent { get; set; }
+        public string TargetTargetEffect { get; set; }
+        public string FlyEffect { get; set; }
+        public string CastTextEvent { get; set; }
+        public string PrepareEffectBone { get; set; }
+        public string Template1 { get; set; }
+        public string AlternativeCastTextEvents { get; set; }
+        public string WeaponBones { get; set; }
+        public string Shape { get; set; }
+        public string Template2 { get; set; }
+        public string CastSound { get; set; }
+        //modifier Distribution ProjectileDistribution
+        public string TargetSound { get; set; }
+        public int FrontOffset { get; set; }
+        public string Template3 { get; set; }
+        public string DomeEffect { get; set; }
+        public string VocalComponentSound { get; set; }
+        public bool Shuffle { get; set; }
+        public bool Autocast { get; set; }
+        public int Range { get; set; }
+        public string StormEffect { get; set; }
+        public string SpawnEffect { get; set; }
+        public bool ProjectileTerrainOffset { get; set; }
+        public bool PreviewStrikeHits { get; set; }
+        public int Base { get; set; }
+        public string CleanseStatuses { get; set; }
+        public string MovingObject { get; set; }
+        public string MaleImpactEffects { get; set; }
+        public string TargetCastEffect { get; set; }
+        public int StatusClearChance { get; set; }
+        //modifier ProjectileType ProjectileType
+        public string FemaleImpactEffects { get; set; }
+        public string Spellbook { get; set; }
+        public string StartTextEvent { get; set; }
+        public string AiCalculationSpellOverride { get; set; }
+        public string ReappearEffectTextEvent { get; set; }
+        public string StopTextEvent { get; set; }
+        public string RainEffect { get; set; }
+        public string CycleConditions { get; set; } // TargetConditions
+        public int Memory_Cost { get; set; }
+        public string ProjectileSpells { get; set; }
+        public AtmosphereType Atmosphere { get; set; }
+        public string UseCosts { get; set; }
+        public int MagicCost { get; set; }
+        public int ConsequencesStartTime { get; set; }
+        public string DualWieldingUseCosts { get; set; }
+        public bool Stealth { get; set; }
+        public int ConsequencesDuration { get; set; }
+        public string ThrowableTargetConditions {get; set; } // TargetConditions
+        public string HitCosts { get; set; }
+        public string SpellAnimationArcaneMagic { get; set; }
+        public int SurfaceRadius { get; set; }
+        public string SpellAnimationDivineMagic { get; set; }
+        public string SpellAnimationNoneMagic { get; set; }
+        public string DualWieldingSpellAnimationArcaneMagic { get; set; }
+        public string DualWieldingSpellAnimationDivineMagic { get; set; }
+        public string DualWieldingSpellAnimationNoneMagic { get; set; }
+        public string RequirementConditions { get; set; } // TargetConditions
+        //modifier VerbalIntent VerbalIntent
+        public List<WeaponFlags> WeaponTypes { get; set; }
+        //modifier SpellFlags SpellFlagList
+        public int MaximumTotalTargetHP { get; set; }
+        //modifier SpellActionType SpellActionType
+        //modifier SpellAnimationType SpellAnimationType
+        //modifier SpellHitAnimationType SpellHitAnimationType
+        //modifier SpellAnimationIntentType SpellAnimationIntentType
+        //modifier SpellJumpType SpellJumpType
+        public int MaximumTargets { get; set; }
+        public string RechargeValues { get; set; }
+        public string Requirements { get; set; } // Requirements
+        public int ForkChance { get; set; }
+        public int MaxForkCount { get; set; }
+        public int ForkLevels { get; set; }
+        //modifier LineOfSightFlags LineOfSightFlags
+        public string ForkingConditions { get; set; } // TargetConditions
+        public int MemoryCost { get; set; }
+        public string RootSpellID { get; set; }
+        public int PowerLevel { get; set; }
+        public int SourceLimbIndex { get; set; }
     }
 }
