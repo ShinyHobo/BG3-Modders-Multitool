@@ -52,10 +52,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int Initiative { get; set; }
         public string Progressions { get; set; }
         public string MinimumDetectionRange { get; set; }
-        public string DarkvisionsRange { get; set; }
+        public string DarkvisionRange { get; set; }
         public string FallingHitEffect { get; set; }
         public string FallingLandEffect { get; set; }
         public ArmorType ArmorType { get; set; }
-        public ProficiencyGroupFlags Proficiencygroup { get; set; }
+        public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
     }
 }

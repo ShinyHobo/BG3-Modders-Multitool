@@ -49,7 +49,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int GrowTimeout { get; set; }
         public string AuraEnemies { get; set; }
         public string TargetConditions { get; set; } // TargetConditions
-        public string AoECondtions { get; set; } // TargetConditions
+        public string AoEConditions { get; set; } // TargetConditions
         public int NextAttackChanceDivider { get; set; }
         public int RandomPoints { get; set; }
         public int Offset { get; set; }

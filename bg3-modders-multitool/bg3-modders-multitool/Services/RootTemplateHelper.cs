@@ -9,6 +9,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.ViewModels;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
@@ -57,11 +58,47 @@ namespace bg3_modders_multitool.Services
                     {
                         if(line.Contains("new entry"))
                         {
-                            StatStructures.Add(StatStructure.New(fileType));
+                            StatStructures.Add(StatStructure.New(fileType, line.Substring(10)));
                         }
                         else if(line.IndexOf("type") == 0)
                         {
                             StatStructures.Last().Type = fileType;
+                        }
+                        else if(line.IndexOf("using") == 0)
+                        {
+                            // find matching entry
+                            // clone
+                            // set equal to clone
+                        }
+                        else if(!string.IsNullOrEmpty(line))
+                        {
+                            var paramPair = line.Substring(5).Replace("\" \"", "|").Replace("\"", "").Split(new[] { '|' },2);
+                            if (!string.IsNullOrEmpty(paramPair[1]))
+                            {
+                                var item = StatStructures.Last();
+                                var property = item.GetType().GetProperty(paramPair[0].Replace(" ", ""));
+                                var propertyType = property.PropertyType;
+                                if (propertyType.IsEnum)
+                                {
+                                    property.SetValue(item, Enum.Parse(property.PropertyType, paramPair[1].Replace(" ", "")), null);
+                                }
+                                else if (propertyType == typeof(Guid))
+                                {
+                                    property.SetValue(item, Guid.Parse(paramPair[1]), null);
+                                }
+                                else if (propertyType.Name == "List`1")
+                                {
+                                    // load list, split on ;
+                                }
+                                else if (propertyType == typeof(bool))
+                                {
+                                    property.SetValue(item, Convert.ChangeType(paramPair[1] == "Yes", property.PropertyType), null);
+                                }
+                                else
+                                {
+                                    property.SetValue(item, Convert.ChangeType(paramPair[1], property.PropertyType), null);
+                                }
+                            }
                         }
                     }
                 }

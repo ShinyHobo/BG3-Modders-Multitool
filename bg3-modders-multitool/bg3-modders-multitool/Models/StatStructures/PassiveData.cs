@@ -17,7 +17,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ExtraDescriptionRef { get; set; }
         public string ExtraDescriptionParams { get; set; }
         public string Icon { get; set; }
-        public List<PassiveFlag> PassiveFlags { get; set; }
+        public List<PassiveFlag> Properties { get; set; }
         public string Boosts { get; set; }
         public StatsFunctorContext StatsFunctorContext { get; set; }
         public StatsFunctorContext BoostContext { get; set; }
