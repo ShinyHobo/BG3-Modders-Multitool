@@ -60,5 +60,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string FallingLandEffect { get; set; }
         public string ColorPresetResource { get; set; }
         public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
+
+        public override StatStructure Clone()
+        {
+            return (Weapon)MemberwiseClone();
+        }
     }
 }

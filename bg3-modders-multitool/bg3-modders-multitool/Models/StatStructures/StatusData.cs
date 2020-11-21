@@ -104,5 +104,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string OnRemoveFunctors { get; set; } // StatsFunctors
         public LEDEffectType LEDEffect { get; set; }
         public List<StatusGroupFlags> StatusGroups { get; set; }
+
+        public override StatStructure Clone()
+        {
+            return (StatusData)MemberwiseClone();
+        }
     }
 }

@@ -36,80 +36,10 @@ namespace bg3_modders_multitool.Services
             foreach(var pak in Paks)
             {
                 ReadRootTemplate(pak);
-                ReadRaces(pak);
                 ReadData(pak);
             }
+            ReadRaces("Shared");
             SortRootTemplate();
-        }
-
-        private bool ReadData(string pak)
-        {
-            var dataDir = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Stats\\Generated\\Data");
-            if(Directory.Exists(dataDir))
-            {
-                var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
-                StatStructures = StatStructures ?? new List<StatStructure>();
-                foreach(var file in dataFiles)
-                {
-                    var fileType = StatStructure.FileType(file);
-                    var line = string.Empty;
-                    var fileStream = new StreamReader(file);
-                    while((line = fileStream.ReadLine()) != null)
-                    {
-                        if(line.Contains("new entry"))
-                        {
-                            StatStructures.Add(StatStructure.New(fileType, line.Substring(10)));
-                        }
-                        else if(line.IndexOf("type") == 0)
-                        {
-                            StatStructures.Last().Type = fileType;
-                        }
-                        else if(line.IndexOf("using") == 0)
-                        {
-                            // find matching entry
-                            // clone
-                            // set equal to clone
-                        }
-                        else if(!string.IsNullOrEmpty(line))
-                        {
-                            var paramPair = line.Substring(5).Replace("\" \"", "|").Replace("\"", "").Split(new[] { '|' },2);
-                            if (!string.IsNullOrEmpty(paramPair[1]))
-                            {
-                                var item = StatStructures.Last();
-                                var property = item.GetType().GetProperty(paramPair[0].Replace(" ", ""));
-                                var propertyType = property.PropertyType;
-                                if (propertyType.IsEnum)
-                                {
-                                    property.SetValue(item, Enum.Parse(property.PropertyType, paramPair[1].Replace(" ", "")), null);
-                                }
-                                else if (propertyType == typeof(Guid))
-                                {
-                                    property.SetValue(item, Guid.Parse(paramPair[1]), null);
-                                }
-                                else if (propertyType.Name == "List`1")
-                                {
-                                    var paramList = paramPair[1].Split(';').ToList();
-                                    var arg = propertyType.GenericTypeArguments.First();
-                                    var enums = paramList.Select(p => Enum.Parse(arg, p)).ToList();
-                                    var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { enums });
-                                    var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { cast });
-                                    property.SetValue(item, Convert.ChangeType(enumList, property.PropertyType), null);
-                                }
-                                else if (propertyType == typeof(bool))
-                                {
-                                    property.SetValue(item, Convert.ChangeType(paramPair[1] == "Yes", property.PropertyType), null);
-                                }
-                                else
-                                {
-                                    property.SetValue(item, Convert.ChangeType(paramPair[1], property.PropertyType), null);
-                                }
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-            return false;
         }
 
         /// <summary>
@@ -355,6 +285,88 @@ namespace bg3_modders_multitool.Services
             Application.Current.Dispatcher.Invoke(() => {
                 ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load Races.lsx for {pak}.pak.\n";
             });
+            return false;
+        }
+
+        /// <summary>
+        /// Reads the stats and converts them into a StatStructure list.
+        /// Uses reflection to dynamically generate data.
+        /// </summary>
+        /// <param name="pak">The pak to search in.</param>
+        /// <returns>Whether the stats were read.</returns>
+        private bool ReadData(string pak)
+        {
+            var dataDir = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Stats\\Generated\\Data");
+            if (Directory.Exists(dataDir))
+            {
+                var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
+                StatStructures = StatStructures ?? new List<StatStructure>();
+                foreach (var file in dataFiles)
+                {
+                    var fileType = StatStructure.FileType(file);
+                    var line = string.Empty;
+                    var fileStream = new StreamReader(file);
+                    while ((line = fileStream.ReadLine()) != null)
+                    {
+                        if (line.Contains("new entry"))
+                        {
+                            StatStructures.Add(StatStructure.New(fileType, line.Substring(10)));
+                        }
+                        else if (line.IndexOf("type") == 0)
+                        {
+                            StatStructures.Last().Type = fileType;
+                        }
+                        else if (line.IndexOf("using") == 0)
+                        {
+                            var item = StatStructures.Last();
+                            var usingEntry = line.Substring(6).Replace("\"", "");
+                            var match = StatStructures.FirstOrDefault(ss => ss.Entry == usingEntry);
+                            var clone = match.Clone();
+                            clone.Entry = item.Entry;
+                            clone.Type = item.Type;
+                            clone.Using = usingEntry;
+                            StatStructures.Remove(item);
+                            StatStructures.Add(clone);
+                        }
+                        else if (!string.IsNullOrEmpty(line))
+                        {
+                            var paramPair = line.Substring(5).Replace("\" \"", "|").Replace("\"", "").Split(new[] { '|' }, 2);
+                            if (!string.IsNullOrEmpty(paramPair[1]))
+                            {
+                                var item = StatStructures.Last();
+                                var property = item.GetType().GetProperty(paramPair[0].Replace(" ", ""));
+                                var propertyType = property.PropertyType;
+                                if (propertyType.IsEnum)
+                                {
+                                    property.SetValue(item, Enum.Parse(property.PropertyType, paramPair[1].Replace(" ", "")), null);
+                                }
+                                else if (propertyType == typeof(Guid))
+                                {
+                                    property.SetValue(item, Guid.Parse(paramPair[1]), null);
+                                }
+                                else if (propertyType.Name == "List`1")
+                                {
+                                    var paramList = paramPair[1].Split(';').ToList();
+                                    var arg = propertyType.GenericTypeArguments.First();
+                                    var enums = paramList.Select(p => Enum.Parse(arg, p)).ToList();
+                                    var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { enums });
+                                    var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { cast });
+                                    property.SetValue(item, Convert.ChangeType(enumList, property.PropertyType), null);
+                                }
+                                else if (propertyType == typeof(bool))
+                                {
+                                    property.SetValue(item, Convert.ChangeType(paramPair[1] == "Yes", property.PropertyType), null);
+                                }
+                                else
+                                {
+                                    property.SetValue(item, Convert.ChangeType(paramPair[1], property.PropertyType), null);
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
             return false;
         }
 

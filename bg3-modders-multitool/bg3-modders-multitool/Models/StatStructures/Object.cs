@@ -53,5 +53,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string UseConditions { get; set; } // Conditions
         public string FallingHitEffect { get; set; }
         public string FallingLandEffect { get; set; }
+
+        public override StatStructure Clone()
+        {
+            return (Object)MemberwiseClone();
+        }
     }
 }

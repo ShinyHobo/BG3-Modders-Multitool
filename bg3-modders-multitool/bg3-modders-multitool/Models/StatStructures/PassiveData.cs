@@ -32,5 +32,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string StatsFunctors { get; set; }
         public string ToggleOnFunctors { get; set; }
         public string ToggleOffFunctors { get; set; }
+
+        public override StatStructure Clone()
+        {
+            return (PassiveData)MemberwiseClone();
+        }
     }
 }
