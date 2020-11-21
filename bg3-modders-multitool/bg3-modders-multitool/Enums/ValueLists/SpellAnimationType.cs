@@ -1,12 +1,12 @@
 ﻿/// <summary>
-/// The atmoshere types.
+/// The spell animation types.
 /// </summary>
 namespace bg3_modders_multitool.Enums.ValueLists
 {
-    public enum AtmosphereType
+    public enum SpellAnimationType
     {
         None,
-        Rain,
-        Storm
+        Dipping,
+        Assisting
     }
 }
