@@ -20,6 +20,7 @@ namespace bg3_modders_multitool.Services
     {
         private List<GameObject> GameObjects;
         private Dictionary<string, Translation> TranslationLookup;
+        private readonly string[] Paks = { "Shared", "Gustav" };
         public List<string> GameObjectTypes { get; private set; }
         public List<GameObject> FlatGameObjects { get; private set; }
         public List<Translation> Translations { get; private set; }
@@ -28,10 +29,17 @@ namespace bg3_modders_multitool.Services
         public RootTemplateHelper()
         {
             ReadTranslations();
-            ReadRootTemplate();
-            ReadRaces();
+            foreach(var pak in Paks)
+            {
+                ReadRootTemplate(pak);
+                ReadRaces(pak);
+            }
+            SortRootTemplate();
         }
 
+        /// <summary>
+        /// Forces garbage collection.
+        /// </summary>
         public void Clear()
         {
             GameObjects.Clear();
@@ -96,15 +104,16 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Reads the root template and converts it into a GameObject list.
         /// </summary>
+        /// <param name="pak">The pak to search in.</param>
         /// <returns>Whether the root template was read.</returns>
-        private bool ReadRootTemplate()
+        private bool ReadRootTemplate(string pak)
         {
-            var rootTemplates = @"Shared\Public\Shared\RootTemplates\_merged.lsf";
+            var rootTemplates = $"{pak}\\Public\\{pak}\\RootTemplates\\_merged.lsf";
             if (File.Exists(FileHelper.GetPath(rootTemplates)))
             {
                 rootTemplates = FileHelper.GetPath(FileHelper.Convert(rootTemplates,"lsx"));
-                GameObjects = new List<GameObject>();
-                GameObjectTypes = new List<string>();
+                GameObjects = GameObjects ?? new List<GameObject>();
+                GameObjectTypes = GameObjectTypes ?? new List<string>();
                 using (XmlReader reader = XmlReader.Create(rootTemplates))
                 {
                     GameObject gameObject = null;
@@ -117,7 +126,7 @@ namespace bg3_modders_multitool.Services
                                 var id = reader.GetAttribute("id");
                                 if (id == "GameObjects")
                                 {
-                                    gameObject = new GameObject { Children = new List<GameObject>() };
+                                    gameObject = new GameObject { Pak = pak, Children = new List<GameObject>() };
                                 }
                                 var value = reader.GetAttribute("value") ?? reader.GetAttribute("handle");
                                 if (reader.Depth == 5) // GameObject attributes
@@ -151,6 +160,9 @@ namespace bg3_modders_multitool.Services
                                         case "Stats":
                                             gameObject.Stats = value;
                                             break;
+                                        case "Race":
+                                            gameObject.RaceUUID = value;
+                                            break;
                                     }
                                 }
                                 break;
@@ -163,37 +175,48 @@ namespace bg3_modders_multitool.Services
                         }
                     }
                 }
+                return true;
+            }
+            Application.Current.Dispatcher.Invoke(() => {
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load root template _merged.lsf for {pak}.pak.\n";
+            });
+            return false;
+        }
+
+        /// <summary>
+        /// Groups children by MapKey and ParentTemplateId
+        /// </summary>
+        /// <returns>Whether the GameObjects list was sorted.</returns>
+        private bool SortRootTemplate()
+        {
+            if(GameObjects != null)
+            {
                 GameObjectTypes = GameObjectTypes.OrderBy(got => got).ToList();
                 GameObjects = GameObjects.OrderBy(go => go.Name).ToList();
                 FlatGameObjects = GameObjects;
-
-                // Groups children by MapKey and ParentTemplateId
                 var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
-                var lookup = GameObjects.ToDictionary(go => go.MapKey);
+                var lookup = GameObjects.GroupBy(go => go.MapKey, StringComparer.OrdinalIgnoreCase).ToDictionary(go => go.Key, go => go.Last());
                 foreach (var gameObject in children)
                 {
                     lookup[gameObject.ParentTemplateId].Children.Add(gameObject);
                 }
                 GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
-
                 return true;
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load root template _merged.lsf. Please unpack Shared.pak\n";
-            });
             return false;
         }
 
         /// <summary>
         /// Reads the Races.lsx file and converts it into a Race list.
         /// </summary>
+        /// <param name="pak">The pak to search in.</param>
         /// <returns>Whether the root template was read.</returns>
-        private bool ReadRaces()
+        private bool ReadRaces(string pak)
         {
-            var raceFile = FileHelper.GetPath(@"Shared\Public\Shared\Races\Races.lsx");
+            var raceFile = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Races\\Races.lsx");
             if (File.Exists(raceFile))
             {
-                Races = new List<Race>();
+                Races = Races ?? new List<Race>();
                 using (XmlReader reader = XmlReader.Create(raceFile))
                 {
                     Race race = null;
@@ -213,10 +236,12 @@ namespace bg3_modders_multitool.Services
                                     switch (id)
                                     {
                                         case "Description":
-                                            race.Description = value;
+                                            race.DescriptionHandle = value;
+                                            // TODO load description
                                             break;
                                         case "DisplayName":
-                                            race.DisplayName = value;
+                                            race.DisplayNameHandle = value;
+                                            // TODO load display name
                                             break;
                                         case "Name":
                                             race.Name = value;
@@ -253,7 +278,7 @@ namespace bg3_modders_multitool.Services
                 return true;
             }
             Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load Races.lsx. Please unpack Shared.pak\n";
+                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load Races.lsx for {pak}.pak.\n";
             });
             return false;
         }

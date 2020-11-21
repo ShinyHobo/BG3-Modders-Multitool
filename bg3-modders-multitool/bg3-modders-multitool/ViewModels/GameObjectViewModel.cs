@@ -4,8 +4,10 @@
 namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Models;
+    using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Services;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Windows.Controls;
 
     public class GameObjectViewModel : BaseViewModel
@@ -73,6 +75,17 @@ namespace bg3_modders_multitool.ViewModels
             get { return _info; }
             set {
                 _info = value;
+                Race = RootTemplateHelper.Races.FirstOrDefault(race => race.UUID == value.RaceUUID);
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private Race _race;
+
+        public Race Race {
+            get { return _race; }
+            set {
+                _race = value;
                 OnNotifyPropertyChanged();
             }
         }
