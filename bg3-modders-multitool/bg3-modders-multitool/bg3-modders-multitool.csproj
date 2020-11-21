@@ -196,6 +196,7 @@
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -245,11 +246,37 @@
     <Compile Include="Enums\ValueLists\ArmorType.cs" />
     <Compile Include="Enums\ValueLists\AtmosphereType.cs" />
     <Compile Include="Enums\ValueLists\AttributeFlag.cs" />
+    <Compile Include="Enums\ValueLists\CooldownType.cs" />
+    <Compile Include="Enums\ValueLists\CursorMode.cs" />
+    <Compile Include="Enums\ValueLists\DamageType.cs" />
+    <Compile Include="Enums\ValueLists\FormatStringColor.cs" />
+    <Compile Include="Enums\ValueLists\HealValueType.cs" />
     <Compile Include="Enums\ValueLists\InventoryTabs.cs" />
+    <Compile Include="Enums\ValueLists\ItemSlot.cs" />
+    <Compile Include="Enums\ValueLists\ItemUseTypes.cs" />
+    <Compile Include="Enums\ValueLists\LEDEffectType.cs" />
+    <Compile Include="Enums\ValueLists\MaterialType.cs" />
     <Compile Include="Enums\ValueLists\ObjectSize.cs" />
     <Compile Include="Enums\ValueLists\PassiveFlag.cs" />
+    <Compile Include="Enums\ValueLists\ProficiencyGroupFlags.cs" />
+    <Compile Include="Enums\ValueLists\ProgressionType.cs" />
     <Compile Include="Enums\ValueLists\Rarity.cs" />
+    <Compile Include="Enums\ValueLists\Skill.cs" />
+    <Compile Include="Enums\ValueLists\SoundVocalType.cs" />
+    <Compile Include="Enums\ValueLists\SpellSchool.cs" />
     <Compile Include="Enums\ValueLists\StatsFunctorContext.cs" />
+    <Compile Include="Enums\ValueLists\StatusAnimationType.cs" />
+    <Compile Include="Enums\ValueLists\StatusEvent.cs" />
+    <Compile Include="Enums\ValueLists\StatusGroupFlags.cs" />
+    <Compile Include="Enums\ValueLists\StatusHealType.cs" />
+    <Compile Include="Enums\ValueLists\StatusPropertyFlags.cs" />
+    <Compile Include="Enums\ValueLists\StepsType.cs" />
+    <Compile Include="Enums\ValueLists\StillAnimPriority.cs" />
+    <Compile Include="Enums\ValueLists\TickType.cs" />
+    <Compile Include="Enums\ValueLists\VampirismType.cs" />
+    <Compile Include="Enums\ValueLists\WeaponFlags.cs" />
+    <Compile Include="Enums\ValueLists\WeaponGroup.cs" />
+    <Compile Include="Enums\ValueLists\WeaponType.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Races\Component.cs" />
     <Compile Include="Models\Races\Race.cs" />
