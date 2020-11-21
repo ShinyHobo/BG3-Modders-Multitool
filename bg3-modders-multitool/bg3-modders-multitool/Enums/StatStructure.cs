@@ -3,7 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Enums
 {
-    public enum StatStructures
+    public enum StatStructure
     {
         Armor,
         Character,
