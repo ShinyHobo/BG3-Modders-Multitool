@@ -1,52 +1,58 @@
-﻿
+﻿/// <summary>
+/// The armor.
+/// </summary>
 namespace bg3_modders_multitool.Models.StatStructures
 {
-    class Armor
+    using bg3_modders_multitool.Enums.ValueLists;
+    using System;
+    using System.Collections.Generic;
+
+    public class Armor
     {
-        //modifier "RootTemplate","FixedString"
-        //modifier "ItemGroup","FixedString"
-        //modifier "Level","ConstantInt"
-        //modifier "Slot","Itemslot"
-        //modifier "Requirements","Requirements"
-        //modifier "UseConditions","Conditions"
-        //modifier "ArmorClass","ConstantInt"
-        //modifier "Durability","ConstantInt"
-        //modifier "DurabilityDegradeSpeed","Qualifier"
-        //modifier "ValueLevel","ConstantInt"
-        //modifier "ValueUUID","Guid"
-        //modifier "ValueScale","ConstantFloat"
-        //modifier "ValueRounding","ConstantInt"
-        //modifier "ValueOverride","ConstantInt"
-        //modifier "Rarity","Rarity"
-        //modifier "Weight","ConstantInt"
-        //modifier "Spells","FixedString"
-        //modifier "Tags","FixedString"
-        //modifier "ExtraProperties","FixedString"
-        //modifier "Flags","AttributeFlags"
-        //modifier "DefaultBoosts","FixedString"
-        //modifier "PersonalStatusImmunities","StatusIDs"
-        //modifier "Boosts","FixedString"
-        //modifier "Passives","FixedString"
-        //modifier "ComboCategory","FixedString"
-        //modifier "InventoryTab","InventoryTabs"
-        //modifier "ArmorType","ArmorType"
-        //modifier "ItemColor","FixedString"
-        //modifier "NeedsIdentification","YesNo"
-        //modifier "Charges","ConstantInt"
-        //modifier "MaxCharges","ConstantInt"
-        //modifier "ObjectCategory","FixedString"
-        //modifier "MinAmount","ConstantInt"
-        //modifier "MaxAmount","ConstantInt"
-        //modifier "Priority","ConstantInt"
-        //modifier "Unique","ConstantInt"
-        //modifier "MinLevel","ConstantInt"
-        //modifier "MaxLevel","ConstantInt"
-        //modifier "Shield","YesNo"
-        //modifier "Armor Class Ability","Ability"
-        //modifier "Ability Modifier Cap","ConstantInt"
-        //modifier "FallingHitEffect","FixedString"
-        //modifier "FallingLandEffect","FixedString"
-        //modifier "ColorPresetResource","FixedString"
-        //modifier "Proficiency Group","ProficiencyGroupFlags"
+        public string RootTemplate { get; set; }
+        public string ItemGroup { get; set; }
+        public int Level { get; set; }
+        public ItemSlot Slot { get; set; }
+        public string Requirements { get; set; } // Requirements
+        public string UseConditions { get; set; } // Conditions
+        public int ArmorClass { get; set; }
+        public int Durability { get; set; }
+        public int? DurabilityDegradeSpeed { get; set; } // Qualifier (null, 0-10)
+        public int ValueLevel { get; set; }
+        public Guid ValueUUID { get; set; }
+        public float ValueScale { get; set; }
+        public int ValueRounding { get; set; }
+        public int ValueOverride { get; set; }
+        public Rarity Rarity { get; set; }
+        public int Weight { get; set; }
+        public string Spells { get; set; }
+        public string Tags { get; set; }
+        public string ExtraProperties { get; set; }
+        public List<AttributeFlag> Flags { get; set; }
+        public string DefaultBoosts { get; set; }
+        public string PersonalStatusImmunities { get; set; } // StatusIDs
+        public string Boosts { get; set; }
+        public string Passives { get; set; }
+        public string ComboCategory { get; set; }
+        public InventoryTabs InventoryTab { get; set; }
+        public ArmorType ArmorType { get; set; }
+        public string ItemColor { get; set; }
+        public bool NeedsIdentification { get; set; }
+        public int Charges { get; set; }
+        public int MaxCharges { get; set; }
+        public string ObjectCategory { get; set; }
+        public int MinAmount { get; set; }
+        public int MaxAmount { get; set; }
+        public int Priority { get; set; }
+        public int Unique { get; set; }
+        public int MinLevel { get; set; }
+        public int MaxLevel { get; set; }
+        public bool Shield { get; set; }
+        public Ability ArmorClassAbility { get; set; }
+        public int AbilityModifierCap { get; set; }
+        public string FallingHitEffect { get; set; }
+        public string FallinglandEffect { get; set; }
+        public string ColorPresetResource { get; set; }
+        public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
     }
 }
