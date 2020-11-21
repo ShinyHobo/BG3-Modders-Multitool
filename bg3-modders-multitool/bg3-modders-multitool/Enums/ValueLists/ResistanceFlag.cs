@@ -1,5 +1,5 @@
 ﻿/// <summary>
-/// 
+/// The resistance flags.
 /// </summary>
 namespace bg3_modders_multitool.Enums.ValueLists
 {

@@ -1,12 +1,12 @@
 ﻿/// <summary>
-/// The atmoshere types.
+/// The projectile types.
 /// </summary>
 namespace bg3_modders_multitool.Enums.ValueLists
 {
-    public enum AtmosphereType
+    public enum ProjectileType
     {
         None,
-        Rain,
-        Storm
+        Arrow,
+        Grenade
     }
 }

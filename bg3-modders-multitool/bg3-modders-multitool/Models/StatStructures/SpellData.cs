@@ -14,7 +14,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string SpellContainerID { get; set; }
         public CooldownType Cooldown { get; set; }
         public string ContainerSpells { get; set; }
-        //modifier Requirement SpellRequirement
+        public SpellRequirement Requirement { get; set; }
         public List<AIFlag> AIFlags { get; set; }
         public string SpellProperties { get; set; } // StatsFunctors
         public string TargetRadius { get; set; }
@@ -22,9 +22,9 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int AreaRadius { get; set; }
         public int DamageRange { get; set; }
         public string AddRangeFromAbility { get; set; }
-        //modifier SurfaceType Surface Type
-        //modifier DamageType Damage Type
-        //modifier DeathType Death Type
+        public SurfaceType SurfaceType { get; set; }
+        public DamageType DamageType { get; set; }
+        public DeathType DeathType { get; set; }
         public int SurfaceLifetime { get; set; }
         public int ExplodeRadius { get; set; }
         public int SurfaceGrowStep { get; set; }
@@ -37,7 +37,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int StrikeDelay { get; set; }
         public int TeleportDelay { get; set; }
         public string AuraSelf { get; set; }
-        //modifier SpellRoll RollConditions
+        public string SpellRoll { get; set; } // RollConditions
         public string AuraAllies { get; set; }
         public string SpellSuccess { get; set; } // StatsFunctors
         public int MaxAttacks { get; set; }
@@ -67,7 +67,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public bool TeleportSurface { get; set; }
         public int TravelSpeed { get; set; }
         public string Template { get; set; }
-        //modifier MemorizationRequirements MemorizationRequirements
+        public string MemorizationRequirements { get; set; } // MemorizationRequirements
         public int Lifetime { get; set; }
         public string Icon { get; set; }
         public int Height { get; set; }
@@ -122,7 +122,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string Shape { get; set; }
         public string Template2 { get; set; }
         public string CastSound { get; set; }
-        //modifier Distribution ProjectileDistribution
+        public ProjectileDistribution Distribution { get; set; }
         public string TargetSound { get; set; }
         public int FrontOffset { get; set; }
         public string Template3 { get; set; }
@@ -141,7 +141,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string MaleImpactEffects { get; set; }
         public string TargetCastEffect { get; set; }
         public int StatusClearChance { get; set; }
-        //modifier ProjectileType ProjectileType
+        public ProjectileType ProjectileType { get; set; }
         public string FemaleImpactEffects { get; set; }
         public string Spellbook { get; set; }
         public string StartTextEvent { get; set; }
@@ -169,22 +169,22 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string DualWieldingSpellAnimationDivineMagic { get; set; }
         public string DualWieldingSpellAnimationNoneMagic { get; set; }
         public string RequirementConditions { get; set; } // TargetConditions
-        //modifier VerbalIntent VerbalIntent
+        public VerbalIntent VerbalIntent { get; set; }
         public List<WeaponFlags> WeaponTypes { get; set; }
-        //modifier SpellFlags SpellFlagList
+        public List<SpellFlagList> SpellFlags { get; set; }
         public int MaximumTotalTargetHP { get; set; }
-        //modifier SpellActionType SpellActionType
-        //modifier SpellAnimationType SpellAnimationType
-        //modifier SpellHitAnimationType SpellHitAnimationType
-        //modifier SpellAnimationIntentType SpellAnimationIntentType
-        //modifier SpellJumpType SpellJumpType
+        public SpellActionType SpellActionType { get; set; }
+        public SpellAnimationType SpellAnimationType { get; set; }
+        public SpellHitAnimationType SpellHitAnimationType { get; set; }
+        public SpellAnimationIntentType SpellAnimationIntentType { get; set; }
+        public SpellJumpType SpellJumpType { get; set; }
         public int MaximumTargets { get; set; }
         public string RechargeValues { get; set; }
         public string Requirements { get; set; } // Requirements
         public int ForkChance { get; set; }
         public int MaxForkCount { get; set; }
         public int ForkLevels { get; set; }
-        //modifier LineOfSightFlags LineOfSightFlags
+        public LineOfSightFlags LineOfSightFlags { get; set; }
         public string ForkingConditions { get; set; } // TargetConditions
         public int MemoryCost { get; set; }
         public string RootSpellID { get; set; }

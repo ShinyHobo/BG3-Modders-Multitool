@@ -1,12 +1,11 @@
 ﻿/// <summary>
-/// The atmoshere types.
+/// The line of sight flags.
 /// </summary>
 namespace bg3_modders_multitool.Enums.ValueLists
 {
-    public enum AtmosphereType
+    public enum LineOfSightFlags
     {
         None,
-        Rain,
-        Storm
+        AddSourceHeight
     }
 }
