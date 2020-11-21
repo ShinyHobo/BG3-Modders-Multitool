@@ -1,58 +1,64 @@
-﻿
+﻿/// <summary>
+/// The weapon model.
+/// </summary>
 namespace bg3_modders_multitool.Models.StatStructures
 {
-    class Weapon
+    using bg3_modders_multitool.Enums.ValueLists;
+    using System;
+    using System.Collections.Generic;
+
+    public class Weapon
     {
-        //modifier "RootTemplate","FixedString"
-        //modifier "ItemGroup","FixedString"
-        //modifier "Level","ConstantInt"
-        //modifier "Requirements","Requirements"
-        //modifier "UseConditions","Conditions"
-        //modifier "Damage Type","Damage Type"
-        //modifier "Damage","FixedString"
-        //modifier "Damage Range","ConstantInt"
-        //modifier "WeaponRange","ConstantInt"
-        //modifier "Durability","ConstantInt"
-        //modifier "DurabilityDegradeSpeed","Qualifier"
-        //modifier "ValueLevel","ConstantInt"
-        //modifier "ValueUUID","Guid"
-        //modifier "ValueScale","ConstantFloat"
-        //modifier "ValueRounding","ConstantInt"
-        //modifier "ValueOverride","ConstantInt"
-        //modifier "Rarity","Rarity"
-        //modifier "Weight","ConstantInt"
-        //modifier "WeaponType","WeaponType"
-        //modifier "Slot","Itemslot"
-        //modifier "Projectile","FixedString"
-        //modifier "IgnoreVisionBlock","YesNo"
-        //modifier "ComboCategory","FixedString"
-        //modifier "Spells","FixedString"
-        //modifier "Tags","FixedString"
-        //modifier "ExtraProperties","FixedString"
-        //modifier "WeaponFunctors","StatsFunctors"
-        //modifier "Flags","AttributeFlags"
-        //modifier "DefaultBoosts","FixedString"
-        //modifier "PersonalStatusImmunities","StatusIDs"
-        //modifier "Boosts","FixedString"
-        //modifier "Passives","FixedString"
-        //modifier "InventoryTab","InventoryTabs"
-        //modifier "NeedsIdentification","YesNo"
-        //modifier "Charges","ConstantInt"
-        //modifier "MaxCharges","ConstantInt"
-        //modifier "ItemColor","FixedString"
-        //modifier "ObjectCategory","FixedString"
-        //modifier "MinAmount","ConstantInt"
-        //modifier "MaxAmount","ConstantInt"
-        //modifier "Priority","ConstantInt"
-        //modifier "Unique","ConstantInt"
-        //modifier "MinLevel","ConstantInt"
-        //modifier "MaxLevel","ConstantInt"
-        //modifier "Weapon Group","Weapon Group"
-        //modifier "VersatileDamage","FixedString"
-        //modifier "Weapon Properties","WeaponFlags"
-        //modifier "FallingHitEffect","FixedString"
-        //modifier "FallingLandEffect","FixedString"
-        //modifier "ColorPresetResource","FixedString"
-        //modifier "Proficiency Group","ProficiencyGroupFlags"
+        public string RootTemplate { get; set; }
+        public string ItemGroup { get; set; }
+        public int Level { get; set; }
+        public string Requirements { get; set; } // Requirements
+        public string UseConditions { get; set; } // Conditions
+        public DamageType DamageType { get; set; }
+        public string Damage { get; set; }
+        public int DamageRange { get; set; }
+        public int WeaponRange { get; set; }
+        public int Durability { get; set; }
+        public int? DurabilityDegradeSpeed { get; set; } // Qualifier (null, 0-10)
+        public int ValueLevel { get; set; }
+        public Guid ValueUUID { get; set; }
+        public float ValueScale { get; set; }
+        public int ValueRounding { get; set; }
+        public int ValueOverride { get; set; }
+        public Rarity Rarity { get; set; }
+        public int Weight { get; set; }
+        public WeaponType WeaponType { get; set; }
+        public ItemSlot Slot { get; set; }
+        public string Projectile { get; set; }
+        public bool IgnoreVisionBlock { get; set; }
+        public string ComboCategory { get; set; }
+        public string Spells { get; set; }
+        public string Tags { get; set; }
+        public string ExtraProperties { get; set; }
+        public string WeaponFunctors { get; set; } // StatsFunctors
+        public List<AttributeFlag> Flags { get; set; }
+        public string DefaultBoosts { get; set; }
+        public string PersonalStatusImmunities { get; set; } // StatusIDs
+        public string Boosts { get; set; }
+        public string Passives { get; set; }
+        public InventoryTabs InventoryTab { get; set; }
+        public bool NeedsIdentification { get; set; }
+        public int Charges { get; set; }
+        public int MaxCharges { get; set; }
+        public string ItemColor { get; set; }
+        public string ObjectCategory { get; set; }
+        public int MinAmount { get; set; }
+        public int MaxAmount { get; set; }
+        public int Priority { get; set; }
+        public int Unique { get; set; }
+        public int MinLevel { get; set; }
+        public int MaxLevel { get; set; }
+        public WeaponGroup WeaponGroup { get; set; }
+        public string VersatileDamage { get; set; }
+        public List<WeaponFlags> WeaponProperties { get; set; }
+        public string FallingHitEffect { get; set; }
+        public string FallingLandEffect { get; set; }
+        public string ColorPresetResource { get; set; }
+        public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
     }
 }
