@@ -205,6 +205,10 @@ namespace bg3_modders_multitool.Services
                     lookup[gameObject.ParentTemplateId].Children.Add(gameObject);
                 }
                 GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+                foreach(var gameObject in GameObjects)
+                {
+                    PassOnStats(gameObject);
+                }
                 return true;
             }
             return false;
@@ -378,6 +382,22 @@ namespace bg3_modders_multitool.Services
             if (!GameObjectTypes.Contains(type))
             {
                 GameObjectTypes.Add(type);
+            }
+        }
+
+        /// <summary>
+        /// Recursive method for passing on stats to child GameObjects.
+        /// </summary>
+        /// <param name="gameObject">The game object to pass stats on from.</param>
+        private void PassOnStats(GameObject gameObject)
+        {
+            foreach(var go in gameObject.Children)
+            {
+                if(string.IsNullOrEmpty(go.Stats))
+                {
+                    go.Stats = gameObject.Stats;
+                }
+                PassOnStats(go);
             }
         }
         #endregion
