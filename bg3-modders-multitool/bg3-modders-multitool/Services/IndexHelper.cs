@@ -236,9 +236,6 @@ namespace bg3_modders_multitool.Services
         /// <returns>A list of file line and trimmed contents.</returns>
         public Dictionary<int, string> GetFileContents(string path)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Looking up file contents.\n";
-            });
             var lines = new Dictionary<int, string>();
             var lineCount = 1;
             path = @"\\?\" + path;
@@ -302,9 +299,6 @@ namespace bg3_modders_multitool.Services
                     lines.Add(0, "File not found.");
                 }
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Lookup complete.\n";
-            });
             return lines;
         }
     }
