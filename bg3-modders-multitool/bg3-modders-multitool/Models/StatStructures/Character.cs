@@ -6,7 +6,11 @@ namespace bg3_modders_multitool.Models.StatStructures
     using bg3_modders_multitool.Enums.ValueLists;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
+    [CategoryOrder("Misc", 1)]
+    [CategoryOrder("Damage Resistance", 2)]
     public class Character : StatStructure
     {
         public int Level { get; set; }
@@ -36,19 +40,32 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ActionResources { get; set; }
         public string Class { get; set; }
         public string Passives { get; set; }
-        public List<ResistanceFlag> BludgeoningResistance { get; set; }
-        public List<ResistanceFlag> SlashingResistance { get; set; }
-        public List<ResistanceFlag> PiercingResistance { get; set; }
-        public List<ResistanceFlag> AcidResistance { get; set; }
-        public List<ResistanceFlag> ColdResistance { get; set; }
-        public List<ResistanceFlag> FireResistance { get; set; }
-        public List<ResistanceFlag> ForceResistance { get; set; }
-        public List<ResistanceFlag> LightningResistance { get; set; }
-        public List<ResistanceFlag> NecroticResistance { get; set; }
-        public List<ResistanceFlag> PoisonResistance { get; set; }
-        public List<ResistanceFlag> PsychicResistance { get; set; }
-        public List<ResistanceFlag> RadiantResistance { get; set; }
-        public List<ResistanceFlag> ThunderResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag BludgeoningResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag SlashingResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag PiercingResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag AcidResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag ColdResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag FireResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag ForceResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag LightningResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag NecroticResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag PoisonResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag PsychicResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag RadiantResistance { get; set; }
+        [Category("Damage Resistance")]
+        public ResistanceFlag ThunderResistance { get; set; }
         public int Initiative { get; set; }
         public string Progressions { get; set; }
         public string MinimumDetectionRange { get; set; }

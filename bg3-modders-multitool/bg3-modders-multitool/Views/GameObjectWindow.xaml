@@ -134,7 +134,7 @@
         <TextBlock x:Name="listCountBlock" HorizontalAlignment="Left" Margin="470,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="73"/>
         <TabControl x:Name="tabBox" Margin="550,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <TabItem Header="Stats">
-                <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged"/>
+                <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False"/>
             </TabItem>
             <TabItem Header="Icon">
                 
