@@ -108,6 +108,58 @@ namespace bg3_modders_multitool.Views
             search.IsEnabled = enable;
             searchBox.IsEnabled = enable;
         }
+
+        #endregion
+
+        #region PropertyGrid Events
+        /// <summary>
+        /// Sets up loading properties to modify editors.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private void PropertyGrid_SelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            var grid = sender as Xceed.Wpf.Toolkit.PropertyGrid.PropertyGrid;
+            var properties = grid.Properties.OfType<Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem>();
+            foreach(var prop in properties)
+            {
+                prop.Loaded += Prop_Loaded;
+            }
+        }
+
+        /// <summary>
+        /// Sets up dropdown disabling event on load.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private void Prop_Loaded(object sender, RoutedEventArgs e)
+        {
+            var source = e.OriginalSource as Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem;
+            if (source.Editor is Xceed.Wpf.Toolkit.PropertyGrid.Editors.PropertyGridEditorComboBox)
+            {
+                var editor = source.Editor as Xceed.Wpf.Toolkit.PropertyGrid.Editors.PropertyGridEditorComboBox;
+                editor.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+            }
+        }
+
+        /// <summary>
+        /// Disables dropdown options at runtime.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private void ItemContainerGenerator_StatusChanged(object sender, System.EventArgs e)
+        {
+            var itemContainerGenerator = sender as ItemContainerGenerator;
+            if(itemContainerGenerator.Status == System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
+            {
+                foreach (var item in itemContainerGenerator.Items)
+                {
+                    var container = itemContainerGenerator.ContainerFromItem(item) as ComboBoxItem;
+                    container.IsEnabled = false;
+                }
+
+            }
+        }
         #endregion
     }
 }
