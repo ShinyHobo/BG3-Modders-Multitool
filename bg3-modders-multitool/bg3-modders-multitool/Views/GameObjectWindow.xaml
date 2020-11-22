@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:model="clr-namespace:bg3_modders_multitool.Models"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:helpers="clr-namespace:bg3_modders_multitool.XAMLHelpers"
         mc:Ignorable="d"
         Title="GameObject Explorer" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
@@ -132,7 +133,12 @@
         <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="470,38,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
         <TextBlock x:Name="listCountBlock" HorizontalAlignment="Left" Margin="470,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="73"/>
         <TabControl x:Name="tabBox" Margin="550,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <TabItem Header="Stats"></TabItem>
+            <TabItem Header="Stats">
+                <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged"/>
+            </TabItem>
+            <TabItem Header="Icon">
+                
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
