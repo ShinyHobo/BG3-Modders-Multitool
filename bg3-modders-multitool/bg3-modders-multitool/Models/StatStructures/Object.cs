@@ -6,7 +6,11 @@ namespace bg3_modders_multitool.Models.StatStructures
     using bg3_modders_multitool.Enums.ValueLists;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
+    [CategoryOrder("Misc", 1)]
+    [CategoryOrder("Damage Resistance", 2)]
     class Object : StatStructure
     {
         public string RootTemplate { get; set; }
@@ -37,22 +41,35 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int MaxLevel { get; set; }
         public string UseCosts { get; set; }
         public ItemUseTypes ItemUseType { get; set; }
-        public List<ResistanceFlag> BludgeoningResistance { get; set; }
-        public List<ResistanceFlag> SlashingResistance { get; set; }
-        public List<ResistanceFlag> PiercingResistance { get; set; }
-        public List<ResistanceFlag> AcidResistance { get; set; }
-        public List<ResistanceFlag> ColdResistance { get; set; }
-        public List<ResistanceFlag> FireResistance { get; set; }
-        public List<ResistanceFlag> ForceResistance { get; set; }
-        public List<ResistanceFlag> LightningResistance { get; set; }
-        public List<ResistanceFlag> NecroticResistance { get; set; }
-        public List<ResistanceFlag> PoisonResistance { get; set; }
-        public List<ResistanceFlag> PsychicResistance { get; set; }
-        public List<ResistanceFlag> RadiantResistance { get; set; }
-        public List<ResistanceFlag> ThunderResistance { get; set; }
         public string UseConditions { get; set; } // Conditions
         public string FallingHitEffect { get; set; }
         public string FallingLandEffect { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> BludgeoningResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> SlashingResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> PiercingResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> AcidResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> ColdResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> FireResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> ForceResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> LightningResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> NecroticResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> PoisonResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> PsychicResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> RadiantResistance { get; set; }
+        [Category("Damage Resistance")]
+        public List<ResistanceFlag> ThunderResistance { get; set; }
 
         public override StatStructure Clone()
         {

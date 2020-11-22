@@ -143,15 +143,15 @@ namespace bg3_modders_multitool.Views
             else if(source.Editor is Xceed.Wpf.Toolkit.PropertyGrid.Editors.PropertyGridEditorPrimitiveTypeCollectionControl)
             {
                 var editor = source.Editor as Xceed.Wpf.Toolkit.PropertyGrid.Editors.PropertyGridEditorPrimitiveTypeCollectionControl;
-                if(editor.ItemsSource != null)
+                var text = string.Empty;
+                if (editor.ItemsSource != null)
                 {
-                    var text = string.Empty;
                     foreach (var item in editor.ItemsSource)
                     {
                         text += System.Enum.GetName(item.GetType(), item) + ";";
                     }
-                    editor.Content = text;
                 }
+                editor.Content = text;
             }
         }
 
