@@ -128,7 +128,7 @@ namespace bg3_modders_multitool.Views
         }
 
         /// <summary>
-        /// Sets up dropdown disabling event on load.
+        /// Sets up PropertyGrid displays.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event.</param>
@@ -139,6 +139,19 @@ namespace bg3_modders_multitool.Views
             {
                 var editor = source.Editor as Xceed.Wpf.Toolkit.PropertyGrid.Editors.PropertyGridEditorComboBox;
                 editor.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+            }
+            else if(source.Editor is Xceed.Wpf.Toolkit.PropertyGrid.Editors.PropertyGridEditorPrimitiveTypeCollectionControl)
+            {
+                var editor = source.Editor as Xceed.Wpf.Toolkit.PropertyGrid.Editors.PropertyGridEditorPrimitiveTypeCollectionControl;
+                if(editor.ItemsSource != null)
+                {
+                    var text = string.Empty;
+                    foreach (var item in editor.ItemsSource)
+                    {
+                        text += System.Enum.GetName(item.GetType(), item) + ";";
+                    }
+                    editor.Content = text;
+                }
             }
         }
 
