@@ -420,6 +420,10 @@ namespace bg3_modders_multitool.Services
                 {
                     go.Stats = gameObject.Stats;
                 }
+                if(string.IsNullOrEmpty(go.Icon))
+                {
+                    go.Icon = gameObject.Icon;
+                }
                 PassOnStats(go);
             }
         }
