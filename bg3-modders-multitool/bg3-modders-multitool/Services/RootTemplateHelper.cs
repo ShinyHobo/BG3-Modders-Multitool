@@ -37,7 +37,7 @@ namespace bg3_modders_multitool.Services
             {
                 ReadRootTemplate(pak);
                 ReadData(pak);
-                ReadCharacterIcons(pak);
+                ReadIcons(pak);
             }
             ReadRaces("Shared");
             SortRootTemplate();
@@ -378,11 +378,11 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
-        /// Reads the character texture atlas for icon displays.
+        /// Reads the texture atlas for icon displays.
         /// </summary>
         /// <param name="pak">The pak to load texture atlas for.</param>
         /// <returns>Whether the texture atlas was created.</returns>
-        private bool ReadCharacterIcons(string pak)
+        private bool ReadIcons(string pak)
         {
             TextureAtlases = TextureAtlases ?? new List<TextureAtlas>();
             var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
