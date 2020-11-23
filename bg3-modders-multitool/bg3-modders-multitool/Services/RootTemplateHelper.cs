@@ -19,16 +19,16 @@ namespace bg3_modders_multitool.Services
 
     public class RootTemplateHelper
     {
-        private List<GameObject> GameObjects;
+        private List<GameObject> GameObjects = new List<GameObject>();
         private Dictionary<string, Translation> TranslationLookup;
         private readonly string[] Paks = { "Shared","Gustav" };
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
-        public List<string> GameObjectTypes { get; private set; }
-        public List<GameObject> FlatGameObjects { get; private set; }
-        public List<Translation> Translations { get; private set; }
-        public List<Race> Races { get; private set; }
-        public List<StatStructure> StatStructures { get; private set; }
-        public List<TextureAtlas> TextureAtlases { get; private set; }
+        public List<string> GameObjectTypes { get; private set; } = new List<string>();
+        public List<GameObject> FlatGameObjects { get; private set; } = new List<GameObject>();
+        public List<Translation> Translations { get; private set; } = new List<Translation>();
+        public List<Race> Races { get; private set; } = new List<Race>();
+        public List<StatStructure> StatStructures { get; private set; } = new List<StatStructure>();
+        public List<TextureAtlas> TextureAtlases { get; private set; } = new List<TextureAtlas>();
 
         public RootTemplateHelper()
         {
@@ -87,7 +87,6 @@ namespace bg3_modders_multitool.Services
             var translationFile = FileHelper.GetPath(@"English\Localization\English\english.xml");
             if (File.Exists(translationFile))
             {
-                Translations = new List<Translation>();
                 using (XmlReader reader = XmlReader.Create(translationFile))
                 {
                     while (reader.Read())
@@ -120,8 +119,6 @@ namespace bg3_modders_multitool.Services
             if (File.Exists(FileHelper.GetPath(rootTemplates)))
             {
                 rootTemplates = FileHelper.GetPath(FileHelper.Convert(rootTemplates,"lsx"));
-                GameObjects = GameObjects ?? new List<GameObject>();
-                GameObjectTypes = GameObjectTypes ?? new List<string>();
                 using (XmlReader reader = XmlReader.Create(rootTemplates))
                 {
                     GameObject gameObject = null;
@@ -228,7 +225,6 @@ namespace bg3_modders_multitool.Services
             var raceFile = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Races\\Races.lsx");
             if (File.Exists(raceFile))
             {
-                Races = Races ?? new List<Race>();
                 using (XmlReader reader = XmlReader.Create(raceFile))
                 {
                     Race race = null;
@@ -307,7 +303,6 @@ namespace bg3_modders_multitool.Services
             if (Directory.Exists(dataDir))
             {
                 var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
-                StatStructures = StatStructures ?? new List<StatStructure>();
                 foreach (var file in dataFiles)
                 {
                     var fileType = StatStructure.FileType(file);
@@ -384,7 +379,6 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the texture atlas was created.</returns>
         private bool ReadIcons(string pak)
         {
-            TextureAtlases = TextureAtlases ?? new List<TextureAtlas>();
             var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
             if (File.Exists(@"\\?\" + metaLoc))
             {
