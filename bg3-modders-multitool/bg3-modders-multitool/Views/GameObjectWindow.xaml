@@ -137,7 +137,7 @@
                 <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False"/>
             </TabItem>
             <TabItem Header="Icon">
-                
+                <Image Width="200" Source="{Binding Icon}"/>
             </TabItem>
         </TabControl>
     </Grid>

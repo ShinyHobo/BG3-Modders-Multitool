@@ -28,6 +28,7 @@ namespace bg3_modders_multitool.Services
         public List<Translation> Translations { get; private set; }
         public List<Race> Races { get; private set; }
         public List<StatStructure> StatStructures { get; private set; }
+        public List<TextureAtlas> TextureAtlases { get; private set; }
 
         public RootTemplateHelper()
         {
@@ -36,9 +37,29 @@ namespace bg3_modders_multitool.Services
             {
                 ReadRootTemplate(pak);
                 ReadData(pak);
+                ReadCharacterIcons(pak);
             }
             ReadRaces("Shared");
             SortRootTemplate();
+        }
+
+        private bool ReadCharacterIcons(string pak)
+        {
+            var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
+            if(File.Exists(@"\\?\" + metaLoc))
+            {
+                var meta = DragAndDropHelper.ReadMeta(metaLoc);
+                var iconLoc = FileHelper.GetPath($"Icons\\Public\\{pak}\\Assets\\Textures\\Icons\\Generated_{meta.UUID}_Icons.dds");
+                var iconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
+                if(File.Exists(@"\\?\" + iconLoc) && File.Exists(@"\\?\" + iconAtlas))
+                {
+                    TextureAtlases = TextureAtlases ?? new List<TextureAtlas>();
+                    TextureAtlases.Add(TextureAtlas.Read(iconAtlas, iconLoc));
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         /// <summary>
@@ -51,6 +72,8 @@ namespace bg3_modders_multitool.Services
             FlatGameObjects.Clear();
             Translations.Clear();
             Races.Clear();
+            StatStructures.Clear();
+            TextureAtlases.Clear();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
