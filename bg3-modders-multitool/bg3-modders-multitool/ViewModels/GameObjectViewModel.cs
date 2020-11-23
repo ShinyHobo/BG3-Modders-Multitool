@@ -80,7 +80,7 @@ namespace bg3_modders_multitool.ViewModels
                 _info = value;
                 Race = RootTemplateHelper.Races.FirstOrDefault(race => race.UUID == value.RaceUUID);
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
-                Icon = RootTemplateHelper.TextureAtlases.Single(ta => ta.Path.Contains(value.Pak)).GetIcon(Info.Icon);
+                Icon = RootTemplateHelper.TextureAtlases.SingleOrDefault(ta => ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
                 OnNotifyPropertyChanged();
             }
         }

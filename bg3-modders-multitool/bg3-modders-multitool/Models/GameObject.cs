@@ -85,6 +85,26 @@ namespace bg3_modders_multitool.Models
         }
 
         /// <summary>
+        /// Recursive method for passing on stats to child GameObjects.
+        /// </summary>
+        /// <param name="gameObject">The game object to pass stats on from.</param>
+        public void PassOnStats()
+        {
+            foreach (var go in Children)
+            {
+                if (string.IsNullOrEmpty(go.Stats))
+                {
+                    go.Stats = Stats;
+                }
+                if (string.IsNullOrEmpty(go.Icon))
+                {
+                    go.Icon = Icon;
+                }
+                go.PassOnStats();
+            }
+        }
+
+        /// <summary>
         /// Finds a match to a game object property value.
         /// </summary>
         /// <param name="filter">The filter.</param>
