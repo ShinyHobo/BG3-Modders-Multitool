@@ -43,25 +43,6 @@ namespace bg3_modders_multitool.Services
             SortRootTemplate();
         }
 
-        private bool ReadCharacterIcons(string pak)
-        {
-            var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
-            if(File.Exists(@"\\?\" + metaLoc))
-            {
-                var meta = DragAndDropHelper.ReadMeta(metaLoc);
-                var iconLoc = FileHelper.GetPath($"Icons\\Public\\{pak}\\Assets\\Textures\\Icons\\Generated_{meta.UUID}_Icons.dds");
-                var iconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
-                if(File.Exists(@"\\?\" + iconLoc) && File.Exists(@"\\?\" + iconAtlas))
-                {
-                    TextureAtlases = TextureAtlases ?? new List<TextureAtlas>();
-                    TextureAtlases.Add(TextureAtlas.Read(iconAtlas, iconLoc));
-                    return true;
-                }
-                return false;
-            }
-            return false;
-        }
-
         /// <summary>
         /// Forces garbage collection.
         /// </summary>
@@ -230,7 +211,7 @@ namespace bg3_modders_multitool.Services
                 GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
                 foreach(var gameObject in GameObjects)
                 {
-                    PassOnStats(gameObject);
+                    gameObject.PassOnStats();
                 }
                 return true;
             }
@@ -397,6 +378,38 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Reads the character texture atlas for icon displays.
+        /// </summary>
+        /// <param name="pak">The pak to load texture atlas for.</param>
+        /// <returns>Whether the texture atlas was created.</returns>
+        private bool ReadCharacterIcons(string pak)
+        {
+            TextureAtlases = TextureAtlases ?? new List<TextureAtlas>();
+            var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
+            if (File.Exists(@"\\?\" + metaLoc))
+            {
+                var meta = DragAndDropHelper.ReadMeta(metaLoc);
+                var characterIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
+                if (File.Exists(@"\\?\" + characterIconAtlas))
+                {
+                    TextureAtlases.Add(TextureAtlas.Read(characterIconAtlas, pak));
+                }
+                var objectIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items.lsx");
+                if (File.Exists(@"\\?\" + objectIconAtlas))
+                {
+                    TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas, pak));
+                }
+                var objectIconAtlas2 = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items_2.lsx");
+                if (File.Exists(@"\\?\" + objectIconAtlas2))
+                {
+                    TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas2, pak));
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Checks for game object types and forces them to be accounted for.
         /// </summary>
         /// <param name="type">The game object type.</param>
@@ -405,26 +418,6 @@ namespace bg3_modders_multitool.Services
             if (!GameObjectTypes.Contains(type))
             {
                 GameObjectTypes.Add(type);
-            }
-        }
-
-        /// <summary>
-        /// Recursive method for passing on stats to child GameObjects.
-        /// </summary>
-        /// <param name="gameObject">The game object to pass stats on from.</param>
-        private void PassOnStats(GameObject gameObject)
-        {
-            foreach(var go in gameObject.Children)
-            {
-                if(string.IsNullOrEmpty(go.Stats))
-                {
-                    go.Stats = gameObject.Stats;
-                }
-                if(string.IsNullOrEmpty(go.Icon))
-                {
-                    go.Icon = gameObject.Icon;
-                }
-                PassOnStats(go);
             }
         }
         #endregion

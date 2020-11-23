@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Models
 {
+    using bg3_modders_multitool.Services;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
@@ -49,22 +50,24 @@ namespace bg3_modders_multitool.Models
         /// Reads a texture atlas and the corresponding .dds file.
         /// </summary>
         /// <param name="path">The path to the texture atlas.</param>
-        /// <param name="iconPath">The path to the .dds file.</param>
+        /// <param name="pak">The pak.</param>
         /// <returns>A new texture atlas.</returns>
-        public static TextureAtlas Read(string path, string iconPath)
+        public static TextureAtlas Read(string path, string pak)
         {
-            var newTextureAtlas = new TextureAtlas { Path = path, Icons = new List<IconUV>() };
+            var newTextureAtlas = new TextureAtlas { Path = path, Icons = new List<IconUV>()};
             XmlDocument doc = new XmlDocument();
             doc.Load(path);
             var textureAtlasInfo = doc.SelectSingleNode("//region[@id='TextureAtlasInfo']");
             textureAtlasInfo = textureAtlasInfo.SelectSingleNode("node[@id='root']");
             textureAtlasInfo = textureAtlasInfo.SelectSingleNode("children");
-            var textureAtlasIconSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasIconSize']");
-            newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText);
-            newTextureAtlas.IconWidth = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText);
 
             var textureAtlasPath = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasPath']");
             newTextureAtlas.UUID = textureAtlasPath.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText;
+            newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}";
+
+            var textureAtlasIconSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasIconSize']");
+            newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText);
+            newTextureAtlas.IconWidth = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText);
 
             var textureAtlasTextureSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasTextureSize']");
             newTextureAtlas.Height = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText);
@@ -86,7 +89,7 @@ namespace bg3_modders_multitool.Models
                 newTextureAtlas.Icons.Add(icon);
             }
 
-            using (var image = Pfim.Pfim.FromFile(iconPath))
+            using (var image = Pfim.Pfim.FromFile(FileHelper.GetPath(newTextureAtlas.Path)))
             {
                 var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
                 var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
