@@ -21,8 +21,7 @@ namespace bg3_modders_multitool.Models
         public int Width { get; set; }
         public int IconHeight { get; set; }
         public int IconWidth { get; set; }
-        public Bitmap Bitmap { get; set; }
-        public BitmapImage BitmapImage { get; set; }
+        public byte[] AtlasImage { get; set; }
         public List<IconUV> Icons { get; set; }
 
         /// <summary>
@@ -38,10 +37,12 @@ namespace bg3_modders_multitool.Models
                 var xPos = (int)(Width * icon.U1);
                 var yPos = (int)(Height * icon.V1);
                 Rectangle cloneRect = new Rectangle(xPos, yPos, IconWidth, IconHeight);
-                var clone = BitmapImage.Clone();
-                var bitmap = new Bitmap(clone.StreamSource);
-                bitmap = bitmap.Clone(cloneRect, bitmap.PixelFormat);
-                return ConvertBitmapToImage(bitmap);
+                using (var ms = new MemoryStream(AtlasImage))
+                {
+                    var bmp = new Bitmap(ms);
+                    bmp = bmp.Clone(cloneRect, bmp.PixelFormat);
+                    return ConvertBitmapToImage(bmp);
+                }
             }
             return null;
         }
@@ -93,7 +94,12 @@ namespace bg3_modders_multitool.Models
             {
                 var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
                 var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
-                newTextureAtlas.BitmapImage = ConvertBitmapToImage(bitmap);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    bitmap.Save(ms, ImageFormat.Png);
+                    newTextureAtlas.AtlasImage = ms.ToArray();
+                    bitmap.Dispose();
+                }
             }
 
             return newTextureAtlas;
@@ -106,16 +112,19 @@ namespace bg3_modders_multitool.Models
         /// <returns>The converted bitmap image.</returns>
         private static BitmapImage ConvertBitmapToImage(Bitmap bitmap)
         {
-            MemoryStream ms = new MemoryStream();
-            bitmap.Save(ms, ImageFormat.Bmp);
-            BitmapImage img = new BitmapImage();
-            img.BeginInit();
-            ms.Seek(0, SeekOrigin.Begin);
-            img.CacheOption = BitmapCacheOption.OnLoad;
-            img.StreamSource = ms;
-            img.EndInit();
-            bitmap.Dispose();
-            return img;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                BitmapImage img = new BitmapImage();
+                img.BeginInit();
+                ms.Seek(0, SeekOrigin.Begin);
+                img.CacheOption = BitmapCacheOption.OnLoad;
+                img.StreamSource = ms;
+                img.EndInit();
+                img.Freeze();
+                bitmap.Dispose();
+                return img;
+            }
         }
     }
 }
