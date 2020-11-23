@@ -8,8 +8,10 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
     using System.Collections.ObjectModel;
+    using System.Drawing;
     using System.Linq;
     using System.Windows.Controls;
+    using System.Windows.Media.Imaging;
 
     public class GameObjectViewModel : BaseViewModel
     {
@@ -78,6 +80,7 @@ namespace bg3_modders_multitool.ViewModels
                 _info = value;
                 Race = RootTemplateHelper.Races.FirstOrDefault(race => race.UUID == value.RaceUUID);
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
+                Icon = RootTemplateHelper.TextureAtlases.Single(ta => ta.Path.Contains(value.Pak)).GetIcon(Info.Icon);
                 OnNotifyPropertyChanged();
             }
         }
@@ -88,6 +91,16 @@ namespace bg3_modders_multitool.ViewModels
             get { return _stats; }
             set {
                 _stats = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private BitmapImage _icon;
+
+        public BitmapImage Icon {
+            get { return _icon; }
+            set {
+                _icon = value;
                 OnNotifyPropertyChanged();
             }
         }
