@@ -1,0 +1,53 @@
+﻿<Window x:Class="bg3_modders_multitool.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:bg3_modders_multitool.Views"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="Baldur's Gate 3 Modder's Multitool" Height="450" Width="800">
+    <Grid>
+        <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,10,526,159">
+            <views:DragAndDropBox x:Name="dragAndDropBox"/>
+        </Viewbox>
+        <!--TODO move file selectors to separate view-->
+        <Grid Margin="273,10,121,340">
+            <Label x:Name="divineLabel" Content="divine.exe location (1.15.2+ Required)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding DivineLocation, Mode=TwoWay}" IsReadOnly="True"/>
+            <Button x:Name="divineSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23" Cursor="Hand"/>
+        </Grid>
+        <Grid Margin="273,63,121,287">
+            <Label x:Name="bg3exeLabel" Content="bg3.exe location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding Bg3ExeLocation, Mode=TwoWay}" IsReadOnly="True"/>
+            <Button x:Name="bg3exeSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click" Cursor="Hand"/>
+        </Grid>
+        <Grid Margin="273,114,28,236">
+            <Label x:Name="guidLabel" Content="v4 UUID/TranslatedString Handle Generator" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="guidGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
+            <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
+            <CheckBox x:Name="typeSwitch" Content="Handle" HorizontalAlignment="Left" Margin="390,33,0,0" VerticalAlignment="Top" Cursor="Hand"/>
+        </Grid>
+        <ScrollViewer x:Name="ConsoleScroller" Margin="10,267,6,6" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged">
+            <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
+                     IsReadOnly="True" Background="Black" Foreground="White"/>
+        </ScrollViewer>
+        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}"/>
+        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
+        <Grid Margin="331,221,20,154">
+            <Grid Visibility="{Binding SearchResults.IndexingVisibility}">
+                <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="105" Margin="30,0,0,0" HorizontalAlignment="Left" Height="10" VerticalAlignment="Bottom"/>
+                <TextBlock Margin="40,10,0,0" >
+                    <Run Text="{Binding SearchResults.IndexFileCount, Mode=OneWay}"/> /
+                    <Run Text="{Binding SearchResults.IndexFileTotal, Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="152,10,0,0" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
+            </Grid>
+            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="228,10,0,0" VerticalAlignment="Top" Width="100" Height="23" MouseDoubleClick="IndexFiles_Click" 
+                    Cursor="Hand" ToolTip="Double-click to begin indexing" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
+            <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"/>
+        </Grid>
+        <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="666,109,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"/>
+        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="642,196,0,0" VerticalAlignment="Top" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand"/>
+    </Grid>
+</Window>
