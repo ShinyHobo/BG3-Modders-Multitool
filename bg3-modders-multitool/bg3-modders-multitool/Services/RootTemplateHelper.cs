@@ -29,6 +29,7 @@ namespace bg3_modders_multitool.Services
         public List<Race> Races { get; private set; } = new List<Race>();
         public List<Models.StatStructures.StatStructure> StatStructures { get; private set; } = new List<Models.StatStructures.StatStructure>();
         public List<TextureAtlas> TextureAtlases { get; private set; } = new List<TextureAtlas>();
+        public Dictionary<string, string> GameObjectAttributes { get; set; } = new Dictionary<string,string>();
 
         public RootTemplateHelper()
         {
@@ -42,6 +43,7 @@ namespace bg3_modders_multitool.Services
             }
             ReadRaces("Shared");
             SortRootTemplate();
+            var attributeValueTypes = string.Join(",", GameObjectAttributes.Values.GroupBy(g => g).Select(g => g.Last()).ToList());
         }
 
         /// <summary>
@@ -133,41 +135,14 @@ namespace bg3_modders_multitool.Services
                                 {
                                     gameObject = new GameObject { Pak = pak, Children = new List<GameObject>() };
                                 }
+                                var type = reader.GetAttribute("type");
                                 var value = reader.GetAttribute("value") ?? reader.GetAttribute("handle");
                                 if (reader.Depth == 5) // GameObject attributes
                                 {
-                                    switch (id)
-                                    {
-                                        case "MapKey":
-                                            gameObject.MapKey = value;
-                                            break;
-                                        case "ParentTemplateId":
-                                            gameObject.ParentTemplateId = value;
-                                            break;
-                                        case "Name":
-                                            gameObject.Name = value;
-                                            break;
-                                        case "DisplayName":
-                                            gameObject.DisplayName = TranslationLookup.ContainsKey(value) ? TranslationLookup[value].Value : string.Empty;
-                                            gameObject.DisplayNameHandle = value;
-                                            break;
-                                        case "Description":
-                                            gameObject.DescriptionHandle = value;
-                                            gameObject.Description = TranslationLookup.ContainsKey(value) ? TranslationLookup[value].Value : string.Empty;
-                                            break;
-                                        case "Type":
-                                            gameObject.Type = (GameObjectType)Enum.Parse(typeof(GameObjectType), value);
-                                            break;
-                                        case "Icon":
-                                            gameObject.Icon = value;
-                                            break;
-                                        case "Stats":
-                                            gameObject.Stats = value;
-                                            break;
-                                        case "Race":
-                                            gameObject.RaceUUID = value;
-                                            break;
-                                    }
+                                    gameObject.LoadProperty(id, type, value);
+
+                                    if (id != null && !GameObjectAttributes.ContainsKey(id))
+                                        GameObjectAttributes.Add(id, type);
                                 }
                                 break;
                             case XmlNodeType.EndElement:
@@ -199,10 +174,10 @@ namespace bg3_modders_multitool.Services
                 GameObjects = GameObjects.OrderBy(go => go.Name).ToList();
                 FlatGameObjects = GameObjects;
                 var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
-                var lookup = GameObjects.GroupBy(go => go.MapKey, StringComparer.OrdinalIgnoreCase).ToDictionary(go => go.Key, go => go.Last());
+                var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
                 foreach (var gameObject in children)
                 {
-                    lookup[gameObject.ParentTemplateId].Children.Add(gameObject);
+                    lookup.First(l => l.Key == gameObject.ParentTemplateId).Value.Children.Add(gameObject);
                 }
                 GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
                 foreach(var gameObject in GameObjects)

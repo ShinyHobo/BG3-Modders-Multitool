@@ -313,6 +313,7 @@
     <Compile Include="Enums\ValueLists\WeaponGroup.cs" />
     <Compile Include="Enums\ValueLists\WeaponSet.cs" />
     <Compile Include="Enums\ValueLists\WeaponType.cs" />
+    <Compile Include="Models\GameObjectTypes\FixedString.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\TextureAtlas.cs" />
     <Compile Include="Models\IconUV.cs" />

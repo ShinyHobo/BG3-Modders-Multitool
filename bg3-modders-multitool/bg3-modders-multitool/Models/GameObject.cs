@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Models
 {
     using bg3_modders_multitool.Enums;
+    using bg3_modders_multitool.Models.GameObjectTypes;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -12,7 +13,7 @@ namespace bg3_modders_multitool.Models
     {
         #region Parameters
         public string Pak { get; set; }
-        public string MapKey { get; set; }
+        public FixedString MapKey { get; set; }
         public string ParentTemplateId { get; set; }
         public string Name { get; set; }
         public string DisplayNameHandle { get; set; }
@@ -28,6 +29,7 @@ namespace bg3_modders_multitool.Models
         public float Scale { get; set; }
         public string TitleHandle { get; set; }
         public string Title { get; set; }
+        public string PhysicsTemplate { get; set; }
         public List<GameObject> Children { get; set; }
 
         /// <summary>
@@ -81,6 +83,7 @@ namespace bg3_modders_multitool.Models
             }
         }
 
+        #region Search
         /// <summary>
         /// Recursively searches through the game object's children to find matching object names.
         /// </summary>
@@ -129,6 +132,38 @@ namespace bg3_modders_multitool.Models
                    Description?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    Icon?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    Stats?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0;
+        }
+        #endregion
+
+        public void LoadProperty(string id, string type, string value)
+        {
+            if(type != null)
+            {
+                if (type.Contains("String"))
+                {
+                    var property = GetType().GetProperty(id);
+                    if (property != null)
+                    {
+                        var propertyType = property.PropertyType;
+                        if (propertyType.IsEnum)
+                        {
+                            property.SetValue(this, Enum.Parse(property.PropertyType, value), null);
+                        }
+                        else
+                        {
+                            var method = propertyType.GetMethod("FromString", new Type[] { typeof(string) });
+                            if(method != null)
+                            {
+                                property.SetValue(this, method.Invoke(null, new object[] { value }));
+                            }
+                            else
+                            {
+                                property.SetValue(this, value);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
