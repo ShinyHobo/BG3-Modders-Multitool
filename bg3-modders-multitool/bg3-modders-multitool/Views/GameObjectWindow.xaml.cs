@@ -34,7 +34,7 @@ namespace bg3_modders_multitool.Views
                 searchBox.Text = string.Empty;
                 ToggleControls();
                 var vm = DataContext as GameObjectViewModel;
-                vm.GameObjects = vm.UnfilteredGameObjects = await vm.RootTemplateHelper.LoadRelevent(combo.SelectedItem.ToString());
+                vm.GameObjects = vm.UnfilteredGameObjects = await vm.RootTemplateHelper.LoadRelevent((Enums.GameObjectType)combo.SelectedItem);
                 listCountBlock.Text = $"{vm.GameObjects.Sum(x => x.Count())} Results";
                 ToggleControls(true);
             }
