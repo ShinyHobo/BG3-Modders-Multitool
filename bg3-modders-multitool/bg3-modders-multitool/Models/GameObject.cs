@@ -3,12 +3,14 @@
 /// </summary>
 namespace bg3_modders_multitool.Models
 {
+    using bg3_modders_multitool.Enums;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     public class GameObject
     {
+        #region Parameters
         public string Pak { get; set; }
         public string MapKey { get; set; }
         public string ParentTemplateId { get; set; }
@@ -17,10 +19,15 @@ namespace bg3_modders_multitool.Models
         public string DisplayName { get; set; }
         public string DescriptionHandle { get; set; }
         public string Description { get; set; }
-        public string Type { get; set; }
+        public GameObjectType Type { get; set; }
         public string Icon { get; set; }
         public string Stats { get; set; }
         public string RaceUUID { get; set; }
+        public string CharacterVisualResourceID { get; set; }
+        public string LevelName { get; set; }
+        public float Scale { get; set; }
+        public string TitleHandle { get; set; }
+        public string Title { get; set; }
         public List<GameObject> Children { get; set; }
 
         /// <summary>
@@ -44,6 +51,7 @@ namespace bg3_modders_multitool.Models
                 return Children.Sum(x => x.count) + Children.Count;
             }
         }
+        #endregion
 
         /// <summary>
         /// Gets a count of all children in the tree, plus the parent.
@@ -51,6 +59,26 @@ namespace bg3_modders_multitool.Models
         public int Count()
         {
             return count + 1;
+        }
+
+        /// <summary>
+        /// Recursive method for passing on stats to child GameObjects.
+        /// </summary>
+        /// <param name="gameObject">The game object to pass stats on from.</param>
+        public void PassOnStats()
+        {
+            foreach (var go in Children)
+            {
+                if (string.IsNullOrEmpty(go.Stats))
+                {
+                    go.Stats = Stats;
+                }
+                if (string.IsNullOrEmpty(go.Icon))
+                {
+                    go.Icon = Icon;
+                }
+                go.PassOnStats();
+            }
         }
 
         /// <summary>
@@ -81,26 +109,6 @@ namespace bg3_modders_multitool.Models
                     }
                 }
                 return null;
-            }
-        }
-
-        /// <summary>
-        /// Recursive method for passing on stats to child GameObjects.
-        /// </summary>
-        /// <param name="gameObject">The game object to pass stats on from.</param>
-        public void PassOnStats()
-        {
-            foreach (var go in Children)
-            {
-                if (string.IsNullOrEmpty(go.Stats))
-                {
-                    go.Stats = Stats;
-                }
-                if (string.IsNullOrEmpty(go.Icon))
-                {
-                    go.Icon = Icon;
-                }
-                go.PassOnStats();
             }
         }
 

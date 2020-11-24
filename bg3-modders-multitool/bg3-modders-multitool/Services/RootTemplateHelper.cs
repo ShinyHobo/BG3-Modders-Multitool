@@ -4,9 +4,9 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using bg3_modders_multitool.Enums;
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
-    using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
@@ -23,15 +23,16 @@ namespace bg3_modders_multitool.Services
         private Dictionary<string, Translation> TranslationLookup;
         private readonly string[] Paks = { "Shared","Gustav" };
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
-        public List<string> GameObjectTypes { get; private set; } = new List<string>();
+        public List<GameObjectType> GameObjectTypes { get; private set; } = new List<GameObjectType>();
         public List<GameObject> FlatGameObjects { get; private set; } = new List<GameObject>();
         public List<Translation> Translations { get; private set; } = new List<Translation>();
         public List<Race> Races { get; private set; } = new List<Race>();
-        public List<StatStructure> StatStructures { get; private set; } = new List<StatStructure>();
+        public List<Models.StatStructures.StatStructure> StatStructures { get; private set; } = new List<Models.StatStructures.StatStructure>();
         public List<TextureAtlas> TextureAtlases { get; private set; } = new List<TextureAtlas>();
 
         public RootTemplateHelper()
         {
+            GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().ToList();
             ReadTranslations();
             foreach(var pak in Paks)
             {
@@ -65,11 +66,10 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="gameObjectType">The game object type to load.</param>
         /// <returns>A collection of game objects.</returns>
-        public async Task<ObservableCollection<GameObject>> LoadRelevent(string gameObjectType)
+        public async Task<ObservableCollection<GameObject>> LoadRelevent(GameObjectType gameObjectType)
         {
             return await Task.Run(() => {
                 var start = DateTime.Now;
-                CheckForValidGameObjectType(gameObjectType);
                 var returnObjects = new ObservableCollection<GameObject>(GameObjects.Where(go => go.Type == gameObjectType));
                 var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
                 return returnObjects;
@@ -156,8 +156,7 @@ namespace bg3_modders_multitool.Services
                                             gameObject.Description = TranslationLookup.ContainsKey(value) ? TranslationLookup[value].Value : string.Empty;
                                             break;
                                         case "Type":
-                                            CheckForValidGameObjectType(value);
-                                            gameObject.Type = value;
+                                            gameObject.Type = (GameObjectType)Enum.Parse(typeof(GameObjectType), value);
                                             break;
                                         case "Icon":
                                             gameObject.Icon = value;
@@ -305,14 +304,14 @@ namespace bg3_modders_multitool.Services
                 var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
                 foreach (var file in dataFiles)
                 {
-                    var fileType = StatStructure.FileType(file);
+                    var fileType = Models.StatStructures.StatStructure.FileType(file);
                     var line = string.Empty;
                     var fileStream = new StreamReader(file);
                     while ((line = fileStream.ReadLine()) != null)
                     {
                         if (line.Contains("new entry"))
                         {
-                            StatStructures.Add(StatStructure.New(fileType, line.Substring(10)));
+                            StatStructures.Add(Models.StatStructures.StatStructure.New(fileType, line.Substring(10)));
                         }
                         else if (line.IndexOf("type") == 0)
                         {
@@ -401,18 +400,6 @@ namespace bg3_modders_multitool.Services
                 return true;
             }
             return false;
-        }
-
-        /// <summary>
-        /// Checks for game object types and forces them to be accounted for.
-        /// </summary>
-        /// <param name="type">The game object type.</param>
-        private void CheckForValidGameObjectType(string type)
-        {
-            if (!GameObjectTypes.Contains(type))
-            {
-                GameObjectTypes.Add(type);
-            }
         }
         #endregion
     }

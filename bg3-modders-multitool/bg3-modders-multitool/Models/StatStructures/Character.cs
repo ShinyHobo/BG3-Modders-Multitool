@@ -10,17 +10,12 @@ namespace bg3_modders_multitool.Models.StatStructures
     using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
     [CategoryOrder("Misc", 1)]
-    [CategoryOrder("Damage Resistance", 2)]
+    [CategoryOrder("Ability Scores",2)]
+    [CategoryOrder("Armor", 3)]
+    [CategoryOrder("Damage Resistance", 4)]
     public class Character : StatStructure
     {
         public int Level { get; set; }
-        public int Strength { get; set; }
-        public int Dexterity { get; set; }
-        public int Constitution { get; set; }
-        public int Intelligence { get; set; }
-        public int Wisdom { get; set; }
-        public int Charisma { get; set; }
-        public int Armor { get; set; }
         public int Vitality { get; set; }
         public Guid XPReward { get; set; }
         public int Sight { get; set; }
@@ -40,6 +35,37 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ActionResources { get; set; }
         public string Class { get; set; }
         public string Passives { get; set; }
+        public int Initiative { get; set; }
+        public string Progressions { get; set; }
+        public string MinimumDetectionRange { get; set; }
+        public string DarkvisionRange { get; set; }
+        public string FallingHitEffect { get; set; }
+        public string FallingLandEffect { get; set; }
+        public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
+
+        #region Armor
+        [Category("Armor")]
+        public int Armor { get; set; }
+        [Category("Armor")]
+        public ArmorType ArmorType { get; set; }
+        #endregion
+
+        #region Ability Scores
+        [Category("Ability Scores")]
+        public int Strength { get; set; }
+        [Category("Ability Scores")]
+        public int Dexterity { get; set; }
+        [Category("Ability Scores")]
+        public int Constitution { get; set; }
+        [Category("Ability Scores")]
+        public int Intelligence { get; set; }
+        [Category("Ability Scores")]
+        public int Wisdom { get; set; }
+        [Category("Ability Scores")]
+        public int Charisma { get; set; }
+        #endregion
+
+        #region Damage Resistance
         [Category("Damage Resistance")]
         public ResistanceFlag BludgeoningResistance { get; set; }
         [Category("Damage Resistance")]
@@ -66,14 +92,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public ResistanceFlag RadiantResistance { get; set; }
         [Category("Damage Resistance")]
         public ResistanceFlag ThunderResistance { get; set; }
-        public int Initiative { get; set; }
-        public string Progressions { get; set; }
-        public string MinimumDetectionRange { get; set; }
-        public string DarkvisionRange { get; set; }
-        public string FallingHitEffect { get; set; }
-        public string FallingLandEffect { get; set; }
-        public ArmorType ArmorType { get; set; }
-        public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
+        #endregion
 
         public override StatStructure Clone()
         {
