@@ -4,7 +4,9 @@
 namespace bg3_modders_multitool.Models.StatStructures
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     public abstract class StatStructure
     {
@@ -44,7 +46,7 @@ namespace bg3_modders_multitool.Models.StatStructures
             {
                 return Enums.StatStructure.StatusData;
             }
-            throw new Exception("Stat structure file type not accounted for.");
+            throw new Exception($"Stat structure file type '{file}' not accounted for.");
         }
 
         /// <summary>
@@ -86,6 +88,62 @@ namespace bg3_modders_multitool.Models.StatStructures
         }
 
         public abstract StatStructure Clone();
+
+        /// <summary>
+        /// Inherit properties from a structure.
+        /// </summary>
+        /// <param name="line">The line to parse.</param>
+        /// <param name="statStructures">The list of stat structures to search through.</param>
+        public void InheritProperties(string line, List<StatStructure> statStructures)
+        {
+            var usingEntry = line.Substring(6).Replace("\"", "");
+            var match = statStructures.FirstOrDefault(ss => ss.Entry == usingEntry);
+            var clone = match.Clone();
+            clone.Entry = Entry;
+            clone.Type = Type;
+            clone.Using = usingEntry;
+            statStructures.Remove(this);
+            statStructures.Add(clone);
+        }
+
+        /// <summary>
+        /// Use reflection to set property value from data file line.
+        /// </summary>
+        /// <param name="line">The line text to parse.</param>
+        public void LoadProperty(string line)
+        {
+            var paramPair = line.Substring(5).Replace("\" \"", "|").Replace("\"", "").Split(new[] { '|' }, 2);
+            if (!string.IsNullOrEmpty(paramPair[1]))
+            {
+                var property = GetType().GetProperty(paramPair[0].Replace(" ", ""));
+                var propertyType = property.PropertyType;
+                if (propertyType.IsEnum)
+                {
+                    property.SetValue(this, Enum.Parse(property.PropertyType, paramPair[1].Replace(" ", "")), null);
+                }
+                else if (propertyType == typeof(Guid))
+                {
+                    property.SetValue(this, Guid.Parse(paramPair[1]), null);
+                }
+                else if (propertyType.Name == "List`1")
+                {
+                    var paramList = paramPair[1].Split(';').ToList();
+                    var arg = propertyType.GenericTypeArguments.First();
+                    var enums = paramList.Select(p => Enum.Parse(arg, p)).ToList();
+                    var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { enums });
+                    var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { cast });
+                    property.SetValue(this, Convert.ChangeType(enumList, property.PropertyType), null);
+                }
+                else if (propertyType == typeof(bool))
+                {
+                    property.SetValue(this, Convert.ChangeType(paramPair[1] == "Yes", property.PropertyType), null);
+                }
+                else
+                {
+                    property.SetValue(this, Convert.ChangeType(paramPair[1], property.PropertyType), null);
+                }
+            }
+        }
 
         public Enums.StatStructure Type { get; set; }
         public string Entry { get; set; }

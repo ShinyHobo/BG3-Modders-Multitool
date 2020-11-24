@@ -319,50 +319,11 @@ namespace bg3_modders_multitool.Services
                         }
                         else if (line.IndexOf("using") == 0)
                         {
-                            var item = StatStructures.Last();
-                            var usingEntry = line.Substring(6).Replace("\"", "");
-                            var match = StatStructures.FirstOrDefault(ss => ss.Entry == usingEntry);
-                            var clone = match.Clone();
-                            clone.Entry = item.Entry;
-                            clone.Type = item.Type;
-                            clone.Using = usingEntry;
-                            StatStructures.Remove(item);
-                            StatStructures.Add(clone);
+                            StatStructures.Last().InheritProperties(line, StatStructures);
                         }
                         else if (!string.IsNullOrEmpty(line))
                         {
-                            var paramPair = line.Substring(5).Replace("\" \"", "|").Replace("\"", "").Split(new[] { '|' }, 2);
-                            if (!string.IsNullOrEmpty(paramPair[1]))
-                            {
-                                var item = StatStructures.Last();
-                                var property = item.GetType().GetProperty(paramPair[0].Replace(" ", ""));
-                                var propertyType = property.PropertyType;
-                                if (propertyType.IsEnum)
-                                {
-                                    property.SetValue(item, Enum.Parse(property.PropertyType, paramPair[1].Replace(" ", "")), null);
-                                }
-                                else if (propertyType == typeof(Guid))
-                                {
-                                    property.SetValue(item, Guid.Parse(paramPair[1]), null);
-                                }
-                                else if (propertyType.Name == "List`1")
-                                {
-                                    var paramList = paramPair[1].Split(';').ToList();
-                                    var arg = propertyType.GenericTypeArguments.First();
-                                    var enums = paramList.Select(p => Enum.Parse(arg, p)).ToList();
-                                    var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { enums });
-                                    var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { cast });
-                                    property.SetValue(item, Convert.ChangeType(enumList, property.PropertyType), null);
-                                }
-                                else if (propertyType == typeof(bool))
-                                {
-                                    property.SetValue(item, Convert.ChangeType(paramPair[1] == "Yes", property.PropertyType), null);
-                                }
-                                else
-                                {
-                                    property.SetValue(item, Convert.ChangeType(paramPair[1], property.PropertyType), null);
-                                }
-                            }
+                            StatStructures.Last().LoadProperty(line);
                         }
                     }
                 }
