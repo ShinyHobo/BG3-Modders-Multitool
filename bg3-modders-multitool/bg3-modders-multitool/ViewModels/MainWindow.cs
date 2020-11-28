@@ -62,12 +62,11 @@ namespace bg3_modders_multitool.ViewModels
         /// <param name="isHandle">Whether the guid is a TranslatedString handle.</param>
         public void CopyGuid(bool isHandle)
         {
-            var guidText = isHandle ? HandleText : GuidText;
             var type = isHandle ? "TranslatedString handle" : "v4 UUID";
-            if (guidText != null)
+            if (GuidText != null)
             {
-                Clipboard.SetText(guidText);
-                ConsoleOutput += $"{type} [{guidText}] copied to clipboard!\n";
+                Clipboard.SetText(GuidText);
+                ConsoleOutput += $"{type} [{GuidText}] copied to clipboard!\n";
             }
         }
         #endregion
