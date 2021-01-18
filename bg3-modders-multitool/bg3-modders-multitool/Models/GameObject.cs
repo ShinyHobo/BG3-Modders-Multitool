@@ -22,7 +22,7 @@ namespace bg3_modders_multitool.Models
         public string Description { get; set; }
         public GameObjectType Type { get; set; }
         public string Icon { get; set; }
-        public FixedString Stats { get; set; }
+        public string Stats { get; set; }
         public string RaceUUID { get; set; }
         public string CharacterVisualResourceID { get; set; }
         public string LevelName { get; set; }
