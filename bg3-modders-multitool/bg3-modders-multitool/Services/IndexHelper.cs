@@ -28,9 +28,9 @@ namespace bg3_modders_multitool.Services
         // models: .ttf, .gr2, .GR2, .tga, .gtp
         // audio: .wem
         // video: .bk2
-        private readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2" };
-        private readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga" };
-        private readonly string luceneIndex = "lucene/index";
+        private static readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2" };
+        private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga" };
+        private static readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
         public string SearchText;
         private readonly FSDirectory fSDirectory;
@@ -151,6 +151,15 @@ namespace bg3_modders_multitool.Services
 
         #region Searching
         /// <summary>
+        /// Determines whether a lucene index exists.
+        /// </summary>
+        /// <returns>Whether the index exists.</returns>
+        public static bool IndexExists()
+        {
+            return System.IO.Directory.Exists(luceneIndex) && System.IO.Directory.EnumerateFiles(luceneIndex).Any();
+        }
+
+        /// <summary>
         /// Searches for and displays results.
         /// </summary>
         /// <param name="search">The text to search for. Supports file title and contents.</param>
@@ -159,7 +168,7 @@ namespace bg3_modders_multitool.Services
             SearchText = search;
             return Task.Run(() => { 
                 var matches = new List<string>();
-                if(!System.IO.Directory.Exists(luceneIndex)||!System.IO.Directory.EnumerateFiles(luceneIndex).Any())
+                if(!IndexExists())
                 {
                     Application.Current.Dispatcher.Invoke(() => {
                         ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No index available! Please unpack game assets and generate an index.\n";

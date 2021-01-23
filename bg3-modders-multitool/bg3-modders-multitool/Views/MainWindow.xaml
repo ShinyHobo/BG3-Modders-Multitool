@@ -43,9 +43,10 @@
                 </TextBlock>
                 <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="152,10,0,0" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
             </Grid>
-            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="228,10,0,0" VerticalAlignment="Top" Width="100" Height="23" MouseDoubleClick="IndexFiles_Click" 
-                    Cursor="Hand" ToolTip="Double-click to begin indexing" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
-            <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"/>
+            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="228,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click" 
+                    Cursor="Hand" ToolTip="Click to begin indexing" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
+            <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
+                    ToolTip="Click to search unpacked file data."/>
         </Grid>
         <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="666,109,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"/>
         <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="642,196,0,0" VerticalAlignment="Top" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand"/>

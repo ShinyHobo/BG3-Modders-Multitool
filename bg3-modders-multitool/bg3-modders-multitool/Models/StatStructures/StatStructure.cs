@@ -113,35 +113,45 @@ namespace bg3_modders_multitool.Models.StatStructures
         public void LoadProperty(string line)
         {
             var paramPair = line.Substring(5).Replace("\" \"", "|").Replace("\"", "").Split(new[] { '|' }, 2);
-            if (!string.IsNullOrEmpty(paramPair[1]))
+            try
             {
-                var property = GetType().GetProperty(paramPair[0].Replace(" ", ""));
-                var propertyType = property.PropertyType;
-                if (propertyType.IsEnum)
+                if (!string.IsNullOrEmpty(paramPair[1]))
                 {
-                    property.SetValue(this, Enum.Parse(property.PropertyType, paramPair[1].Replace(" ", "")), null);
+                    var property = GetType().GetProperty(paramPair[0].Replace(" ", ""));
+                    var propertyType = property.PropertyType;
+                    if (propertyType.IsEnum)
+                    {
+                        property.SetValue(this, Enum.Parse(property.PropertyType, paramPair[1].Replace(" ", "")), null);
+                    }
+                    else if (propertyType == typeof(Guid))
+                    {
+                        property.SetValue(this, Guid.Parse(paramPair[1]), null);
+                    }
+                    else if (propertyType.Name == "List`1")
+                    {
+                        var paramList = paramPair[1].Split(';').ToList();
+                        var arg = propertyType.GenericTypeArguments.First();
+                        var enums = paramList.Select(p => Enum.Parse(arg, p)).ToList();
+                        var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { enums });
+                        var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { cast });
+                        property.SetValue(this, Convert.ChangeType(enumList, property.PropertyType), null);
+                    }
+                    else if (propertyType == typeof(bool))
+                    {
+                        property.SetValue(this, Convert.ChangeType(paramPair[1] == "Yes", property.PropertyType), null);
+                    }
+                    else
+                    {
+                        property.SetValue(this, Convert.ChangeType(paramPair[1], property.PropertyType), null);
+                    }
                 }
-                else if (propertyType == typeof(Guid))
-                {
-                    property.SetValue(this, Guid.Parse(paramPair[1]), null);
-                }
-                else if (propertyType.Name == "List`1")
-                {
-                    var paramList = paramPair[1].Split(';').ToList();
-                    var arg = propertyType.GenericTypeArguments.First();
-                    var enums = paramList.Select(p => Enum.Parse(arg, p)).ToList();
-                    var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { enums });
-                    var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { cast });
-                    property.SetValue(this, Convert.ChangeType(enumList, property.PropertyType), null);
-                }
-                else if (propertyType == typeof(bool))
-                {
-                    property.SetValue(this, Convert.ChangeType(paramPair[1] == "Yes", property.PropertyType), null);
-                }
-                else
-                {
-                    property.SetValue(this, Convert.ChangeType(paramPair[1], property.PropertyType), null);
-                }
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                    ((ViewModels.MainWindow)System.Windows.Application.Current.MainWindow.DataContext).ConsoleOutput += $"Error parsing line {line}\n";
+                    ((ViewModels.MainWindow)System.Windows.Application.Current.MainWindow.DataContext).ConsoleOutput += $"{ex.Message}\n{ex.StackTrace}\n";
+                });
             }
         }
 
