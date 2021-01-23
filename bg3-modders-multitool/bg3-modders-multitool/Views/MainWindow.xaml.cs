@@ -112,7 +112,7 @@ namespace bg3_modders_multitool.Views
         private async void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
             var result = System.Windows.Forms.DialogResult.OK;
-            if(Services.IndexHelper.IndexExists())
+            if(Services.IndexHelper.IndexDirectoryExists())
             {
                 result = System.Windows.Forms.MessageBox.Show("Careful! \n\nClicking \"OK\" will wipe your current index and rebuild it from scratch; " +
                     "this could take some time. Are you sure you wish you continue?", "Ready to index again?", System.Windows.Forms.MessageBoxButtons.OKCancel);
