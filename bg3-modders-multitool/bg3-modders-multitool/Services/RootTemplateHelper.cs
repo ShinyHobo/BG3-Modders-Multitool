@@ -171,13 +171,13 @@ namespace bg3_modders_multitool.Services
             if(GameObjects != null)
             {
                 GameObjectTypes = GameObjectTypes.OrderBy(got => got).ToList();
-                GameObjects = GameObjects.OrderBy(go => go.Name).ToList();
+                GameObjects = GameObjects.OrderBy(go => (string)go.Name).ToList();
                 FlatGameObjects = GameObjects;
                 var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
                 var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
                 foreach (var gameObject in children)
                 {
-                    lookup.First(l => l.Key == gameObject.ParentTemplateId).Value.Children.Add(gameObject);
+                    lookup.First(l => l.Key == (string)gameObject.ParentTemplateId).Value.Children.Add(gameObject);
                 }
                 GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
                 foreach(var gameObject in GameObjects)
