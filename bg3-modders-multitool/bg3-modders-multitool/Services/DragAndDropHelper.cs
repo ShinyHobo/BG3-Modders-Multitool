@@ -37,10 +37,7 @@ namespace bg3_modders_multitool.Services
                     if (Path.GetFileName(file).Equals("meta.lsx"))
                     {
                         metaList.Add(file);
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"meta.lsx file found in {mod}.\n";
-                        });
+                        GeneralHelper.WriteToConsole($"meta.lsx file found in {mod}.\n");
                     }
                 }
             }
@@ -77,11 +74,8 @@ namespace bg3_modders_multitool.Services
             };
             process.StartInfo = startInfo;
             process.Start();
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardOutput.ReadToEnd();
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardError.ReadToEnd();
-            });
+            GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
+            GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
             process.WaitForExit();
         }
 
@@ -104,10 +98,7 @@ namespace bg3_modders_multitool.Services
                 {
                     var metadata = ReadMeta(meta, created, modGroup);
                     mods.Add(metadata);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Metadata for {metadata.Name} created.\n";
-                    });
+                    GeneralHelper.WriteToConsole($"Metadata for {metadata.Name} created.\n");
                 }
                 info.Mods.AddRange(mods);
             }
@@ -131,10 +122,7 @@ namespace bg3_modders_multitool.Services
 
             var json = JsonConvert.SerializeObject(info);
             File.WriteAllText(TempFolder + @"\info.json", json);
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"info.json generated.\n";
-            });
+            GeneralHelper.WriteToConsole($"info.json generated.\n");
         }
 
         public static MetaLsx ReadMeta(string meta, DateTime? created = null, KeyValuePair<string, List<string>>? modGroup = null)
@@ -191,10 +179,7 @@ namespace bg3_modders_multitool.Services
                 File.Delete(zip);
             }
             ZipFile.CreateFromDirectory(TempFolder, zip);
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"{name}.zip created.\n";
-            });
+            GeneralHelper.WriteToConsole($"{name}.zip created.\n");
         }
 
         /// <summary>
@@ -209,10 +194,7 @@ namespace bg3_modders_multitool.Services
             {
                 file.Delete();
             }
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Temp files cleaned.\n";
-            });
+            GeneralHelper.WriteToConsole($"Temp files cleaned.\n");
         }
 
         /// <summary>
@@ -237,9 +219,7 @@ namespace bg3_modders_multitool.Services
                                 {
                                     var metaList = new Dictionary<string, List<string>>();
                                     var dirName = new DirectoryInfo(fullPath).Name;
-                                    Application.Current.Dispatcher.Invoke(() => {
-                                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Directory name: {dirName}\n";
-                                    });
+                                    GeneralHelper.WriteToConsole($"Directory name: {dirName}\n");
                                     if (Directory.Exists(fullPath + "\\Mods"))
                                     {
                                         // single mod directory
@@ -260,9 +240,7 @@ namespace bg3_modders_multitool.Services
                                 else
                                 {
                                     // File dropping unsupported
-                                    Application.Current.Dispatcher.Invoke(() => {
-                                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File dropping is not yet supported.";
-                                    });
+                                    GeneralHelper.WriteToConsole($"File dropping is not yet supported.");
                                 }
                             }
                         }
@@ -270,9 +248,7 @@ namespace bg3_modders_multitool.Services
                 }
                 catch (Exception ex)
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += ex.Message;
-                    });
+                    GeneralHelper.WriteToConsole(ex.Message);
                     CleanTempDirectory();
                 }
             });
@@ -324,11 +300,8 @@ namespace bg3_modders_multitool.Services
         private static List<string> ProcessMod(string path, string dirName)
         {
             var destination =  $"{TempFolder}\\{dirName}.pak";
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Destination: {destination}\n";
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Attempting to pack mod.\n";
-            });
+            GeneralHelper.WriteToConsole($"Destination: {destination}\n");
+            GeneralHelper.WriteToConsole($"Attempting to pack mod.\n");
             var buildDir = BuildPack(path);
             PackMod(buildDir, destination);
             Directory.Delete(buildDir,true);

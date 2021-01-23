@@ -52,14 +52,11 @@ namespace bg3_modders_multitool.Services
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
-                Application.Current.Dispatcher.Invoke(() =>
+                if(string.IsNullOrEmpty(newPath))
                 {
-                    if(string.IsNullOrEmpty(newPath))
-                    {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardOutput.ReadToEnd();
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardError.ReadToEnd();
-                    }
-                });
+                    GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
+                    GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
+                }
             }
 
             return isConvertable ? newFile : file;
@@ -85,10 +82,7 @@ namespace bg3_modders_multitool.Services
             var fileList = RecursiveFileSearch(directory);
             if (fileList.Count == 0)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No files found!\n";
-                });
+                GeneralHelper.WriteToConsole($"No files found!\n");
             }
             return fileList;
         }
@@ -154,7 +148,7 @@ namespace bg3_modders_multitool.Services
             }
             else
             {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File does not exist on the given path ({path}).\n";
+                GeneralHelper.WriteToConsole($"File does not exist on the given path ({path}).\n");
             }
         }
     }

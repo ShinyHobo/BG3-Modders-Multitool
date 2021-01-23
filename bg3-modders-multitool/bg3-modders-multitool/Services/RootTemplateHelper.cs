@@ -43,9 +43,7 @@ namespace bg3_modders_multitool.Services
             }
             if(!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
             {
-                Application.Current.Dispatcher.Invoke(() => {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No valid texture atlases found. Unpack Icons.pak to generate icons.\n";
-                });
+                GeneralHelper.WriteToConsole($"No valid texture atlases found. Unpack Icons.pak to generate icons.\n");
             }
             ReadRaces("Shared");
             SortRootTemplate();
@@ -110,9 +108,7 @@ namespace bg3_modders_multitool.Services
                     return true;
                 }
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load english.xml. Please unpack English.pak to generate translations.\n";
-            });
+            GeneralHelper.WriteToConsole($"Failed to load english.xml. Please unpack English.pak to generate translations.\n");
             return false;
         }
 
@@ -162,9 +158,7 @@ namespace bg3_modders_multitool.Services
                 }
                 return true;
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load root template _merged.lsf for {pak}.pak.\n";
-            });
+            GeneralHelper.WriteToConsole($"Failed to load root template _merged.lsf for {pak}.pak.\n");
             return false;
         }
 
@@ -265,9 +259,7 @@ namespace bg3_modders_multitool.Services
                 }
                 return true;
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load Races.lsx for {pak}.pak.\n";
-            });
+            GeneralHelper.WriteToConsole($"Failed to load Races.lsx for {pak}.pak.\n");
             return false;
         }
 
