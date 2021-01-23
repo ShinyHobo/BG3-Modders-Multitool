@@ -331,6 +331,7 @@
     <Compile Include="Models\Translation.cs" />
     <Compile Include="Services\DragAndDropHelper.cs" />
     <Compile Include="Services\FileHelper.cs" />
+    <Compile Include="Services\GeneralHelper.cs" />
     <Compile Include="Services\IndexHelper.cs" />
     <Compile Include="Services\PakUnpackHelper.cs" />
     <Compile Include="Services\RootTemplateHelper.cs" />

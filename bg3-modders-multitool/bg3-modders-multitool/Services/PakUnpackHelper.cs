@@ -22,8 +22,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            var dataContext = Application.Current.MainWindow.DataContext as MainWindow;
-            dataContext.ConsoleOutput += "Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.\n";
+            GeneralHelper.WriteToConsole("Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.\n");
             Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
@@ -46,14 +45,11 @@ namespace bg3_modders_multitool.Services
                 }));
             }).ContinueWith(delegate
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                GeneralHelper.WriteToConsole("All unpacking processes finished.\n");
+                if (!Cancelled)
                 {
-                    dataContext.ConsoleOutput += "All unpacking processes finished.\n";
-                    if (!Cancelled)
-                    {
-                        dataContext.ConsoleOutput += "Unpacking complete!\n";
-                    }
-                });
+                    GeneralHelper.WriteToConsole("Unpacking complete!\n");
+                }
             });
         }
 
@@ -93,7 +89,6 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public void CancelUpacking()
         {
-            var dataContext = Application.Current.MainWindow.DataContext as MainWindow;
             Cancelled = true;
             if(Processes != null && Processes.Count>0)
             {
@@ -113,7 +108,7 @@ namespace bg3_modders_multitool.Services
                         catch { }// only exception should be "Process with ID #### not found", safe to ignore
                     }
                 }
-                dataContext.ConsoleOutput += "Unpacking processes cancelled successfully!\n";
+                GeneralHelper.WriteToConsole("Unpacking processes cancelled successfully!\n");
             }
         }
     }

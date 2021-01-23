@@ -62,16 +62,14 @@ namespace bg3_modders_multitool.Services
                 });
                 if (filelist==null)
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Retrieving file list.\n";
-                    });
+                    GeneralHelper.WriteToConsole($"Retrieving file list.\n");
                     filelist = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
                 }
 
                 // Display total file count being indexed
+                GeneralHelper.WriteToConsole($"File list retrieved.\n");
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File list retrieved.\n";
                     DataContext.IndexFileTotal = filelist.Count;
                     DataContext.IndexStartTime = DateTime.Now;
                     DataContext.IndexFileCount = 0;
@@ -90,9 +88,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="analyzer">The analyzer to use when indexing.</param>
         private void IndexFiles(List<string> files, Analyzer analyzer)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Starting index process.\n";
-            });
+            GeneralHelper.WriteToConsole($"Starting index process.\n");
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
@@ -106,9 +102,7 @@ namespace bg3_modders_multitool.Services
                         }
                         catch(OutOfMemoryException)
                         {
-                            Application.Current.Dispatcher.Invoke(() => {
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"OOME: Failed to index {file}\n";
-                            });
+                            GeneralHelper.WriteToConsole($"OOME: Failed to index {file}\n");
                         }
                     }
                     writer.Commit();
@@ -116,8 +110,8 @@ namespace bg3_modders_multitool.Services
                     writer.Dispose();
                 }
             }
+            GeneralHelper.WriteToConsole($"Indexing process finished in {DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss")}.\n");
             Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Indexing process finished in {DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss")}.\n";
                 DataContext.IsIndexing = false;
             });
         }
@@ -170,9 +164,7 @@ namespace bg3_modders_multitool.Services
                 var matches = new List<string>();
                 if(!IndexExists())
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No index available! Please unpack game assets and generate an index.\n";
-                    });
+                    GeneralHelper.WriteToConsole($"No index available! Please unpack game assets and generate an index.\n");
                     return matches;
                 }
 
@@ -195,17 +187,12 @@ namespace bg3_modders_multitool.Services
                         if (reader.MaxDoc != 0)
                         {
                             var start = DateTime.Now;
-                            Application.Current.Dispatcher.Invoke(() => {
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Search started.\n";
-                            });
+                            GeneralHelper.WriteToConsole("Search started.\n");
 
                             // perform search
                             TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
-                            Application.Current.Dispatcher.Invoke(() => {
-                                var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks);
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.TotalMilliseconds} ms\n";
-                            });
+                            GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
 
                             // display results
                             foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
@@ -220,17 +207,13 @@ namespace bg3_modders_multitool.Services
                         }
                         else
                         {
-                            Application.Current.Dispatcher.Invoke(() => {
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "No documents available. Please generate the index again.\n";
-                            });
+                            GeneralHelper.WriteToConsole("No documents available. Please generate the index again.\n");
                         }
                     }
                 }
                 else
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Index does not exist yet.\n";
-                    });
+                    GeneralHelper.WriteToConsole("Index does not exist yet.\n");
                 }
                 
                 return matches;
