@@ -3,24 +3,33 @@
 /// </summary>
 namespace bg3_modders_multitool.Models
 {
+    using bg3_modders_multitool.Enums;
+    using bg3_modders_multitool.Models.GameObjectTypes;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     public class GameObject
     {
+        #region Parameters
         public string Pak { get; set; }
-        public string MapKey { get; set; }
+        public FixedString MapKey { get; set; }
         public string ParentTemplateId { get; set; }
         public string Name { get; set; }
         public string DisplayNameHandle { get; set; }
         public string DisplayName { get; set; }
         public string DescriptionHandle { get; set; }
         public string Description { get; set; }
-        public string Type { get; set; }
+        public GameObjectType Type { get; set; }
         public string Icon { get; set; }
         public string Stats { get; set; }
         public string RaceUUID { get; set; }
+        public string CharacterVisualResourceID { get; set; }
+        public string LevelName { get; set; }
+        public float Scale { get; set; }
+        public string TitleHandle { get; set; }
+        public string Title { get; set; }
+        public string PhysicsTemplate { get; set; }
         public List<GameObject> Children { get; set; }
 
         /// <summary>
@@ -44,6 +53,7 @@ namespace bg3_modders_multitool.Models
                 return Children.Sum(x => x.count) + Children.Count;
             }
         }
+        #endregion
 
         /// <summary>
         /// Gets a count of all children in the tree, plus the parent.
@@ -53,6 +63,27 @@ namespace bg3_modders_multitool.Models
             return count + 1;
         }
 
+        /// <summary>
+        /// Recursive method for passing on stats to child GameObjects.
+        /// </summary>
+        /// <param name="gameObject">The game object to pass stats on from.</param>
+        public void PassOnStats()
+        {
+            foreach (var go in Children)
+            {
+                if (string.IsNullOrEmpty(go.Stats))
+                {
+                    go.Stats = Stats;
+                }
+                if (string.IsNullOrEmpty(go.Icon))
+                {
+                    go.Icon = Icon;
+                }
+                go.PassOnStats();
+            }
+        }
+
+        #region Search
         /// <summary>
         /// Recursively searches through the game object's children to find matching object names.
         /// </summary>
@@ -85,26 +116,6 @@ namespace bg3_modders_multitool.Models
         }
 
         /// <summary>
-        /// Recursive method for passing on stats to child GameObjects.
-        /// </summary>
-        /// <param name="gameObject">The game object to pass stats on from.</param>
-        public void PassOnStats()
-        {
-            foreach (var go in Children)
-            {
-                if (string.IsNullOrEmpty(go.Stats))
-                {
-                    go.Stats = Stats;
-                }
-                if (string.IsNullOrEmpty(go.Icon))
-                {
-                    go.Icon = Icon;
-                }
-                go.PassOnStats();
-            }
-        }
-
-        /// <summary>
         /// Finds a match to a game object property value.
         /// </summary>
         /// <param name="filter">The filter.</param>
@@ -121,6 +132,38 @@ namespace bg3_modders_multitool.Models
                    Description?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    Icon?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    Stats?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0;
+        }
+        #endregion
+
+        public void LoadProperty(string id, string type, string value)
+        {
+            if(type != null)
+            {
+                if (type.Contains("String"))
+                {
+                    var property = GetType().GetProperty(id);
+                    if (property != null)
+                    {
+                        var propertyType = property.PropertyType;
+                        if (propertyType.IsEnum)
+                        {
+                            property.SetValue(this, Enum.Parse(property.PropertyType, value), null);
+                        }
+                        else
+                        {
+                            var method = propertyType.GetMethod("FromString", new Type[] { typeof(string) });
+                            if(method != null)
+                            {
+                                property.SetValue(this, method.Invoke(null, new object[] { value }));
+                            }
+                            else
+                            {
+                                property.SetValue(this, value);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
