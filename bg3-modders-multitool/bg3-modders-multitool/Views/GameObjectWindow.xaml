@@ -6,6 +6,7 @@
         xmlns:model="clr-namespace:bg3_modders_multitool.Models"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:helpers="clr-namespace:bg3_modders_multitool.XAMLHelpers"
+        xmlns:enums="clr-namespace:bg3_modders_multitool.Enums"
         mc:Ignorable="d"
         Title="GameObject Explorer" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
     <Grid>

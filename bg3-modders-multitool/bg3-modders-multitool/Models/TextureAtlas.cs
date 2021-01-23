@@ -21,8 +21,7 @@ namespace bg3_modders_multitool.Models
         public int Width { get; set; }
         public int IconHeight { get; set; }
         public int IconWidth { get; set; }
-        public Bitmap Bitmap { get; set; }
-        public BitmapImage BitmapImage { get; set; }
+        public byte[] AtlasImage { get; set; }
         public List<IconUV> Icons { get; set; }
 
         /// <summary>
@@ -33,15 +32,17 @@ namespace bg3_modders_multitool.Models
         public BitmapImage GetIcon(string mapKey)
         {
             var icon = Icons.SingleOrDefault(i => i.MapKey == mapKey);
-            if(icon != null)
+            if(icon != null && AtlasImage != null)
             {
                 var xPos = (int)(Width * icon.U1);
                 var yPos = (int)(Height * icon.V1);
                 Rectangle cloneRect = new Rectangle(xPos, yPos, IconWidth, IconHeight);
-                var clone = BitmapImage.Clone();
-                var bitmap = new Bitmap(clone.StreamSource);
-                bitmap = bitmap.Clone(cloneRect, bitmap.PixelFormat);
-                return ConvertBitmapToImage(bitmap);
+                using (var ms = new MemoryStream(AtlasImage))
+                {
+                    var bmp = new Bitmap(ms);
+                    bmp = bmp.Clone(cloneRect, bmp.PixelFormat);
+                    return ConvertBitmapToImage(bmp);
+                }
             }
             return null;
         }
@@ -63,7 +64,7 @@ namespace bg3_modders_multitool.Models
 
             var textureAtlasPath = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasPath']");
             newTextureAtlas.UUID = textureAtlasPath.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText;
-            newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}";
+            newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}".Replace("/","\\");
 
             var textureAtlasIconSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasIconSize']");
             newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText);
@@ -89,11 +90,20 @@ namespace bg3_modders_multitool.Models
                 newTextureAtlas.Icons.Add(icon);
             }
 
-            using (var image = Pfim.Pfim.FromFile(FileHelper.GetPath(newTextureAtlas.Path)))
+            var newTextureAtlasPath = FileHelper.GetPath(newTextureAtlas.Path);
+            if (File.Exists(@"\\?\" + newTextureAtlasPath))
             {
-                var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
-                var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
-                newTextureAtlas.BitmapImage = ConvertBitmapToImage(bitmap);
+                using (var image = Pfim.Pfim.FromFile(newTextureAtlasPath))
+                {
+                    var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                    var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        bitmap.Save(ms, ImageFormat.Png);
+                        newTextureAtlas.AtlasImage = ms.ToArray();
+                        bitmap.Dispose();
+                    }
+                }
             }
 
             return newTextureAtlas;
@@ -106,16 +116,19 @@ namespace bg3_modders_multitool.Models
         /// <returns>The converted bitmap image.</returns>
         private static BitmapImage ConvertBitmapToImage(Bitmap bitmap)
         {
-            MemoryStream ms = new MemoryStream();
-            bitmap.Save(ms, ImageFormat.Bmp);
-            BitmapImage img = new BitmapImage();
-            img.BeginInit();
-            ms.Seek(0, SeekOrigin.Begin);
-            img.CacheOption = BitmapCacheOption.OnLoad;
-            img.StreamSource = ms;
-            img.EndInit();
-            bitmap.Dispose();
-            return img;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                BitmapImage img = new BitmapImage();
+                img.BeginInit();
+                ms.Seek(0, SeekOrigin.Begin);
+                img.CacheOption = BitmapCacheOption.OnLoad;
+                img.StreamSource = ms;
+                img.EndInit();
+                img.Freeze();
+                bitmap.Dispose();
+                return img;
+            }
         }
     }
 }
