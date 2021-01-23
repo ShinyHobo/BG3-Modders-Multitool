@@ -172,53 +172,57 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole($"No index available! Please unpack game assets and generate an index.\n");
                     return matches;
                 }
-                else if(IsIndexCorrupt(fSDirectory))
+
+                try
                 {
+                    using (Analyzer analyzer = new CustomAnalyzer())
+                    using (IndexReader reader = DirectoryReader.Open(fSDirectory))
+                    {
+                        IndexSearcher searcher = new IndexSearcher(reader);
+                        MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
+                        {
+                            AllowLeadingWildcard = true
+                        };
+                        Query searchTermQuery = queryParser.Parse('*' + QueryParser.Escape(search.Trim()) + '*');
+
+                        BooleanQuery aggregateQuery = new BooleanQuery() {
+                            { searchTermQuery, Occur.MUST }
+                        };
+
+                        if (reader.MaxDoc != 0)
+                        {
+                            var start = DateTime.Now;
+                            GeneralHelper.WriteToConsole("Search started.\n");
+
+                            // perform search
+                            TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
+
+                            GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
+
+                            // display results
+                            foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
+                            {
+                                float score = scoreDoc.Score;
+                                int docId = scoreDoc.Doc;
+
+                                Document doc = searcher.Doc(docId);
+
+                                matches.Add(doc.Get("path"));
+                            }
+                        }
+                        else
+                        {
+                            GeneralHelper.WriteToConsole("No documents available. Please generate the index again.\n");
+                        }
+                    }
+                }
+                catch
+                {
+                    // Checking if the index is corrupt is slower than just letting it fail
                     GeneralHelper.WriteToConsole($"Available index is corrupt. Please rerun the indexer to create a new one.\n");
                     return matches;
                 }
 
-                using (Analyzer analyzer = new CustomAnalyzer())
-                using (IndexReader reader = DirectoryReader.Open(fSDirectory))
-                {
-                    IndexSearcher searcher = new IndexSearcher(reader);
-                    MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
-                    {
-                        AllowLeadingWildcard = true
-                    };
-                    Query searchTermQuery = queryParser.Parse('*' + QueryParser.Escape(search.Trim()) + '*');
-
-                    BooleanQuery aggregateQuery = new BooleanQuery() {
-                        { searchTermQuery, Occur.MUST }
-                    };
-
-                    if (reader.MaxDoc != 0)
-                    {
-                        var start = DateTime.Now;
-                        GeneralHelper.WriteToConsole("Search started.\n");
-
-                        // perform search
-                        TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
-
-                        GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
-
-                        // display results
-                        foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
-                        {
-                            float score = scoreDoc.Score;
-                            int docId = scoreDoc.Doc;
-
-                            Document doc = searcher.Doc(docId);
-
-                            matches.Add(doc.Get("path"));
-                        }
-                    }
-                    else
-                    {
-                        GeneralHelper.WriteToConsole("No documents available. Please generate the index again.\n");
-                    }
-                }
-                
                 return matches;
             });
         }
