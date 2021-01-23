@@ -145,12 +145,17 @@ namespace bg3_modders_multitool.Services
 
         #region Searching
         /// <summary>
-        /// Determines whether a lucene index exists.
+        /// Determines whether a lucene index directory exists.
         /// </summary>
         /// <returns>Whether the index exists.</returns>
-        public static bool IndexExists()
+        public static bool IndexDirectoryExists()
         {
             return System.IO.Directory.Exists(luceneIndex) && System.IO.Directory.EnumerateFiles(luceneIndex).Any();
+        }
+
+        public static bool IsIndexCorrupt(FSDirectory fSDirectory)
+        {
+            return !new CheckIndex(fSDirectory).DoCheckIndex().Clean;
         }
 
         /// <summary>
@@ -162,58 +167,56 @@ namespace bg3_modders_multitool.Services
             SearchText = search;
             return Task.Run(() => { 
                 var matches = new List<string>();
-                if(!IndexExists())
+                if(!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
                 {
                     GeneralHelper.WriteToConsole($"No index available! Please unpack game assets and generate an index.\n");
                     return matches;
                 }
-
-                if(DirectoryReader.IndexExists(fSDirectory))
+                else if(IsIndexCorrupt(fSDirectory))
                 {
-                    using (Analyzer analyzer = new CustomAnalyzer())
-                    using (IndexReader reader = DirectoryReader.Open(fSDirectory))
+                    GeneralHelper.WriteToConsole($"Available index is corrupt. Please rerun the indexer to create a new one.\n");
+                    return matches;
+                }
+
+                using (Analyzer analyzer = new CustomAnalyzer())
+                using (IndexReader reader = DirectoryReader.Open(fSDirectory))
+                {
+                    IndexSearcher searcher = new IndexSearcher(reader);
+                    MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
                     {
-                        IndexSearcher searcher = new IndexSearcher(reader);
-                        MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
+                        AllowLeadingWildcard = true
+                    };
+                    Query searchTermQuery = queryParser.Parse('*' + QueryParser.Escape(search.Trim()) + '*');
+
+                    BooleanQuery aggregateQuery = new BooleanQuery() {
+                        { searchTermQuery, Occur.MUST }
+                    };
+
+                    if (reader.MaxDoc != 0)
+                    {
+                        var start = DateTime.Now;
+                        GeneralHelper.WriteToConsole("Search started.\n");
+
+                        // perform search
+                        TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
+
+                        GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
+
+                        // display results
+                        foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
                         {
-                            AllowLeadingWildcard = true
-                        };
-                        Query searchTermQuery = queryParser.Parse('*' + QueryParser.Escape(search.Trim()) + '*');
+                            float score = scoreDoc.Score;
+                            int docId = scoreDoc.Doc;
 
-                        BooleanQuery aggregateQuery = new BooleanQuery() {
-                            { searchTermQuery, Occur.MUST }
-                        };
+                            Document doc = searcher.Doc(docId);
 
-                        if (reader.MaxDoc != 0)
-                        {
-                            var start = DateTime.Now;
-                            GeneralHelper.WriteToConsole("Search started.\n");
-
-                            // perform search
-                            TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
-
-                            GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
-
-                            // display results
-                            foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
-                            {
-                                float score = scoreDoc.Score;
-                                int docId = scoreDoc.Doc;
-
-                                Document doc = searcher.Doc(docId);
-
-                                matches.Add(doc.Get("path"));
-                            }
-                        }
-                        else
-                        {
-                            GeneralHelper.WriteToConsole("No documents available. Please generate the index again.\n");
+                            matches.Add(doc.Get("path"));
                         }
                     }
-                }
-                else
-                {
-                    GeneralHelper.WriteToConsole("Index does not exist yet.\n");
+                    else
+                    {
+                        GeneralHelper.WriteToConsole("No documents available. Please generate the index again.\n");
+                    }
                 }
                 
                 return matches;
