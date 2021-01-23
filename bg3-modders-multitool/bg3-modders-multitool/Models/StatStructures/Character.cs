@@ -16,12 +16,6 @@ namespace bg3_modders_multitool.Models.StatStructures
     public class Character : StatStructure
     {
         public int Level { get; set; }
-        public int Strength { get; set; }
-        public int Dexterity { get; set; }
-        public int Constitution { get; set; }
-        public int Intelligence { get; set; }
-        public int Wisdom { get; set; }
-        public int Vitality { get; set; }
         public Guid XPReward { get; set; }
         public int Sight { get; set; }
         public int Hearing { get; set; }
@@ -41,19 +35,6 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ActionResources { get; set; }
         public string Class { get; set; }
         public string Passives { get; set; }
-        public ResistanceFlag BludgeoningResistance { get; set; }
-        public ResistanceFlag SlashingResistance { get; set; }
-        public ResistanceFlag PiercingResistance { get; set; }
-        public ResistanceFlag AcidResistance { get; set; }
-        public ResistanceFlag ColdResistance { get; set; }
-        public ResistanceFlag FireResistance { get; set; }
-        public ResistanceFlag ForceResistance { get; set; }
-        public ResistanceFlag LightningResistance { get; set; }
-        public ResistanceFlag NecroticResistance { get; set; }
-        public ResistanceFlag PoisonResistance { get; set; }
-        public ResistanceFlag PsychicResistance { get; set; }
-        public ResistanceFlag RadiantResistance { get; set; }
-        public ResistanceFlag ThunderResistance { get; set; }
         public int Initiative { get; set; }
         public string Progressions { get; set; }
         public string MinimumDetectionRange { get; set; }
