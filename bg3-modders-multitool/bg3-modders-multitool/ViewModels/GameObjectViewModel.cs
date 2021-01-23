@@ -8,7 +8,6 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
     using System.Collections.ObjectModel;
-    using System.Drawing;
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Media.Imaging;

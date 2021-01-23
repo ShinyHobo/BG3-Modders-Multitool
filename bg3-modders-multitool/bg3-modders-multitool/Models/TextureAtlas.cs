@@ -32,7 +32,7 @@ namespace bg3_modders_multitool.Models
         public BitmapImage GetIcon(string mapKey)
         {
             var icon = Icons.SingleOrDefault(i => i.MapKey == mapKey);
-            if(icon != null)
+            if(icon != null && AtlasImage != null)
             {
                 var xPos = (int)(Width * icon.U1);
                 var yPos = (int)(Height * icon.V1);
@@ -90,15 +90,19 @@ namespace bg3_modders_multitool.Models
                 newTextureAtlas.Icons.Add(icon);
             }
 
-            using (var image = Pfim.Pfim.FromFile(FileHelper.GetPath(newTextureAtlas.Path)))
+            var newTextureAtlasPath = FileHelper.GetPath(newTextureAtlas.Path);
+            if (File.Exists(@"\\?\" + newTextureAtlasPath))
             {
-                var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
-                var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
-                using (MemoryStream ms = new MemoryStream())
+                using (var image = Pfim.Pfim.FromFile(newTextureAtlasPath))
                 {
-                    bitmap.Save(ms, ImageFormat.Png);
-                    newTextureAtlas.AtlasImage = ms.ToArray();
-                    bitmap.Dispose();
+                    var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                    var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        bitmap.Save(ms, ImageFormat.Png);
+                        newTextureAtlas.AtlasImage = ms.ToArray();
+                        bitmap.Dispose();
+                    }
                 }
             }
 

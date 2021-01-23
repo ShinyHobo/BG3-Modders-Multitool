@@ -111,8 +111,18 @@ namespace bg3_modders_multitool.Views
 
         private async void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
-            await vm.SearchResults.IndexHelper.Index();
+            var result = System.Windows.Forms.DialogResult.OK;
+            if(Services.IndexHelper.IndexExists())
+            {
+                result = System.Windows.Forms.MessageBox.Show("Careful! \n\nClicking \"OK\" will wipe your current index and rebuild it from scratch; " +
+                    "this could take some time. Are you sure you wish you continue?", "Ready to index again?", System.Windows.Forms.MessageBoxButtons.OKCancel);
+            }
+
+            if(result.Equals(System.Windows.Forms.DialogResult.OK))
+            {
+                var vm = DataContext as ViewModels.MainWindow;
+                await vm.SearchResults.IndexHelper.Index();
+            }
         }
         #endregion
 
@@ -124,7 +134,16 @@ namespace bg3_modders_multitool.Views
 
         private void GameObjectButton_Click(object sender, RoutedEventArgs e)
         {
-            new GameObjectWindow().Show();
+            try
+            {
+                new GameObjectWindow().Show();
+            }
+            catch(System.Exception ex)
+            {
+                Application.Current.Dispatcher.Invoke(() => {
+                    ((ViewModels.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"{ex.Message}\n{ex.StackTrace}\n";
+                });
+            }
         }
     }
 }
