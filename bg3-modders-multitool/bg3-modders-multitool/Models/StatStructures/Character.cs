@@ -16,6 +16,7 @@ namespace bg3_modders_multitool.Models.StatStructures
     public class Character : StatStructure
     {
         public int Level { get; set; }
+        public int Vitality { get; set; }
         public Guid XPReward { get; set; }
         public int Sight { get; set; }
         public int Hearing { get; set; }

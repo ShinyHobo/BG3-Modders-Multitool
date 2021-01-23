@@ -134,16 +134,7 @@ namespace bg3_modders_multitool.Views
 
         private void GameObjectButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                new GameObjectWindow().Show();
-            }
-            catch(System.Exception ex)
-            {
-                Application.Current.Dispatcher.Invoke(() => {
-                    ((ViewModels.MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"{ex.Message}\n{ex.StackTrace}\n";
-                });
-            }
+            new GameObjectWindow().Show();
         }
     }
 }
