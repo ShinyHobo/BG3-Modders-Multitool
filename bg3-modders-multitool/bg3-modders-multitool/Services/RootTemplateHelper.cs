@@ -41,6 +41,12 @@ namespace bg3_modders_multitool.Services
                 ReadData(pak);
                 ReadIcons(pak);
             }
+            if(!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
+            {
+                Application.Current.Dispatcher.Invoke(() => {
+                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No valid texture atlases found. Unpack Icons.pak to generate icons.\n";
+                });
+            }
             ReadRaces("Shared");
             SortRootTemplate();
             var attributeValueTypes = string.Join(",", GameObjectAttributes.Values.GroupBy(g => g).Select(g => g.Last()).ToList());
