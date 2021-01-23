@@ -64,7 +64,7 @@ namespace bg3_modders_multitool.Models
 
             var textureAtlasPath = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasPath']");
             newTextureAtlas.UUID = textureAtlasPath.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText;
-            newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}";
+            newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}".Replace("/","\\");
 
             var textureAtlasIconSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasIconSize']");
             newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText);
