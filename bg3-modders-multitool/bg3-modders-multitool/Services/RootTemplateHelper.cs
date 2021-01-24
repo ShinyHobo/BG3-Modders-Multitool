@@ -7,14 +7,12 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Enums;
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
-    using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Windows;
     using System.Xml;
 
     public class RootTemplateHelper
@@ -138,10 +136,20 @@ namespace bg3_modders_multitool.Services
                                     gameObject = new GameObject { Pak = pak, Children = new List<GameObject>() };
                                 }
                                 var type = reader.GetAttribute("type");
-                                var value = reader.GetAttribute("value") ?? reader.GetAttribute("handle");
+                                var handle = reader.GetAttribute("handle");
+                                var value = reader.GetAttribute("value") ?? handle;
                                 if (reader.Depth == 5) // GameObject attributes
                                 {
-                                    gameObject.LoadProperty(id, type, value);
+                                    if(string.IsNullOrEmpty(handle))
+                                    {
+                                        gameObject.LoadProperty(id, type, value);
+                                    }
+                                    else
+                                    {
+                                        gameObject.LoadProperty($"{id}Handle", type, value);
+                                        var translationText = TranslationLookup.FirstOrDefault(tl => tl.Key.Equals(value)).Value?.Value;
+                                        gameObject.LoadProperty(id, type, translationText);
+                                    }
 
                                     if (id != null && !GameObjectAttributes.ContainsKey(id))
                                         GameObjectAttributes.Add(id, type);
@@ -235,7 +243,7 @@ namespace bg3_modders_multitool.Services
                                             race.ProgressionTableUUID = value;
                                             break;
                                         case "UUID":
-                                            race.UUID = value;
+                                            race.UUID = new Guid(value);
                                             break;
                                     }
                                 }

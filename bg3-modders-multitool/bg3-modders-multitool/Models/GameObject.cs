@@ -16,19 +16,19 @@ namespace bg3_modders_multitool.Models
         public FixedString MapKey { get; set; }
         public FixedString ParentTemplateId { get; set; }
         public FixedString Name { get; set; }
-        public string DisplayNameHandle { get; set; }
-        public TranslatedString DisplayName { get; set; }
-        public string DescriptionHandle { get; set; }
-        public TranslatedString Description { get; set; }
+        public TranslatedString DisplayNameHandle { get; set; }
+        public string DisplayName { get; set; }
+        public TranslatedString DescriptionHandle { get; set; }
+        public string Description { get; set; }
         public GameObjectType Type { get; set; }
         public FixedString Icon { get; set; }
         public FixedString Stats { get; set; }
-        public string RaceUUID { get; set; }
+        public Guid RaceUUID { get; set; }
         public FixedString CharacterVisualResourceID { get; set; }
         public FixedString LevelName { get; set; }
         public float Scale { get; set; }
-        public string TitleHandle { get; set; }
-        public TranslatedString Title { get; set; }
+        public TranslatedString TitleHandle { get; set; }
+        public string Title { get; set; }
         public FixedString PhysicsTemplate { get; set; }
         public List<GameObject> Children { get; set; }
 
