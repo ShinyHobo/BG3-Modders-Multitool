@@ -3,16 +3,16 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
-    using bg3_modders_multitool.ViewModels;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Windows;
+    using System.Threading.Tasks;
 
     public static class FileHelper
     {
-        public static string[] ConvertableLsxResources = { ".lsf", ".lsb" };
+        public static string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
+        public static string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
         /// <summary>
         /// Converts the given file to .lsx in-place
@@ -37,6 +37,12 @@ namespace bg3_modders_multitool.Services
             }
             if (!File.Exists(newPath) && isConvertable)
             {
+                if(MustRenameLsxResources.Contains(originalExtension))
+                {
+                    var renamedPath = Path.ChangeExtension(path, originalExtension + ".lsf");
+                    File.Move(path, renamedPath);
+                    path = renamedPath;
+                }
                 var divine = $" -g \"bg3\" --action \"convert-resource\" --output-format \"{extension}\" --source \"{path}\" --destination \"{newPath}\" -l \"all\"";
                 var process = new Process();
                 var startInfo = new ProcessStartInfo
@@ -52,14 +58,15 @@ namespace bg3_modders_multitool.Services
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
-                Application.Current.Dispatcher.Invoke(() =>
+                if(string.IsNullOrEmpty(newPath))
                 {
-                    if(string.IsNullOrEmpty(newPath))
-                    {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardOutput.ReadToEnd();
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += process.StandardError.ReadToEnd();
-                    }
-                });
+                    GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
+                    GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
+                }
+                if (MustRenameLsxResources.Contains(originalExtension))
+                {
+                    File.Move(path, Path.ChangeExtension(path, ""));
+                }
             }
 
             return isConvertable ? newFile : file;
@@ -85,10 +92,7 @@ namespace bg3_modders_multitool.Services
             var fileList = RecursiveFileSearch(directory);
             if (fileList.Count == 0)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No files found!\n";
-                });
+                GeneralHelper.WriteToConsole($"No files found!\n");
             }
             return fileList;
         }
@@ -103,11 +107,18 @@ namespace bg3_modders_multitool.Services
             var fileList = new List<string>();
             foreach (string dir in Directory.GetDirectories(directory))
             {
-                foreach (string file in Directory.GetFiles(dir))
+                try
                 {
-                    fileList.Add(file);
+                    foreach (string file in Directory.GetFiles(dir))
+                    {
+                        fileList.Add(file);
+                    }
+                    fileList.AddRange(RecursiveFileSearch(dir));
                 }
-                fileList.AddRange(RecursiveFileSearch(dir));
+                catch(System.Exception ex)
+                {
+                    GeneralHelper.WriteToConsole($"Could not read from directory: {directory}\n");
+                }
             }
             return fileList;
         }
@@ -154,7 +165,7 @@ namespace bg3_modders_multitool.Services
             }
             else
             {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File does not exist on the given path ({path}).\n";
+                GeneralHelper.WriteToConsole($"File does not exist on the given path ({path}).\n");
             }
         }
     }

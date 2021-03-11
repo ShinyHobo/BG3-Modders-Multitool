@@ -9,7 +9,6 @@ namespace bg3_modders_multitool.Services
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Windows;
 
     public class PakUnpackHelper
     {
@@ -22,8 +21,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            var dataContext = Application.Current.MainWindow.DataContext as MainWindow;
-            dataContext.ConsoleOutput += "Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.\n";
+            GeneralHelper.WriteToConsole("Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.\n");
             Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
@@ -46,14 +44,11 @@ namespace bg3_modders_multitool.Services
                 }));
             }).ContinueWith(delegate
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                GeneralHelper.WriteToConsole("All unpacking processes finished.\n");
+                if (!Cancelled)
                 {
-                    dataContext.ConsoleOutput += "All unpacking processes finished.\n";
-                    if (!Cancelled)
-                    {
-                        dataContext.ConsoleOutput += "Unpacking complete!\n";
-                    }
-                });
+                    GeneralHelper.WriteToConsole("Unpacking complete!\n");
+                }
             });
         }
 
@@ -93,7 +88,6 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public void CancelUpacking()
         {
-            var dataContext = Application.Current.MainWindow.DataContext as MainWindow;
             Cancelled = true;
             if(Processes != null && Processes.Count>0)
             {
@@ -113,8 +107,30 @@ namespace bg3_modders_multitool.Services
                         catch { }// only exception should be "Process with ID #### not found", safe to ignore
                     }
                 }
-                dataContext.ConsoleOutput += "Unpacking processes cancelled successfully!\n";
+                GeneralHelper.WriteToConsole("Unpacking processes cancelled successfully!\n");
             }
+        }
+
+        /// <summary>
+        /// Decompresses all decompressable files recursively.
+        /// </summary>
+        /// <returns>The task.</returns>
+        public Task DecompressAllConvertableFiles()
+        {
+            return Task.Run(() =>
+            {
+                GeneralHelper.WriteToConsole($"Retrieving file list for decompression.\n");
+                var fileList = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
+                GeneralHelper.WriteToConsole($"Retrived file list. Starting decompression; this could take awhile.\n");
+                var defaultPath = @"\\?\" + FileHelper.GetPath("");
+                Parallel.ForEach(fileList, file => {
+                    if (!string.IsNullOrEmpty(Path.GetExtension(file)))
+                    {
+                        FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
+                    }
+                });
+                GeneralHelper.WriteToConsole($"Decompression complete.\n");
+            });
         }
     }
 }

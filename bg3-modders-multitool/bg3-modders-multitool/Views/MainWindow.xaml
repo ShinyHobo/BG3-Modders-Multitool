@@ -13,7 +13,7 @@
         </Viewbox>
         <!--TODO move file selectors to separate view-->
         <Grid Margin="273,10,121,340">
-            <Label x:Name="divineLabel" Content="divine.exe location (1.15.2+ Required)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="divineLabel" Content="LSLib divine.exe location (1.15.6+ Required)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding DivineLocation, Mode=TwoWay}" IsReadOnly="True"/>
             <Button x:Name="divineSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23" Cursor="Hand"/>
         </Grid>
@@ -50,5 +50,6 @@
         </Grid>
         <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="666,109,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"/>
         <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="642,196,0,0" VerticalAlignment="Top" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand"/>
+        <Button x:Name="decompressButton" Content="Decompress Files" HorizontalAlignment="Left" Margin="666,53,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}"/>
     </Grid>
 </Window>

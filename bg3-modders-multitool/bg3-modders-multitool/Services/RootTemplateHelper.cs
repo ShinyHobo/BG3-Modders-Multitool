@@ -7,14 +7,12 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Enums;
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
-    using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Windows;
     using System.Xml;
 
     public class RootTemplateHelper
@@ -43,9 +41,7 @@ namespace bg3_modders_multitool.Services
             }
             if(!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
             {
-                Application.Current.Dispatcher.Invoke(() => {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No valid texture atlases found. Unpack Icons.pak to generate icons.\n";
-                });
+                GeneralHelper.WriteToConsole($"No valid texture atlases found. Unpack Icons.pak to generate icons.\n");
             }
             ReadRaces("Shared");
             SortRootTemplate();
@@ -110,9 +106,7 @@ namespace bg3_modders_multitool.Services
                     return true;
                 }
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load english.xml. Please unpack English.pak to generate translations.\n";
-            });
+            GeneralHelper.WriteToConsole($"Failed to load english.xml. Please unpack English.pak to generate translations.\n");
             return false;
         }
 
@@ -142,10 +136,20 @@ namespace bg3_modders_multitool.Services
                                     gameObject = new GameObject { Pak = pak, Children = new List<GameObject>() };
                                 }
                                 var type = reader.GetAttribute("type");
-                                var value = reader.GetAttribute("value") ?? reader.GetAttribute("handle");
+                                var handle = reader.GetAttribute("handle");
+                                var value = reader.GetAttribute("value") ?? handle;
                                 if (reader.Depth == 5) // GameObject attributes
                                 {
-                                    gameObject.LoadProperty(id, type, value);
+                                    if(string.IsNullOrEmpty(handle))
+                                    {
+                                        gameObject.LoadProperty(id, type, value);
+                                    }
+                                    else
+                                    {
+                                        gameObject.LoadProperty($"{id}Handle", type, value);
+                                        var translationText = TranslationLookup.FirstOrDefault(tl => tl.Key.Equals(value)).Value?.Value;
+                                        gameObject.LoadProperty(id, type, translationText);
+                                    }
 
                                     if (id != null && !GameObjectAttributes.ContainsKey(id))
                                         GameObjectAttributes.Add(id, type);
@@ -154,6 +158,8 @@ namespace bg3_modders_multitool.Services
                             case XmlNodeType.EndElement:
                                 if (reader.Depth == 4) // end of GameObject
                                 {
+                                    if (string.IsNullOrEmpty(gameObject.Name))
+                                        gameObject.Name = (string)gameObject.DisplayName;
                                     GameObjects.Add(gameObject);
                                 }
                                 break;
@@ -162,9 +168,7 @@ namespace bg3_modders_multitool.Services
                 }
                 return true;
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load root template _merged.lsf for {pak}.pak.\n";
-            });
+            GeneralHelper.WriteToConsole($"Failed to load root template _merged.lsf for {pak}.pak.\n");
             return false;
         }
 
@@ -177,13 +181,13 @@ namespace bg3_modders_multitool.Services
             if(GameObjects != null)
             {
                 GameObjectTypes = GameObjectTypes.OrderBy(got => got).ToList();
-                GameObjects = GameObjects.OrderBy(go => go.Name).ToList();
+                GameObjects = GameObjects.OrderBy(go => (string)go.Name).ToList();
                 FlatGameObjects = GameObjects;
                 var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
                 var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
                 foreach (var gameObject in children)
                 {
-                    lookup.First(l => l.Key == gameObject.ParentTemplateId).Value.Children.Add(gameObject);
+                    lookup.First(l => l.Key == (string)gameObject.ParentTemplateId).Value.Children.Add(gameObject);
                 }
                 GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
                 foreach(var gameObject in GameObjects)
@@ -241,7 +245,7 @@ namespace bg3_modders_multitool.Services
                                             race.ProgressionTableUUID = value;
                                             break;
                                         case "UUID":
-                                            race.UUID = value;
+                                            race.UUID = new Guid(value);
                                             break;
                                     }
                                 }
@@ -265,9 +269,7 @@ namespace bg3_modders_multitool.Services
                 }
                 return true;
             }
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Failed to load Races.lsx for {pak}.pak.\n";
-            });
+            GeneralHelper.WriteToConsole($"Failed to load Races.lsx for {pak}.pak.\n");
             return false;
         }
 

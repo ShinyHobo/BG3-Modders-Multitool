@@ -148,10 +148,8 @@ namespace bg3_modders_multitool.Models.StatStructures
             }
             catch
             {
-                System.Windows.Application.Current.Dispatcher.Invoke(() => {
-                    // This can usually be fixed by adding the Modifier data to the given StatStructure type
-                    ((ViewModels.MainWindow)System.Windows.Application.Current.MainWindow.DataContext).ConsoleOutput += $"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\"\n";
-                });
+                // This can usually be fixed by adding the Modifier data to the given StatStructure type
+                Services.GeneralHelper.WriteToConsole($"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\"\n");
             }
         }
 

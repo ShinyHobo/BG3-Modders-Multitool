@@ -24,11 +24,12 @@ namespace bg3_modders_multitool.Services
 
     public class IndexHelper
     {
-        // images: .png, .DDS, .dds
-        // models: .ttf, .gr2, .GR2, .tga, .gtp
+        // images: .png, .DDS, .dds, .tga
+        // models: .ttf, .gr2, .GR2, .gtp
         // audio: .wem
         // video: .bk2
-        private static readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2" };
+        // ??: .bshd, .shd
+        private static readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga" };
         private static readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
@@ -62,16 +63,14 @@ namespace bg3_modders_multitool.Services
                 });
                 if (filelist==null)
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Retrieving file list.\n";
-                    });
+                    GeneralHelper.WriteToConsole($"Retrieving file list.\n");
                     filelist = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
                 }
 
                 // Display total file count being indexed
+                GeneralHelper.WriteToConsole($"File list retrieved.\n");
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"File list retrieved.\n";
                     DataContext.IndexFileTotal = filelist.Count;
                     DataContext.IndexStartTime = DateTime.Now;
                     DataContext.IndexFileCount = 0;
@@ -90,34 +89,29 @@ namespace bg3_modders_multitool.Services
         /// <param name="analyzer">The analyzer to use when indexing.</param>
         private void IndexFiles(List<string> files, Analyzer analyzer)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Starting index process.\n";
-            });
+            GeneralHelper.WriteToConsole($"Starting index process.\n");
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
                 using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                 {
-                    foreach (string file in files)
-                    {
+                    Parallel.ForEach(files, file => {
                         try
                         {
                             IndexLuceneFile(file, writer);
                         }
-                        catch(OutOfMemoryException)
+                        catch (OutOfMemoryException)
                         {
-                            Application.Current.Dispatcher.Invoke(() => {
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"OOME: Failed to index {file}\n";
-                            });
+                            GeneralHelper.WriteToConsole($"OOME: Failed to index {file}\n");
                         }
-                    }
+                    });
                     writer.Commit();
                     analyzer.Dispose();
                     writer.Dispose();
                 }
             }
+            GeneralHelper.WriteToConsole($"Indexing process finished in {DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss")}.\n");
             Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Indexing process finished in {DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss")}.\n";
                 DataContext.IsIndexing = false;
             });
         }
@@ -129,19 +123,25 @@ namespace bg3_modders_multitool.Services
         /// <param name="writer">The index to write to.</param>
         private void IndexLuceneFile(string file, IndexWriter writer)
         {
-            var fileName = Path.GetFileName(file);
-            var extension = Path.GetExtension(file);
-            // if file type is excluded, only track file name and path so it can be searched for by name
-            var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file);
-            var doc = new Document
+            try
             {
-                //new Int64Field("id", id, Field.Store.YES),
-                new TextField("path", file, Field.Store.YES),
-                new TextField("title", fileName, Field.Store.YES),
-                new TextField("body", contents, Field.Store.NO)
-            };
-            writer.AddDocument(doc);
-
+                var fileName = Path.GetFileName(file);
+                var extension = Path.GetExtension(file);
+                // if file type is excluded, only track file name and path so it can be searched for by name
+                var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file);
+                var doc = new Document
+                {
+                    //new Int64Field("id", id, Field.Store.YES),
+                    new TextField("path", file, Field.Store.YES),
+                    new TextField("title", fileName, Field.Store.YES),
+                    new TextField("body", contents, Field.Store.NO)
+                };
+                writer.AddDocument(doc);
+            }
+            catch(Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"Failed to index file [{file}]:\n{ex.Message}");
+            }
             Application.Current.Dispatcher.Invoke(() =>
             {
                 DataContext.IndexFileCount++;
@@ -151,12 +151,17 @@ namespace bg3_modders_multitool.Services
 
         #region Searching
         /// <summary>
-        /// Determines whether a lucene index exists.
+        /// Determines whether a lucene index directory exists.
         /// </summary>
         /// <returns>Whether the index exists.</returns>
-        public static bool IndexExists()
+        public static bool IndexDirectoryExists()
         {
             return System.IO.Directory.Exists(luceneIndex) && System.IO.Directory.EnumerateFiles(luceneIndex).Any();
+        }
+
+        public static bool IsIndexCorrupt(FSDirectory fSDirectory)
+        {
+            return !new CheckIndex(fSDirectory).DoCheckIndex().Clean;
         }
 
         /// <summary>
@@ -168,15 +173,13 @@ namespace bg3_modders_multitool.Services
             SearchText = search;
             return Task.Run(() => { 
                 var matches = new List<string>();
-                if(!IndexExists())
+                if(!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"No index available! Please unpack game assets and generate an index.\n";
-                    });
+                    GeneralHelper.WriteToConsole($"No index available! Please unpack game assets and generate an index.\n");
                     return matches;
                 }
 
-                if(DirectoryReader.IndexExists(fSDirectory))
+                try
                 {
                     using (Analyzer analyzer = new CustomAnalyzer())
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
@@ -195,17 +198,12 @@ namespace bg3_modders_multitool.Services
                         if (reader.MaxDoc != 0)
                         {
                             var start = DateTime.Now;
-                            Application.Current.Dispatcher.Invoke(() => {
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Search started.\n";
-                            });
+                            GeneralHelper.WriteToConsole("Search started.\n");
 
                             // perform search
                             TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
-                            Application.Current.Dispatcher.Invoke(() => {
-                                var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks);
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += $"Search returned {topDocs.ScoreDocs.Length} results in {timeTaken.TotalMilliseconds} ms\n";
-                            });
+                            GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
 
                             // display results
                             foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
@@ -220,19 +218,17 @@ namespace bg3_modders_multitool.Services
                         }
                         else
                         {
-                            Application.Current.Dispatcher.Invoke(() => {
-                                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "No documents available. Please generate the index again.\n";
-                            });
+                            GeneralHelper.WriteToConsole("No documents available. Please generate the index again.\n");
                         }
                     }
                 }
-                else
+                catch
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += "Index does not exist yet.\n";
-                    });
+                    // Checking if the index is corrupt is slower than just letting it fail
+                    GeneralHelper.WriteToConsole($"Available index is corrupt. Please rerun the indexer to create a new one.\n");
+                    return matches;
                 }
-                
+
                 return matches;
             });
         }

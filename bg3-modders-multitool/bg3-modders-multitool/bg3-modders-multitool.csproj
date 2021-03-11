@@ -313,6 +313,8 @@
     <Compile Include="Enums\ValueLists\WeaponGroup.cs" />
     <Compile Include="Enums\ValueLists\WeaponSet.cs" />
     <Compile Include="Enums\ValueLists\WeaponType.cs" />
+    <Compile Include="Models\GameObjectTypes\LSString.cs" />
+    <Compile Include="Models\GameObjectTypes\TranslatedString.cs" />
     <Compile Include="Models\GameObjectTypes\FixedString.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\TextureAtlas.cs" />
@@ -331,6 +333,7 @@
     <Compile Include="Models\Translation.cs" />
     <Compile Include="Services\DragAndDropHelper.cs" />
     <Compile Include="Services\FileHelper.cs" />
+    <Compile Include="Services\GeneralHelper.cs" />
     <Compile Include="Services\IndexHelper.cs" />
     <Compile Include="Services\PakUnpackHelper.cs" />
     <Compile Include="Services\RootTemplateHelper.cs" />
