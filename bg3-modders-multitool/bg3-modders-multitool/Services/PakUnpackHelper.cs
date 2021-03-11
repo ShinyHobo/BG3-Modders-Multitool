@@ -123,13 +123,12 @@ namespace bg3_modders_multitool.Services
                 var fileList = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
                 GeneralHelper.WriteToConsole($"Retrived file list. Starting decompression; this could take awhile.\n");
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
-                foreach (var file in fileList)
-                {
+                Parallel.ForEach(fileList, file => {
                     if (!string.IsNullOrEmpty(Path.GetExtension(file)))
                     {
-                        FileHelper.Convert(file.Replace(defaultPath,""), "lsx");
+                        FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
                     }
-                }
+                });
                 GeneralHelper.WriteToConsole($"Decompression complete.\n");
             });
         }
