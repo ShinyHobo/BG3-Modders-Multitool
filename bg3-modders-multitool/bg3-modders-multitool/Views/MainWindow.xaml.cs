@@ -136,5 +136,11 @@ namespace bg3_modders_multitool.Views
         {
             new GameObjectWindow().Show();
         }
+
+        private async void Decompress_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            await vm.Unpacker.DecompressAllConvertableFiles();
+        }
     }
 }

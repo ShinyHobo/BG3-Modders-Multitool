@@ -9,7 +9,6 @@ namespace bg3_modders_multitool.Services
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Windows;
 
     public class PakUnpackHelper
     {
@@ -110,6 +109,29 @@ namespace bg3_modders_multitool.Services
                 }
                 GeneralHelper.WriteToConsole("Unpacking processes cancelled successfully!\n");
             }
+        }
+
+        /// <summary>
+        /// Decompresses all decompressable files recursively.
+        /// </summary>
+        /// <returns>The task.</returns>
+        public Task DecompressAllConvertableFiles()
+        {
+            return Task.Run(() =>
+            {
+                GeneralHelper.WriteToConsole($"Retrieving file list for decompression.\n");
+                var fileList = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
+                GeneralHelper.WriteToConsole($"Retrived file list. Starting decompression; this could take awhile.\n");
+                var defaultPath = @"\\?\" + FileHelper.GetPath("");
+                foreach (var file in fileList)
+                {
+                    if (!string.IsNullOrEmpty(Path.GetExtension(file)))
+                    {
+                        FileHelper.Convert(file.Replace(defaultPath,""), "lsx");
+                    }
+                }
+                GeneralHelper.WriteToConsole($"Decompression complete.\n");
+            });
         }
     }
 }
