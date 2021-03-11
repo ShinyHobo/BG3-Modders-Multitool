@@ -24,11 +24,11 @@ namespace bg3_modders_multitool.Services
 
     public class IndexHelper
     {
-        // images: .png, .DDS, .dds
-        // models: .ttf, .gr2, .GR2, .tga, .gtp
+        // images: .png, .DDS, .dds, .tga
+        // models: .ttf, .gr2, .GR2, .gtp
         // audio: .wem
         // video: .bk2
-        private static readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2" };
+        private static readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga" };
         private static readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
@@ -123,19 +123,25 @@ namespace bg3_modders_multitool.Services
         /// <param name="writer">The index to write to.</param>
         private void IndexLuceneFile(string file, IndexWriter writer)
         {
-            var fileName = Path.GetFileName(file);
-            var extension = Path.GetExtension(file);
-            // if file type is excluded, only track file name and path so it can be searched for by name
-            var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file);
-            var doc = new Document
+            try
             {
-                //new Int64Field("id", id, Field.Store.YES),
-                new TextField("path", file, Field.Store.YES),
-                new TextField("title", fileName, Field.Store.YES),
-                new TextField("body", contents, Field.Store.NO)
-            };
-            writer.AddDocument(doc);
-
+                var fileName = Path.GetFileName(file);
+                var extension = Path.GetExtension(file);
+                // if file type is excluded, only track file name and path so it can be searched for by name
+                var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file);
+                var doc = new Document
+                {
+                    //new Int64Field("id", id, Field.Store.YES),
+                    new TextField("path", file, Field.Store.YES),
+                    new TextField("title", fileName, Field.Store.YES),
+                    new TextField("body", contents, Field.Store.NO)
+                };
+                writer.AddDocument(doc);
+            }
+            catch(Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"Failed to index file [{file}]:\n{ex.Message}");
+            }
             Application.Current.Dispatcher.Invoke(() =>
             {
                 DataContext.IndexFileCount++;

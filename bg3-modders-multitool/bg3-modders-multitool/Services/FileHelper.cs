@@ -3,16 +3,14 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
-    using bg3_modders_multitool.ViewModels;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Windows;
 
     public static class FileHelper
     {
-        public static string[] ConvertableLsxResources = { ".lsf", ".lsb" };
+        public static string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbc", ".lsbs" };
 
         /// <summary>
         /// Converts the given file to .lsx in-place
@@ -97,11 +95,18 @@ namespace bg3_modders_multitool.Services
             var fileList = new List<string>();
             foreach (string dir in Directory.GetDirectories(directory))
             {
-                foreach (string file in Directory.GetFiles(dir))
+                try
                 {
-                    fileList.Add(file);
+                    foreach (string file in Directory.GetFiles(dir))
+                    {
+                        fileList.Add(file);
+                    }
+                    fileList.AddRange(RecursiveFileSearch(dir));
                 }
-                fileList.AddRange(RecursiveFileSearch(dir));
+                catch(System.Exception ex)
+                {
+                    GeneralHelper.WriteToConsole($"Could not read from directory: {directory}\n");
+                }
             }
             return fileList;
         }
