@@ -7,10 +7,12 @@ namespace bg3_modders_multitool.Services
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public static class FileHelper
     {
-        public static string[] ConvertableLsxResources = { ".lsf", ".lsb" };
+        public static string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
+        public static string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
         /// <summary>
         /// Converts the given file to .lsx in-place
@@ -35,6 +37,12 @@ namespace bg3_modders_multitool.Services
             }
             if (!File.Exists(newPath) && isConvertable)
             {
+                if(MustRenameLsxResources.Contains(originalExtension))
+                {
+                    var renamedPath = Path.ChangeExtension(path, originalExtension + ".lsf");
+                    File.Move(path, renamedPath);
+                    path = renamedPath;
+                }
                 var divine = $" -g \"bg3\" --action \"convert-resource\" --output-format \"{extension}\" --source \"{path}\" --destination \"{newPath}\" -l \"all\"";
                 var process = new Process();
                 var startInfo = new ProcessStartInfo
@@ -54,6 +62,10 @@ namespace bg3_modders_multitool.Services
                 {
                     GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
                     GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
+                }
+                if (MustRenameLsxResources.Contains(originalExtension))
+                {
+                    File.Move(path, Path.ChangeExtension(path, ""));
                 }
             }
 

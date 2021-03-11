@@ -158,6 +158,8 @@ namespace bg3_modders_multitool.Services
                             case XmlNodeType.EndElement:
                                 if (reader.Depth == 4) // end of GameObject
                                 {
+                                    if (string.IsNullOrEmpty(gameObject.Name))
+                                        gameObject.Name = (string)gameObject.DisplayName;
                                     GameObjects.Add(gameObject);
                                 }
                                 break;
