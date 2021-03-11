@@ -95,17 +95,16 @@ namespace bg3_modders_multitool.Services
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
                 using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                 {
-                    foreach (string file in files)
-                    {
+                    Parallel.ForEach(files, file => {
                         try
                         {
                             IndexLuceneFile(file, writer);
                         }
-                        catch(OutOfMemoryException)
+                        catch (OutOfMemoryException)
                         {
                             GeneralHelper.WriteToConsole($"OOME: Failed to index {file}\n");
                         }
-                    }
+                    });
                     writer.Commit();
                     analyzer.Dispose();
                     writer.Dispose();

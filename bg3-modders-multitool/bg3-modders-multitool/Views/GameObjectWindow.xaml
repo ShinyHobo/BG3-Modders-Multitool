@@ -29,7 +29,7 @@
                 <TreeView.Resources>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding DisplayName}" Margin="0,0,5,0" Background="Transparent"></TextBlock>
+                            <TextBlock Text="{Binding Name}" Margin="0,0,5,0" Background="Transparent"></TextBlock>
                             <Button x:Name="exploreMore" Background="White" BorderBrush="White" Uid="{Binding MapKey}" Cursor="Hand" Click="ExploreMore_Click">
                                 <TextBlock Text="(+)" HorizontalAlignment="Stretch"></TextBlock>
                                 <Button.Template>
@@ -71,6 +71,12 @@
                         <Border BorderBrush="Black" BorderThickness="1 1 1 1" Margin="-3,-1,-3,-1"></Border>
                         <TextBlock Text="Pak:" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Pak, Mode=OneWay}" Background="Transparent" Margin="28,0,0,0"
+                                                 Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
+                    </Grid>
+                    <Grid Background="AliceBlue" Margin="0,1,0,1">
+                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
+                        <TextBlock Text="Name:" FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Name, Mode=OneWay}" Background="Transparent" Margin="40,0,0,0"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </Grid>
                     <Grid Margin="0,1,0,1">
