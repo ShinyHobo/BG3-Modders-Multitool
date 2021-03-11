@@ -17,9 +17,9 @@ namespace bg3_modders_multitool.Models
         public FixedString ParentTemplateId { get; set; }
         public FixedString Name { get; set; }
         public TranslatedString DisplayNameHandle { get; set; }
-        public string DisplayName { get; set; }
+        public TranslatedString DisplayName { get; set; }
         public TranslatedString DescriptionHandle { get; set; }
-        public string Description { get; set; }
+        public TranslatedString Description { get; set; }
         public GameObjectType Type { get; set; }
         public FixedString Icon { get; set; }
         public FixedString Stats { get; set; }
