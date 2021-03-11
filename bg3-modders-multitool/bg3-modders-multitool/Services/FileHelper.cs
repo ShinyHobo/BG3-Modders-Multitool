@@ -10,7 +10,7 @@ namespace bg3_modders_multitool.Services
 
     public static class FileHelper
     {
-        public static string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbc", ".lsbs" };
+        public static string[] ConvertableLsxResources = { ".lsf", ".lsb" };
 
         /// <summary>
         /// Converts the given file to .lsx in-place

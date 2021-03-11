@@ -28,7 +28,8 @@ namespace bg3_modders_multitool.Services
         // models: .ttf, .gr2, .GR2, .gtp
         // audio: .wem
         // video: .bk2
-        private static readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga" };
+        // ??: .bshd, .shd
+        private static readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga" };
         private static readonly string luceneIndex = "lucene/index";
         public SearchResults DataContext;
