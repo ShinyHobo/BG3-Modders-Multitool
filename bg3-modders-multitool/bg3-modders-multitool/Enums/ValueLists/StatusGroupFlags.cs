@@ -26,6 +26,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         SG_Light,
         SG_Disguise,
         SG_Possessed,
-        SG_Petrified
+        SG_Petrified,
+        SG_Polymorph_BeastShape,
+        SG_Polymorph_BeastShape_NPC
     }
 }

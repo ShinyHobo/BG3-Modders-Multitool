@@ -35,6 +35,15 @@ namespace bg3_modders_multitool.Enums.ValueLists
         SimpleWeapons,
         Slings,
         Spears,
-        Warhammers
+        Warhammers,
+        Greatclubs,
+        Greataxes,
+        Pikes,
+        Morningstars,
+        Mauls,
+        Halberds,
+        Flails,
+        Tridents,
+        Warpicks
     }
 }
