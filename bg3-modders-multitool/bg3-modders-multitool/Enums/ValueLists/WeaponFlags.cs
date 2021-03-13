@@ -23,6 +23,9 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Torch,
         NoDualWield,
         Magical,
-        NeedDualWieldingBoost
+        NeedDualWieldingBoost,
+        AddToHotbar,
+        Unstowable,
+        StaffOrClub
     }
 }
