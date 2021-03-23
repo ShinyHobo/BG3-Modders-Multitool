@@ -19,6 +19,7 @@ namespace bg3_modders_multitool.Enums
         surface,
         terrain,
         TileConstruction,
-        trigger
+        trigger,
+        invalid_template
     }
 }
