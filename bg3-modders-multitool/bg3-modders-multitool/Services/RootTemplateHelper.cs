@@ -21,6 +21,7 @@ namespace bg3_modders_multitool.Services
         private Dictionary<string, Translation> TranslationLookup;
         private readonly string[] Paks = { "Shared","Gustav" };
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
+        private bool Loaded = false;
         public List<GameObjectType> GameObjectTypes { get; private set; } = new List<GameObjectType>();
         public List<GameObject> FlatGameObjects { get; private set; } = new List<GameObject>();
         public List<Translation> Translations { get; private set; } = new List<Translation>();
@@ -29,13 +30,21 @@ namespace bg3_modders_multitool.Services
         public List<TextureAtlas> TextureAtlases { get; private set; } = new List<TextureAtlas>();
         public Dictionary<string, string> GameObjectAttributes { get; set; } = new Dictionary<string,string>();
 
-        public RootTemplateHelper()
+        public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
             GeneralHelper.WriteToConsole($"Loading GameObjects...\n");
             var start = DateTime.Now;
             LoadRootTemplates().ContinueWith(delegate {
-                var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
-                GeneralHelper.WriteToConsole($"GameObjects loaded in {timePassed} seconds.\n");
+                if(Loaded)
+                {
+                    var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
+                    GeneralHelper.WriteToConsole($"GameObjects loaded in {timePassed} seconds.\n");
+                    gameObjectViewModel.Loaded = true;
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole($"GameObjects loading cancelled.\n");
+                }
             });
         }
 
@@ -73,6 +82,7 @@ namespace bg3_modders_multitool.Services
                 }
                 ReadRaces("Shared");
                 SortRootTemplate();
+                Loaded = true;
                 return string.Join(",", GameObjectAttributes.Values.GroupBy(g => g).Select(g => g.Last()).ToList());
             });
         }
@@ -179,7 +189,6 @@ namespace bg3_modders_multitool.Services
                                             lock(GameObjects)
                                             GameObjects.Add(gameObject);
                                         }
-                                            
                                     }
                                     break;
                             }
