@@ -16,7 +16,7 @@ namespace bg3_modders_multitool.ViewModels
     {
         public GameObjectViewModel()
         {
-            RootTemplateHelper = new RootTemplateHelper();
+            RootTemplateHelper = new RootTemplateHelper(this);
         }
 
         public void Clear()
@@ -110,6 +110,16 @@ namespace bg3_modders_multitool.ViewModels
             get { return _race; }
             set {
                 _race = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _loaded = false;
+
+        public bool Loaded {
+            get { return _loaded; }
+            set {
+                _loaded = true;
                 OnNotifyPropertyChanged();
             }
         }

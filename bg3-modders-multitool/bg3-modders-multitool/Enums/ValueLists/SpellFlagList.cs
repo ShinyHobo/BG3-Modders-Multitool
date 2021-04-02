@@ -39,6 +39,11 @@ namespace bg3_modders_multitool.Enums.ValueLists
         CannotRotate,
         DontForceSheathOrUnsheath,
         CanDualWield,
-        IsLinkedSpellContainer
+        IsLinkedSpellContainer,
+        Invisible,
+        WildShape,
+        AllowMoveAndCast,
+        Force1HSSubSetDuringCast,
+        SwitchSheathUnsheathOnCast
     }
 }

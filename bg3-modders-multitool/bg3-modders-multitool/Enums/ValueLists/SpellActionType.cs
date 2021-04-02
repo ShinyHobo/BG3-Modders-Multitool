@@ -15,6 +15,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Jump,
         Knockout,
         Shove,
-        Throw
+        Throw,
+        Dismiss
     }
 }

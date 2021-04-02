@@ -8,6 +8,10 @@ namespace bg3_modders_multitool.Enums.ValueLists
         PhysicalDamage,
         MagicalDamage,
         MagicalNondamage,
+        MagicalDamage_External,
+        MagicalDamage_Internal,
+        MagicalDamage_Electric,
+        MagicalDamage_Psychic,
         None
     }
 }

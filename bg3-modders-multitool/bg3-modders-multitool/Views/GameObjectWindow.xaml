@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Title="GameObject Explorer" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
     <Grid>
-        <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="455" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded" Cursor="Hand">
+        <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="455" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded" Cursor="Hand" IsEnabled="{Binding Loaded}" >
             <ComboBox.ItemsSource>
                 <CompositeCollection>
                     <ComboBoxItem x:Name="defaultType" Content="Please Select GameObject Type" Focusable="False" IsHitTestVisible="False" IsEnabled="False"></ComboBoxItem>
@@ -142,4 +142,15 @@
             </TabItem>
         </TabControl>
     </Grid>
+    <Window.Resources>
+        <Style TargetType="{x:Type ComboBox}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled"
+                 Value="False">
+                    <Setter Property="Foreground"
+                    Value="Gray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 </Window>

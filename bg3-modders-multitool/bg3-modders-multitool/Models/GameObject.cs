@@ -122,7 +122,7 @@ namespace bg3_modders_multitool.Models
         /// <returns></returns>
         private bool FindMatch(string filter)
         {
-            return Name.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+            return Name?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    Pak.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    MapKey?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    ParentTemplateId?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||

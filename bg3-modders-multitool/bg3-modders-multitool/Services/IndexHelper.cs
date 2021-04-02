@@ -226,7 +226,6 @@ namespace bg3_modders_multitool.Services
                 {
                     // Checking if the index is corrupt is slower than just letting it fail
                     GeneralHelper.WriteToConsole($"Available index is corrupt. Please rerun the indexer to create a new one.\n");
-                    return matches;
                 }
 
                 return matches;
