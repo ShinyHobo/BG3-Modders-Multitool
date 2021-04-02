@@ -21,10 +21,10 @@ namespace bg3_modders_multitool.Services
         /// <returns>The new file path.</returns>
         public static string Convert(string file, string extension, string newPath = null)
         {
-            var path = string.Empty;
             var originalExtension = Path.GetExtension(file);
             var newFile = file.Replace(originalExtension, $".{extension}");
             var isConvertable = true;
+            string path;
             if (string.IsNullOrEmpty(newPath))
             {
                 path = GetPath(file);

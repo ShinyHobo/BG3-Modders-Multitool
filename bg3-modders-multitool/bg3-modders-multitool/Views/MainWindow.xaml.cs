@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
+    using bg3_modders_multitool.Services;
     using System.Windows;
 
     /// <summary>
@@ -139,8 +140,7 @@ namespace bg3_modders_multitool.Views
 
         private async void Decompress_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
-            await vm.Unpacker.DecompressAllConvertableFiles();
+            await PakUnpackHelper.DecompressAllConvertableFiles();
         }
     }
 }
