@@ -324,7 +324,7 @@ namespace bg3_modders_multitool.Services
     /// <summary>
     /// Custom tokenizer for handling UUIDs.
     /// </summary>
-    public class CustomTokenizer : CharTokenizer
+    public sealed class CustomTokenizer : CharTokenizer
     {
         private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':'};
 
