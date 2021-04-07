@@ -78,8 +78,8 @@ namespace bg3_modders_multitool.ViewModels
             set {
                 _info = value;
                 Race = RootTemplateHelper.Races.FirstOrDefault(race => race.UUID == value.RaceUUID);
-                Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
-                Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats?.Value);
+                Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon?.Value))?.GetIcon(Info.Icon?.Value);
                 OnNotifyPropertyChanged();
             }
         }

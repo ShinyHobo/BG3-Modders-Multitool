@@ -13,23 +13,23 @@ namespace bg3_modders_multitool.Models
     {
         #region Parameters
         public string Pak { get; set; }
-        public string MapKey { get; set; }
-        public string ParentTemplateId { get; set; }
-        public string Name { get; set; }
-        public string DisplayNameHandle { get; set; }
-        public string DisplayName { get; set; }
-        public string DescriptionHandle { get; set; }
-        public string Description { get; set; }
+        public StringType MapKey { get; set; }
+        public StringType ParentTemplateId { get; set; }
+        public StringType Name { get; set; }
+        public StringType DisplayNameHandle { get; set; }
+        public StringType DisplayName { get; set; }
+        public StringType DescriptionHandle { get; set; }
+        public StringType Description { get; set; }
         public GameObjectType Type { get; set; }
-        public string Icon { get; set; }
-        public string Stats { get; set; }
+        public StringType Icon { get; set; }
+        public StringType Stats { get; set; }
         public Guid RaceUUID { get; set; }
-        public string CharacterVisualResourceID { get; set; }
-        public string LevelName { get; set; }
+        public StringType CharacterVisualResourceID { get; set; }
+        public StringType LevelName { get; set; }
         public float Scale { get; set; }
-        public string TitleHandle { get; set; }
+        public StringType TitleHandle { get; set; }
         public string Title { get; set; }
-        public string PhysicsTemplate { get; set; }
+        public StringType PhysicsTemplate { get; set; }
         public List<GameObject> Children { get; set; }
 
         /// <summary>
@@ -71,11 +71,11 @@ namespace bg3_modders_multitool.Models
         {
             foreach (var go in Children)
             {
-                if (string.IsNullOrEmpty(go.Stats))
+                if (string.IsNullOrEmpty(go.Stats?.Value))
                 {
                     go.Stats = Stats;
                 }
-                if (string.IsNullOrEmpty(go.Icon))
+                if (string.IsNullOrEmpty(go.Icon?.Value))
                 {
                     go.Icon = Icon;
                 }
@@ -122,16 +122,16 @@ namespace bg3_modders_multitool.Models
         /// <returns></returns>
         private bool FindMatch(string filter)
         {
-            return Name?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+            return Name?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    Pak.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   MapKey?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   ParentTemplateId?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   DisplayNameHandle?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   DisplayName?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   DescriptionHandle?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   Description?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   Icon?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   Stats?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0;
+                   MapKey?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   ParentTemplateId?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   DisplayNameHandle?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   DisplayName?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   DescriptionHandle?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   Description?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   Icon?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   Stats?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0;
         }
         #endregion
 
@@ -151,14 +151,13 @@ namespace bg3_modders_multitool.Models
                         }
                         else
                         {
-                            var method = propertyType.GetMethod("FromString", new Type[] { typeof(string) });
-                            if(method != null)
+                            if(propertyType == typeof(string))
                             {
-                                property.SetValue(this, method.Invoke(null, new object[] { value }));
+                                property.SetValue(this, value);
                             }
                             else
                             {
-                                property.SetValue(this, value);
+                                property.SetValue(this, new StringType(value, type));
                             }
                         }
                     }

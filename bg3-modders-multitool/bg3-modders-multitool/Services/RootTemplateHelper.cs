@@ -184,8 +184,8 @@ namespace bg3_modders_multitool.Services
                                     }
                                 }
 
-                                if (string.IsNullOrEmpty(gameObject.Name))
-                                    gameObject.Name = (string)gameObject.DisplayName;
+                                if (string.IsNullOrEmpty(gameObject.Name.Value))
+                                    gameObject.Name.Value = gameObject.DisplayName?.Value;
 
                                 lock (GameObjects)
                                 {
@@ -222,18 +222,18 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
                 GameObjects.RemoveAll(go => go == null);
                 GameObjectTypes = GameObjectTypes.OrderBy(got => got).ToList();
-                GameObjects = GameObjects.OrderBy(go => (string)go.Name).ToList();
+                GameObjects = GameObjects.OrderBy(go => go.Name.Value).ToList();
                 FlatGameObjects = GameObjects;
                 FileHelper.SerializeObject(FlatGameObjects, "FlatGameObjects");
-                var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+                var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId?.Value)).ToList();
                 var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
                 Parallel.ForEach(children, gameObject =>
                 {
-                    var goChildren = lookup.First(l => l.Key == (string)gameObject.ParentTemplateId).Value.Children;
+                    var goChildren = lookup.First(l => l.Key.Value == gameObject.ParentTemplateId?.Value).Value.Children;
                     lock (goChildren)
                         goChildren.Add(gameObject);
                 });
-                GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+                GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId?.Value)).ToList();
                 foreach(var gameObject in GameObjects)
                 {
                     gameObject.PassOnStats();
