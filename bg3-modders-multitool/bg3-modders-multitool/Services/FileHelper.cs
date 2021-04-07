@@ -3,10 +3,13 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Xml;
+    using System.Xml.Serialization;
 
     public static class FileHelper
     {
@@ -166,6 +169,61 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole($"File does not exist on the given path ({path}).\n");
             }
+        }
+
+        /// <summary>
+        /// Serializes an object and saves it as an xml file.
+        /// </summary>
+        /// <param name="serialObject">The object to serialize</param>
+        /// <param name="filename">The filename to use, without extension</param>
+        public static void SerializeObject(object serialObject, string filename)
+        {
+            if(!File.Exists($"Cache/{filename}.xml"))
+            {
+                GeneralHelper.WriteToConsole($"Caching {filename}...\n");
+                XmlDocument xmlDocument = new XmlDocument();
+                XmlSerializer serializer = new XmlSerializer(serialObject.GetType());
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    serializer.Serialize(stream, serialObject);
+                    stream.Position = 0;
+                    xmlDocument.Load(stream);
+                    if (!Directory.Exists("Cache"))
+                        Directory.CreateDirectory("Cache");
+                    xmlDocument.Save($"Cache/{filename}.xml");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an object from a saved xml file.
+        /// </summary>
+        /// <typeparam name="T">The object type.</typeparam>
+        /// <param name="filename">The filename, without extension.</param>
+        /// <returns>The deserialized object, or null if not found.</returns>
+        public static T DeserializeObject<T>(string filename)
+        {
+            var file = $"Cache/{filename}.xml";
+            T objectOut = default(T);
+            if (File.Exists(file))
+            {
+                GeneralHelper.WriteToConsole($"Loading {filename} from cache...\n");
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(file);
+                string xmlString = xmlDocument.OuterXml;
+
+                using (StringReader read = new StringReader(xmlString))
+                {
+                    Type outType = typeof(T);
+
+                    XmlSerializer serializer = new XmlSerializer(outType);
+                    using (XmlReader reader = new XmlTextReader(read))
+                    {
+                        objectOut = (T)serializer.Deserialize(reader);
+                    }
+                }
+            }
+            return objectOut;
         }
     }
 }

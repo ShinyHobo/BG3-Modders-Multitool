@@ -140,6 +140,12 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the root template was read.</returns>
         private bool ReadRootTemplate()
         {
+            var deserializedGameObjects = FileHelper.DeserializeObject<List<GameObject>>("GameObjects");
+            if(deserializedGameObjects != null)
+            {
+                GameObjects = deserializedGameObjects;
+                return true;
+            }
             var rootTemplates = GetRootTemplateFileList();
             Parallel.ForEach(rootTemplates, rootTemplate =>
             {
@@ -207,11 +213,18 @@ namespace bg3_modders_multitool.Services
         {
             if(GameObjects != null)
             {
+                var deserializedFlatGameObjects = FileHelper.DeserializeObject<List<GameObject>>("FlatGameObjects");
+                if (deserializedFlatGameObjects != null)
+                {
+                    FlatGameObjects = deserializedFlatGameObjects;
+                    return true;
+                }
                 GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
                 GameObjects.RemoveAll(go => go == null);
                 GameObjectTypes = GameObjectTypes.OrderBy(got => got).ToList();
                 GameObjects = GameObjects.OrderBy(go => (string)go.Name).ToList();
                 FlatGameObjects = GameObjects;
+                FileHelper.SerializeObject(FlatGameObjects, "FlatGameObjects");
                 var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
                 var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
                 Parallel.ForEach(children, gameObject =>
@@ -225,6 +238,8 @@ namespace bg3_modders_multitool.Services
                 {
                     gameObject.PassOnStats();
                 }
+                FileHelper.SerializeObject(GameObjects, "GameObjects");
+                
                 return true;
             }
             return false;
