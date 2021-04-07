@@ -79,7 +79,7 @@ namespace bg3_modders_multitool.Views
             vm.DisabledButton = button;
             button.IsEnabled = false;
             var MapKey = ((Button)sender).Uid;
-            vm.Info = vm.RootTemplateHelper.FlatGameObjects.Single(go => go.MapKey == MapKey);
+            vm.Info = vm.RootTemplateHelper.FlatGameObjects.Single(go => go.MapKey.Value == MapKey);
         }
 
         private void TypeComboBox_Loaded(object sender, RoutedEventArgs e)

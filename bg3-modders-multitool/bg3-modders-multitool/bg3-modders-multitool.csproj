@@ -266,6 +266,7 @@
     </ApplicationDefinition>
     <Compile Include="Enums\GameObjectType.cs" />
     <Compile Include="Enums\StatStructure.cs" />
+    <Compile Include="Enums\TagStringType.cs" />
     <Compile Include="Enums\ValueLists\Ability.cs" />
     <Compile Include="Enums\ValueLists\AIFlag.cs" />
     <Compile Include="Enums\ValueLists\ArmorType.cs" />
@@ -317,6 +318,7 @@
     <Compile Include="Enums\ValueLists\WeaponSet.cs" />
     <Compile Include="Enums\ValueLists\WeaponType.cs" />
     <Compile Include="Models\GameObjectTypes\LSString.cs" />
+    <Compile Include="Models\GameObjectTypes\StringType.cs" />
     <Compile Include="Models\GameObjectTypes\TranslatedString.cs" />
     <Compile Include="Models\GameObjectTypes\FixedString.cs" />
     <Compile Include="Models\GameObject.cs" />
