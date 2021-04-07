@@ -15,6 +15,7 @@ namespace bg3_modders_multitool.Services
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Xml;
+    using System.Xml.Linq;
 
     public class RootTemplateHelper
     {
@@ -146,53 +147,49 @@ namespace bg3_modders_multitool.Services
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
                     var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
-                    using (var fileStream = new StreamReader(rootTemplatePath))
-                    using (XmlReader reader = XmlReader.Create(fileStream))
+
+                    using(var fileStream = new StreamReader(rootTemplatePath))
+                    using(var reader = new XmlTextReader(fileStream))
                     {
-                        GameObject gameObject = null;
-
-                        while (reader.Read())
+                        reader.Read();
+                        while(!reader.EOF)
                         {
-                            switch (reader.NodeType)
+                            if(reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.GetAttribute("id") == "GameObjects")
                             {
-                                case XmlNodeType.Element:
-                                    var id = reader.GetAttribute("id");
-                                    if (id == "GameObjects")
-                                    {
-                                        gameObject = new GameObject { Pak = pak, Children = new List<GameObject>() };
-                                    }
-                                    var type = reader.GetAttribute("type");
-                                    var handle = reader.GetAttribute("handle");
-                                    var value = reader.GetAttribute("value") ?? handle;
-                                    if (reader.Depth == 5) // GameObject attributes
-                                    {
-                                        if (string.IsNullOrEmpty(handle))
-                                        {
-                                            gameObject.LoadProperty(id, type, value);
-                                        }
-                                        else
-                                        {
-                                            gameObject.LoadProperty($"{id}Handle", type, value);
-                                            var translationText = TranslationLookup.FirstOrDefault(tl => tl.Key.Equals(value)).Value?.Value;
-                                            gameObject.LoadProperty(id, type, translationText);
-                                        }
+                                var xml = (XElement)XNode.ReadFrom(reader);
+                                var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>() };
+                                var attributes = xml.Elements().Where(x => x.Name == "attribute");
 
-                                        if (id != null && !GameObjectAttributes.ContainsKey(id))
-                                            GameObjectAttributes.Add(id, type);
-                                    }
-                                    break;
-                                case XmlNodeType.EndElement:
-                                    if (reader.Depth == 4) // end of GameObject
+                                foreach(XElement attribute in attributes)
+                                {
+                                    var id = attribute.Attribute("id").Value;
+                                    var handle = attribute.Attribute("handle")?.Value;
+                                    var value = handle ?? attribute.Attribute("value").Value;
+                                    var type = attribute.Attribute("type").Value;
+                                    if (string.IsNullOrEmpty(handle))
                                     {
-                                        if (string.IsNullOrEmpty(gameObject.Name))
-                                            gameObject.Name = (string)gameObject.DisplayName;
-                                        if (gameObject != null)
-                                        {
-                                            lock (GameObjects)
-                                                GameObjects.Add(gameObject);
-                                        }
+                                        gameObject.LoadProperty(id, type, value);
                                     }
-                                    break;
+                                    else
+                                    {
+                                        gameObject.LoadProperty($"{id}Handle", type, value);
+                                        var translationText = TranslationLookup.FirstOrDefault(tl => tl.Key.Equals(value)).Value?.Value;
+                                        gameObject.LoadProperty(id, type, translationText);
+                                    }
+                                }
+
+                                if (string.IsNullOrEmpty(gameObject.Name))
+                                    gameObject.Name = (string)gameObject.DisplayName;
+
+                                lock (GameObjects)
+                                {
+                                    GameObjects.Add(gameObject);
+                                    reader.Skip();
+                                }
+                            }
+                            else
+                            {
+                                reader.Read();
                             }
                         }
                     }
