@@ -7,7 +7,6 @@ namespace bg3_modders_multitool.Services
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
 
     public static class FileHelper
     {
@@ -115,7 +114,7 @@ namespace bg3_modders_multitool.Services
                     }
                     fileList.AddRange(RecursiveFileSearch(dir));
                 }
-                catch(System.Exception ex)
+                catch
                 {
                     GeneralHelper.WriteToConsole($"Could not read from directory: {directory}\n");
                 }
