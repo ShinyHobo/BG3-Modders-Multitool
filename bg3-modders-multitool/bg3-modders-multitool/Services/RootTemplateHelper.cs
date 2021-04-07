@@ -111,6 +111,12 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the translation file was read.</returns>
         private bool ReadTranslations()
         {
+            var deserializedTranslations = FileHelper.DeserializeObject<Dictionary<string, Translation>>("TranslationLookup");
+            if (deserializedTranslations != null)
+            {
+                TranslationLookup = deserializedTranslations;
+                return true;
+            }
             TranslationLookup = new Dictionary<string, Translation>();
             var translationFile = FileHelper.GetPath(@"English\Localization\English\english.xml");
             if (File.Exists(translationFile))
@@ -127,6 +133,7 @@ namespace bg3_modders_multitool.Services
                         }
                     }
                     TranslationLookup = Translations.ToDictionary(go => go.ContentUid);
+                    FileHelper.SerializeObject(TranslationLookup, "TranslationLookup");
                     return true;
                 }
             }
