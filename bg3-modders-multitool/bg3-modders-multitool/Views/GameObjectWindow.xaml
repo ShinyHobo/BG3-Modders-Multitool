@@ -20,9 +20,9 @@
         </ComboBox>
         <Grid Margin="10,0,0,10" Width="535" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" MinHeight="250" />
+                <RowDefinition Height="*" MinHeight="270" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="*" MinHeight="180"/>
+                <RowDefinition Height="*" MinHeight="160"/>
             </Grid.RowDefinitions>
             <TreeView x:Name="treeView" Margin="0,68,0,5" Width="535" HorizontalAlignment="Left" ItemsSource="{Binding GameObjects}" VerticalContentAlignment="Stretch"
                       VirtualizingStackPanel.IsVirtualizing="True">
@@ -115,12 +115,6 @@
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Description.Value, Mode=OneWay}" Background="Transparent" Margin="70,0,0,0"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </Grid>
-                    <Grid Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="Stats:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Stats.Value, Mode=OneWay}" Background="Transparent" Margin="35,0,0,0"
-                                                 Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
                 </StackPanel>
             </ScrollViewer>
         </Grid>
@@ -128,10 +122,18 @@
         <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="470,38,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
         <TextBlock x:Name="listCountBlock" HorizontalAlignment="Left" Margin="470,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="73"/>
         <TabControl x:Name="tabBox" Margin="550,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <TabItem Header="Stats">
-                <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False"/>
+            <TabItem Header="Stats" Cursor="Hand">
+                <Grid>
+                    <Grid Margin="0,20,0,0">
+                        <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False" ShowTitle="False"/>
+                    </Grid>
+                    <Grid>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Stats.Value, Mode=OneWay}" Background="Transparent" FontWeight="Bold"
+                                                Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
+                    </Grid>
+                </Grid>
             </TabItem>
-            <TabItem Header="Icon">
+            <TabItem Header="Icon" Cursor="Hand">
                 <StackPanel>
                     <Grid Margin="0,10,0,10">
                         <Image Width="200" Source="{Binding Icon}"/>

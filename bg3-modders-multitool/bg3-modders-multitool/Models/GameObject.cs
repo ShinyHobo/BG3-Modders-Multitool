@@ -13,6 +13,10 @@ namespace bg3_modders_multitool.Models
     {
         #region Parameters
         public string Pak { get; set; }
+        public List<GameObject> Children { get; set; }
+        public Guid RaceUUID { get; set; }
+        public GameObjectType Type { get; set; }
+        public float Scale { get; set; }
         public StringType MapKey { get; set; }
         public StringType ParentTemplateId { get; set; }
         public StringType Name { get; set; }
@@ -20,17 +24,13 @@ namespace bg3_modders_multitool.Models
         public StringType DisplayName { get; set; }
         public StringType DescriptionHandle { get; set; }
         public StringType Description { get; set; }
-        public GameObjectType Type { get; set; }
         public StringType Icon { get; set; }
         public StringType Stats { get; set; }
-        public Guid RaceUUID { get; set; }
         public StringType CharacterVisualResourceID { get; set; }
         public StringType LevelName { get; set; }
-        public float Scale { get; set; }
         public StringType TitleHandle { get; set; }
-        public string Title { get; set; }
+        public StringType Title { get; set; }
         public StringType PhysicsTemplate { get; set; }
-        public List<GameObject> Children { get; set; }
 
         /// <summary>
         /// Gets the full depth of the tree.

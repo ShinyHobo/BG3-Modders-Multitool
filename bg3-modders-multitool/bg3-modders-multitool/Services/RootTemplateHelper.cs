@@ -193,6 +193,8 @@ namespace bg3_modders_multitool.Services
 
                                 if (string.IsNullOrEmpty(gameObject.Name.Value))
                                     gameObject.Name.Value = gameObject.DisplayName?.Value;
+                                if (string.IsNullOrEmpty(gameObject.Name.Value))
+                                    gameObject.Name.Value = gameObject.Stats?.Value;
 
                                 lock (GameObjects)
                                 {
