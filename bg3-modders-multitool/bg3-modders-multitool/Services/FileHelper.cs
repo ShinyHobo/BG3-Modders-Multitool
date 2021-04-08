@@ -184,7 +184,7 @@ namespace bg3_modders_multitool.Services
                 TextWriter writer = null;
                 try
                 {
-                    var contentsToWriteToFile = JsonConvert.SerializeObject(serialObject);
+                    var contentsToWriteToFile = JsonConvert.SerializeObject(serialObject, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                     writer = new StreamWriter(file, false);
                     writer.Write(contentsToWriteToFile);
                 }

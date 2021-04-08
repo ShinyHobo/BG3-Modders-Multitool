@@ -71,7 +71,7 @@ namespace bg3_modders_multitool.Services
         public async Task<string> LoadRootTemplates()
         {
             return await Task.Run(() => {
-                GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().ToList();
+                GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
                 ReadTranslations();
                 ReadRootTemplate();
                 foreach (var pak in Paks)
@@ -83,7 +83,6 @@ namespace bg3_modders_multitool.Services
                 {
                     GeneralHelper.WriteToConsole($"No valid texture atlases found. Unpack Icons.pak to generate icons.\n");
                 }
-                ReadRaces("Shared");
                 SortRootTemplate();
                 Loaded = true;
                 return string.Join(",", GameObjectAttributes.Values.GroupBy(g => g).Select(g => g.Last()).ToList());
@@ -167,7 +166,7 @@ namespace bg3_modders_multitool.Services
                             if(reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.GetAttribute("id") == "GameObjects")
                             {
                                 var xml = (XElement)XNode.ReadFrom(reader);
-                                var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>() };
+                                var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty) };
                                 var attributes = xml.Elements().Where(x => x.Name == "attribute");
 
                                 foreach(XElement attribute in attributes)
@@ -235,7 +234,6 @@ namespace bg3_modders_multitool.Services
                 }
                 GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
                 GameObjects.RemoveAll(go => go == null);
-                GameObjectTypes = GameObjectTypes.OrderBy(got => got).ToList();
                 GameObjects = GameObjects.OrderBy(go => go.Name.Value).ToList();
                 FlatGameObjects = GameObjects;
                 FileHelper.SerializeObject(FlatGameObjects, "FlatGameObjects");

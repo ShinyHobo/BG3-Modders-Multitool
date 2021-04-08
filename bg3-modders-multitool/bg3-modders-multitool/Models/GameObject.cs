@@ -14,9 +14,8 @@ namespace bg3_modders_multitool.Models
         #region Parameters
         public string Pak { get; set; }
         public List<GameObject> Children { get; set; }
-        public Guid RaceUUID { get; set; }
         public GameObjectType Type { get; set; }
-        public float Scale { get; set; }
+        public string FileLocation { get; set; }
         public StringType MapKey { get; set; }
         public StringType ParentTemplateId { get; set; }
         public StringType Name { get; set; }
