@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.Services
 {
     using bg3_modders_multitool.ViewModels;
     using System.Windows;
+    using System.Windows.Media;
 
     public static class GeneralHelper
     {
@@ -20,26 +21,25 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
-        /// Locates the first UI element of a given type recursively.
+        /// Locates the first UI element with a given UID recursively.
         /// </summary>
-        /// <typeparam name="T">The type of object to return</typeparam>
-        /// <param name="obj">The object to search</param>
-        /// <returns>The object</returns>
-        public static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        /// <param name="parent">The object to search</param>
+        /// <param name="uid">The UID to search for.</param>
+        /// <returns>The object.</returns>
+        public static UIElement FindUid(this DependencyObject parent, string uid)
         {
-            if (obj != null)
-            {
-                for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(obj); i++)
-                {
-                    var child = System.Windows.Media.VisualTreeHelper.GetChild(obj, i);
-                    if (child is T)
-                    {
-                        return (T)child;
-                    }
+            var count = VisualTreeHelper.GetChildrenCount(parent);
+            if (count == 0) return null;
 
-                    T childItem = FindVisualChild<T>(child);
-                    if (childItem != null) return childItem;
-                }
+            for (int i = 0; i < count; i++)
+            {
+                var el = VisualTreeHelper.GetChild(parent, i) as UIElement;
+                if (el == null) continue;
+
+                if (el.Uid == uid) return el;
+
+                el = el.FindUid(uid);
+                if (el != null) return el;
             }
             return null;
         }
