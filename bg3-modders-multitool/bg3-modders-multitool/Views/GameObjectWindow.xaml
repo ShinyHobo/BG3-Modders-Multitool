@@ -25,12 +25,12 @@
                 <RowDefinition Height="*" MinHeight="197"/>
             </Grid.RowDefinitions>
             <TreeView x:Name="treeView" Margin="0,68,0,5" Width="535" HorizontalAlignment="Left" ItemsSource="{Binding GameObjects}" VerticalContentAlignment="Stretch"
-                      VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                      VirtualizingStackPanel.IsVirtualizing="True">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Name.Value}" Margin="0,0,5,0" Background="Transparent"></TextBlock>
-                            <Button x:Name="exploreMore" Background="White" BorderBrush="White" Uid="{Binding MapKey.Value}" Cursor="Hand" Click="ExploreMore_Click">
+                            <Button Background="White" BorderBrush="White" Uid="{Binding MapKey.Value}" Cursor="Hand" Click="ExploreMore_Click" Loaded="ItemSelectionButton_Loaded" >
                                 <TextBlock Text="(+)" HorizontalAlignment="Stretch"></TextBlock>
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">

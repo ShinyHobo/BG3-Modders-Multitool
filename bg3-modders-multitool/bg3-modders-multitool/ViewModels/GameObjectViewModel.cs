@@ -124,7 +124,7 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        public Button DisabledButton { get; set; }
+        public int DisabledItem { get; set; };
         #endregion
     }
 }
