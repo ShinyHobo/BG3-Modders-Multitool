@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
@@ -111,12 +112,6 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the translation file was read.</returns>
         private bool ReadTranslations()
         {
-            var deserializedTranslations = FileHelper.DeserializeObject<Dictionary<string, Translation>>("TranslationLookup");
-            if (deserializedTranslations != null)
-            {
-                TranslationLookup = deserializedTranslations;
-                return true;
-            }
             TranslationLookup = new Dictionary<string, Translation>();
             var translationFile = FileHelper.GetPath(@"English\Localization\English\english.xml");
             if (File.Exists(translationFile))
@@ -133,7 +128,6 @@ namespace bg3_modders_multitool.Services
                         }
                     }
                     TranslationLookup = Translations.ToDictionary(go => go.ContentUid);
-                    FileHelper.SerializeObject(TranslationLookup, "TranslationLookup");
                     return true;
                 }
             }
@@ -154,6 +148,9 @@ namespace bg3_modders_multitool.Services
                 return true;
             }
             var rootTemplates = GetRootTemplateFileList();
+            var typeBag = new ConcurrentBag<string>();
+            var idBag = new ConcurrentBag<string>();
+            var classBag = new ConcurrentBag<Tuple<string, string>>();
             Parallel.ForEach(rootTemplates, rootTemplate =>
             {
                 if (File.Exists(rootTemplate))
@@ -179,6 +176,9 @@ namespace bg3_modders_multitool.Services
                                     var handle = attribute.Attribute("handle")?.Value;
                                     var value = handle ?? attribute.Attribute("value").Value;
                                     var type = attribute.Attribute("type").Value;
+                                    typeBag.Add(type);
+                                    idBag.Add(id);
+                                    classBag.Add(new Tuple<string, string>(id, type));
                                     if (string.IsNullOrEmpty(handle))
                                     {
                                         gameObject.LoadProperty(id, type, value);
@@ -208,7 +208,11 @@ namespace bg3_modders_multitool.Services
                     }
                 }
             });
-
+            #if DEBUG
+            FileHelper.SerializeObject(typeBag.ToList().Distinct().ToList(), "GameObjectTypes");
+            FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
+            GeneralHelper.ClassBuilder(classBag.ToList().Distinct().ToList());
+            #endif
             return true;
         }
 
@@ -224,7 +228,8 @@ namespace bg3_modders_multitool.Services
                 if (deserializedFlatGameObjects != null)
                 {
                     FlatGameObjects = deserializedFlatGameObjects;
-                    return true;
+                    if(File.Exists("Cache/GameObjects.json"))
+                        return true;
                 }
                 GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
                 GameObjects.RemoveAll(go => go == null);
