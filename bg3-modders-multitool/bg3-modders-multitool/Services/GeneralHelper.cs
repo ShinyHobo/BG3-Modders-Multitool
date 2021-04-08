@@ -4,6 +4,10 @@
 namespace bg3_modders_multitool.Services
 {
     using bg3_modders_multitool.ViewModels;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Media;
 
@@ -42,6 +46,79 @@ namespace bg3_modders_multitool.Services
                 if (el != null) return el;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Creates a file containing class properties for GameObjects. For development use.
+        /// </summary>
+        /// <param name="attributeClasses">The distinct list of ids and types</param>
+        public static void ClassBuilder(List<Tuple<string, string>> attributeClasses)
+        {
+            FileHelper.SerializeObject(attributeClasses, "GameObjectAttributeClasses");
+            var classList = string.Empty;
+            foreach (var attribute in attributeClasses.OrderBy(at => at.Item1))
+            {
+                if (!char.IsLetter(attribute.Item1[0]))
+                    continue;
+                var type = string.Empty;
+
+                switch (attribute.Item2)
+                {
+                    case "guid":
+                        type = "Guid";
+                        break;
+                    case "bool":
+                        type = "bool";
+                        break;
+                    case "float":
+                        type = "float";
+                        break;
+                    case "int8":
+                        type = "sbyte";
+                        break;
+                    case "int16":
+                        type = "Int16";
+                        break;
+                    case "int32":
+                        type = "int";
+                        break;
+                    case "uint8":
+                        type = "byte";
+                        break;
+                    case "uint32":
+                        type = "uint";
+                        break;
+                    case "uint64":
+                        type = "ulong";
+                        break;
+                    case "fvec2":
+                        type = "Tuple<float, float>";
+                        break;
+                    case "fvec3":
+                        type = "Tuple<float, float, float>";
+                        break;
+                    case "fvec4":
+                        type = "Tuple<float, float, float, float>";
+                        break;
+                    case "FixedString":
+                    case "LSString":
+                    case "TranslatedString":
+                        type = "StringType";
+                        break;
+                    default:
+                        throw new Exception($"Attribute type not covered: {attribute.Item2}");
+                }
+                var camelCaseId = char.ToLowerInvariant(attribute.Item1[0]) + attribute.Item1.Substring(1);
+                classList += $"private {type} _{camelCaseId};\n\n" +
+                                $"public {type} {attribute.Item1} {{\n" +
+                                $"\tget {{ return _{camelCaseId}; }}\n" +
+                                $"\tset {{ _{camelCaseId} = value; }}\n" +
+                                $"}}\n\n";
+
+            }
+            if (!Directory.Exists("Development"))
+                Directory.CreateDirectory("Development");
+            File.WriteAllText("Development/classList.txt", classList);
         }
     }
 }
