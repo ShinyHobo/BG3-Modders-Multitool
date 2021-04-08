@@ -81,7 +81,7 @@ namespace bg3_modders_multitool.Views
                 var disabledButton = GeneralHelper.FindUid(treeView, vm.SelectedKey);
                 if (disabledButton != null)
                     disabledButton.IsEnabled = true;
-                vm.Info = vm.RootTemplateHelper.FlatGameObjects.Single(go => go.MapKey.Value == MapKey);
+                vm.Info = vm.FindGameObject(MapKey);
                 vm.SelectedKey = MapKey;
                 button.IsEnabled = false;
             }

@@ -9,7 +9,6 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Services;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Windows.Controls;
     using System.Windows.Media.Imaging;
 
     public class GameObjectViewModel : BaseViewModel
@@ -48,6 +47,43 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
+        /// <summary>
+        /// Finds a given gameobject by its mapkey.
+        /// </summary>
+        /// <param name="mapKey">The mapkey to search for.</param>
+        /// <returns>The gameobject.</returns>
+        public GameObject FindGameObject(string mapKey)
+        {
+            foreach (var gameObject in RootTemplateHelper.GameObjects)
+            {
+                var found = SearchGameObject(gameObject, mapKey);
+                if (found != null)
+                    return found;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Searches through gameobject and children for a given mapkey.
+        /// </summary>
+        /// <param name="gameObject">The gameobject to search on.</param>
+        /// <param name="mapKey">The mapkey to find.</param>
+        /// <returns>The matching gameobject.</returns>
+        private GameObject SearchGameObject(GameObject gameObject, string mapKey)
+        {
+            if (gameObject == null)
+                return null;
+            if (gameObject.MapKey.Value == mapKey)
+                return gameObject;
+            foreach (var child in gameObject.Children)
+            {
+                var found = SearchGameObject(child, mapKey);
+                if (found != null)
+                    return found;
+            }
+            return null;
+        }
+
         #region Properties
         public RootTemplateHelper RootTemplateHelper;
 
@@ -77,6 +113,7 @@ namespace bg3_modders_multitool.ViewModels
             get { return _info; }
             set {
                 _info = value;
+                var autoGenGameObject = new AutoGenGameObject(value.FileLocation);
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats?.Value);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon?.Value))?.GetIcon(Info.Icon?.Value);
                 OnNotifyPropertyChanged();
