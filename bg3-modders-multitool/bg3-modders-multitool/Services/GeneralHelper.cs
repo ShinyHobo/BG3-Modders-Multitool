@@ -77,7 +77,7 @@ namespace bg3_modders_multitool.Services
                         type = "sbyte";
                         break;
                     case "int16":
-                        type = "Int16";
+                        type = "short";
                         break;
                     case "int32":
                         type = "int";
@@ -103,13 +103,13 @@ namespace bg3_modders_multitool.Services
                     case "FixedString":
                     case "LSString":
                     case "TranslatedString":
-                        type = "StringType";
+                        type = attribute.Item2;
                         break;
                     default:
                         throw new Exception($"Attribute type not covered: {attribute.Item2}");
                 }
                 var camelCaseId = char.ToLowerInvariant(attribute.Item1[0]) + attribute.Item1.Substring(1);
-                classList += $"private {type} _{camelCaseId};\n\n" +
+                classList +=    $"private {type} _{camelCaseId};\n\n" +
                                 $"public {type} {attribute.Item1} {{\n" +
                                 $"\tget {{ return _{camelCaseId}; }}\n" +
                                 $"\tset {{ _{camelCaseId} = value; }}\n" +

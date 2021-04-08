@@ -73,7 +73,7 @@ namespace bg3_modders_multitool.ViewModels
         {
             if (gameObject == null)
                 return null;
-            if (gameObject.MapKey.Value == mapKey)
+            if (gameObject.MapKey == mapKey)
                 return gameObject;
             foreach (var child in gameObject.Children)
             {
@@ -113,9 +113,20 @@ namespace bg3_modders_multitool.ViewModels
             get { return _info; }
             set {
                 _info = value;
-                var autoGenGameObject = new AutoGenGameObject(value.FileLocation);
-                Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats?.Value);
-                Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon?.Value))?.GetIcon(Info.Icon?.Value);
+                AutoGenGameObject = new AutoGenGameObject(value.FileLocation, value.MapKey);
+                var properties = AutoGenGameObject.LoadedProperties;
+                Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
+                Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private AutoGenGameObject _autoGenGameObject;
+
+        public AutoGenGameObject AutoGenGameObject {
+            get { return _autoGenGameObject; }
+            set {
+                _autoGenGameObject = value;
                 OnNotifyPropertyChanged();
             }
         }

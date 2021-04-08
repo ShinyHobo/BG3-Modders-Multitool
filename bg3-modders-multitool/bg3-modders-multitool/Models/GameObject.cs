@@ -16,20 +16,18 @@ namespace bg3_modders_multitool.Models
         public List<GameObject> Children { get; set; }
         public GameObjectType Type { get; set; }
         public string FileLocation { get; set; }
-        public StringType MapKey { get; set; }
-        public StringType ParentTemplateId { get; set; }
-        public StringType Name { get; set; }
-        public StringType DisplayNameHandle { get; set; }
-        public StringType DisplayName { get; set; }
-        public StringType DescriptionHandle { get; set; }
-        public StringType Description { get; set; }
-        public StringType Icon { get; set; }
-        public StringType Stats { get; set; }
-        public StringType CharacterVisualResourceID { get; set; }
-        public StringType LevelName { get; set; }
-        public StringType TitleHandle { get; set; }
-        public StringType Title { get; set; }
-        public StringType PhysicsTemplate { get; set; }
+        public string MapKey { get; set; }
+        public string ParentTemplateId { get; set; }
+        public string Name { get; set; }
+        public string DisplayNameHandle { get; set; }
+        public string DisplayName { get; set; }
+        public string DescriptionHandle { get; set; }
+        public string Description { get; set; }
+        public string Icon { get; set; }
+        public string Stats { get; set; }
+        public string CharacterVisualResourceID { get; set; }
+        public string TitleHandle { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets the full depth of the tree.
@@ -70,11 +68,11 @@ namespace bg3_modders_multitool.Models
         {
             foreach (var go in Children)
             {
-                if (string.IsNullOrEmpty(go.Stats?.Value))
+                if (string.IsNullOrEmpty(go.Stats))
                 {
                     go.Stats = Stats;
                 }
-                if (string.IsNullOrEmpty(go.Icon?.Value))
+                if (string.IsNullOrEmpty(go.Icon))
                 {
                     go.Icon = Icon;
                 }
@@ -121,16 +119,16 @@ namespace bg3_modders_multitool.Models
         /// <returns></returns>
         private bool FindMatch(string filter)
         {
-            return Name?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+            return Name?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    Pak.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   MapKey?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   ParentTemplateId?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   DisplayNameHandle?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   DisplayName?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   DescriptionHandle?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   Description?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   Icon?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   Stats?.Value?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0;
+                   MapKey?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   ParentTemplateId?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   DisplayNameHandle?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   DisplayName?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   DescriptionHandle?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   Description?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   Icon?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                   Stats?.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase) >= 0;
         }
         #endregion
 

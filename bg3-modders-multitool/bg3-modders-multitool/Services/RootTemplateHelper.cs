@@ -20,7 +20,7 @@ namespace bg3_modders_multitool.Services
 
     public class RootTemplateHelper
     {
-        private Dictionary<string, Translation> TranslationLookup;
+        private List<Translation> Translations = new List<Translation>();
         private readonly string[] Paks = { "Shared","Gustav" };
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
         private bool Loaded = false;
@@ -28,7 +28,7 @@ namespace bg3_modders_multitool.Services
         private ConcurrentBag<GameObject> GameObjectBag = new ConcurrentBag<GameObject>();
         public List<GameObject> GameObjects = new List<GameObject>();
         public List<GameObjectType> GameObjectTypes { get; private set; } = new List<GameObjectType>();
-        public List<Translation> Translations { get; private set; } = new List<Translation>();
+        public Dictionary<string, Translation> TranslationLookup;
         public List<Race> Races { get; private set; } = new List<Race>();
         public List<Models.StatStructures.StatStructure> StatStructures { get; private set; } = new List<Models.StatStructures.StatStructure>();
         public List<TextureAtlas> TextureAtlases { get; private set; } = new List<TextureAtlas>();
@@ -195,10 +195,10 @@ namespace bg3_modders_multitool.Services
                                     }
                                 }
 
-                                if (string.IsNullOrEmpty(gameObject.Name.Value))
-                                    gameObject.Name.Value = gameObject.DisplayName?.Value;
-                                if (string.IsNullOrEmpty(gameObject.Name.Value))
-                                    gameObject.Name.Value = gameObject.Stats?.Value;
+                                if (string.IsNullOrEmpty(gameObject.Name))
+                                    gameObject.Name = gameObject.DisplayName;
+                                if (string.IsNullOrEmpty(gameObject.Name))
+                                    gameObject.Name = gameObject.Stats;
 
                                 GameObjectBag.Add(gameObject);
                                 reader.Skip();
@@ -228,16 +228,16 @@ namespace bg3_modders_multitool.Services
             if (GameObjectsCached)
                 return true;
             GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
-            GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name?.Value)).ThenBy(go => go.Name.Value).ToList();
-            var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId?.Value)).ToList();
+            GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name).ToList();
+            var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
             var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
-            Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name?.Value)).ThenBy(go => go.Name.Value), gameObject =>
+            Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name), gameObject =>
             {
-                var goChildren = lookup.First(l => l.Key.Value == gameObject.ParentTemplateId?.Value).Value.Children;
+                var goChildren = lookup.First(l => l.Key == gameObject.ParentTemplateId).Value.Children;
                 lock (goChildren)
                     goChildren.Add(gameObject);
             });
-            GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId?.Value)).ToList();
+            GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
             foreach(var gameObject in GameObjects)
             {
                 gameObject.PassOnStats();
