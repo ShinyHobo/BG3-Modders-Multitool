@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
+    using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using System.Linq;
     using System.Windows;
@@ -34,6 +35,7 @@ namespace bg3_modders_multitool.Views
                 searchBox.Text = string.Empty;
                 ToggleControls();
                 var vm = DataContext as GameObjectViewModel;
+                vm.DisabledItem = -1;
                 vm.GameObjects = vm.UnfilteredGameObjects = await vm.RootTemplateHelper.LoadRelevent((Enums.GameObjectType)combo.SelectedItem);
                 listCountBlock.Text = $"{vm.GameObjects.Sum(x => x.Count())} Results";
                 ToggleControls(true);
@@ -74,11 +76,21 @@ namespace bg3_modders_multitool.Views
         {
             var button = (Button)sender;
             var vm = DataContext as GameObjectViewModel;
-            if (vm.DisabledButton != null)
-                vm.DisabledButton.IsEnabled = true;
-            vm.DisabledButton = button;
+            var MapKey = button.Uid;
+            
+            if(vm.DisabledItem >= 0)
+            {
+                var oldItem = treeView.ItemContainerGenerator.ContainerFromIndex(vm.DisabledItem);
+                if(oldItem != null)
+                {
+                    var child = (TreeViewItem)oldItem;
+                    var oldButton = GeneralHelper.FindVisualChild<Button>(child);
+                    oldButton.IsEnabled = true;
+                }
+            }
             button.IsEnabled = false;
-            var MapKey = ((Button)sender).Uid;
+
+            vm.DisabledItem = treeView.Items.IndexOf(((StackPanel)button.Parent).DataContext);
             vm.Info = vm.RootTemplateHelper.FlatGameObjects.Single(go => go.MapKey.Value == MapKey);
         }
 
@@ -94,6 +106,22 @@ namespace bg3_modders_multitool.Views
         {
             var vm = DataContext as GameObjectViewModel;
             vm.Clear();
+        }
+
+        /// <summary>
+        /// Disables button when it is loaded by the VirtualizingStackPanel.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private void ItemSelectionButton_Loaded(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as GameObjectViewModel;
+            var button = (Button)sender;
+            var item = treeView.Items.IndexOf(((StackPanel)button.Parent).DataContext);
+            if (vm.DisabledItem == item)
+            {
+                button.IsEnabled = false;
+            }
         }
         #endregion
 
