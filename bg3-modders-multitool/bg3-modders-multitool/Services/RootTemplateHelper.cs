@@ -20,13 +20,14 @@ namespace bg3_modders_multitool.Services
 
     public class RootTemplateHelper
     {
-        private List<GameObject> GameObjects = new List<GameObject>();
         private Dictionary<string, Translation> TranslationLookup;
         private readonly string[] Paks = { "Shared","Gustav" };
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
         private bool Loaded = false;
+        private bool GameObjectsCached = false;
+        private ConcurrentBag<GameObject> GameObjectBag = new ConcurrentBag<GameObject>();
+        public List<GameObject> GameObjects = new List<GameObject>();
         public List<GameObjectType> GameObjectTypes { get; private set; } = new List<GameObjectType>();
-        public List<GameObject> FlatGameObjects { get; private set; } = new List<GameObject>();
         public List<Translation> Translations { get; private set; } = new List<Translation>();
         public List<Race> Races { get; private set; } = new List<Race>();
         public List<Models.StatStructures.StatStructure> StatStructures { get; private set; } = new List<Models.StatStructures.StatStructure>();
@@ -58,7 +59,6 @@ namespace bg3_modders_multitool.Services
         {
             GameObjects.Clear();
             TranslationLookup.Clear();
-            FlatGameObjects.Clear();
             Translations.Clear();
             Races.Clear();
             StatStructures.Clear();
@@ -144,12 +144,15 @@ namespace bg3_modders_multitool.Services
             if(deserializedGameObjects != null)
             {
                 GameObjects = deserializedGameObjects;
+                GameObjectsCached = true;
                 return true;
             }
             var rootTemplates = GetRootTemplateFileList();
             var typeBag = new ConcurrentBag<string>();
+            #if DEBUG
             var idBag = new ConcurrentBag<string>();
             var classBag = new ConcurrentBag<Tuple<string, string>>();
+            #endif
             Parallel.ForEach(rootTemplates, rootTemplate =>
             {
                 if (File.Exists(rootTemplate))
@@ -175,9 +178,11 @@ namespace bg3_modders_multitool.Services
                                     var handle = attribute.Attribute("handle")?.Value;
                                     var value = handle ?? attribute.Attribute("value").Value;
                                     var type = attribute.Attribute("type").Value;
+                                    #if DEBUG
                                     typeBag.Add(type);
                                     idBag.Add(id);
                                     classBag.Add(new Tuple<string, string>(id, type));
+                                    #endif
                                     if (string.IsNullOrEmpty(handle))
                                     {
                                         gameObject.LoadProperty(id, type, value);
@@ -195,11 +200,8 @@ namespace bg3_modders_multitool.Services
                                 if (string.IsNullOrEmpty(gameObject.Name.Value))
                                     gameObject.Name.Value = gameObject.Stats?.Value;
 
-                                lock (GameObjects)
-                                {
-                                    GameObjects.Add(gameObject);
-                                    reader.Skip();
-                                }
+                                GameObjectBag.Add(gameObject);
+                                reader.Skip();
                             }
                             else
                             {
@@ -223,38 +225,26 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the GameObjects list was sorted.</returns>
         private bool SortRootTemplate()
         {
-            if(GameObjects != null)
-            {
-                var deserializedFlatGameObjects = FileHelper.DeserializeObject<List<GameObject>>("FlatGameObjects");
-                if (deserializedFlatGameObjects != null)
-                {
-                    FlatGameObjects = deserializedFlatGameObjects;
-                    if(File.Exists("Cache/GameObjects.json"))
-                        return true;
-                }
-                GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
-                GameObjects.RemoveAll(go => go == null);
-                GameObjects = GameObjects.OrderBy(go => go.Name.Value).ToList();
-                FlatGameObjects = GameObjects;
-                FileHelper.SerializeObject(FlatGameObjects, "FlatGameObjects");
-                var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId?.Value)).ToList();
-                var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
-                Parallel.ForEach(children, gameObject =>
-                {
-                    var goChildren = lookup.First(l => l.Key.Value == gameObject.ParentTemplateId?.Value).Value.Children;
-                    lock (goChildren)
-                        goChildren.Add(gameObject);
-                });
-                GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId?.Value)).ToList();
-                foreach(var gameObject in GameObjects)
-                {
-                    gameObject.PassOnStats();
-                }
-                FileHelper.SerializeObject(GameObjects, "GameObjects");
-                
+            if (GameObjectsCached)
                 return true;
+            GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
+            GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name?.Value)).ThenBy(go => go.Name.Value).ToList();
+            var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId?.Value)).ToList();
+            var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
+            Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name?.Value)).ThenBy(go => go.Name.Value), gameObject =>
+            {
+                var goChildren = lookup.First(l => l.Key.Value == gameObject.ParentTemplateId?.Value).Value.Children;
+                lock (goChildren)
+                    goChildren.Add(gameObject);
+            });
+            GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId?.Value)).ToList();
+            foreach(var gameObject in GameObjects)
+            {
+                gameObject.PassOnStats();
             }
-            return false;
+            FileHelper.SerializeObject(GameObjects, "GameObjects");
+                
+            return true;
         }
 
         /// <summary>
