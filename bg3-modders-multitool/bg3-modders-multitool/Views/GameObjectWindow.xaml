@@ -20,9 +20,9 @@
         </ComboBox>
         <Grid Margin="10,0,0,10" Width="535" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" MinHeight="235" />
+                <RowDefinition Height="*" MinHeight="250" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="*" MinHeight="197"/>
+                <RowDefinition Height="*" MinHeight="180"/>
             </Grid.RowDefinitions>
             <TreeView x:Name="treeView" Margin="0,68,0,5" Width="535" HorizontalAlignment="Left" ItemsSource="{Binding GameObjects}" VerticalContentAlignment="Stretch"
                       VirtualizingStackPanel.IsVirtualizing="True">
@@ -117,12 +117,6 @@
                     </Grid>
                     <Grid Margin="0,1,0,1">
                         <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="Icon:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Icon.Value, Mode=OneWay}" Background="Transparent" Margin="32,0,0,0"
-                                                 Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                    <Grid Background="AliceBlue" Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
                         <TextBlock Text="Stats:" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Stats.Value, Mode=OneWay}" Background="Transparent" Margin="35,0,0,0"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
@@ -138,7 +132,17 @@
                 <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False"/>
             </TabItem>
             <TabItem Header="Icon">
-                <Image Width="200" Source="{Binding Icon}"/>
+                <StackPanel>
+                    <Grid Margin="0,10,0,10">
+                        <Image Width="200" Source="{Binding Icon}"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,0">
+                        <Border BorderBrush="Black" BorderThickness="0 1 0 0" Margin="-3,-1,-3,-1"></Border>
+                        <TextBlock Text="Icon:" FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Icon.Value, Mode=OneWay}" Background="Transparent" Margin="32,0,0,0"
+                                                 Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
+                    </Grid>
+                </StackPanel>
             </TabItem>
         </TabControl>
     </Grid>
