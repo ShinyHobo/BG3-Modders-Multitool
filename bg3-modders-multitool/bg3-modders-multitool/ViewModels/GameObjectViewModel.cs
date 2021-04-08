@@ -124,7 +124,7 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        public int DisabledItem { get; set; };
+        public string SelectedKey { get; set; }
         #endregion
     }
 }
