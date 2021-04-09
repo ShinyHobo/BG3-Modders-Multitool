@@ -43,7 +43,9 @@ namespace bg3_modders_multitool.Models
                                     var type = attribute.Attribute("type").Value;
                                     this.LoadProperty(id, type, value);
                                 }
-                            }
+								LoadChildren(xml);
+
+							}
                             reader.Skip();
                         }
                         else
@@ -55,91 +57,96 @@ namespace bg3_modders_multitool.Models
             }
         }
 
+		private void LoadChildren(XElement parent)
+        {
+			var children = parent.Element("children");
+			if(children != null)
+            {
+				var nodes = children.Elements("node");
+				foreach(XElement node in nodes)
+                {
+					// create child and attach to parent
+					LoadChildren(node);
+				}
+            }
+			var attributes = parent.Elements().Where(x => x.Name == "attribute");
+			if(attributes.Any())
+            {
+				// load attributes on parent here
+            }
+        }
+
 		/// <summary>
 		/// Loads properties using reflection.
 		/// </summary>
 		/// <param name="id">The property name to match.</param>
 		/// <param name="type">The property type to match.</param>
 		/// <param name="value">The value to assign the matched property.</param>
-		public void LoadProperty(string id, string type, string value)
+		private void LoadProperty(string id, string type, string value)
 		{
 			if (type != null && char.IsLetter(id[0]))
 			{
 				var property = GetType().GetProperty(id);
 				if (property != null)
 				{
-					LoadedProperties.Add(id);
 					var propertyType = property.PropertyType;
-					if (type.Contains("String"))
-					{
-						if (propertyType.IsEnum)
-						{
-							property.SetValue(this, Enum.Parse(property.PropertyType, value), null);
-						}
-						else
-						{
-							var method = propertyType.GetMethod("FromString", new Type[] { typeof(string) });
-							if (method != null)
-                            {
-								property.SetValue(this, method.Invoke(null, new object[] { value }));
-							}
-							else if (propertyType == typeof(string))
-							{
-								property.SetValue(this, value);
-							}
-							else
-							{
-								property.SetValue(this, new StringType(value, type));
-							}
-						}
+					object propertyValue = null;
+					switch(type) {
+						case "LSString":
+							propertyValue = new LSString(value);
+							break;
+						case "FixedString":
+							propertyValue = new FixedString(value);
+							break;
+						case "TranslatedString":
+							propertyValue = new TranslatedString(value);
+							break;
+						case "int8":
+							propertyValue = sbyte.Parse(value);
+							break;
+						case "short":
+							propertyValue = short.Parse(value);
+							break;
+						case "int32":
+							propertyValue = int.Parse(value);
+							break;
+						case "uint8":
+							propertyValue = byte.Parse(value);
+							break;
+						case "uint32":
+							propertyValue = uint.Parse(value);
+							break;
+						case "uint64":
+							propertyValue = ulong.Parse(value);
+							break;
+                        case "bool":
+							propertyValue = bool.Parse(value);
+							break;
+						case "guid":
+							propertyValue = new Guid(value);
+							break;
+						case "float":
+							propertyValue = float.Parse(value);
+							break;
+						case "fvec2":
+							var fvec2 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+							propertyValue = new Tuple<float, float>(fvec2[0], fvec2[1]);
+							break;
+						case "fvec3":
+							var fvec3 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+							propertyValue = new Tuple<float, float, float>(fvec3[0], fvec3[1], fvec3[2]);
+							break;
+						case "fvec4":
+							var fvec4 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+							propertyValue = new Tuple<float, float, float, float>(fvec4[0], fvec4[1], fvec4[2], fvec4[3]);
+							break;
+						default:
+							GeneralHelper.WriteToConsole($"GameObject property [{id}] not covered.\n");
+							break;
 					}
-					else
-                    {
-						switch(type) {
-							case "int8":
-								property.SetValue(this, sbyte.Parse(value));
-								break;
-							case "short":
-								property.SetValue(this, short.Parse(value));
-								break;
-							case "int32":
-								property.SetValue(this, int.Parse(value));
-								break;
-							case "uint8":
-								property.SetValue(this, byte.Parse(value));
-								break;
-							case "uint32":
-								property.SetValue(this, uint.Parse(value));
-								break;
-							case "uint64":
-								property.SetValue(this, ulong.Parse(value));
-								break;
-                            case "bool":
-								property.SetValue(this, bool.Parse(value));
-								break;
-							case "guid":
-								property.SetValue(this, new Guid(value));
-								break;
-							case "float":
-								property.SetValue(this, float.Parse(value));
-								break;
-							case "fvec2":
-								var fvec2 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
-								property.SetValue(this, new Tuple<float, float>(fvec2[0], fvec2[1]));
-								break;
-							case "fvec3":
-								var fvec3 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
-								property.SetValue(this, new Tuple<float, float, float>(fvec3[0], fvec3[1], fvec3[2]));
-								break;
-							case "fvec4":
-								var fvec4 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
-								property.SetValue(this, new Tuple<float, float, float, float>(fvec4[0], fvec4[1], fvec4[2], fvec4[3]));
-								break;
-							default:
-								GeneralHelper.WriteToConsole($"GameObject property [{id}] not covered.\n");
-								break;
-						}
-                    }
+
+					property.SetValue(this, propertyValue);
+					LoadedProperties.Add(new GameObjectAttribute(id, propertyValue));
 				}
 				else
 				{
@@ -147,15 +154,14 @@ namespace bg3_modders_multitool.Models
 					GeneralHelper.WriteToConsole($"GameObject property [{id}] not covered.\n");
 					#endif
 				}
-
 			}
 		}
 
 		#region Properties
-		private List<string> _loadedProperties = new List<string>();
+		private List<GameObjectAttribute> _loadedProperties = new List<GameObjectAttribute>();
 
 		[Browsable(false)]
-		public List<string> LoadedProperties {
+		public List<GameObjectAttribute> LoadedProperties {
 			get { return _loadedProperties; }
 			set { _loadedProperties = value; }
         }
@@ -218,33 +224,19 @@ namespace bg3_modders_multitool.Models
 			set { _ambientSound = value; }
 		}
 
-		private float _amount;
+		private object _amount;
 
-		public float Amount {
+		public object Amount {
 			get { return _amount; }
 			set { _amount = value; }
 		}
 
-		//private int _amount;
+		private object _angle;
 
-		//public int Amount {
-		//	get { return _amount; }
-		//	set { _amount = value; }
-		//}
-
-		private Tuple<float, float> _angle;
-
-		public Tuple<float, float> Angle {
+		public object Angle {
 			get { return _angle; }
 			set { _angle = value; }
 		}
-
-		//private float _angle;
-
-		//public float Angle {
-		//	get { return _angle; }
-		//	set { _angle = value; }
-		//}
 
 		private float _angleCutoff;
 
@@ -561,19 +553,12 @@ namespace bg3_modders_multitool.Models
 			set { _defaultLifeTime = value; }
 		}
 
-		private FixedString _defaultState;
+		private object _defaultState;
 
-		public FixedString DefaultState {
+		public object DefaultState {
 			get { return _defaultState; }
 			set { _defaultState = value; }
 		}
-
-		//private byte _defaultState;
-
-		//public byte DefaultState {
-		//	get { return _defaultState; }
-		//	set { _defaultState = value; }
-		//}
 
 		private TranslatedString _description;
 
@@ -1667,16 +1652,9 @@ namespace bg3_modders_multitool.Models
 			set { _projectilePath = value; }
 		}
 
-		//private sbyte _race;
+		private object _race;
 
-		//public sbyte Race {
-		//	get { return _race; }
-		//	set { _race = value; }
-		//}
-
-		private Guid _race;
-
-		public Guid Race {
+		public object Race {
 			get { return _race; }
 			set { _race = value; }
 		}
