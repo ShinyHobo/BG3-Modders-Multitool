@@ -132,6 +132,12 @@ namespace bg3_modders_multitool.Models
         }
         #endregion
 
+        /// <summary>
+        /// Loads gameobject properties using reflection.
+        /// </summary>
+        /// <param name="id">The attribute id.</param>
+        /// <param name="type">The attribute type.</param>
+        /// <param name="value">The attribute value.</param>
         public void LoadProperty(string id, string type, string value)
         {
             if(type != null)
@@ -160,6 +166,72 @@ namespace bg3_modders_multitool.Models
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Converts a given xml attribute to the corresponding C# valuetype.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>The property.</returns>
+        public static object XmlToValue(string type, string value)
+        {
+            object propertyValue = null;
+            switch (type)
+            {
+                case "LSString":
+                    propertyValue = new LSString(value);
+                    break;
+                case "FixedString":
+                    propertyValue = new FixedString(value);
+                    break;
+                case "TranslatedString":
+                    propertyValue = new TranslatedString(value);
+                    break;
+                case "int8":
+                    propertyValue = sbyte.Parse(value);
+                    break;
+                case "int16":
+                    propertyValue = short.Parse(value);
+                    break;
+                case "int32":
+                    propertyValue = int.Parse(value);
+                    break;
+                case "uint8":
+                    propertyValue = byte.Parse(value);
+                    break;
+                case "uint32":
+                    propertyValue = uint.Parse(value);
+                    break;
+                case "uint64":
+                    propertyValue = ulong.Parse(value);
+                    break;
+                case "bool":
+                    propertyValue = bool.Parse(value);
+                    break;
+                case "guid":
+                    propertyValue = new Guid(value);
+                    break;
+                case "float":
+                    propertyValue = float.Parse(value);
+                    break;
+                case "fvec2":
+                    var fvec2 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    propertyValue = new Tuple<float, float>(fvec2[0], fvec2[1]);
+                    break;
+                case "fvec3":
+                    var fvec3 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    propertyValue = new Tuple<float, float, float>(fvec3[0], fvec3[1], fvec3[2]);
+                    break;
+                case "fvec4":
+                    var fvec4 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    propertyValue = new Tuple<float, float, float, float>(fvec4[0], fvec4[1], fvec4[2], fvec4[3]);
+                    break;
+                default:
+                    Services.GeneralHelper.WriteToConsole($"GameObject attribute type [{type}] not covered.\n");
+                    break;
+            }
+            return propertyValue;
         }
     }
 }

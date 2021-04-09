@@ -317,8 +317,9 @@
     <Compile Include="Enums\ValueLists\WeaponGroup.cs" />
     <Compile Include="Enums\ValueLists\WeaponSet.cs" />
     <Compile Include="Enums\ValueLists\WeaponType.cs" />
-    <Compile Include="Models\AutoGenGameObject.cs" />
-    <Compile Include="Models\GameObjectAttribute.cs" />
+    <Compile Include="Models\GameObjects\AutoGenGameObject.cs" />
+    <Compile Include="Models\GameObjects\GameObjectAttribute.cs" />
+    <Compile Include="Models\GameObjects\GameObjectNode.cs" />
     <Compile Include="Models\GameObjectTypes\LSString.cs" />
     <Compile Include="Models\GameObjectTypes\StringType.cs" />
     <Compile Include="Models\GameObjectTypes\TranslatedString.cs" />
