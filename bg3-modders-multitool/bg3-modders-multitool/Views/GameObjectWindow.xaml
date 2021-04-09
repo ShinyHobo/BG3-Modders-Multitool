@@ -20,9 +20,9 @@
         </ComboBox>
         <Grid Margin="10,0,0,10" Width="535" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" MinHeight="270" />
+                <RowDefinition Height="*" MinHeight="260" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="*" MinHeight="160"/>
+                <RowDefinition Height="*" MinHeight="170"/>
             </Grid.RowDefinitions>
             <TreeView x:Name="treeView" Margin="0,68,0,5" Width="535" HorizontalAlignment="Left" ItemsSource="{Binding GameObjects}" VerticalContentAlignment="Stretch"
                       VirtualizingStackPanel.IsVirtualizing="True">
@@ -65,58 +65,51 @@
             <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch"/>
             <!--TODO - Put scrollviewer contents in separate view-->
             <Border BorderBrush="Gray" BorderThickness="1" Margin="0,5,0,0" HorizontalAlignment="Left" Width="535" Grid.Row="2"/>
-            <ScrollViewer Margin="0,6,0,1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Stretch" Width="533" HorizontalAlignment="Left" Grid.Row="2">
-                <StackPanel Margin="5,5,5,5" MaxWidth="510">
-                    <Grid Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 1 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="Pak:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Pak, Mode=OneWay}" Background="Transparent" Margin="28,0,0,0"
+            <ScrollViewer Margin="0,6,0,1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" VerticalContentAlignment="Stretch" Width="533" HorizontalAlignment="Left" Grid.Row="2">
+                <ListBox Margin="0,-1,0,-1" AlternationCount="2" MaxWidth="524"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+                    <WrapPanel>
+                        <TextBlock Text="Pak: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Pak, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                    <Grid Background="AliceBlue" Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="Name:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Name, Mode=OneWay}" Background="Transparent" Margin="40,0,0,0"
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="Name: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Name, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                    <Grid Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="MapKey:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.MapKey, Mode=OneWay}" Background="Transparent" Margin="52,0,0,0"
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="MapKey: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.MapKey, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                    <Grid Background="AliceBlue" Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="ParentTemplateId:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.ParentTemplateId, Mode=OneWay}" Background="Transparent" Margin="105,0,0,0"
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="ParentTemplateId: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.ParentTemplateId, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                    <Grid Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="DisplayNameHandle:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayNameHandle, Mode=OneWay}" Background="Transparent" Margin="120,0,0,0"
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="DisplayNameHandle: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayNameHandle, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                    <Grid Background="AliceBlue" Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="DisplayName:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayName, Mode=OneWay}" Background="Transparent" Margin="80,0,0,0"
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="DisplayName: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayName, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                    <Grid Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="DescriptionHandle:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DescriptionHandle, Mode=OneWay}" Background="Transparent" Margin="110,0,0,0"
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="DescriptionHandle: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DescriptionHandle, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                    <Grid Background="AliceBlue" Margin="0,1,0,1">
-                        <Border BorderBrush="Black" BorderThickness="1 0 1 1" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="Description:" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Description, Mode=OneWay}" Background="Transparent" Margin="70,0,0,0"
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="Description: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Description, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
-                    </Grid>
-                </StackPanel>
+                    </WrapPanel>
+                </ListBox>
             </ScrollViewer>
+            
         </Grid>
         <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="455" IsEnabled="False" KeyDown="Search_KeyDown"/>
         <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="470,38,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
@@ -134,7 +127,18 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Attributes" Cursor="Hand">
-                <xctk:PropertyGrid SelectedObject="{Binding AutoGenGameObject, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False" ShowTitle="False" IsVirtualizing="True"/>
+                <ListBox ItemsSource="{Binding GameObjectAttributes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" AlternationCount="2">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                                <TextBlock Text=": " />
+                                <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Value, Mode=OneWay}" Background="Transparent"
+                                                    Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </TabItem>
             <TabItem Header="Icon" Cursor="Hand">
                 <StackPanel>
@@ -158,6 +162,22 @@
                  Value="False">
                     <Setter Property="Foreground"
                     Value="Gray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="AliceBlue" />
                 </Trigger>
             </Style.Triggers>
         </Style>

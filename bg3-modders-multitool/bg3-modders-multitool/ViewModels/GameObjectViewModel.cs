@@ -7,6 +7,7 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Media.Imaging;
@@ -114,9 +115,19 @@ namespace bg3_modders_multitool.ViewModels
             set {
                 _info = value;
                 AutoGenGameObject = new AutoGenGameObject(value.FileLocation, value.MapKey);
-                var properties = AutoGenGameObject.LoadedProperties;
+                GameObjectAttributes = AutoGenGameObject.LoadedProperties;
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private List<GameObjectAttribute> _gameObjectAttributes;
+
+        public List<GameObjectAttribute> GameObjectAttributes {
+            get { return _gameObjectAttributes; }
+            set {
+                _gameObjectAttributes = value;
                 OnNotifyPropertyChanged();
             }
         }

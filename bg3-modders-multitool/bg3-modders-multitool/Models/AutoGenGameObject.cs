@@ -104,7 +104,7 @@ namespace bg3_modders_multitool.Models
 						case "int8":
 							propertyValue = sbyte.Parse(value);
 							break;
-						case "short":
+						case "int16":
 							propertyValue = short.Parse(value);
 							break;
 						case "int32":
