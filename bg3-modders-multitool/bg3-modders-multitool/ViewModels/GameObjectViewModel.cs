@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Models;
+    using bg3_modders_multitool.Models.GameObjects;
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
@@ -114,8 +115,7 @@ namespace bg3_modders_multitool.ViewModels
             get { return _info; }
             set {
                 _info = value;
-                AutoGenGameObject = new AutoGenGameObject(value.FileLocation, value.MapKey);
-                GameObjectAttributes = AutoGenGameObject.LoadedProperties;
+                GameObjectAttributes = new AutoGenGameObject(value.FileLocation, value.MapKey).Data?.Attributes;
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
                 OnNotifyPropertyChanged();
@@ -128,16 +128,6 @@ namespace bg3_modders_multitool.ViewModels
             get { return _gameObjectAttributes; }
             set {
                 _gameObjectAttributes = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-
-        private AutoGenGameObject _autoGenGameObject;
-
-        public AutoGenGameObject AutoGenGameObject {
-            get { return _autoGenGameObject; }
-            set {
-                _autoGenGameObject = value;
                 OnNotifyPropertyChanged();
             }
         }

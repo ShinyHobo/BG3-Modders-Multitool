@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// The GameObject attribute model.
 /// </summary>
-namespace bg3_modders_multitool.Models
+namespace bg3_modders_multitool.Models.GameObjects
 {
     public class GameObjectAttribute
     {

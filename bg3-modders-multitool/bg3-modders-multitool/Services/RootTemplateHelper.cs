@@ -208,6 +208,7 @@ namespace bg3_modders_multitool.Services
                                 reader.Read();
                             }
                         }
+                        reader.Close();
                     }
                 }
             });
