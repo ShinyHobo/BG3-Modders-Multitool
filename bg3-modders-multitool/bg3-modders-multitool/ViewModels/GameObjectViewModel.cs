@@ -9,11 +9,8 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
     using HelixToolkit.Wpf.SharpDX;
-    using HelixToolkit.Wpf.SharpDX.Assimp;
-    using HelixToolkit.Wpf.SharpDX.Model.Scene;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Media.Imaging;
@@ -25,7 +22,7 @@ namespace bg3_modders_multitool.ViewModels
             RootTemplateHelper = new RootTemplateHelper(this);
 
             EffectsManager = new DefaultEffectsManager();
-            Camera = new PerspectiveCamera();
+            Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
             Material = PhongMaterials.LightGray;
         }
 
@@ -98,13 +95,31 @@ namespace bg3_modders_multitool.ViewModels
         #region SharpDX
         public EffectsManager EffectsManager { get; }
         public Camera Camera { get; }
-        public Material Material { get; }
+
+        private Material _material;
+
+        public Material Material { 
+            get { return _material; }
+            set {
+                _material = value;
+                OnNotifyPropertyChanged();
+            }
+        }
 
         private Geometry3D _mesh;
         public Geometry3D Mesh { 
             get { return _mesh; } 
             set {
                 _mesh = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private Geometry3D _mesh2;
+        public Geometry3D Mesh2 {
+            get { return _mesh2; }
+            set {
+                _mesh2 = value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -133,6 +148,16 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
+        private System.Windows.Media.Media3D.MatrixTransform3D _transform;
+
+        public System.Windows.Media.Media3D.MatrixTransform3D Transform {
+            get { return _transform; }
+            set {
+                _transform = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         private GameObject _info;
 
         public GameObject Info {
@@ -143,12 +168,16 @@ namespace bg3_modders_multitool.ViewModels
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
 
-                //var importFormats = Importer.SupportedFormats;
-                //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
-
                 Task.Run(() => {
+                    // this should dynamically create meshes based on the number of objects, assemble them based on transforms
                     Mesh = RenderedModelHelper.GetMesh(GameObjectAttributes);
+                    //Mesh2 = Mesh;
                 });
+
+                var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
+                matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 20, 0));
+                matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 0, 1), 45));
+                Transform = new System.Windows.Media.Media3D.MatrixTransform3D(matrix);
 
                 OnNotifyPropertyChanged();
             }
