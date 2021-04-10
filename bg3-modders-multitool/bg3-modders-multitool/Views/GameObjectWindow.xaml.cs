@@ -3,12 +3,17 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
+    using Assimp;
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
+    using HelixToolkit.Wpf;
+    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
+    using System.Windows.Media.Media3D;
+    using Material = System.Windows.Media.Media3D.Material;
 
     /// <summary>
     /// Interaction logic for GameObjectWindow.xaml
@@ -19,6 +24,25 @@ namespace bg3_modders_multitool.Views
         {
             InitializeComponent();
             DataContext = new GameObjectViewModel();
+            // convert GR2 file to dae with divine.exe
+            var filename = @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Public\Shared\Assets\Characters\_Models\_Creatures\Dragon_Red\Dragon_Red_A";
+            // J:\BG3\6-1603420546-7833522.png
+            if (!File.Exists($"{filename}.obj"))
+            {
+                var dae = $"{filename}.dae";
+                // read stream in
+                // keep track of vertices id
+                // when vertext input is found, replace source with vertices id
+                // read to end
+                AssimpContext converter = new AssimpContext();
+                var imported = converter.ImportFile(dae);
+                converter.ExportFile(imported, $"{filename}.obj", "obj");
+                // update mtl file with correct values ie texture (requires conversion of dds to png?)
+            }
+            //var importer = new ModelImporter();
+            //var bler = importer.Load($"{filename}.obj");
+            var objModel = new ObjReader().Read($"{filename}.obj");
+            model.Content = objModel;
         }
 
         #region Events
