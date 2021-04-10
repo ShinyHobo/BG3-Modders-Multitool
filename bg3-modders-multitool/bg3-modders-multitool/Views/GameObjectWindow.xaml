@@ -155,7 +155,7 @@
             </TabItem>
             <TabItem Header="3D Model">
                 <hx:Viewport3DX Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" >
-                    <hx:AmbientLight3D x:Name="ambLight" Color="White"/>
+                    <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
                     <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
                     <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
                     <hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1" />
