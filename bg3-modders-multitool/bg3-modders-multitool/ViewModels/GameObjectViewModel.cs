@@ -175,8 +175,8 @@ namespace bg3_modders_multitool.ViewModels
                 });
 
                 var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
-                matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 20, 0));
-                matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 0, 1), 45));
+                matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
+                matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
                 Transform = new System.Windows.Media.Media3D.MatrixTransform3D(matrix);
 
                 OnNotifyPropertyChanged();
