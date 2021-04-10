@@ -3,7 +3,6 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
-    using Assimp;
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using System.Linq;
