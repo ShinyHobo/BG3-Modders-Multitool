@@ -6,7 +6,7 @@
         xmlns:model="clr-namespace:bg3_modders_multitool.Models"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:helpers="clr-namespace:bg3_modders_multitool.XAMLHelpers"
-        xmlns:enums="clr-namespace:bg3_modders_multitool.Enums" xmlns:HelixToolkit="http://helix-toolkit.org/wpf"
+        xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         mc:Ignorable="d"
         Title="GameObject Explorer" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
     <Grid>
@@ -153,12 +153,14 @@
                     </Grid>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="3D?">
-                <HelixToolkit:HelixViewport3D x:Name="myView" ZoomExtentsWhenLoaded="True">
-                    <HelixToolkit:SunLight/>
-                    <ModelVisual3D x:Name="model"/>
-                    <HelixToolkit:GridLinesVisual3D Width="15" Length="15" MinorDistance="1" MajorDistance="1" Thickness="0.01"/>
-                </HelixToolkit:HelixViewport3D>
+            <TabItem Header="3D Model">
+                <hx:Viewport3DX Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" >
+                    <hx:AmbientLight3D x:Name="ambLight" Color="White"/>
+                    <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
+                    <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
+                    <hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1" />
+                    <hx:MeshGeometryModel3D Geometry="{Binding Mesh}" Material="{Binding Material}" CullMode="Back"/>
+                </hx:Viewport3DX>
             </TabItem>
         </TabControl>
     </Grid>
