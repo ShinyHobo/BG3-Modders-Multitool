@@ -159,7 +159,7 @@
                     <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
                     <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
                     <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
-                    <hx:MeshGeometryModel3D Geometry="{Binding Mesh}" Material="{Binding Material}" CullMode="Back" x:Name="mesh1"/>
+                    <hx:MeshGeometryModel3D Geometry="{Binding Mesh}" Material="{Binding Material}" CullMode="Back" x:Name="mesh1" Transform="{Binding Transform}"/>
                     <!--<hx:MeshGeometryModel3D Geometry="{Binding Mesh2}" Material="{Binding Material}" Transform="{Binding Transform}" CullMode="Back" x:Name="mesh2"/>-->
                 </hx:Viewport3DX>
             </TabItem>
