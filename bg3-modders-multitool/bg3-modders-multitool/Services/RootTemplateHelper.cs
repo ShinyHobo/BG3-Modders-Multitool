@@ -34,6 +34,8 @@ namespace bg3_modders_multitool.Services
         public List<Models.StatStructures.StatStructure> StatStructures { get; private set; } = new List<Models.StatStructures.StatStructure>();
         public List<TextureAtlas> TextureAtlases { get; private set; } = new List<TextureAtlas>();
         public Dictionary<string, string> GameObjectAttributes { get; set; } = new Dictionary<string,string>();
+        public Dictionary<string, string> CharacterVisualBanks { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> VisualBanks { get; set; } = new Dictionary<string, string>();
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
@@ -74,6 +76,7 @@ namespace bg3_modders_multitool.Services
             return await Task.Run(() => {
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
                 ReadTranslations();
+                ReadVisualBanks();
                 ReadRootTemplate();
                 foreach (var pak in Paks)
                 {
@@ -399,6 +402,81 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Reads the visual banks for a list of id/filepath references for quick lookup.
+        /// </summary>
+        /// <returns>Whether the visual bank lists were created.</returns>
+        private bool ReadVisualBanks()
+        {
+            var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string,string>>("CharacterVisualBanks");
+            var deserializedVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("VisualBanks");
+
+            if(deserializedVisualBanks != null && deserializedCharacterVisualBanks != null)
+            {
+                CharacterVisualBanks = deserializedCharacterVisualBanks;
+                VisualBanks = deserializedVisualBanks;
+                return true;
+            }
+
+            // Lookup CharacterVisualBank file from CharacterVisualResourceID
+            var characterVisualBanks = new ConcurrentDictionary<string, string>();
+            var visualBanks = new ConcurrentDictionary<string, string>();
+            var visualBankFiles = GetFileList("VisualBank");
+            Parallel.ForEach(visualBankFiles, visualBankFile => {
+                if (File.Exists(visualBankFile))
+                {
+                    var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
+                    var filePath = visualBankFilePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
+
+                    using (var fileStream = new StreamReader(visualBankFilePath))
+                    using (var reader = new XmlTextReader(fileStream))
+                    {
+                        reader.Read();
+                        while (!reader.EOF)
+                        {
+                            var sectionId = reader.GetAttribute("id");
+                            if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node" && (sectionId == "CharacterVisualBank" || sectionId == "VisualBank"))
+                            {
+                                // read children for resource nodes
+                                var xml = (XElement)XNode.ReadFrom(reader);
+                                var children = xml.Element("children");
+                                if (children != null)
+                                {
+                                    var nodes = children.Elements("node");
+                                    foreach (XElement node in nodes)
+                                    {
+                                        var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
+                                        if (sectionId == "CharacterVisualBank")
+                                        {
+                                            characterVisualBanks.TryAdd(id, filePath);
+                                        }
+                                        else
+                                        {
+                                            visualBanks.TryAdd(id, filePath);
+                                        }
+                                    }
+                                }
+
+                                reader.Skip();
+                            }
+                            else
+                            {
+                                reader.Read();
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+            });
+
+            CharacterVisualBanks = characterVisualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            VisualBanks = visualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            FileHelper.SerializeObject(CharacterVisualBanks, "CharacterVisualBanks");
+            FileHelper.SerializeObject(VisualBanks, "VisualBanks");
+            return true;
+        }
+
+        /// <summary>
         /// Gets the file list from all unpacked paks containing a certain node.
         /// </summary>
         /// <param name="searchTerm">The term to search on.</param>
@@ -406,7 +484,7 @@ namespace bg3_modders_multitool.Services
         private List<string> GetFileList(string searchTerm)
         {
             var rtList = new List<string>();
-            IndexHelper.SearchFiles(searchTerm).ContinueWith(results => {
+            IndexHelper.SearchFiles(searchTerm, false).ContinueWith(results => {
                 rtList.AddRange(results.Result.Where(r => r.EndsWith(".lsf")));
             }).Wait();
             return rtList;
