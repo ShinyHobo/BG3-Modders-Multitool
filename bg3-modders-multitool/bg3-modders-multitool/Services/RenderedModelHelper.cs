@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using bg3_modders_multitool.Models.GameObjectTypes;
     using HelixToolkit.Wpf.SharpDX;
     using HelixToolkit.Wpf.SharpDX.Assimp;
     using HelixToolkit.Wpf.SharpDX.Model.Scene;
@@ -18,21 +19,42 @@ namespace bg3_modders_multitool.Services
         /// Looks up and loads all the model geometry for the gameobject.
         /// </summary>
         /// <param name="gameObjectAttributes">The gameobject attributes to get the necessary lookup information from.</param>
+        /// <param name="characterVisualBanks">The character visualbanks file lookup.</param>
+        /// <param name="visualBanks">The visualbanks file lookup.</param>
         /// <returns>The list of geometry lookups.</returns>
-        public static List<Dictionary<string, List<MeshGeometry3D>>> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes)
+        public static List<Dictionary<string, List<MeshGeometry3D>>> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
         {
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
+            var gr2Files = new List<string>();
+
             // Check GameObject type
-
-            // CharacterVisualResourceID => characters
-            // VisualTemplate => items
-
-            // Cache every instance of CharacterVisualBank Resource ID => file pair
-            // Cache every instance of VisualBank Resource ID => file pair
+            var type = (FixedString)gameObjectAttributes.Single(goa => goa.Name == "Type").Value;
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
+            // CharacterVisualResourceID => characters, load CharacterVisualBank, then VisualBanks
+            // VisualTemplate => items, load VisualBanks
+            switch (type)
+            {
+                case "character":
+
+                    break;
+                case "item":
+                    var visualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value;
+                    if(visualTemplate != null)
+                    {
+                        visualBanks.TryGetValue(visualTemplate, out string file);
+                        // TODO - Possible that a visual template could link to other templates?
+                        if (file != null)
+                            gr2Files.Add(LoadVisualResource(FileHelper.GetPath(file), visualTemplate));
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            
             // Scan through resources to find matching Resource
             // Scan Resource Slots for VisualResource IDs
             // Loop through IDs to find VisualBank Resource files, make distinct
@@ -58,21 +80,23 @@ namespace bg3_modders_multitool.Services
             //          child objects - match name to get materialid per part
 
             // Get model for loaded object (.GR2)
-            var files = new string[] { 
-                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo",
-                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/Beard_HUM_Volo",
-                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Headwear_MuffinHat_Volo",
-                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A",
-                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_MiddleClass_E_1_Lowerbody",
-                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Automaton\Resources\AUTOMN_M_Body_A", // too big
-                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Elementals\Resources\ELEM_Mud_Body_A" // too big
-            };
+            //var files = new string[] { 
+            //    @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo",
+            //    @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/Beard_HUM_Volo",
+            //    @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Headwear_MuffinHat_Volo",
+            //    //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A",
+            //    //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_MiddleClass_E_1_Lowerbody",
+            //    //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Automaton\Resources\AUTOMN_M_Body_A", // too big
+            //    //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Elementals\Resources\ELEM_Mud_Body_A" // too big
+            //};
 
             var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
 
-            foreach(var slot in files)
+            foreach(var gr2File in gr2Files)
             {
-                geometryGroup.Add(GetMesh(slot));
+                var geometry = GetMesh(gr2File);
+                if(geometry != null)
+                    geometryGroup.Add(geometry);
             }
 
             return geometryGroup;
@@ -86,6 +110,8 @@ namespace bg3_modders_multitool.Services
         public static Dictionary<string, List<MeshGeometry3D>> GetMesh(string filename)
         {
             var file = LoadFile(filename);
+            if (file == null)
+                return null;
 
             // Gather meshes
             var meshes = file.Root.Items.Where(x => x.Items.Any(y => y as MeshNode != null)).ToList();
@@ -121,7 +147,7 @@ namespace bg3_modders_multitool.Services
             if (!File.Exists(dae))
             {
                 GeneralHelper.WriteToConsole($"Converting model to .dae for rendering...\n");
-                var divine = $" -g \"bg3\" --action \"convert-model\" --output-format \"dae\" --source \"{filename}.GR2\" --destination \"{dae}\" -l \"all\"";
+                var divine = $" -g \"bg3\" --action \"convert-model\" --output-format \"dae\" --source \"\\\\?\\{filename}.GR2\" --destination \"{dae}\" -l \"all\"";
                 var process = new Process();
                 var startInfo = new ProcessStartInfo
                 {
@@ -142,7 +168,7 @@ namespace bg3_modders_multitool.Services
             var importer = new Importer();
             // Update material here?
             var file = importer.Load(dae);
-            if (file == null)
+            if (file == null && File.Exists(dae))
             {
                 GeneralHelper.WriteToConsole("Fixing vertices...\n");
                 var xml = XDocument.Load(dae);
@@ -159,6 +185,21 @@ namespace bg3_modders_multitool.Services
             }
             importer.Dispose();
             return file;
+        }
+
+        /// <summary>
+        /// Finds the visualresource sourcefile for an object.
+        /// </summary>
+        /// <param name="filename">The file to search.</param>
+        /// <param name="id">The id to match.</param>
+        /// <returns>The .GR2 sourcefile.</returns>
+        private static string LoadVisualResource(string filename, string id)
+        {
+            var xml = XDocument.Load(filename);
+            var visualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
+            var gr2File = visualResource.Elements("attribute").Single(a => a.Attribute("id").Value == "SourceFile").Attribute("value").Value;
+            gr2File = gr2File.Replace(".GR2", string.Empty);
+            return FileHelper.GetPath($"Models\\{gr2File}");
         }
     }
 }

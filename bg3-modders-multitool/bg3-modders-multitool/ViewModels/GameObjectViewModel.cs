@@ -175,7 +175,7 @@ namespace bg3_modders_multitool.ViewModels
 
                 Task.Run(() => {
                     // this should dynamically create meshes based on the number of objects, assemble them based on transforms
-                    var slots = RenderedModelHelper.GetMeshes(GameObjectAttributes);
+                    var slots = RenderedModelHelper.GetMeshes(GameObjectAttributes, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks);
 
                     // Loop through slots
                     foreach (var lodLevels in slots)
