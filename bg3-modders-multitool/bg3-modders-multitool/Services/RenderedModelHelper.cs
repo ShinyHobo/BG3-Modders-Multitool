@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Services
     using HelixToolkit.Wpf.SharpDX;
     using HelixToolkit.Wpf.SharpDX.Assimp;
     using HelixToolkit.Wpf.SharpDX.Model.Scene;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -14,18 +15,25 @@ namespace bg3_modders_multitool.Services
     public static class RenderedModelHelper
     {
         /// <summary>
-        /// Gets the model geometry for a given GameObject.
+        /// Looks up and loads all the model geometry for the gameobject.
         /// </summary>
-        /// <param name="gameObjectAttributes">The GameObject attributes.</param>
-        /// <returns>The model mesh geometry.</returns>
-        public static MeshGeometry3D GetMesh(System.Collections.Generic.List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes)
+        /// <param name="gameObjectAttributes">The gameobject attributes to get the necessary lookup information from.</param>
+        /// <returns>The list of geometry lookups.</returns>
+        public static List<Dictionary<string, List<MeshGeometry3D>>> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes)
         {
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
+            // Get model for loaded object (.GR2)
+
+            var files = new string[] { 
+                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo"
+            };
+
+            var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
             // GameObject (Volo)
             //  <attribute id="MapKey" type="FixedString" value="2af25a85-5b9a-4794-85d3-0bd4c4d262fa" />
-            //  <attribute id="CharacterVisualResourceID" type="FixedString" value="f8103934-8d3d-cbd9-5cf6-1a8951b98e93" />
+            //  <attribute id="CharacterVisualResourceID" type="FixedString" value=" " />
             // CharacterVisual Resource
             //  <attribute id="ID" type="FixedString" value="f8103934-8d3d-cbd9-5cf6-1a8951b98e93" />
             //  <attribute id="BaseVisual" type="FixedString" value="3773c64c-c5a9-9baf-1b85-6bee029ee044" /> Asset Id for human male base
@@ -42,8 +50,54 @@ namespace bg3_modders_multitool.Services
             //          <attribute id="SourceFile" type="LSWString" value="Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A.GR2" />
             //          child objects - match name to get materialid per part
 
-            // Get model for loaded object (.GR2)
-            var filename = @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo";
+            // foreach slot each
+            foreach(var slot in files)
+            {
+                var meshGroups = GetMesh(slot);
+                geometryGroup.Add(meshGroups);
+            }
+
+            return geometryGroup;
+        }
+
+        /// <summary>
+        /// Gets the model geometry from a given .GR2 file and organizes it by LOD level.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns>The geometry lookup table.</returns>
+        public static Dictionary<string, List<MeshGeometry3D>> GetMesh(string filename)
+        {
+            var file = LoadFile(filename);
+
+            // Gather meshes
+            var meshes = file.Root.Items.Where(x => x.Items.Any(y => y as MeshNode != null)).ToList();
+            // Group meshes by lod
+            var meshGroups = meshes.GroupBy(mesh => mesh.Name.Split('_').Last()).ToList();
+            var geometryLookup = new Dictionary<string, List<MeshGeometry3D>>();
+            foreach (var meshGroup in meshGroups)
+            {
+                var geometryList = new List<MeshGeometry3D>();
+
+                // Selecting body first
+                foreach(var mesh in meshGroup)
+                {
+                    var meshNode = mesh.Items.Last() as MeshNode;
+                    var meshGeometry = meshNode.Geometry as MeshGeometry3D;
+                    meshGeometry.Normals = meshGeometry.CalculateNormals();
+                    geometryList.Add(meshGeometry);
+                }
+                geometryLookup.Add(meshGroup.Key, geometryList);
+            }
+            return geometryLookup;
+        }
+
+        /// <summary>
+        /// Converts a given .GR2 file to a .dae file for rendering and further conversion.
+        /// </summary>
+        /// <param name="filename">The file name.</param>
+        /// <returns>The .dae converted model file.</returns>
+        private static HelixToolkitScene LoadFile(string filename)
+        {
             var dae = $"{filename}.dae";
 
             if (!File.Exists(dae))
@@ -70,12 +124,12 @@ namespace bg3_modders_multitool.Services
             var importer = new Importer();
             // Update material here?
             var file = importer.Load(dae);
-            if(file == null)
+            if (file == null)
             {
                 GeneralHelper.WriteToConsole("Fixing vertices...\n");
                 var xml = XDocument.Load(dae);
                 var geometryList = xml.Descendants().Where(x => x.Name.LocalName == "geometry").ToList();
-                foreach(var lod in geometryList)
+                foreach (var lod in geometryList)
                 {
                     var vertexId = lod.Descendants().Where(x => x.Name.LocalName == "vertices").Select(x => x.Attribute("id").Value).First();
                     var vertex = lod.Descendants().Single(x => x.Name.LocalName == "input" && x.Attribute("semantic").Value == "VERTEX");
@@ -85,19 +139,8 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole("Model conversion complete!\n");
                 file = importer.Load(dae);
             }
-
-            // Gather meshes
-            var meshes = file.Root.Items.Where(x => x.Items.Any(y => y as MeshNode != null)).ToList();
-            // Group meshes by lod
-            var meshGroups = meshes.GroupBy(mesh => mesh.Name.Split('_').Last()).ToList();
-            // TODO - need lod slider, selecting highest lod first
-            var meshGroup = meshGroups[0].ToList();
-            // Selecting body first
-            var meshNode = meshGroup[0].Items.Last() as MeshNode;
-            var meshGeometry = meshNode.Geometry as MeshGeometry3D;
-            meshGeometry.Normals = meshGeometry.CalculateNormals();
             importer.Dispose();
-            return meshGeometry;
+            return file;
         }
     }
 }
