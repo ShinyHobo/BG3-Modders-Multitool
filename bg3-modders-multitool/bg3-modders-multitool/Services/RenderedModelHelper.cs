@@ -27,7 +27,8 @@ namespace bg3_modders_multitool.Services
             // Get model for loaded object (.GR2)
 
             var files = new string[] { 
-                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo"
+                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo",
+                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/Beard_HUM_Volo"
             };
 
             var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
