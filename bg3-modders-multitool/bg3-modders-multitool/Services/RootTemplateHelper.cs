@@ -174,7 +174,7 @@ namespace bg3_modders_multitool.Services
                             {
                                 var xml = (XElement)XNode.ReadFrom(reader);
                                 var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty) };
-                                var attributes = xml.Elements().Where(x => x.Name == "attribute");
+                                var attributes = xml.Elements("attribute");
 
                                 foreach(XElement attribute in attributes)
                                 {
