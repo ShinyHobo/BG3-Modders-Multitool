@@ -112,16 +112,6 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private Geometry3D _mesh;
-
-        public Geometry3D Mesh {
-            get { return _mesh; }
-            set {
-                _mesh = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-
         private List<MeshGeometry3D> _meshList;
 
         public List<MeshGeometry3D> MeshList {
@@ -188,26 +178,17 @@ namespace bg3_modders_multitool.ViewModels
                     var slots = RenderedModelHelper.GetMeshes(GameObjectAttributes);
 
                     // Loop through slots
-                    //foreach (var lodLevels in slots)
-                    //{
-                    //    foreach (var lod in lodLevels)
-                    //    {
-                    //        var sner = lod.Value;
-                    //    }
-                    //}
-
-                    // TODO - need lod slider, selecting highest lod first
-                    var lodLevel = slots.First();
-                    var lod = lodLevel.First().Value;
-                    MeshList = lod;
-                    Mesh = lod.First();
-
-                    foreach(var model in lod)
+                    foreach (var lodLevels in slots)
                     {
-                        Application.Current.Dispatcher.Invoke(() => {
-                            var mesh = new MeshGeometryModel3D() { Geometry = model, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
-                            ViewPort.Items.Add(mesh);
-                        });
+                        // TODO - need lod slider, selecting highest lod first
+                        var lod = lodLevels.First().Value;
+                        foreach (var model in lod)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => {
+                                var mesh = new MeshGeometryModel3D() { Geometry = model, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                                ViewPort.Items.Add(mesh);
+                            });
+                        }
                     }
                 });
 
