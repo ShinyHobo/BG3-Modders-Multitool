@@ -26,6 +26,7 @@ namespace bg3_modders_multitool.Services
         private bool Loaded = false;
         private bool GameObjectsCached = false;
         private ConcurrentBag<GameObject> GameObjectBag = new ConcurrentBag<GameObject>();
+        private IndexHelper IndexHelper = new IndexHelper();
         public List<GameObject> GameObjects = new List<GameObject>();
         public List<GameObjectType> GameObjectTypes { get; private set; } = new List<GameObjectType>();
         public Dictionary<string, Translation> TranslationLookup;
@@ -147,7 +148,7 @@ namespace bg3_modders_multitool.Services
                 GameObjectsCached = true;
                 return true;
             }
-            var rootTemplates = GetRootTemplateFileList();
+            var rootTemplates = GetFileList("GameObjects");
             var typeBag = new ConcurrentBag<string>();
             #if DEBUG
             var idBag = new ConcurrentBag<string>();
@@ -398,14 +399,14 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
-        /// Gets the root template file list from all unpacked paks
+        /// Gets the file list from all unpacked paks containing a certain node.
         /// </summary>
-        /// <returns>The root template file list.</returns>
-        private List<string> GetRootTemplateFileList()
+        /// <param name="searchTerm">The term to search on.</param>
+        /// <returns>The file list.</returns>
+        private List<string> GetFileList(string searchTerm)
         {
-            var index = new IndexHelper();
             var rtList = new List<string>();
-            index.SearchFiles("GameObjects").ContinueWith(results => {
+            IndexHelper.SearchFiles(searchTerm).ContinueWith(results => {
                 rtList.AddRange(results.Result.Where(r => r.EndsWith(".lsf")));
             }).Wait();
             return rtList;
