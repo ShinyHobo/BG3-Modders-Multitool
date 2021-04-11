@@ -13,6 +13,7 @@ namespace bg3_modders_multitool.ViewModels
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Media.Imaging;
 
     public class GameObjectViewModel : BaseViewModel
@@ -24,6 +25,10 @@ namespace bg3_modders_multitool.ViewModels
             EffectsManager = new DefaultEffectsManager();
             Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
             Material = PhongMaterials.LightGray;
+            var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
+            matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
+            matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
+            Transform = new System.Windows.Media.Media3D.MatrixTransform3D(matrix);
         }
 
         public void Clear()
@@ -93,6 +98,7 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         #region SharpDX
+        public Viewport3DX ViewPort { get; internal set; }
         public EffectsManager EffectsManager { get; }
         public Camera Camera { get; }
 
@@ -107,19 +113,21 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         private Geometry3D _mesh;
-        public Geometry3D Mesh { 
-            get { return _mesh; } 
+
+        public Geometry3D Mesh {
+            get { return _mesh; }
             set {
                 _mesh = value;
                 OnNotifyPropertyChanged();
             }
         }
 
-        private Geometry3D _mesh2;
-        public Geometry3D Mesh2 {
-            get { return _mesh2; }
+        private List<MeshGeometry3D> _meshList;
+
+        public List<MeshGeometry3D> MeshList {
+            get { return _meshList; }
             set {
-                _mesh2 = value;
+                _meshList = value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -168,16 +176,40 @@ namespace bg3_modders_multitool.ViewModels
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
 
+                // reset viewport items
+                var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
+                foreach (var model in modelsToRemove)
+                {
+                    ViewPort.Items.Remove(model);
+                }
+
                 Task.Run(() => {
                     // this should dynamically create meshes based on the number of objects, assemble them based on transforms
-                    Mesh = RenderedModelHelper.GetMesh(GameObjectAttributes);
-                    //Mesh2 = Mesh;
-                });
+                    var slots = RenderedModelHelper.GetMeshes(GameObjectAttributes);
 
-                var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
-                matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
-                matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
-                Transform = new System.Windows.Media.Media3D.MatrixTransform3D(matrix);
+                    // Loop through slots
+                    //foreach (var lodLevels in slots)
+                    //{
+                    //    foreach (var lod in lodLevels)
+                    //    {
+                    //        var sner = lod.Value;
+                    //    }
+                    //}
+
+                    // TODO - need lod slider, selecting highest lod first
+                    var lodLevel = slots.First();
+                    var lod = lodLevel.First().Value;
+                    MeshList = lod;
+                    Mesh = lod.First();
+
+                    foreach(var model in lod)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            var mesh = new MeshGeometryModel3D() { Geometry = model, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                            ViewPort.Items.Add(mesh);
+                        });
+                    }
+                });
 
                 OnNotifyPropertyChanged();
             }
