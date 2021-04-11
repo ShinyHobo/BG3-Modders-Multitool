@@ -22,7 +22,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="characterVisualBanks">The character visualbanks file lookup.</param>
         /// <param name="visualBanks">The visualbanks file lookup.</param>
         /// <returns>The list of geometry lookups.</returns>
-        public static List<Dictionary<string, List<MeshGeometry3D>>> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
+        public static List<Dictionary<string, List<MeshGeometry3D>>> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
         {
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
@@ -39,7 +39,7 @@ namespace bg3_modders_multitool.Services
             {
                 case "character":
                     var characterVisualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value;
-                    gr2Files.AddRange(LoadCharacterVisualResources(characterVisualTemplate, characterVisualBanks, visualBanks));
+                    gr2Files.AddRange(LoadCharacterVisualResources(characterVisualTemplate, characterVisualBanks, visualBanks, bodySetVisuals));
                     break;
                 case "item":
                 case "scenery":
@@ -157,7 +157,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="characterVisualBanks">The character visualbanks lookup.</param>
         /// <param name="visualBanks">The visualbanks lookup.</param>
         /// <returns>The list of character visual resources found.</returns>
-        private static List<string> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
+        private static List<string> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
         {
             var characterVisualResources = new List<string>();
             if (id != null)
@@ -167,6 +167,10 @@ namespace bg3_modders_multitool.Services
                 {
                     var xml = XDocument.Load(FileHelper.GetPath(file));
                     var characterVisualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
+                    var bodySetVisualId = characterVisualResource.Elements("attribute").Single(x => x.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
+                    var bodySetVisual = LoadVisualResource(bodySetVisualId, visualBanks);
+                    if(bodySetVisual != null)
+                        characterVisualResources.Add(bodySetVisual);
                     var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
                     foreach (var slot in slots)
                     {

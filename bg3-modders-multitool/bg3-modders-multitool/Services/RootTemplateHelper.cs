@@ -36,6 +36,7 @@ namespace bg3_modders_multitool.Services
         public Dictionary<string, string> GameObjectAttributes { get; set; } = new Dictionary<string,string>();
         public Dictionary<string, string> CharacterVisualBanks { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> VisualBanks { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> BodySetVisuals { get; set; } = new Dictionary<string, string>();
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
@@ -416,17 +417,20 @@ namespace bg3_modders_multitool.Services
         {
             var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string,string>>("CharacterVisualBanks");
             var deserializedVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("VisualBanks");
+            var deserializedBodySetVisuals = FileHelper.DeserializeObject<Dictionary<string, string>>("BodySetVisuals");
 
-            if(deserializedVisualBanks != null && deserializedCharacterVisualBanks != null)
+            if (deserializedVisualBanks != null && deserializedCharacterVisualBanks != null && deserializedBodySetVisuals != null)
             {
                 CharacterVisualBanks = deserializedCharacterVisualBanks;
                 VisualBanks = deserializedVisualBanks;
+                BodySetVisuals = deserializedBodySetVisuals;
                 return true;
             }
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             var characterVisualBanks = new ConcurrentDictionary<string, string>();
             var visualBanks = new ConcurrentDictionary<string, string>();
+            var bodySetVisuals = new ConcurrentDictionary<string, string>();
             var visualBankFiles = GetFileList("VisualBank");
             Parallel.ForEach(visualBankFiles, visualBankFile => {
                 if (File.Exists(visualBankFile))
@@ -455,6 +459,9 @@ namespace bg3_modders_multitool.Services
                                         if (sectionId == "CharacterVisualBank")
                                         {
                                             characterVisualBanks.TryAdd(id, filePath);
+                                            var bodySetVisual = node.Elements("attribute").Single(a => a.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
+                                            if (bodySetVisual != null)
+                                                bodySetVisuals.TryAdd(bodySetVisual, filePath);
                                         }
                                         else
                                         {
@@ -477,9 +484,11 @@ namespace bg3_modders_multitool.Services
 
             CharacterVisualBanks = characterVisualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             VisualBanks = visualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            BodySetVisuals = bodySetVisuals.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             FileHelper.SerializeObject(CharacterVisualBanks, "CharacterVisualBanks");
             FileHelper.SerializeObject(VisualBanks, "VisualBanks");
+            FileHelper.SerializeObject(BodySetVisuals, "BodySetVisuals");
             return true;
         }
 
