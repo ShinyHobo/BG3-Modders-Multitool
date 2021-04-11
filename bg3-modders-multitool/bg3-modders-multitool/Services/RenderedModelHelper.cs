@@ -38,63 +38,36 @@ namespace bg3_modders_multitool.Services
             switch (type)
             {
                 case "character":
-
+                    var characterVisualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value;
+                    if(characterVisualTemplate != null)
+                    {
+                        characterVisualBanks.TryGetValue(characterVisualTemplate, out string file);
+                        if(file != null)
+                        {
+                            var xml = XDocument.Load(FileHelper.GetPath(file));
+                            var characterVisualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == characterVisualTemplate).First();
+                            var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
+                            foreach(var slot in slots)
+                            {
+                                var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
+                                var visualResource = LoadVisualResource(visualResourceId, visualBanks);
+                                if (visualResource != null)
+                                    gr2Files.Add(visualResource);
+                            }
+                        }
+                    }
                     break;
                 case "item":
                 case "scenery":
                 case "TileConstruction":
                     var visualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value;
-                    if (visualTemplate != null)
-                    {
-                        visualBanks.TryGetValue(visualTemplate, out string file);
-                        // TODO - Possible that a visual template could link to other templates?
-                        if (file != null)
-                        {
-                            var visualResource = LoadVisualResource(FileHelper.GetPath(file), visualTemplate);
-                            if (visualResource != null)
-                                gr2Files.Add(visualResource);
-                        }
-                    }
+                    var itemVisualResource = LoadVisualResource(visualTemplate, visualBanks);
+                    if (itemVisualResource != null)
+                        gr2Files.Add(itemVisualResource);
                     break;
                 default:
                     break;
             }
-
-            
-            // Scan through resources to find matching Resource
-            // Scan Resource Slots for VisualResource IDs
-            // Loop through IDs to find VisualBank Resource files, make distinct
-            // Locate matching VisualBank Resources, pull SourceFile value
-
-            // GameObject (Volo)
-            //  <attribute id="MapKey" type="FixedString" value="2af25a85-5b9a-4794-85d3-0bd4c4d262fa" />
-            //  <attribute id="CharacterVisualResourceID" type="FixedString" value="f8103934-8d3d-cbd9-5cf6-1a8951b98e93" />
-            // CharacterVisual Resource
-            //  <attribute id="ID" type="FixedString" value="f8103934-8d3d-cbd9-5cf6-1a8951b98e93" />
-            //  <attribute id="BaseVisual" type="FixedString" value="3773c64c-c5a9-9baf-1b85-6bee029ee044" /> Asset Id for human male base
-            //  <attribute id="BodySetVisual" type="FixedString" value="38cee76d-1a75-4419-9293-52e47fda65e9" /> Asset Id for human male body A
-            //  Slots list
-            //      <attribute id="VisualResource" type="FixedString" value="44e7769e-bc14-8c16-40d0-8b576ceddcb1" />  Volo head (Shared\Public\Shared\Content\Assets\Characters\Humans\Heads\[PAK]_HUM_M_Head_Volo\_merged.lsx)
-            //      VisualBank Resource
-            //          <attribute id="ID" type="FixedString" value="44e7769e-bc14-8c16-40d0-8b576ceddcb1" />
-            //          <attribute id="SourceFile" type="LSWString" value="Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo.GR2" />
-            //          child objects - match name to get materialid per part
-            //      <attribute id="VisualResource" type="FixedString" value="c60465a9-71bd-b436-c837-7dfadf7edf1c" /> Volo bar shirt (Shared\Public\Shared\Content\Assets\Characters\Humans\[PAK]_Male_Clothing\_merged.lsx)
-            //      VisualBank Resource
-            //          <attribute id="ID" type="FixedString" value="c60465a9-71bd-b436-c837-7dfadf7edf1c" />
-            //          <attribute id="SourceFile" type="LSWString" value="Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A.GR2" />
-            //          child objects - match name to get materialid per part
-
-            // Get model for loaded object (.GR2)
-            //var files = new string[] { 
-            //    @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo",
-            //    @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/Beard_HUM_Volo",
-            //    @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Headwear_MuffinHat_Volo",
-            //    //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A",
-            //    //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_MiddleClass_E_1_Lowerbody",
-            //    //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Automaton\Resources\AUTOMN_M_Body_A", // too big
-            //    //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Elementals\Resources\ELEM_Mud_Body_A" // too big
-            //};
 
             var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
 
@@ -196,18 +169,26 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Finds the visualresource sourcefile for an object.
         /// </summary>
-        /// <param name="filename">The file to search.</param>
         /// <param name="id">The id to match.</param>
+        /// <param name="visualBanks">The visualbanks lookup.</param>
         /// <returns>The .GR2 sourcefile.</returns>
-        private static string LoadVisualResource(string filename, string id)
+        private static string LoadVisualResource(string id, Dictionary<string, string> visualBanks)
         {
-            var xml = XDocument.Load(filename);
-            var visualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
-            var gr2File = visualResource.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
-            if (gr2File == null)
-                return null;
-            gr2File = gr2File.Replace(".GR2", string.Empty);
-            return FileHelper.GetPath($"Models\\{gr2File}");
+            if (id != null)
+            {
+                visualBanks.TryGetValue(id, out string visualResourceFile);
+                if (visualResourceFile != null)
+                {
+                    var xml = XDocument.Load(FileHelper.GetPath(visualResourceFile));
+                    var visualResourceNode = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
+                    var gr2File = visualResourceNode.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
+                    if (gr2File == null)
+                        return null;
+                    gr2File = gr2File.Replace(".GR2", string.Empty);
+                    return FileHelper.GetPath($"Models\\{gr2File}");
+                }
+            }
+            return null;
         }
     }
 }
