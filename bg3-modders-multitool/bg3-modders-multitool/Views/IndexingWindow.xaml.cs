@@ -36,6 +36,7 @@ namespace bg3_modders_multitool.Views
         {
             if(!string.IsNullOrEmpty(search.Text))
             {
+                searchFilesButton.IsEnabled = false;
                 var vm = DataContext as SearchResults;
                 vm.SelectedPath = string.Empty;
                 vm.FileContents = new ObservableCollection<SearchResult>();
@@ -44,6 +45,7 @@ namespace bg3_modders_multitool.Views
                 {
                     vm.Results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
+                searchFilesButton.IsEnabled = true;
             }
         }
 
