@@ -24,6 +24,11 @@ namespace bg3_modders_multitool.Services
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
+            // Check GameObject type
+
+            // CharacterVisualResourceID => characters
+            // VisualTemplate => items
+
             // Cache every instance of CharacterVisualBank Resource ID => file pair
             // Cache every instance of VisualBank Resource ID => file pair
 

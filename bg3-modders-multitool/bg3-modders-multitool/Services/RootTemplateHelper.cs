@@ -199,6 +199,10 @@ namespace bg3_modders_multitool.Services
                                     }
                                 }
 
+                                if(string.IsNullOrEmpty(gameObject.ParentTemplateId))
+                                    gameObject.ParentTemplateId = gameObject.TemplateName;
+                                if (string.IsNullOrEmpty(gameObject.CharacterVisualResourceID))
+                                    gameObject.CharacterVisualResourceID = gameObject.VisualTemplate;
                                 if (string.IsNullOrEmpty(gameObject.Name))
                                     gameObject.Name = gameObject.DisplayName;
                                 if (string.IsNullOrEmpty(gameObject.Name))
@@ -238,9 +242,12 @@ namespace bg3_modders_multitool.Services
             var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
             Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name), gameObject =>
             {
-                var goChildren = lookup.First(l => l.Key == gameObject.ParentTemplateId).Value.Children;
-                lock (goChildren)
-                    goChildren.Add(gameObject);
+                var goChildren = lookup.FirstOrDefault(l => l.Key == gameObject.ParentTemplateId).Value?.Children;
+                if(goChildren != null)
+                {
+                    lock (goChildren)
+                        goChildren.Add(gameObject);
+                }
             });
             GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
             foreach(var gameObject in GameObjects)

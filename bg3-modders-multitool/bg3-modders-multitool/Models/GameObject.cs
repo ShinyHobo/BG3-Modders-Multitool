@@ -18,6 +18,7 @@ namespace bg3_modders_multitool.Models
         public string FileLocation { get; set; }
         public string MapKey { get; set; }
         public string ParentTemplateId { get; set; }
+        public string TemplateName { get; set; }
         public string Name { get; set; }
         public string DisplayNameHandle { get; set; }
         public string DisplayName { get; set; }
@@ -26,6 +27,7 @@ namespace bg3_modders_multitool.Models
         public string Icon { get; set; }
         public string Stats { get; set; }
         public string CharacterVisualResourceID { get; set; }
+        public string VisualTemplate { get; set; }
         public string TitleHandle { get; set; }
         public string Title { get; set; }
 
