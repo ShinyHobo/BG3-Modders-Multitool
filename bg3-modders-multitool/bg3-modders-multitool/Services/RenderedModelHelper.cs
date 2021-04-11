@@ -39,23 +39,7 @@ namespace bg3_modders_multitool.Services
             {
                 case "character":
                     var characterVisualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value;
-                    if(characterVisualTemplate != null)
-                    {
-                        characterVisualBanks.TryGetValue(characterVisualTemplate, out string file);
-                        if(file != null)
-                        {
-                            var xml = XDocument.Load(FileHelper.GetPath(file));
-                            var characterVisualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == characterVisualTemplate).First();
-                            var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
-                            foreach(var slot in slots)
-                            {
-                                var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
-                                var visualResource = LoadVisualResource(visualResourceId, visualBanks);
-                                if (visualResource != null)
-                                    gr2Files.Add(visualResource);
-                            }
-                        }
-                    }
+                    gr2Files.AddRange(LoadCharacterVisualResources(characterVisualTemplate, characterVisualBanks, visualBanks));
                     break;
                 case "item":
                 case "scenery":
@@ -164,6 +148,36 @@ namespace bg3_modders_multitool.Services
             }
             importer.Dispose();
             return file;
+        }
+
+        /// <summary>
+        /// Finds the charactervisualresources for a given character.
+        /// </summary>
+        /// <param name="id">The character visualresource id.</param>
+        /// <param name="characterVisualBanks">The character visualbanks lookup.</param>
+        /// <param name="visualBanks">The visualbanks lookup.</param>
+        /// <returns>The list of character visual resources found.</returns>
+        private static List<string> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
+        {
+            var characterVisualResources = new List<string>();
+            if (id != null)
+            {
+                characterVisualBanks.TryGetValue(id, out string file);
+                if (file != null)
+                {
+                    var xml = XDocument.Load(FileHelper.GetPath(file));
+                    var characterVisualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
+                    var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
+                    foreach (var slot in slots)
+                    {
+                        var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
+                        var visualResource = LoadVisualResource(visualResourceId, visualBanks);
+                        if (visualResource != null)
+                            characterVisualResources.Add(visualResource);
+                    }
+                }
+            }
+            return characterVisualResources;
         }
 
         /// <summary>
