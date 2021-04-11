@@ -154,12 +154,17 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="3D Model">
-                <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black">
-                    <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
-                    <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
-                    <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
-                    <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
-                </hx:Viewport3DX>
+                <Grid>
+                    <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black">
+                        <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
+                        <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
+                        <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
+                        <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
+                    </hx:Viewport3DX>
+                    <Grid Background="Black" Visibility="{Binding ModelLoading }" x:Name="modelLoadingScreen">
+                        <TextBlock Text="Loading..." TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
+                    </Grid>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

@@ -121,6 +121,26 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        private Visibility _modelLoading = Visibility.Hidden;
+
+        public Visibility ModelLoading {
+            get { return _modelLoading; }
+            set {
+                _modelLoading = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private System.Windows.Media.Media3D.MatrixTransform3D _transform;
+
+        public System.Windows.Media.Media3D.MatrixTransform3D Transform {
+            get { return _transform; }
+            set {
+                _transform = value;
+                OnNotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Properties
@@ -146,14 +166,13 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private System.Windows.Media.Media3D.MatrixTransform3D _transform;
-
-        public System.Windows.Media.Media3D.MatrixTransform3D Transform {
-            get { return _transform; }
+        private List<GameObjectNode> _gameObjectChildren;
+        public List<GameObjectNode> GameObjectChildren { 
+            get { return _gameObjectChildren; }
             set {
-                _transform = value;
+                _gameObjectChildren = value;
                 OnNotifyPropertyChanged();
-            }
+            } 
         }
 
         private GameObject _info;
@@ -162,7 +181,12 @@ namespace bg3_modders_multitool.ViewModels
             get { return _info; }
             set {
                 _info = value;
-                GameObjectAttributes = new AutoGenGameObject(value.FileLocation, value.MapKey).Data?.Attributes;
+                var autoGenGameObject = new AutoGenGameObject(value.FileLocation, value.MapKey).Data;
+                GameObjectAttributes = autoGenGameObject?.Attributes;
+                GameObjectChildren = autoGenGameObject?.Children;
+                var hasModel = GameObjectAttributes?.Any(goa => goa.Name == "CharacterVisualResourceID" || goa.Name == "VisualTemplate");
+                if(hasModel == true)
+                    ModelLoading = Visibility.Visible;
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
 
@@ -190,6 +214,8 @@ namespace bg3_modders_multitool.ViewModels
                             });
                         }
                     }
+
+                    ModelLoading = Visibility.Hidden;
                 });
 
                 OnNotifyPropertyChanged();
