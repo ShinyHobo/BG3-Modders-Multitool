@@ -65,11 +65,9 @@ namespace bg3_modders_multitool.Services
 
             var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
 
-            // foreach slot each
             foreach(var slot in files)
             {
-                var meshGroups = GetMesh(slot);
-                geometryGroup.Add(meshGroups);
+                geometryGroup.Add(GetMesh(slot));
             }
 
             return geometryGroup;
