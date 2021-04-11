@@ -8,9 +8,12 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
+    using HelixToolkit.Wpf.SharpDX;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Media.Imaging;
 
     public class GameObjectViewModel : BaseViewModel
@@ -18,6 +21,14 @@ namespace bg3_modders_multitool.ViewModels
         public GameObjectViewModel()
         {
             RootTemplateHelper = new RootTemplateHelper(this);
+
+            EffectsManager = new DefaultEffectsManager();
+            Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
+            Material = PhongMaterials.LightGray;
+            var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
+            matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
+            matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
+            Transform = new System.Windows.Media.Media3D.MatrixTransform3D(matrix);
         }
 
         public void Clear()
@@ -86,6 +97,52 @@ namespace bg3_modders_multitool.ViewModels
             return null;
         }
 
+        #region SharpDX
+        public Viewport3DX ViewPort { get; internal set; }
+        public EffectsManager EffectsManager { get; }
+        public Camera Camera { get; }
+
+        private Material _material;
+
+        public Material Material { 
+            get { return _material; }
+            set {
+                _material = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private List<MeshGeometry3D> _meshList;
+
+        public List<MeshGeometry3D> MeshList {
+            get { return _meshList; }
+            set {
+                _meshList = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private Visibility _modelLoading = Visibility.Hidden;
+
+        public Visibility ModelLoading {
+            get { return _modelLoading; }
+            set {
+                _modelLoading = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private System.Windows.Media.Media3D.MatrixTransform3D _transform;
+
+        public System.Windows.Media.Media3D.MatrixTransform3D Transform {
+            get { return _transform; }
+            set {
+                _transform = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        #endregion
+
         #region Properties
         public RootTemplateHelper RootTemplateHelper;
 
@@ -109,15 +166,58 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
+        private List<GameObjectNode> _gameObjectChildren;
+        public List<GameObjectNode> GameObjectChildren { 
+            get { return _gameObjectChildren; }
+            set {
+                _gameObjectChildren = value;
+                OnNotifyPropertyChanged();
+            } 
+        }
+
         private GameObject _info;
 
         public GameObject Info {
             get { return _info; }
             set {
                 _info = value;
-                GameObjectAttributes = new AutoGenGameObject(value.FileLocation, value.MapKey).Data?.Attributes;
+                var autoGenGameObject = new AutoGenGameObject(value.FileLocation, value.MapKey).Data;
+                GameObjectAttributes = autoGenGameObject?.Attributes;
+                GameObjectChildren = autoGenGameObject?.Children;
+                var hasModel = GameObjectAttributes?.Any(goa => goa.Name == "CharacterVisualResourceID" || goa.Name == "VisualTemplate");
+                if(hasModel == true)
+                    ModelLoading = Visibility.Visible;
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+
+                // reset viewport items
+                var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
+                foreach (var model in modelsToRemove)
+                {
+                    ViewPort.Items.Remove(model);
+                }
+
+                Task.Run(() => {
+                    // this should dynamically create meshes based on the number of objects, assemble them based on transforms
+                    var slots = RenderedModelHelper.GetMeshes(GameObjectAttributes, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals);
+
+                    // Loop through slots
+                    foreach (var lodLevels in slots)
+                    {
+                        // TODO - need lod slider, selecting highest lod first
+                        var lod = lodLevels.First().Value;
+                        foreach (var model in lod)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => {
+                                var mesh = new MeshGeometryModel3D() { Geometry = model, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                                ViewPort.Items.Add(mesh);
+                            });
+                        }
+                    }
+
+                    ModelLoading = Visibility.Hidden;
+                });
+
                 OnNotifyPropertyChanged();
             }
         }

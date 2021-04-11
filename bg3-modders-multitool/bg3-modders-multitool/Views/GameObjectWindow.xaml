@@ -6,7 +6,7 @@
         xmlns:model="clr-namespace:bg3_modders_multitool.Models"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:helpers="clr-namespace:bg3_modders_multitool.XAMLHelpers"
-        xmlns:enums="clr-namespace:bg3_modders_multitool.Enums"
+        xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         mc:Ignorable="d"
         Title="GameObject Explorer" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
     <Grid>
@@ -152,6 +152,19 @@
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </Grid>
                 </StackPanel>
+            </TabItem>
+            <TabItem Header="3D Model">
+                <Grid>
+                    <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black">
+                        <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
+                        <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
+                        <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
+                        <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
+                    </hx:Viewport3DX>
+                    <Grid Background="Black" Visibility="{Binding ModelLoading }" x:Name="modelLoadingScreen">
+                        <TextBlock Text="Loading..." TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
+                    </Grid>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

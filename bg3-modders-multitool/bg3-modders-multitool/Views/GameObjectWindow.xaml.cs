@@ -91,6 +91,7 @@ namespace bg3_modders_multitool.Views
         {
             var combo = sender as ComboBox;
             var vm = DataContext as GameObjectViewModel;
+            vm.ViewPort = viewport;
             typeOptions.Collection = vm.RootTemplateHelper.GameObjectTypes;
             combo.SelectedIndex = 0;
         }

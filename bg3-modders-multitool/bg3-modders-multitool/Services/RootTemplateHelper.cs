@@ -26,6 +26,7 @@ namespace bg3_modders_multitool.Services
         private bool Loaded = false;
         private bool GameObjectsCached = false;
         private ConcurrentBag<GameObject> GameObjectBag = new ConcurrentBag<GameObject>();
+        private IndexHelper IndexHelper = new IndexHelper();
         public List<GameObject> GameObjects = new List<GameObject>();
         public List<GameObjectType> GameObjectTypes { get; private set; } = new List<GameObjectType>();
         public Dictionary<string, Translation> TranslationLookup;
@@ -33,6 +34,9 @@ namespace bg3_modders_multitool.Services
         public List<Models.StatStructures.StatStructure> StatStructures { get; private set; } = new List<Models.StatStructures.StatStructure>();
         public List<TextureAtlas> TextureAtlases { get; private set; } = new List<TextureAtlas>();
         public Dictionary<string, string> GameObjectAttributes { get; set; } = new Dictionary<string,string>();
+        public Dictionary<string, string> CharacterVisualBanks { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> VisualBanks { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> BodySetVisuals { get; set; } = new Dictionary<string, string>();
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
@@ -73,6 +77,7 @@ namespace bg3_modders_multitool.Services
             return await Task.Run(() => {
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
                 ReadTranslations();
+                ReadVisualBanks();
                 ReadRootTemplate();
                 foreach (var pak in Paks)
                 {
@@ -147,7 +152,7 @@ namespace bg3_modders_multitool.Services
                 GameObjectsCached = true;
                 return true;
             }
-            var rootTemplates = GetRootTemplateFileList();
+            var rootTemplates = GetFileList("GameObjects");
             var typeBag = new ConcurrentBag<string>();
             #if DEBUG
             var idBag = new ConcurrentBag<string>();
@@ -170,7 +175,7 @@ namespace bg3_modders_multitool.Services
                             {
                                 var xml = (XElement)XNode.ReadFrom(reader);
                                 var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty) };
-                                var attributes = xml.Elements().Where(x => x.Name == "attribute");
+                                var attributes = xml.Elements("attribute");
 
                                 foreach(XElement attribute in attributes)
                                 {
@@ -195,6 +200,10 @@ namespace bg3_modders_multitool.Services
                                     }
                                 }
 
+                                if(string.IsNullOrEmpty(gameObject.ParentTemplateId))
+                                    gameObject.ParentTemplateId = gameObject.TemplateName;
+                                if (string.IsNullOrEmpty(gameObject.CharacterVisualResourceID))
+                                    gameObject.CharacterVisualResourceID = gameObject.VisualTemplate;
                                 if (string.IsNullOrEmpty(gameObject.Name))
                                     gameObject.Name = gameObject.DisplayName;
                                 if (string.IsNullOrEmpty(gameObject.Name))
@@ -234,9 +243,12 @@ namespace bg3_modders_multitool.Services
             var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
             Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name), gameObject =>
             {
-                var goChildren = lookup.First(l => l.Key == gameObject.ParentTemplateId).Value.Children;
-                lock (goChildren)
-                    goChildren.Add(gameObject);
+                var goChildren = lookup.FirstOrDefault(l => l.Key == gameObject.ParentTemplateId).Value?.Children;
+                if(goChildren != null)
+                {
+                    lock (goChildren)
+                        goChildren.Add(gameObject);
+                }
             });
             GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
             foreach(var gameObject in GameObjects)
@@ -398,14 +410,97 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
-        /// Gets the root template file list from all unpacked paks
+        /// Reads the visual banks for a list of id/filepath references for quick lookup.
         /// </summary>
-        /// <returns>The root template file list.</returns>
-        private List<string> GetRootTemplateFileList()
+        /// <returns>Whether the visual bank lists were created.</returns>
+        private bool ReadVisualBanks()
         {
-            var index = new IndexHelper();
+            var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string,string>>("CharacterVisualBanks");
+            var deserializedVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("VisualBanks");
+            var deserializedBodySetVisuals = FileHelper.DeserializeObject<Dictionary<string, string>>("BodySetVisuals");
+
+            if (deserializedVisualBanks != null && deserializedCharacterVisualBanks != null && deserializedBodySetVisuals != null)
+            {
+                CharacterVisualBanks = deserializedCharacterVisualBanks;
+                VisualBanks = deserializedVisualBanks;
+                BodySetVisuals = deserializedBodySetVisuals;
+                return true;
+            }
+
+            // Lookup CharacterVisualBank file from CharacterVisualResourceID
+            var characterVisualBanks = new ConcurrentDictionary<string, string>();
+            var visualBanks = new ConcurrentDictionary<string, string>();
+            var bodySetVisuals = new ConcurrentDictionary<string, string>();
+            var visualBankFiles = GetFileList("VisualBank");
+            Parallel.ForEach(visualBankFiles, visualBankFile => {
+                if (File.Exists(visualBankFile))
+                {
+                    var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
+                    var filePath = visualBankFilePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
+
+                    using (var fileStream = new StreamReader(visualBankFilePath))
+                    using (var reader = new XmlTextReader(fileStream))
+                    {
+                        reader.Read();
+                        while (!reader.EOF)
+                        {
+                            var sectionId = reader.GetAttribute("id");
+                            if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node" && (sectionId == "CharacterVisualBank" || sectionId == "VisualBank"))
+                            {
+                                // read children for resource nodes
+                                var xml = (XElement)XNode.ReadFrom(reader);
+                                var children = xml.Element("children");
+                                if (children != null)
+                                {
+                                    var nodes = children.Elements("node");
+                                    foreach (XElement node in nodes)
+                                    {
+                                        var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
+                                        if (sectionId == "CharacterVisualBank")
+                                        {
+                                            characterVisualBanks.TryAdd(id, filePath);
+                                            var bodySetVisual = node.Elements("attribute").Single(a => a.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
+                                            if (bodySetVisual != null)
+                                                bodySetVisuals.TryAdd(bodySetVisual, filePath);
+                                        }
+                                        else
+                                        {
+                                            visualBanks.TryAdd(id, filePath);
+                                        }
+                                    }
+                                }
+
+                                reader.Skip();
+                            }
+                            else
+                            {
+                                reader.Read();
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+            });
+
+            CharacterVisualBanks = characterVisualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            VisualBanks = visualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            BodySetVisuals = bodySetVisuals.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            FileHelper.SerializeObject(CharacterVisualBanks, "CharacterVisualBanks");
+            FileHelper.SerializeObject(VisualBanks, "VisualBanks");
+            FileHelper.SerializeObject(BodySetVisuals, "BodySetVisuals");
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the file list from all unpacked paks containing a certain node.
+        /// </summary>
+        /// <param name="searchTerm">The term to search on.</param>
+        /// <returns>The file list.</returns>
+        private List<string> GetFileList(string searchTerm)
+        {
             var rtList = new List<string>();
-            index.SearchFiles("GameObjects").ContinueWith(results => {
+            IndexHelper.SearchFiles(searchTerm, false).ContinueWith(results => {
                 rtList.AddRange(results.Result.Where(r => r.EndsWith(".lsf")));
             }).Wait();
             return rtList;
