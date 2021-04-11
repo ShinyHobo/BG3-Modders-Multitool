@@ -24,21 +24,18 @@ namespace bg3_modders_multitool.Services
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
-            // Get model for loaded object (.GR2)
-            var files = new string[] { 
-                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo",
-                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/Beard_HUM_Volo",
-                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Headwear_MuffinHat_Volo",
-                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A",
-                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_MiddleClass_E_1_Lowerbody",
-                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Automaton\Resources\AUTOMN_M_Body_A", // too big
-                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Elementals\Resources\ELEM_Mud_Body_A" // too big
-            };
+            // Cache every instance of CharacterVisualBank Resource ID => file pair
+            // Cache every instance of VisualBank Resource ID => file pair
 
-            var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
+            // Lookup CharacterVisualBank file from CharacterVisualResourceID
+            // Scan through resources to find matching Resource
+            // Scan Resource Slots for VisualResource IDs
+            // Loop through IDs to find VisualBank Resource files, make distinct
+            // Locate matching VisualBank Resources, pull SourceFile value
+
             // GameObject (Volo)
             //  <attribute id="MapKey" type="FixedString" value="2af25a85-5b9a-4794-85d3-0bd4c4d262fa" />
-            //  <attribute id="CharacterVisualResourceID" type="FixedString" value=" " />
+            //  <attribute id="CharacterVisualResourceID" type="FixedString" value="f8103934-8d3d-cbd9-5cf6-1a8951b98e93" />
             // CharacterVisual Resource
             //  <attribute id="ID" type="FixedString" value="f8103934-8d3d-cbd9-5cf6-1a8951b98e93" />
             //  <attribute id="BaseVisual" type="FixedString" value="3773c64c-c5a9-9baf-1b85-6bee029ee044" /> Asset Id for human male base
@@ -54,6 +51,19 @@ namespace bg3_modders_multitool.Services
             //          <attribute id="ID" type="FixedString" value="c60465a9-71bd-b436-c837-7dfadf7edf1c" />
             //          <attribute id="SourceFile" type="LSWString" value="Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A.GR2" />
             //          child objects - match name to get materialid per part
+
+            // Get model for loaded object (.GR2)
+            var files = new string[] { 
+                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo",
+                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/Beard_HUM_Volo",
+                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Headwear_MuffinHat_Volo",
+                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A",
+                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_MiddleClass_E_1_Lowerbody",
+                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Automaton\Resources\AUTOMN_M_Body_A", // too big
+                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Elementals\Resources\ELEM_Mud_Body_A" // too big
+            };
+
+            var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
 
             // foreach slot each
             foreach(var slot in files)
