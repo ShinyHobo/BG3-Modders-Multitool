@@ -25,10 +25,14 @@ namespace bg3_modders_multitool.Services
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
             // Get model for loaded object (.GR2)
-
             var files = new string[] { 
                 @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Anims/Humans/_Male/Resources/HUM_M_NKD_Head_Volo",
-                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/Beard_HUM_Volo"
+                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/Beard_HUM_Volo",
+                @"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Headwear_MuffinHat_Volo",
+                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_Bard_Shirt_A",
+                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated/Public/Shared/Assets/Characters/_Models/Humans/Resources/HUM_M_CLT_MiddleClass_E_1_Lowerbody",
+                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Automaton\Resources\AUTOMN_M_Body_A", // too big
+                //@"J:\BG3\bg3-modders-multitool\bg3-modders-multitool\bg3-modders-multitool\bin\x64\Debug\UnpackedData\Models\Generated\Public\Shared\Assets\Characters\_Models\_Creatures\Elementals\Resources\ELEM_Mud_Body_A" // too big
             };
 
             var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
