@@ -41,13 +41,19 @@ namespace bg3_modders_multitool.Services
 
                     break;
                 case "item":
+                case "scenery":
+                case "TileConstruction":
                     var visualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value;
-                    if(visualTemplate != null)
+                    if (visualTemplate != null)
                     {
                         visualBanks.TryGetValue(visualTemplate, out string file);
                         // TODO - Possible that a visual template could link to other templates?
                         if (file != null)
-                            gr2Files.Add(LoadVisualResource(FileHelper.GetPath(file), visualTemplate));
+                        {
+                            var visualResource = LoadVisualResource(FileHelper.GetPath(file), visualTemplate);
+                            if (visualResource != null)
+                                gr2Files.Add(visualResource);
+                        }
                     }
                     break;
                 default:
@@ -147,7 +153,7 @@ namespace bg3_modders_multitool.Services
             if (!File.Exists(dae))
             {
                 GeneralHelper.WriteToConsole($"Converting model to .dae for rendering...\n");
-                var divine = $" -g \"bg3\" --action \"convert-model\" --output-format \"dae\" --source \"\\\\?\\{filename}.GR2\" --destination \"{dae}\" -l \"all\"";
+                var divine = $" -g \"bg3\" --action \"convert-model\" --output-format \"dae\" --source \"\\\\?\\{filename}.GR2\" --destination \"\\\\?\\{dae}\" -l \"all\"";
                 var process = new Process();
                 var startInfo = new ProcessStartInfo
                 {
@@ -197,7 +203,9 @@ namespace bg3_modders_multitool.Services
         {
             var xml = XDocument.Load(filename);
             var visualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
-            var gr2File = visualResource.Elements("attribute").Single(a => a.Attribute("id").Value == "SourceFile").Attribute("value").Value;
+            var gr2File = visualResource.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
+            if (gr2File == null)
+                return null;
             gr2File = gr2File.Replace(".GR2", string.Empty);
             return FileHelper.GetPath($"Models\\{gr2File}");
         }
