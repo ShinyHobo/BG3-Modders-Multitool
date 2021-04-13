@@ -3,12 +3,14 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using BrendanGrant.Helpers.FileAssociation;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Windows.Forms;
 
     public static class FileHelper
     {
@@ -144,6 +146,16 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Determines if the file path is a .GR2 mesh.
+        /// </summary>
+        /// <param name="path">The file path.</param>
+        /// <returns>Whether or not the file is a .GR2 file.</returns>
+        public static bool IsGR2(string path)
+        {
+            return Path.GetExtension(path).Contains(".GR2") || Path.GetExtension(path).Contains(".gr2");
+        }
+
+        /// <summary>
         /// Gets a standard path for files.
         /// </summary>
         /// <param name="file">The file to generate a path for.</param>
@@ -162,7 +174,20 @@ namespace bg3_modders_multitool.Services
             var path = GetPath(file);
             if (File.Exists(@"\\?\" + path))
             {
-                Process.Start(path);
+                if(IsGR2(path))
+                {
+                    var dae = Path.ChangeExtension(path,".dae");
+                    // determine if you can determine if there is a default program
+                    var fileAssociation = new FileAssociationInfo(".dae");
+                    if(fileAssociation.Exists)
+                        Process.Start(dae);
+                    // open folder
+                    Process.Start("explorer.exe", $"/select,{dae}");
+                }
+                else
+                {
+                    Process.Start(path);
+                }
             }
             else
             {

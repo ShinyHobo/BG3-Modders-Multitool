@@ -84,10 +84,9 @@ namespace bg3_modders_multitool.Views
                 var vm = DataContext as SearchResults;
                 if (string.IsNullOrEmpty(vm.SelectedPath)||!hoverFile.Contains(vm.SelectedPath))
                 {
-                    vm.RenderModel();
                     vm.FileContents = new ObservableCollection<SearchResult>();
                     vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
-                    
+                    vm.RenderModel();
                     foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
                     {
                         vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
