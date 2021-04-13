@@ -172,7 +172,7 @@ namespace bg3_modders_multitool.ViewModels
         {
             ModelLoading = Visibility.Hidden;
             ModelVisible = Visibility.Hidden;
-            if (Path.GetExtension(SelectedPath).Contains(".GR2") || Path.GetExtension(SelectedPath).Contains(".gr2"))
+            if (FileHelper.IsGR2(SelectedPath))
             {
                 ModelLoading = Visibility.Visible;
                 var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();

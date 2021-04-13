@@ -70,7 +70,6 @@
                 <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
                 <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
                 <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
-                <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
             </hx:Viewport3DX>
             <Grid Background="Black" Visibility="{Binding ModelLoading}" x:Name="modelLoadingScreen">
                 <TextBlock Text="Loading..." TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
