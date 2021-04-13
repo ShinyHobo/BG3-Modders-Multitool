@@ -7,8 +7,10 @@ namespace bg3_modders_multitool.ViewModels
     using HelixToolkit.Wpf.SharpDX;
     using System;
     using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Media;
 
     /// <summary>
     /// The model for search results
@@ -163,6 +165,45 @@ namespace bg3_modders_multitool.ViewModels
         #endregion
 
         #region SharpDX
+        /// <summary>
+        /// Renders the model if one is present.
+        /// </summary>
+        public void RenderModel()
+        {
+            ModelLoading = Visibility.Hidden;
+            ModelVisible = Visibility.Hidden;
+            if (Path.GetExtension(SelectedPath).Contains(".GR2") || Path.GetExtension(SelectedPath).Contains(".gr2"))
+            {
+                ModelLoading = Visibility.Visible;
+                var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
+                foreach (var model in modelsToRemove)
+                {
+                    ViewPort.Items.Remove(model);
+                }
+
+                Task.Run(() => {
+                    var mesh = RenderedModelHelper.GetMesh(Path.ChangeExtension(FileHelper.GetPath(SelectedPath), null));
+                    if (mesh != null && mesh.Any())
+                    {
+                        var lod = mesh.First().Value;
+                        if (lod.Any())
+                        {
+                            foreach (var model in lod)
+                            {
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    var meshGeometry = new MeshGeometryModel3D() { Geometry = model, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                                    ViewPort.Items.Add(meshGeometry);
+                                });
+                            }
+                            ModelVisible = Visibility.Visible;
+                        }
+                    }
+                    ModelLoading = Visibility.Hidden;
+                });
+            }
+        }
+
         private Visibility _modelLoading = Visibility.Hidden;
 
         public Visibility ModelLoading {
