@@ -168,7 +168,8 @@ namespace bg3_modders_multitool.ViewModels
         /// <summary>
         /// Renders the model if one is present.
         /// </summary>
-        public void RenderModel()
+        /// <returns>Whether the selected path was a .gr2 file.</returns>
+        public bool RenderModel()
         {
             ModelLoading = Visibility.Hidden;
             ModelVisible = Visibility.Hidden;
@@ -201,7 +202,9 @@ namespace bg3_modders_multitool.ViewModels
                     }
                     ModelLoading = Visibility.Hidden;
                 });
+                return true;
             }
+            return false;
         }
 
         private Visibility _modelLoading = Visibility.Hidden;
