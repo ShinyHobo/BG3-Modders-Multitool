@@ -21,30 +21,6 @@ namespace bg3_modders_multitool.Views
             };
         }
 
-        #region File Selection
-        /// <summary>
-        /// Opens dialog for selecting divine.exe location.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event arguments.</param>
-        private void DivineSelect_Click(object sender, RoutedEventArgs e)
-        {
-            var vm = DataContext as ViewModels.MainWindow;
-            vm.DivineLocation = vm.FileLocationDialog("divineExe", "Select divine.exe location");
-        }
-
-        /// <summary>
-        /// Opens dialog for selecting bg3.exe location.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e">The event arguments.</param>
-        private void Bg3exeSelect_Click(object sender, RoutedEventArgs e)
-        {
-            var vm = DataContext as ViewModels.MainWindow;
-            vm.Bg3ExeLocation = vm.FileLocationDialog("bg3Exe", "Select bg3.exe or bg3_dx11.exe location");
-        }
-        #endregion
-
         #region File Unpacker
         /// <summary>
         /// Opens dialog for selecting and unpacking .pak game assets.
