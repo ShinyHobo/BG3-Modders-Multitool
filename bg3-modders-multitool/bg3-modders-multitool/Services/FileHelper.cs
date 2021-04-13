@@ -209,6 +209,8 @@ namespace bg3_modders_multitool.Services
                 TextWriter writer = null;
                 try
                 {
+                    if (!Directory.Exists("Cache"))
+                        Directory.CreateDirectory("Cache");
                     var contentsToWriteToFile = JsonConvert.SerializeObject(serialObject, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                     writer = new StreamWriter(file, false);
                     writer.Write(contentsToWriteToFile);
