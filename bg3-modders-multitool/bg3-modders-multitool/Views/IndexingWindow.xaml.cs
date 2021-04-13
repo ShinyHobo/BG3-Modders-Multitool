@@ -86,13 +86,13 @@ namespace bg3_modders_multitool.Views
                 {
                     vm.FileContents = new ObservableCollection<SearchResult>();
                     vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
-                    vm.RenderModel();
+                    var isGr2 = vm.RenderModel();
                     foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
                     {
                         vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
                     }
                     convertAndOpenButton.IsEnabled = true;
-                    convertAndOpenButton.Content = FileHelper.CanConvertToLsx(vm.SelectedPath) ? "Convert & Open" : "Open";
+                    convertAndOpenButton.Content = isGr2 ? "Open .dae" : (FileHelper.CanConvertToLsx(vm.SelectedPath) ? "Convert & Open" : "Open");
                 }
             }
             timer.Stop();
