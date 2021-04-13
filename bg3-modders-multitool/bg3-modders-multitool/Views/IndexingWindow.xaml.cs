@@ -5,9 +5,11 @@ namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
+    using HelixToolkit.Wpf.SharpDX;
     using System;
     using System.Collections.ObjectModel;
     using System.IO;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -83,8 +85,31 @@ namespace bg3_modders_multitool.Views
                 var vm = DataContext as SearchResults;
                 if (string.IsNullOrEmpty(vm.SelectedPath)||!hoverFile.Contains(vm.SelectedPath))
                 {
+                    vm.ModelLoading = Visibility.Hidden;
+                    vm.ModelVisible = Visibility.Hidden;
                     vm.FileContents = new ObservableCollection<SearchResult>();
                     vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
+                    if (Path.GetExtension(vm.SelectedPath).Contains(".GR2") || Path.GetExtension(vm.SelectedPath).Contains(".gr2"))
+                    {
+                        vm.ModelLoading = Visibility.Visible;
+                        var modelsToRemove = viewport.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
+                        foreach (var model in modelsToRemove)
+                        {
+                            viewport.Items.Remove(model);
+                        }
+                        var mesh = RenderedModelHelper.GetMesh(Path.ChangeExtension(FileHelper.GetPath(vm.SelectedPath), null));
+                        if(mesh != null && mesh.Any())
+                        {
+                            var lod = mesh.First().Value;
+                            foreach (var model in lod)
+                            {
+                                var meshGeometry = new MeshGeometryModel3D() { Geometry = model, Material = vm.Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = vm.Transform };
+                                viewport.Items.Add(meshGeometry);
+                            }
+                            vm.ModelVisible = Visibility.Visible;
+                        }
+                        vm.ModelLoading = Visibility.Hidden;
+                    }
                     foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
                     {
                         vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });

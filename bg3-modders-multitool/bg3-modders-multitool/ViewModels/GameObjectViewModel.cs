@@ -166,15 +166,6 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private List<GameObjectNode> _gameObjectChildren;
-        public List<GameObjectNode> GameObjectChildren { 
-            get { return _gameObjectChildren; }
-            set {
-                _gameObjectChildren = value;
-                OnNotifyPropertyChanged();
-            } 
-        }
-
         private GameObject _info;
 
         public GameObject Info {
@@ -215,7 +206,7 @@ namespace bg3_modders_multitool.ViewModels
                         }
                     }
 
-                    ModelLoading = Visibility.Hidden;
+                    ModelLoading = Visibility.Hidden; 
                 });
 
                 OnNotifyPropertyChanged();
@@ -228,6 +219,15 @@ namespace bg3_modders_multitool.ViewModels
             get { return _gameObjectAttributes; }
             set {
                 _gameObjectAttributes = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private List<GameObjectNode> _gameObjectChildren;
+        public List<GameObjectNode> GameObjectChildren {
+            get { return _gameObjectChildren; }
+            set {
+                _gameObjectChildren = value;
                 OnNotifyPropertyChanged();
             }
         }
