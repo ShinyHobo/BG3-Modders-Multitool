@@ -7,6 +7,7 @@ namespace bg3_modders_multitool.Services
     using HelixToolkit.Wpf.SharpDX;
     using HelixToolkit.Wpf.SharpDX.Assimp;
     using HelixToolkit.Wpf.SharpDX.Model.Scene;
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -128,33 +129,42 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
                 GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
             }
-            var importer = new Importer();
-            // Update material here?
-            var file = importer.Load(dae);
-            if (file == null && File.Exists(dae))
+            try
             {
-                GeneralHelper.WriteToConsole("Fixing vertices...\n");
-                try
+                var importer = new Importer();
+                // Update material here?
+                var file = importer.Load(dae);
+                if (file == null && File.Exists(dae))
                 {
-                    var xml = XDocument.Load(dae);
-                    var geometryList = xml.Descendants().Where(x => x.Name.LocalName == "geometry").ToList();
-                    foreach (var lod in geometryList)
+                    GeneralHelper.WriteToConsole("Fixing vertices...\n");
+                    try
                     {
-                        var vertexId = lod.Descendants().Where(x => x.Name.LocalName == "vertices").Select(x => x.Attribute("id").Value).First();
-                        var vertex = lod.Descendants().Single(x => x.Name.LocalName == "input" && x.Attribute("semantic").Value == "VERTEX");
-                        vertex.Attribute("source").Value = $"#{vertexId}";
+                        var xml = XDocument.Load(dae);
+                        var geometryList = xml.Descendants().Where(x => x.Name.LocalName == "geometry").ToList();
+                        foreach (var lod in geometryList)
+                        {
+                            var vertexId = lod.Descendants().Where(x => x.Name.LocalName == "vertices").Select(x => x.Attribute("id").Value).First();
+                            var vertex = lod.Descendants().Single(x => x.Name.LocalName == "input" && x.Attribute("semantic").Value == "VERTEX");
+                            vertex.Attribute("source").Value = $"#{vertexId}";
+                        }
+                        xml.Save(dae);
+                        GeneralHelper.WriteToConsole("Model conversion complete!\n");
+                        file = importer.Load(dae);
                     }
-                    xml.Save(dae);
-                    GeneralHelper.WriteToConsole("Model conversion complete!\n");
-                    file = importer.Load(dae);
+                    catch (Exception ex)
+                    {
+                        // in use by another process
+                        GeneralHelper.WriteToConsole($"Error : {ex.Message}\n");
+                    }
                 }
-                catch
-                {
-                    // in use by another process
-                }
+                importer.Dispose();
+                return file;
             }
-            importer.Dispose();
-            return file;
+            catch(Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"Error loading .dae: {ex.Message}\n");
+            }
+            return null;
         }
 
         /// <summary>
