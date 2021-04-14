@@ -44,7 +44,8 @@
             <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="105,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
                     ToolTip="Click to search unpacked file data" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
         </Grid>
-        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="273,165,0,220" VerticalAlignment="Center" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand" ToolTip="Allows you to graphically navigate unpacked gameobjects including characters, items, and more"/>
+        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="273,165,0,220" VerticalAlignment="Center" Width="122" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                Height="25" Cursor="Hand" ToolTip="Allows you to graphically navigate unpacked gameobjects including characters, items, and more"/>
         <TextBlock x:Name="configMenu" Text="*" FontSize="44" LineStackingStrategy="BlockLineHeight"  LineHeight="44" Cursor="Hand" Margin="757,240,10,140" ToolTip="Essential configuration options" MouseLeftButtonUp="configMenu_MouseLeftButtonUp">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
