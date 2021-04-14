@@ -11,18 +11,7 @@
         <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,10,526,159">
             <views:DragAndDropBox x:Name="dragAndDropBox"/>
         </Viewbox>
-        <!--TODO move file selectors to separate view-->
-        <Grid Margin="273,10,121,340">
-            <Label x:Name="divineLabel" Content="LSLib divine.exe location (1.15.6+ Required)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding DivineLocation, Mode=TwoWay}" IsReadOnly="True"/>
-            <Button x:Name="divineSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23" Cursor="Hand"/>
-        </Grid>
-        <Grid Margin="273,63,121,287">
-            <Label x:Name="bg3exeLabel" Content="bg3.exe location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding Bg3ExeLocation, Mode=TwoWay}" IsReadOnly="True"/>
-            <Button x:Name="bg3exeSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click" Cursor="Hand"/>
-        </Grid>
-        <Grid Margin="273,114,28,236">
+        <Grid Margin="273,10,60,340">
             <Label x:Name="guidLabel" Content="v4 UUID/TranslatedString Handle Generator" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <Button x:Name="guidGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
             <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
@@ -32,24 +21,43 @@
             <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
                      IsReadOnly="True" Background="Black" Foreground="White"/>
         </ScrollViewer>
-        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}"/>
-        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand"/>
-        <Grid Margin="331,221,20,154">
-            <Grid Visibility="{Binding SearchResults.IndexingVisibility}">
-                <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="105" Margin="30,0,0,0" HorizontalAlignment="Left" Height="10" VerticalAlignment="Bottom"/>
-                <TextBlock Margin="40,10,0,0" >
+        <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="483,81,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" Height="23" ToolTip="Launches the game"/>
+        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}" ToolTip="Allows you to select the game paks to unpack"/>
+        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="666,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand" ToolTip="Immediately stop all unpacking processes"/>
+        <Button x:Name="decompressButton" Content="Decompress Files" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}" ToolTip="Converts all convertable, unpacked files to .lsx"/>
+        <Grid Margin="273,115,60,260">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="321*"/>
+                <ColumnDefinition Width="122*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Visibility="{Binding SearchResults.IndexingVisibility}" Grid.ColumnSpan="2" Margin="210,10,0,3">
+                <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="125" HorizontalAlignment="Left" Height="23" VerticalAlignment="Bottom"/>
+                <TextBlock Margin="15,4,0,0" FontWeight="Bold">
                     <Run Text="{Binding SearchResults.IndexFileCount, Mode=OneWay}"/> /
                     <Run Text="{Binding SearchResults.IndexFileTotal, Mode=OneWay}"/>
                 </TextBlock>
-                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="152,10,0,0" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
+                <TextBlock Margin="130,4,0,0" Text="Estimate: "></TextBlock>
+                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="180,4,0,0" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
             </Grid>
-            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="228,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click" 
+            <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click" 
                     Cursor="Hand" ToolTip="Click to begin indexing" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
-            <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="333,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
-                    ToolTip="Click to search unpacked file data."/>
+            <Button x:Name="searchButton" Content="Index Search" HorizontalAlignment="Left" Margin="105,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
+                    ToolTip="Click to search unpacked file data" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
         </Grid>
-        <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="666,109,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"/>
-        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="642,196,0,0" VerticalAlignment="Top" Width="122" Click="GameObjectButton_Click" Height="25" Cursor="Hand"/>
-        <Button x:Name="decompressButton" Content="Decompress Files" HorizontalAlignment="Left" Margin="666,53,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}"/>
+        <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="273,165,0,220" VerticalAlignment="Center" Width="122" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                Height="25" Cursor="Hand" ToolTip="Allows you to graphically navigate unpacked gameobjects including characters, items, and more"/>
+        <TextBlock x:Name="configMenu" Text="*" FontSize="44" LineStackingStrategy="BlockLineHeight"  LineHeight="44" Cursor="Hand" Margin="757,240,10,140" ToolTip="Essential configuration options" MouseLeftButtonUp="configMenu_MouseLeftButtonUp">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property= "Foreground" Value="Black"/>
+                    <Style.Triggers>
+                        <Trigger Property ="IsMouseOver" Value="True">
+                            <Setter Property= "Foreground" Value="CadetBlue"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBlock x:Name="configNeeded" Text="Configuration needed =>" Margin="620,244,30,150" Visibility="{Binding ConfigNeeded}"/>
     </Grid>
 </Window>
