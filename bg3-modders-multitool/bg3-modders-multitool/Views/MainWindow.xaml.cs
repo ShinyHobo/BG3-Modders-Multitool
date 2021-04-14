@@ -118,5 +118,16 @@ namespace bg3_modders_multitool.Views
         {
             await PakUnpackHelper.DecompressAllConvertableFiles();
         }
+
+        private void configMenu_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            if (!vm.ConfigOpen)
+            {
+                var config = new ConfigurationMenu(vm);
+                config.Owner = this;
+                config.Show();
+            }
+        }
     }
 }
