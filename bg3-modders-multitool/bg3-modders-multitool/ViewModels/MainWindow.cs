@@ -122,6 +122,27 @@ namespace bg3_modders_multitool.ViewModels
                 _bg3exeLocation = value;
                 UnpackAllowed = !string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(DivineLocation);
                 LaunchGameAllowed = !string.IsNullOrEmpty(value);
+                ConfigNeeded = UnpackAllowed && LaunchGameAllowed ? Visibility.Hidden : Visibility.Visible;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _configOpen = false;
+
+        public bool ConfigOpen {
+            get { return _configOpen; }
+            set {
+                _configOpen = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private Visibility _configNeeded = Visibility.Hidden;
+
+        public Visibility ConfigNeeded {
+            get { return _configNeeded; }
+            set {
+                _configNeeded = value;
                 OnNotifyPropertyChanged();
             }
         }
