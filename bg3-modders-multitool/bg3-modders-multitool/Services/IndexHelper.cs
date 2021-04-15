@@ -168,7 +168,8 @@ namespace bg3_modders_multitool.Services
         /// Searches for and displays results.
         /// </summary>
         /// <param name="search">The text to search for. Supports file title and contents.</param>
-        public Task<List<string>> SearchFiles(string search)
+        /// <param name="writeToConsole">Whether or not to write search status to console (errors still report).</param>
+        public Task<List<string>> SearchFiles(string search, bool writeToConsole = true)
         {
             SearchText = search;
             return Task.Run(() => { 
@@ -198,12 +199,14 @@ namespace bg3_modders_multitool.Services
                         if (reader.MaxDoc != 0)
                         {
                             var start = DateTime.Now;
-                            GeneralHelper.WriteToConsole("Search started.\n");
+                            if(writeToConsole)
+                                GeneralHelper.WriteToConsole("Search started.\n");
 
                             // perform search
                             TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
-                            GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
+                            if(writeToConsole)
+                                GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
 
                             // display results
                             foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
@@ -324,7 +327,7 @@ namespace bg3_modders_multitool.Services
     /// <summary>
     /// Custom tokenizer for handling UUIDs.
     /// </summary>
-    public class CustomTokenizer : CharTokenizer
+    public sealed class CustomTokenizer : CharTokenizer
     {
         private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':'};
 

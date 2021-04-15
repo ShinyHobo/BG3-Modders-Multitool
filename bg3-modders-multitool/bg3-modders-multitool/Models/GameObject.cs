@@ -13,24 +13,23 @@ namespace bg3_modders_multitool.Models
     {
         #region Parameters
         public string Pak { get; set; }
-        public FixedString MapKey { get; set; }
-        public FixedString ParentTemplateId { get; set; }
-        public FixedString Name { get; set; }
-        public TranslatedString DisplayNameHandle { get; set; }
-        public TranslatedString DisplayName { get; set; }
-        public TranslatedString DescriptionHandle { get; set; }
-        public TranslatedString Description { get; set; }
-        public GameObjectType Type { get; set; }
-        public FixedString Icon { get; set; }
-        public FixedString Stats { get; set; }
-        public Guid RaceUUID { get; set; }
-        public FixedString CharacterVisualResourceID { get; set; }
-        public FixedString LevelName { get; set; }
-        public float Scale { get; set; }
-        public TranslatedString TitleHandle { get; set; }
-        public string Title { get; set; }
-        public FixedString PhysicsTemplate { get; set; }
         public List<GameObject> Children { get; set; }
+        public GameObjectType Type { get; set; }
+        public string FileLocation { get; set; }
+        public string MapKey { get; set; }
+        public string ParentTemplateId { get; set; }
+        public string TemplateName { get; set; }
+        public string Name { get; set; }
+        public string DisplayNameHandle { get; set; }
+        public string DisplayName { get; set; }
+        public string DescriptionHandle { get; set; }
+        public string Description { get; set; }
+        public string Icon { get; set; }
+        public string Stats { get; set; }
+        public string CharacterVisualResourceID { get; set; }
+        public string VisualTemplate { get; set; }
+        public string TitleHandle { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets the full depth of the tree.
@@ -78,6 +77,14 @@ namespace bg3_modders_multitool.Models
                 if (string.IsNullOrEmpty(go.Icon))
                 {
                     go.Icon = Icon;
+                }
+                if (string.IsNullOrEmpty(go.CharacterVisualResourceID))
+                {
+                    go.CharacterVisualResourceID = CharacterVisualResourceID;
+                }
+                if (string.IsNullOrEmpty(go.VisualTemplate))
+                {
+                    go.VisualTemplate = VisualTemplate;
                 }
                 go.PassOnStats();
             }
@@ -135,6 +142,12 @@ namespace bg3_modders_multitool.Models
         }
         #endregion
 
+        /// <summary>
+        /// Loads gameobject properties using reflection.
+        /// </summary>
+        /// <param name="id">The attribute id.</param>
+        /// <param name="type">The attribute type.</param>
+        /// <param name="value">The attribute value.</param>
         public void LoadProperty(string id, string type, string value)
         {
             if(type != null)
@@ -151,19 +164,84 @@ namespace bg3_modders_multitool.Models
                         }
                         else
                         {
-                            var method = propertyType.GetMethod("FromString", new Type[] { typeof(string) });
-                            if(method != null)
+                            if(propertyType == typeof(string))
                             {
-                                property.SetValue(this, method.Invoke(null, new object[] { value }));
+                                property.SetValue(this, value);
                             }
                             else
                             {
-                                property.SetValue(this, value);
+                                property.SetValue(this, new StringType(value, type));
                             }
                         }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Converts a given xml attribute to the corresponding C# valuetype.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>The property.</returns>
+        public static object XmlToValue(string type, string value)
+        {
+            object propertyValue = null;
+            switch (type)
+            {
+                case "LSString":
+                    propertyValue = new LSString(value);
+                    break;
+                case "FixedString":
+                    propertyValue = new FixedString(value);
+                    break;
+                case "TranslatedString":
+                    propertyValue = new TranslatedString(value);
+                    break;
+                case "int8":
+                    propertyValue = sbyte.Parse(value);
+                    break;
+                case "int16":
+                    propertyValue = short.Parse(value);
+                    break;
+                case "int32":
+                    propertyValue = int.Parse(value);
+                    break;
+                case "uint8":
+                    propertyValue = byte.Parse(value);
+                    break;
+                case "uint32":
+                    propertyValue = uint.Parse(value);
+                    break;
+                case "uint64":
+                    propertyValue = ulong.Parse(value);
+                    break;
+                case "bool":
+                    propertyValue = bool.Parse(value);
+                    break;
+                case "guid":
+                    propertyValue = new Guid(value);
+                    break;
+                case "float":
+                    propertyValue = float.Parse(value);
+                    break;
+                case "fvec2":
+                    var fvec2 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    propertyValue = new Tuple<float, float>(fvec2[0], fvec2[1]);
+                    break;
+                case "fvec3":
+                    var fvec3 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    propertyValue = new Tuple<float, float, float>(fvec3[0], fvec3[1], fvec3[2]);
+                    break;
+                case "fvec4":
+                    var fvec4 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    propertyValue = new Tuple<float, float, float, float>(fvec4[0], fvec4[1], fvec4[2], fvec4[3]);
+                    break;
+                default:
+                    Services.GeneralHelper.WriteToConsole($"GameObject attribute type [{type}] not covered.\n");
+                    break;
+            }
+            return propertyValue;
         }
     }
 }
