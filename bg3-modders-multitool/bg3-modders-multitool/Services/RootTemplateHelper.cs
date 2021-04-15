@@ -86,7 +86,7 @@ namespace bg3_modders_multitool.Services
                 }
                 if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
                 {
-                    GeneralHelper.WriteToConsole($"No valid texture atlases found. Unpack Icons.pak to generate icons.\n");
+                    GeneralHelper.WriteToConsole($"No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping...\n");
                 }
                 SortRootTemplate();
                 Loaded = true;
@@ -135,7 +135,7 @@ namespace bg3_modders_multitool.Services
                     return true;
                 }
             }
-            GeneralHelper.WriteToConsole($"Failed to load english.xml. Please unpack English.pak to generate translations.\n");
+            GeneralHelper.WriteToConsole($"Failed to load english.xml. Please unpack English.pak to generate translations. Skipping...\n");
             return false;
         }
 
