@@ -3,8 +3,8 @@
 /// </summary>
 namespace bg3_modders_multitool.Models.GameObjects
 {
+    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Services;
-    using System.IO;
     using System.Linq;
     using System.Xml;
     using System.Xml.Linq;
@@ -22,7 +22,7 @@ namespace bg3_modders_multitool.Models.GameObjects
 
 			if (File.Exists(file))
             {
-                using (var fileStream = new StreamReader(file))
+                using (var fileStream = new System.IO.StreamReader(file))
                 using (var reader = new XmlTextReader(fileStream))
                 {
                     reader.Read();

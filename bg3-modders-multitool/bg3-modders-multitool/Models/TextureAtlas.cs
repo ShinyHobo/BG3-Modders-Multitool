@@ -3,11 +3,11 @@
 /// </summary>
 namespace bg3_modders_multitool.Models
 {
+    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Services;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
-    using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Media.Imaging;
@@ -37,7 +37,7 @@ namespace bg3_modders_multitool.Models
                 var xPos = (int)(Width * icon.U1);
                 var yPos = (int)(Height * icon.V1);
                 Rectangle cloneRect = new Rectangle(xPos, yPos, IconWidth, IconHeight);
-                using (var ms = new MemoryStream(AtlasImage))
+                using (var ms = new System.IO.MemoryStream(AtlasImage))
                 {
                     var bmp = new Bitmap(ms);
                     bmp = bmp.Clone(cloneRect, bmp.PixelFormat);
@@ -97,7 +97,7 @@ namespace bg3_modders_multitool.Models
                 {
                     var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
                     var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
-                    using (MemoryStream ms = new MemoryStream())
+                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
                     {
                         bitmap.Save(ms, ImageFormat.Png);
                         newTextureAtlas.AtlasImage = ms.ToArray();
@@ -116,12 +116,12 @@ namespace bg3_modders_multitool.Models
         /// <returns>The converted bitmap image.</returns>
         private static BitmapImage ConvertBitmapToImage(Bitmap bitmap)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
             {
                 bitmap.Save(ms, ImageFormat.Png);
                 BitmapImage img = new BitmapImage();
                 img.BeginInit();
-                ms.Seek(0, SeekOrigin.Begin);
+                ms.Seek(0, System.IO.SeekOrigin.Begin);
                 img.CacheOption = BitmapCacheOption.OnLoad;
                 img.StreamSource = ms;
                 img.EndInit();
