@@ -3,7 +3,9 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
+    using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
+    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -74,18 +76,23 @@ namespace bg3_modders_multitool.Views
         {
             var button = (Button)sender;
             var vm = DataContext as GameObjectViewModel;
-            if (vm.DisabledButton != null)
-                vm.DisabledButton.IsEnabled = true;
-            vm.DisabledButton = button;
-            button.IsEnabled = false;
-            var MapKey = ((Button)sender).Uid;
-            vm.Info = vm.RootTemplateHelper.FlatGameObjects.Single(go => go.MapKey == MapKey);
+            var MapKey = button.Uid;
+            if (MapKey != vm.SelectedKey)
+            {
+                var disabledButton = GeneralHelper.FindUid(treeView, vm.SelectedKey);
+                if (disabledButton != null)
+                    disabledButton.IsEnabled = true;
+                vm.Info = vm.FindGameObject(MapKey);
+                vm.SelectedKey = MapKey;
+                button.IsEnabled = false;
+            }
         }
 
         private void TypeComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
             var vm = DataContext as GameObjectViewModel;
+            vm.ViewPort = viewport;
             typeOptions.Collection = vm.RootTemplateHelper.GameObjectTypes;
             combo.SelectedIndex = 0;
         }
@@ -94,6 +101,34 @@ namespace bg3_modders_multitool.Views
         {
             var vm = DataContext as GameObjectViewModel;
             vm.Clear();
+        }
+
+        /// <summary>
+        /// Disables button when it is loaded by the VirtualizingStackPanel.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private void ItemSelectionButton_Loaded(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as GameObjectViewModel;
+            var button = (Button)sender;
+            var MapKey = button.Uid;
+            if(MapKey == vm.SelectedKey)
+            {
+                button.IsEnabled = false;
+            }
+        }
+
+        /// <summary>
+        /// Launches directory containing the dae file and selects it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var text = ((TextBlock)sender).ToolTip.ToString();
+            text = $"{text}.GR2";
+            FileHelper.OpenFile(text);
         }
         #endregion
 
