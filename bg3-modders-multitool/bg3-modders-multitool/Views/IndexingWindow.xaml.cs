@@ -28,6 +28,7 @@ namespace bg3_modders_multitool.Views
             InitializeComponent();
             DataContext = new SearchResults();
             ((SearchResults)DataContext).IndexHelper.DataContext = (SearchResults)DataContext;
+            ((SearchResults)DataContext).ViewPort = viewport;
             timer.Interval = TimeSpan.FromMilliseconds(400);
             timer.Tick += Timer_Tick;
         }
@@ -36,6 +37,7 @@ namespace bg3_modders_multitool.Views
         {
             if(!string.IsNullOrEmpty(search.Text))
             {
+                searchFilesButton.IsEnabled = false;
                 var vm = DataContext as SearchResults;
                 vm.SelectedPath = string.Empty;
                 vm.FileContents = new ObservableCollection<SearchResult>();
@@ -44,6 +46,7 @@ namespace bg3_modders_multitool.Views
                 {
                     vm.Results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
+                searchFilesButton.IsEnabled = true;
             }
         }
 
@@ -83,12 +86,13 @@ namespace bg3_modders_multitool.Views
                 {
                     vm.FileContents = new ObservableCollection<SearchResult>();
                     vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
+                    var isGr2 = vm.RenderModel();
                     foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
                     {
                         vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
                     }
                     convertAndOpenButton.IsEnabled = true;
-                    convertAndOpenButton.Content = FileHelper.CanConvertToLsx(vm.SelectedPath) ? "Convert & Open" : "Open";
+                    convertAndOpenButton.Content = isGr2 ? "Open .dae" : (FileHelper.CanConvertToLsx(vm.SelectedPath) ? "Convert & Open" : "Open");
                 }
             }
             timer.Stop();
