@@ -4,7 +4,6 @@
 namespace bg3_modders_multitool.Services
 {
     using bg3_modders_multitool.Models;
-    using bg3_modders_multitool.Models.GameObjectTypes;
     using HelixToolkit.Wpf.SharpDX;
     using HelixToolkit.Wpf.SharpDX.Assimp;
     using HelixToolkit.Wpf.SharpDX.Model.Scene;
@@ -20,19 +19,18 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Looks up and loads all the model geometry for the gameobject.
         /// </summary>
-        /// <param name="gameObjectAttributes">The gameobject attributes to get the necessary lookup information from.</param>
+        /// <param name="type">The gameobject type.</param>
+        /// <param name="template">The template id.</param>
+        /// <param name="bodySetVisuals">The body set visualbanks file lookup.</param>
         /// <param name="characterVisualBanks">The character visualbanks file lookup.</param>
         /// <param name="visualBanks">The visualbanks file lookup.</param>
         /// <returns>The list of geometry lookups.</returns>
-        public static List<MeshGeometry> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
+        public static List<MeshGeometry> GetMeshes(string type, string template, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
         {
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
             var gr2Files = new List<string>();
-
-            // Check GameObject type
-            var type = (FixedString)gameObjectAttributes.Single(goa => goa.Name == "Type").Value;
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             // CharacterVisualResourceID => characters, load CharacterVisualBank, then VisualBanks
@@ -40,14 +38,12 @@ namespace bg3_modders_multitool.Services
             switch (type)
             {
                 case "character":
-                    var characterVisualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value;
-                    gr2Files.AddRange(LoadCharacterVisualResources(characterVisualTemplate, characterVisualBanks, visualBanks, bodySetVisuals));
+                    gr2Files.AddRange(LoadCharacterVisualResources(template, characterVisualBanks, visualBanks, bodySetVisuals));
                     break;
                 case "item":
                 case "scenery":
                 case "TileConstruction":
-                    var visualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value;
-                    var itemVisualResource = LoadVisualResource(visualTemplate, visualBanks);
+                    var itemVisualResource = LoadVisualResource(template, visualBanks);
                     if (itemVisualResource != null)
                         gr2Files.Add(itemVisualResource);
                     break;

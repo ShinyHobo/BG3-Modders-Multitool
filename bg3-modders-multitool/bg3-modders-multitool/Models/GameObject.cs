@@ -78,6 +78,14 @@ namespace bg3_modders_multitool.Models
                 {
                     go.Icon = Icon;
                 }
+                if (string.IsNullOrEmpty(go.CharacterVisualResourceID))
+                {
+                    go.CharacterVisualResourceID = CharacterVisualResourceID;
+                }
+                if (string.IsNullOrEmpty(go.VisualTemplate))
+                {
+                    go.VisualTemplate = VisualTemplate;
+                }
                 go.PassOnStats();
             }
         }
