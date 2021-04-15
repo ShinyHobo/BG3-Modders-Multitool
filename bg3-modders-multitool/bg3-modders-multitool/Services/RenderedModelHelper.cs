@@ -3,10 +3,11 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
-    using bg3_modders_multitool.Models.GameObjectTypes;
+    using bg3_modders_multitool.Models;
     using HelixToolkit.Wpf.SharpDX;
     using HelixToolkit.Wpf.SharpDX.Assimp;
     using HelixToolkit.Wpf.SharpDX.Model.Scene;
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -18,19 +19,18 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Looks up and loads all the model geometry for the gameobject.
         /// </summary>
-        /// <param name="gameObjectAttributes">The gameobject attributes to get the necessary lookup information from.</param>
+        /// <param name="type">The gameobject type.</param>
+        /// <param name="template">The template id.</param>
+        /// <param name="bodySetVisuals">The body set visualbanks file lookup.</param>
         /// <param name="characterVisualBanks">The character visualbanks file lookup.</param>
         /// <param name="visualBanks">The visualbanks file lookup.</param>
         /// <returns>The list of geometry lookups.</returns>
-        public static List<Dictionary<string, List<MeshGeometry3D>>> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
+        public static List<MeshGeometry> GetMeshes(string type, string template, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
         {
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
             var gr2Files = new List<string>();
-
-            // Check GameObject type
-            var type = (FixedString)gameObjectAttributes.Single(goa => goa.Name == "Type").Value;
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             // CharacterVisualResourceID => characters, load CharacterVisualBank, then VisualBanks
@@ -38,14 +38,12 @@ namespace bg3_modders_multitool.Services
             switch (type)
             {
                 case "character":
-                    var characterVisualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value;
-                    gr2Files.AddRange(LoadCharacterVisualResources(characterVisualTemplate, characterVisualBanks, visualBanks, bodySetVisuals));
+                    gr2Files.AddRange(LoadCharacterVisualResources(template, characterVisualBanks, visualBanks, bodySetVisuals));
                     break;
                 case "item":
                 case "scenery":
                 case "TileConstruction":
-                    var visualTemplate = (FixedString)gameObjectAttributes.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value;
-                    var itemVisualResource = LoadVisualResource(visualTemplate, visualBanks);
+                    var itemVisualResource = LoadVisualResource(template, visualBanks);
                     if (itemVisualResource != null)
                         gr2Files.Add(itemVisualResource);
                     break;
@@ -53,13 +51,13 @@ namespace bg3_modders_multitool.Services
                     break;
             }
 
-            var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
+            var geometryGroup = new List<MeshGeometry>();
 
             foreach(var gr2File in gr2Files)
             {
                 var geometry = GetMesh(gr2File);
                 if(geometry != null)
-                    geometryGroup.Add(geometry);
+                    geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty).Replace('/','\\'), geometry));
             }
 
             return geometryGroup;
@@ -128,33 +126,51 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
                 GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
             }
-            var importer = new Importer();
-            // Update material here?
-            var file = importer.Load(dae);
-            if (file == null && File.Exists(dae))
+            try
             {
-                GeneralHelper.WriteToConsole("Fixing vertices...\n");
-                try
+                var importer = new Importer();
+                // Update material here?
+                var file = importer.Load(dae);
+                if (file == null && File.Exists(dae))
                 {
-                    var xml = XDocument.Load(dae);
-                    var geometryList = xml.Descendants().Where(x => x.Name.LocalName == "geometry").ToList();
-                    foreach (var lod in geometryList)
+                    GeneralHelper.WriteToConsole("Fixing vertices...\n");
+                    try
                     {
-                        var vertexId = lod.Descendants().Where(x => x.Name.LocalName == "vertices").Select(x => x.Attribute("id").Value).First();
-                        var vertex = lod.Descendants().Single(x => x.Name.LocalName == "input" && x.Attribute("semantic").Value == "VERTEX");
-                        vertex.Attribute("source").Value = $"#{vertexId}";
+                        var xml = XDocument.Load(dae);
+                        var geometryList = xml.Descendants().Where(x => x.Name.LocalName == "geometry").ToList();
+                        foreach (var lod in geometryList)
+                        {
+                            var vertexId = lod.Descendants().Where(x => x.Name.LocalName == "vertices").Select(x => x.Attribute("id").Value).First();
+                            var vertex = lod.Descendants().Single(x => x.Name.LocalName == "input" && x.Attribute("semantic").Value == "VERTEX");
+                            vertex.Attribute("source").Value = $"#{vertexId}";
+                        }
+                        xml.Save(dae);
+                        GeneralHelper.WriteToConsole("Model conversion complete!\n");
+                        file = importer.Load(dae);
                     }
-                    xml.Save(dae);
-                    GeneralHelper.WriteToConsole("Model conversion complete!\n");
-                    file = importer.Load(dae);
+                    catch (Exception ex)
+                    {
+                        // in use by another process
+                        GeneralHelper.WriteToConsole($"Error : {ex.Message}\n");
+                    }
                 }
-                catch
+                
+                if(!File.Exists($"{filename}.fbx"))
                 {
-                    // in use by another process
+                    var converter = new Assimp.AssimpContext();
+                    var exportFormats = converter.GetSupportedExportFormats().Select(e => e.FormatId);
+                    var importFormats = converter.GetSupportedImportFormats();
+                    var imported = converter.ImportFile(dae);
+                    converter.ExportFile(imported, $"{filename}.fbx", "fbx");
                 }
+                importer.Dispose();
+                return file;
             }
-            importer.Dispose();
-            return file;
+            catch(Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"Error loading .dae: {ex.Message}. Inner exception: {ex.InnerException.Message}\n");
+            }
+            return null;
         }
 
         /// <summary>
