@@ -114,8 +114,8 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Decompresses all decompressable files recursively.
         /// </summary>
-        /// <returns>The task.</returns>
-        public Task DecompressAllConvertableFiles()
+        /// <returns>The task with the list of all decompressable files.</returns>
+        public static Task<List<string>> DecompressAllConvertableFiles()
         {
             return Task.Run(() =>
             {
@@ -123,13 +123,19 @@ namespace bg3_modders_multitool.Services
                 var fileList = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
                 GeneralHelper.WriteToConsole($"Retrived file list. Starting decompression; this could take awhile.\n");
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
+                var lsxFiles = new List<string>();
                 Parallel.ForEach(fileList, file => {
                     if (!string.IsNullOrEmpty(Path.GetExtension(file)))
                     {
-                        FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
+                        var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
+                        if (Path.GetExtension(convertedFile) == ".lsx")
+                        {
+                            lsxFiles.Add(convertedFile);
+                        }
                     }
                 });
                 GeneralHelper.WriteToConsole($"Decompression complete.\n");
+                return lsxFiles;
             });
         }
     }

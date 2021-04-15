@@ -3,11 +3,14 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using BrendanGrant.Helpers.FileAssociation;
+    using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
+    using System.Windows.Forms;
 
     public static class FileHelper
     {
@@ -21,10 +24,10 @@ namespace bg3_modders_multitool.Services
         /// <returns>The new file path.</returns>
         public static string Convert(string file, string extension, string newPath = null)
         {
-            var path = string.Empty;
             var originalExtension = Path.GetExtension(file);
             var newFile = file.Replace(originalExtension, $".{extension}");
             var isConvertable = true;
+            string path;
             if (string.IsNullOrEmpty(newPath))
             {
                 path = GetPath(file);
@@ -115,7 +118,7 @@ namespace bg3_modders_multitool.Services
                     }
                     fileList.AddRange(RecursiveFileSearch(dir));
                 }
-                catch(System.Exception ex)
+                catch
                 {
                     GeneralHelper.WriteToConsole($"Could not read from directory: {directory}\n");
                 }
@@ -143,6 +146,16 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Determines if the file path is a .GR2 mesh.
+        /// </summary>
+        /// <param name="path">The file path.</param>
+        /// <returns>Whether or not the file is a .GR2 file.</returns>
+        public static bool IsGR2(string path)
+        {
+            return Path.GetExtension(path).Contains(".GR2") || Path.GetExtension(path).Contains(".gr2");
+        }
+
+        /// <summary>
         /// Gets a standard path for files.
         /// </summary>
         /// <param name="file">The file to generate a path for.</param>
@@ -161,12 +174,82 @@ namespace bg3_modders_multitool.Services
             var path = GetPath(file);
             if (File.Exists(@"\\?\" + path))
             {
-                Process.Start(path);
+                if(IsGR2(path))
+                {
+                    var dae = Path.ChangeExtension(path,".dae");
+                    // determine if you can determine if there is a default program
+                    var fileAssociation = new FileAssociationInfo(".dae");
+                    if(fileAssociation.Exists)
+                        Process.Start(dae);
+                    // open folder
+                    Process.Start("explorer.exe", $"/select,{dae}");
+                }
+                else
+                {
+                    Process.Start(path);
+                }
             }
             else
             {
                 GeneralHelper.WriteToConsole($"File does not exist on the given path ({path}).\n");
             }
+        }
+
+        /// <summary>
+        /// Serializes an object and saves it as a json file.
+        /// </summary>
+        /// <param name="serialObject">The object to serialize</param>
+        /// <param name="filename">The filename to use, without extension</param>
+        public static void SerializeObject(object serialObject, string filename)
+        {
+            var file = $"Cache/{filename}.json";
+            if (!File.Exists(file))
+            {
+                GeneralHelper.WriteToConsole($"Caching {filename}...\n");
+                TextWriter writer = null;
+                try
+                {
+                    if (!Directory.Exists("Cache"))
+                        Directory.CreateDirectory("Cache");
+                    var contentsToWriteToFile = JsonConvert.SerializeObject(serialObject, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    writer = new StreamWriter(file, false);
+                    writer.Write(contentsToWriteToFile);
+                }
+                finally
+                {
+                    if (writer != null)
+                        writer.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an object from a saved json file.
+        /// </summary>
+        /// <typeparam name="T">The object type.</typeparam>
+        /// <param name="filename">The filename, without extension.</param>
+        /// <returns>The deserialized object, or null if not found.</returns>
+        public static T DeserializeObject<T>(string filename)
+        {
+            var file = $"Cache/{filename}.json";
+            T objectOut = default(T);
+            if (File.Exists(file))
+            {
+                GeneralHelper.WriteToConsole($"Loading {filename} from cache...\n");
+                TextReader reader = null;
+                try
+                {
+                    reader = new StreamReader(file);
+                    var fileContents = reader.ReadToEnd();
+                    return JsonConvert.DeserializeObject<T>(fileContents);
+                }
+                finally
+                {
+                    if (reader != null)
+                        reader.Close();
+                }
+            }
+            return objectOut;
         }
     }
 }
