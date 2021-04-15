@@ -245,14 +245,14 @@ namespace bg3_modders_multitool.Services
         {
             var lines = new Dictionary<int, string>();
             var lineCount = 1;
-            path = @"\\?\" + path;
             if (File.Exists(path))
             {
                 var extension = Path.GetExtension(path);
                 var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    using (System.IO.StreamReader r = new System.IO.StreamReader(path))
+                    var stream = File.OpenText(path);
+                    using (System.IO.StreamReader r = stream)
                     {
                         string line;
                         var searchArray = SearchText.Split(' ');

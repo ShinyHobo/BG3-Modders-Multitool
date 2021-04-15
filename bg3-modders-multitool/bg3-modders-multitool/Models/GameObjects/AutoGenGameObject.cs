@@ -22,7 +22,8 @@ namespace bg3_modders_multitool.Models.GameObjects
 
 			if (File.Exists(file))
             {
-                using (var fileStream = new System.IO.StreamReader(file))
+                var stream = File.OpenText(file);
+                using (var fileStream = stream)
                 using (var reader = new XmlTextReader(fileStream))
                 {
                     reader.Read();

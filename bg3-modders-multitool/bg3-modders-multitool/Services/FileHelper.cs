@@ -238,7 +238,8 @@ namespace bg3_modders_multitool.Services
                 System.IO.TextReader reader = null;
                 try
                 {
-                    reader = new System.IO.StreamReader(file);
+                    var stream = File.OpenText(file);
+                    reader = stream;
                     var fileContents = reader.ReadToEnd();
                     return JsonConvert.DeserializeObject<T>(fileContents);
                 }
