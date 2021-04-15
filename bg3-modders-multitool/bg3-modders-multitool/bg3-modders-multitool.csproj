@@ -364,6 +364,7 @@
     <Compile Include="Models\GameObjectTypes\TranslatedString.cs" />
     <Compile Include="Models\GameObjectTypes\FixedString.cs" />
     <Compile Include="Models\GameObject.cs" />
+    <Compile Include="Models\MeshGeometry.cs" />
     <Compile Include="Models\TextureAtlas.cs" />
     <Compile Include="Models\IconUV.cs" />
     <Compile Include="Models\Races\Component.cs" />
@@ -503,6 +504,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Costura64\assimp.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

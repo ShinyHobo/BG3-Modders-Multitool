@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.GameObjects;
+    using bg3_modders_multitool.Models.GameObjectTypes;
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
@@ -141,6 +142,16 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        private List<MeshGeometry> _meshFiles;
+
+        public List<MeshGeometry> MeshFiles {
+            get { return _meshFiles; }
+            set {
+                _meshFiles = value;
+                OnNotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Properties
@@ -189,14 +200,18 @@ namespace bg3_modders_multitool.ViewModels
                 }
 
                 Task.Run(() => {
+                    var type = (FixedString)GameObjectAttributes.Single(goa => goa.Name == "Type").Value;
+                    var characterVisualResourceId = (FixedString)GameObjectAttributes.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value ?? value.CharacterVisualResourceID;
+                    var visualTemplate = (FixedString)GameObjectAttributes.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value ?? value.VisualTemplate;
                     // this should dynamically create meshes based on the number of objects, assemble them based on transforms
-                    var slots = RenderedModelHelper.GetMeshes(GameObjectAttributes, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals);
+                    var slots = RenderedModelHelper.GetMeshes(type, characterVisualResourceId ?? visualTemplate, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals);
+                    MeshFiles = slots.OrderBy(slot => slot.File).ToList();
 
                     // Loop through slots
                     foreach (var lodLevels in slots)
                     {
                         // TODO - need lod slider, selecting highest lod first
-                        var lod = lodLevels.First().Value;
+                        var lod = lodLevels.MeshList.First().Value;
                         foreach (var model in lod)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
