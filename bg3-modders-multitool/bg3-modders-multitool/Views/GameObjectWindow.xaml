@@ -116,18 +116,18 @@
         <TextBlock x:Name="listCountBlock" HorizontalAlignment="Left" Margin="470,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="73"/>
         <TabControl x:Name="tabBox" Margin="550,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <TabItem Header="Stats" Cursor="Hand">
-                <Grid>
+                <Grid Cursor="Arrow">
                     <Grid Margin="0,20,0,0">
                         <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False" ShowTitle="False" IsVirtualizing="True"/>
                     </Grid>
-                    <Grid>
+                    <Grid Margin="0,0,0,384" Height="20">
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Stats, Mode=OneWay}" Background="Transparent" FontWeight="Bold"
                                                 Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Attributes" Cursor="Hand">
-                <ListBox ItemsSource="{Binding GameObjectAttributes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" AlternationCount="2">
+                <ListBox ItemsSource="{Binding GameObjectAttributes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" AlternationCount="2" Cursor="Arrow">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <WrapPanel>
@@ -141,7 +141,7 @@
                 </ListBox>
             </TabItem>
             <TabItem Header="Icon" Cursor="Hand">
-                <StackPanel>
+                <StackPanel Cursor="Arrow">
                     <Grid Margin="0,10,0,10">
                         <Image Width="200" Source="{Binding Icon}"/>
                     </Grid>
@@ -153,8 +153,8 @@
                     </Grid>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="3D Model">
-                <Grid>
+            <TabItem Header="3D Model" Cursor="Hand">
+                <Grid Cursor="Arrow">
                     <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" UseDefaultGestures="False"
                                     IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black">
                         <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
@@ -174,9 +174,23 @@
                             <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
                         </hx:Viewport3DX.InputBindings>
                     </hx:Viewport3DX>
-                    <Grid Background="Black" Visibility="{Binding ModelLoading }" x:Name="modelLoadingScreen">
+                    <Grid Background="Black" Visibility="{Binding ModelLoading}" x:Name="modelLoadingScreen">
                         <TextBlock Text="Loading..." TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
                     </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Model Files" Cursor="Hand">
+                <Grid>
+                    <ListBox ItemsSource="{Binding MeshFiles}" AlternationCount="2" Cursor="Arrow">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <WrapPanel >
+                                    <TextBlock Text="{Binding FileName}" ToolTip="{Binding File}" MouseLeftButtonUp="TextBlock_MouseLeftButtonUp" Cursor="Hand"/>
+                                </WrapPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Grid Background="White" Visibility="{Binding ModelLoading}" x:Name="meshListLoadingScreen"/>
                 </Grid>
             </TabItem>
         </TabControl>

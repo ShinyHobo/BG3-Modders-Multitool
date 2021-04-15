@@ -141,6 +141,16 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        private List<MeshGeometry> _meshFiles;
+
+        public List<MeshGeometry> MeshFiles {
+            get { return _meshFiles; }
+            set {
+                _meshFiles = value;
+                OnNotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Properties
@@ -191,12 +201,13 @@ namespace bg3_modders_multitool.ViewModels
                 Task.Run(() => {
                     // this should dynamically create meshes based on the number of objects, assemble them based on transforms
                     var slots = RenderedModelHelper.GetMeshes(GameObjectAttributes, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals);
+                    MeshFiles = slots.OrderBy(slot => slot.File).ToList();
 
                     // Loop through slots
                     foreach (var lodLevels in slots)
                     {
                         // TODO - need lod slider, selecting highest lod first
-                        var lod = lodLevels.First().Value;
+                        var lod = lodLevels.MeshList.First().Value;
                         foreach (var model in lod)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
