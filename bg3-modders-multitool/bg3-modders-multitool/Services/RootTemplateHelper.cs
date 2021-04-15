@@ -202,8 +202,6 @@ namespace bg3_modders_multitool.Services
 
                                 if(string.IsNullOrEmpty(gameObject.ParentTemplateId))
                                     gameObject.ParentTemplateId = gameObject.TemplateName;
-                                if (string.IsNullOrEmpty(gameObject.CharacterVisualResourceID))
-                                    gameObject.CharacterVisualResourceID = gameObject.VisualTemplate;
                                 if (string.IsNullOrEmpty(gameObject.Name))
                                     gameObject.Name = gameObject.DisplayName;
                                 if (string.IsNullOrEmpty(gameObject.Name))
