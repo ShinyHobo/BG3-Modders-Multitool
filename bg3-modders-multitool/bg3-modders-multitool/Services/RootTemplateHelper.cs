@@ -164,8 +164,8 @@ namespace bg3_modders_multitool.Services
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
                     var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
-
-                    using(var fileStream = new System.IO.StreamReader(rootTemplatePath))
+                    var stream = File.OpenText(rootTemplatePath);
+                    using (var fileStream = stream)
                     using(var reader = new XmlTextReader(fileStream))
                     {
                         reader.Read();
@@ -435,8 +435,8 @@ namespace bg3_modders_multitool.Services
                 {
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
                     var filePath = visualBankFilePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
-
-                    using (var fileStream = new System.IO.StreamReader(visualBankFilePath))
+                    var stream = File.OpenText(visualBankFilePath);
+                    using (var fileStream = stream)
                     using (var reader = new XmlTextReader(fileStream))
                     {
                         reader.Read();
