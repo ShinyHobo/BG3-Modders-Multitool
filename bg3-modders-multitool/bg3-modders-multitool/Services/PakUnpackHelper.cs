@@ -3,10 +3,10 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.ViewModels;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 

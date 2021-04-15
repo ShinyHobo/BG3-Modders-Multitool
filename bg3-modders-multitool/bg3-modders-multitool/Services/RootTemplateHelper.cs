@@ -4,6 +4,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Enums;
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
@@ -11,7 +12,6 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -165,7 +165,7 @@ namespace bg3_modders_multitool.Services
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
                     var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
 
-                    using(var fileStream = new StreamReader(rootTemplatePath))
+                    using(var fileStream = new System.IO.StreamReader(rootTemplatePath))
                     using(var reader = new XmlTextReader(fileStream))
                     {
                         reader.Read();
@@ -348,7 +348,7 @@ namespace bg3_modders_multitool.Services
                 {
                     var fileType = Models.StatStructures.StatStructure.FileType(file);
                     var line = string.Empty;
-                    using(var fileStream = new StreamReader(file))
+                    using(var fileStream = new System.IO.StreamReader(file))
                     {
                         while ((line = fileStream.ReadLine()) != null)
                         {
@@ -436,7 +436,7 @@ namespace bg3_modders_multitool.Services
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
                     var filePath = visualBankFilePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
 
-                    using (var fileStream = new StreamReader(visualBankFilePath))
+                    using (var fileStream = new System.IO.StreamReader(visualBankFilePath))
                     using (var reader = new XmlTextReader(fileStream))
                     {
                         reader.Read();
