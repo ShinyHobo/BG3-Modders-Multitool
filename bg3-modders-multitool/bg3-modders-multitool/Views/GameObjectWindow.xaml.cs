@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
+    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -116,6 +117,18 @@ namespace bg3_modders_multitool.Views
             {
                 button.IsEnabled = false;
             }
+        }
+
+        /// <summary>
+        /// Launches directory containing the dae file and selects it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var text = ((TextBlock)sender).ToolTip.ToString();
+            text = $"{text}.GR2";
+            FileHelper.OpenFile(text);
         }
         #endregion
 

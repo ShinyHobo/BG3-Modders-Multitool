@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.GameObjectTypes;
     using HelixToolkit.Wpf.SharpDX;
     using HelixToolkit.Wpf.SharpDX.Assimp;
@@ -23,7 +24,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="characterVisualBanks">The character visualbanks file lookup.</param>
         /// <param name="visualBanks">The visualbanks file lookup.</param>
         /// <returns>The list of geometry lookups.</returns>
-        public static List<Dictionary<string, List<MeshGeometry3D>>> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
+        public static List<MeshGeometry> GetMeshes(List<Models.GameObjects.GameObjectAttribute> gameObjectAttributes, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
         {
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
@@ -54,13 +55,13 @@ namespace bg3_modders_multitool.Services
                     break;
             }
 
-            var geometryGroup = new List<Dictionary<string, List<MeshGeometry3D>>>();
+            var geometryGroup = new List<MeshGeometry>();
 
             foreach(var gr2File in gr2Files)
             {
                 var geometry = GetMesh(gr2File);
                 if(geometry != null)
-                    geometryGroup.Add(geometry);
+                    geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty).Replace('/','\\'), geometry));
             }
 
             return geometryGroup;
