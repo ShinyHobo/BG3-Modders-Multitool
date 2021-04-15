@@ -155,11 +155,24 @@
             </TabItem>
             <TabItem Header="3D Model">
                 <Grid>
-                    <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black">
+                    <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" UseDefaultGestures="False"
+                                    IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black">
                         <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
                         <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
                         <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
                         <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
+                        <hx:Viewport3DX.InputBindings>
+                            <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                            <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                            <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                            <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                            <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                            <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                            <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                            <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
+                            <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                            <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
+                        </hx:Viewport3DX.InputBindings>
                     </hx:Viewport3DX>
                     <Grid Background="Black" Visibility="{Binding ModelLoading }" x:Name="modelLoadingScreen">
                         <TextBlock Text="Loading..." TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>

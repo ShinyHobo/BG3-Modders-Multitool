@@ -157,12 +157,21 @@ namespace bg3_modders_multitool.Services
                         GeneralHelper.WriteToConsole($"Error : {ex.Message}\n");
                     }
                 }
+                
+                if(!File.Exists($"{filename}.fbx"))
+                {
+                    var converter = new Assimp.AssimpContext();
+                    var exportFormats = converter.GetSupportedExportFormats().Select(e => e.FormatId);
+                    var importFormats = converter.GetSupportedImportFormats();
+                    var imported = converter.ImportFile(dae);
+                    converter.ExportFile(imported, $"{filename}.fbx", "fbx");
+                }
                 importer.Dispose();
                 return file;
             }
             catch(Exception ex)
             {
-                GeneralHelper.WriteToConsole($"Error loading .dae: {ex.Message}\n");
+                GeneralHelper.WriteToConsole($"Error loading .dae: {ex.Message}. Inner exception: {ex.InnerException.Message}\n");
             }
             return null;
         }
