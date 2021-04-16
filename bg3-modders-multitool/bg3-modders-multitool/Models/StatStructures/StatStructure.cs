@@ -3,9 +3,9 @@
 /// </summary>
 namespace bg3_modders_multitool.Models.StatStructures
 {
+    using Alphaleonis.Win32.Filesystem;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
 
     public abstract class StatStructure
