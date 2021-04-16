@@ -95,6 +95,7 @@ namespace bg3_modders_multitool.ViewModels
             get { return _unpackAllowed; }
             set {
                 _unpackAllowed = value;
+                NotDecompressing = value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -153,6 +154,16 @@ namespace bg3_modders_multitool.ViewModels
             get { return _launchGameAllowed; }
             set {
                 _launchGameAllowed = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _notDecompressing;
+
+        public bool NotDecompressing {
+            get { return _notDecompressing; }
+            set {
+                _notDecompressing = value;
                 OnNotifyPropertyChanged();
             }
         }

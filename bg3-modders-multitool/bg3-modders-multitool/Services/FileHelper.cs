@@ -158,9 +158,11 @@ namespace bg3_modders_multitool.Services
         /// Gets a standard path for files.
         /// </summary>
         /// <param name="file">The file to generate a path for.</param>
-        /// <returns></returns>
+        /// <returns>The full file path.</returns>
         public static string GetPath(string file)
         {
+            if(!string.IsNullOrEmpty(file) && file.Contains($"{Directory.GetCurrentDirectory()}\\UnpackedData\\"))
+                    return file;
             return $"{Directory.GetCurrentDirectory()}\\UnpackedData\\{file}";
         }
 
