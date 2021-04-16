@@ -131,8 +131,9 @@ namespace bg3_modders_multitool.Services
             {
                 Properties.Settings.Default.quickLaunch = setting;
                 FileHelper.CreateDestroyQuickLaunchMod(setting);
-                // find where game launches from and add -continueGame parameter to launch command
                 Properties.Settings.Default.Save();
+                var toggleText = setting ? "on" : "off";
+                GeneralHelper.WriteToConsole($"Quick launch settings toggled {toggleText}!\n");
             }
         }
     }
