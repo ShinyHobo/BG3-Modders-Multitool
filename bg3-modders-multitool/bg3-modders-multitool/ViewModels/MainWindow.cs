@@ -15,6 +15,7 @@ namespace bg3_modders_multitool.ViewModels
             Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
             Unpacker = new PakUnpackHelper();
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
+            QuickLaunch = Properties.Settings.Default.quickLaunch;
         }
 
         #region File Selection Methods
@@ -68,6 +69,17 @@ namespace bg3_modders_multitool.ViewModels
                 Clipboard.SetText(GuidText);
                 ConsoleOutput += $"{type} [{GuidText}] copied to clipboard!\n";
             }
+        }
+        #endregion
+
+        #region Configuration Methods
+        /// <summary>
+        /// Toggles the quick launch features.
+        /// </summary>
+        /// <param name="setting">Whether or not quick launch options should be enabled.</param>
+        public void ToggleQuickLaunch(bool setting)
+        {
+            GeneralHelper.ToggleQuickLaunch(setting);
         }
         #endregion
 
@@ -164,6 +176,16 @@ namespace bg3_modders_multitool.ViewModels
             get { return _notDecompressing; }
             set {
                 _notDecompressing = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _quickLaunch;
+
+        public bool QuickLaunch {
+            get { return _quickLaunch; }
+            set {
+                _quickLaunch = value;
                 OnNotifyPropertyChanged();
             }
         }
