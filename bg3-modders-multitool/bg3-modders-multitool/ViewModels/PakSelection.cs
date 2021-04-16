@@ -5,7 +5,7 @@ namespace bg3_modders_multitool.ViewModels
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.IO;
+    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.ViewModels.Reusables;
 
     public class PakSelection : BaseViewModel

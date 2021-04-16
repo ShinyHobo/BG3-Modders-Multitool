@@ -3,11 +3,11 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
+    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
-    using System.IO;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;

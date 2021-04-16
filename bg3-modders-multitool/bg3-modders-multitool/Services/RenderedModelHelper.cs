@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Models;
     using HelixToolkit.Wpf.SharpDX;
     using HelixToolkit.Wpf.SharpDX.Assimp;
@@ -10,7 +11,6 @@ namespace bg3_modders_multitool.Services
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Xml.Linq;
 

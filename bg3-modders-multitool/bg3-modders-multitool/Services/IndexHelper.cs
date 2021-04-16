@@ -4,7 +4,6 @@
 namespace bg3_modders_multitool.Services
 {
     using System;
-    using System.IO;
     using System.Collections.Generic;
     using System.Windows;
     using System.Linq;
@@ -21,6 +20,7 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Analysis.En;
     using Lucene.Net.Analysis.Util;
     using J2N;
+    using Alphaleonis.Win32.Filesystem;
 
     public class IndexHelper
     {
@@ -245,14 +245,14 @@ namespace bg3_modders_multitool.Services
         {
             var lines = new Dictionary<int, string>();
             var lineCount = 1;
-            path = @"\\?\" + path;
             if (File.Exists(path))
             {
                 var extension = Path.GetExtension(path);
                 var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    using (StreamReader r = new StreamReader(path))
+                    var stream = File.OpenText(path);
+                    using (System.IO.StreamReader r = stream)
                     {
                         string line;
                         var searchArray = SearchText.Split(' ');
@@ -315,7 +315,7 @@ namespace bg3_modders_multitool.Services
     /// </summary>
     public class CustomAnalyzer : Analyzer
     {
-        protected override TokenStreamComponents CreateComponents(string fieldName,TextReader reader)
+        protected override TokenStreamComponents CreateComponents(string fieldName, System.IO.TextReader reader)
         {
             Tokenizer tokenizer = new CustomTokenizer(LuceneVersion.LUCENE_48, reader);
             TokenStream result = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
@@ -331,7 +331,7 @@ namespace bg3_modders_multitool.Services
     {
         private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':'};
 
-        public CustomTokenizer(LuceneVersion matchVersion, TextReader input) : base(matchVersion, input) { }
+        public CustomTokenizer(LuceneVersion matchVersion, System.IO.TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
         /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':')
