@@ -3,11 +3,11 @@
 /// </summary>
 namespace bg3_modders_multitool.ViewModels
 {
+    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Services;
     using HelixToolkit.Wpf.SharpDX;
     using System;
     using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;

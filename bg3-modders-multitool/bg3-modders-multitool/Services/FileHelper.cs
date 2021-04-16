@@ -3,14 +3,13 @@
 /// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using Alphaleonis.Win32.Filesystem;
     using BrendanGrant.Helpers.FileAssociation;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
-    using System.Windows.Forms;
 
     public static class FileHelper
     {
@@ -206,13 +205,13 @@ namespace bg3_modders_multitool.Services
             if (!File.Exists(file))
             {
                 GeneralHelper.WriteToConsole($"Caching {filename}...\n");
-                TextWriter writer = null;
+                System.IO.TextWriter writer = null;
                 try
                 {
                     if (!Directory.Exists("Cache"))
                         Directory.CreateDirectory("Cache");
                     var contentsToWriteToFile = JsonConvert.SerializeObject(serialObject, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                    writer = new StreamWriter(file, false);
+                    writer = new System.IO.StreamWriter(file, false);
                     writer.Write(contentsToWriteToFile);
                 }
                 finally
@@ -236,10 +235,11 @@ namespace bg3_modders_multitool.Services
             if (File.Exists(file))
             {
                 GeneralHelper.WriteToConsole($"Loading {filename} from cache...\n");
-                TextReader reader = null;
+                System.IO.TextReader reader = null;
                 try
                 {
-                    reader = new StreamReader(file);
+                    var stream = File.OpenText(file);
+                    reader = stream;
                     var fileContents = reader.ReadToEnd();
                     return JsonConvert.DeserializeObject<T>(fileContents);
                 }
