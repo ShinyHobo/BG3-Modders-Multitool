@@ -134,6 +134,7 @@ namespace bg3_modders_multitool.Services
                         }
                     }
                 });
+                fileList.Clear();
                 GeneralHelper.WriteToConsole($"Decompression complete.\n");
                 return lsxFiles;
             });

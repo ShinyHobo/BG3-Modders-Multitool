@@ -116,7 +116,16 @@ namespace bg3_modders_multitool.Views
 
         private async void Decompress_Click(object sender, RoutedEventArgs e)
         {
-            await PakUnpackHelper.DecompressAllConvertableFiles();
+            var vm = DataContext as ViewModels.MainWindow;
+            if(vm.NotDecompressing)
+            {
+                vm.NotDecompressing = false;
+                await PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        vm.NotDecompressing = true;
+                    });
+                });
+            }
         }
 
         private void configMenu_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
