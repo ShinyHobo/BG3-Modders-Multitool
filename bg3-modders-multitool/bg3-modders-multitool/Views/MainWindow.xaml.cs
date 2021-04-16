@@ -106,7 +106,7 @@ namespace bg3_modders_multitool.Views
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            System.Diagnostics.Process.Start(vm.Bg3ExeLocation);
+            System.Diagnostics.Process.Start(vm.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame" : string.Empty);
         }
 
         private void GameObjectButton_Click(object sender, RoutedEventArgs e)
