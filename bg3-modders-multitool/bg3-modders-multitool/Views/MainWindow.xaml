@@ -22,9 +22,9 @@
                      IsReadOnly="True" Background="Black" Foreground="White"/>
         </ScrollViewer>
         <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="620,81,0,0" VerticalAlignment="Top" Width="100" Height="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" ToolTip="Launches the game"/>
-        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}" ToolTip="Allows you to select the game paks to unpack"/>
-        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand" ToolTip="Immediately stop all unpacking processes"/>
-        <Button x:Name="decompressButton" Content="Decompress Files" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" 
+        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}" ToolTip="Allows you to select the game paks to unpack"/>
+        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand" ToolTip="Immediately stop all unpacking processes"/>
+        <Button x:Name="decompressButton" Content="Decompress Files" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" 
                 Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding NotDecompressing}" ToolTip="Converts all convertable, unpacked files to .lsx"/>
         <Grid Margin="273,115,60,260">
             <Grid.ColumnDefinitions>
@@ -37,7 +37,7 @@
                     <Run Text="{Binding SearchResults.IndexFileCount, Mode=OneWay}"/> /
                     <Run Text="{Binding SearchResults.IndexFileTotal, Mode=OneWay}"/>
                 </TextBlock>
-                <TextBlock Margin="130,4,0,0" Text="Estimate: "></TextBlock>
+                <TextBlock Margin="0,38,0,-34" Text="Estimate: "></TextBlock>
                 <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="180,4,0,0" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
             </Grid>
             <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click" 
