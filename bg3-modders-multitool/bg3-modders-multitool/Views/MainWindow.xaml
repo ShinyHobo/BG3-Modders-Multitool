@@ -31,14 +31,14 @@
                 <ColumnDefinition Width="321*"/>
                 <ColumnDefinition Width="122*"/>
             </Grid.ColumnDefinitions>
-            <Grid Visibility="{Binding SearchResults.IndexingVisibility}" Grid.ColumnSpan="2" Margin="210,10,0,3">
-                <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="125" HorizontalAlignment="Left" Height="23" VerticalAlignment="Bottom"/>
+            <Grid Visibility="{Binding SearchResults.IndexingVisibility}" Grid.ColumnSpan="2" Margin="210,10,0,0">
+                <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="125" HorizontalAlignment="Left" Height="23" Margin="0,0,0,0" VerticalAlignment="Top"/>
                 <TextBlock Margin="15,4,0,0" FontWeight="Bold">
                     <Run Text="{Binding SearchResults.IndexFileCount, Mode=OneWay}"/> /
                     <Run Text="{Binding SearchResults.IndexFileTotal, Mode=OneWay}"/>
                 </TextBlock>
                 <TextBlock Margin="0,25,0,-34" Text="Estimate: "></TextBlock>
-                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="50,25,0,-34" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
+                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="50,25,0,-34" TextWrapping="Wrap" Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
             </Grid>
             <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click" 
                     Cursor="Hand" ToolTip="Click to begin indexing" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
