@@ -120,5 +120,21 @@ namespace bg3_modders_multitool.Services
                 Directory.CreateDirectory("Development");
             File.WriteAllText("Development/classList.txt", classList);
         }
+
+        /// <summary>
+        /// Toggles the quick launch features.
+        /// </summary>
+        /// <param name="setting">Whether or not quick launch options should be enabled.</param>
+        public static void ToggleQuickLaunch(bool setting)
+        {
+            if(Properties.Settings.Default.quickLaunch != setting)
+            {
+                Properties.Settings.Default.quickLaunch = setting;
+                FileHelper.CreateDestroyQuickLaunchMod(setting);
+                Properties.Settings.Default.Save();
+                var toggleText = setting ? "on" : "off";
+                GeneralHelper.WriteToConsole($"Quick launch settings toggled {toggleText}!\n");
+            }
+        }
     }
 }
