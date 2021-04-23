@@ -81,3 +81,5 @@ ModFolder
 ```
 
 Upon working correctly, you will get a .zip of the same name as your mod directory immediately next to it. It is compatible with ShadowChild's <a href='https://github.com/ShadowChild/BaldursGate3/releases'>Candor Mod Manager</a>
+
+Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
