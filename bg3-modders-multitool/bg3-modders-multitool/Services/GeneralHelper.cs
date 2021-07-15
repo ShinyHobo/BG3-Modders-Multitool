@@ -105,6 +105,9 @@ namespace bg3_modders_multitool.Services
                     case "TranslatedString":
                         type = attribute.Item2;
                         break;
+                    case "18":
+                        type = "List<Tuple<float, float, float>>";
+                        break;
                     default:
                         throw new Exception($"Attribute type not covered: {attribute.Item2}");
                 }

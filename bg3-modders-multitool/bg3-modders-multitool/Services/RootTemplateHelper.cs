@@ -203,21 +203,39 @@ namespace bg3_modders_multitool.Services
                                         case "1":
                                             type = "uint8";
                                             break;
+                                        case "2":
+                                            type = "int16";
+                                            break;
+                                        case "5":
+                                            type = "uint32";
+                                            break;
                                         case "4":
                                         case "6":
                                             type = "float";
                                             break;
+                                        case "11":
+                                            type = "fvec2";
+                                            break;
                                         case "12":
+                                            type = "fvec3";
+                                            break;
+                                        case "13":
                                             type = "fvec4";
+                                            break;
+                                        case "18": // CustomPointTransform
                                             break;
                                         case "19":
                                             type = "bool";
                                             break;
                                         case "22":
+                                        case "27":
                                             type = "FixedString";
                                             break;
                                         case "23":
                                             type = "LSString";
+                                            break;
+                                        case "24":
+                                            type = "uint64";
                                             break;
                                         case "28":
                                             type = "TranslatedString";
