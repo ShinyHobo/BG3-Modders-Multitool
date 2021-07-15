@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Models.GameObjects
 {
+    using bg3_modders_multitool.Services;
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
@@ -26,6 +27,7 @@ namespace bg3_modders_multitool.Models.GameObjects
                     var handle = attribute.Attribute("handle")?.Value;
                     var value = handle ?? attribute.Attribute("value").Value;
                     var type = attribute.Attribute("type").Value;
+                    type = GeneralHelper.LarianTypeEnumConvert(type);
                     this.LoadAttribute(id, type, value);
                 }
             }
