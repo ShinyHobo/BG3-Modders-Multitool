@@ -168,7 +168,7 @@ namespace bg3_modders_multitool.Services
             }
             catch(Exception ex)
             {
-                GeneralHelper.WriteToConsole($"Error loading .dae: {ex.Message}. Inner exception: {ex.InnerException.Message}\n");
+                GeneralHelper.WriteToConsole($"Error loading .dae: {ex.Message}. Inner exception: {ex.InnerException?.Message}\n");
             }
             return null;
         }
