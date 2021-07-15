@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Title="GameObject Explorer" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
     <Grid>
-        <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="455" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded" Cursor="Hand" IsEnabled="{Binding Loaded}" >
+        <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="450" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded" Cursor="Hand" IsEnabled="{Binding Loaded}" >
             <ComboBox.ItemsSource>
                 <CompositeCollection>
                     <ComboBoxItem x:Name="defaultType" Content="Please Select GameObject Type" Focusable="False" IsHitTestVisible="False" IsEnabled="False"></ComboBoxItem>
@@ -109,11 +109,10 @@
                     </WrapPanel>
                 </ListBox>
             </ScrollViewer>
-            
         </Grid>
-        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="455" IsEnabled="False" KeyDown="Search_KeyDown"/>
-        <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="470,38,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
-        <TextBlock x:Name="listCountBlock" HorizontalAlignment="Left" Margin="470,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="73"/>
+        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="450" IsEnabled="False" KeyDown="Search_KeyDown"/>
+        <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="465,38,0,0" VerticalAlignment="Top" Width="80" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
+        <TextBlock x:Name="listCountBlock" HorizontalAlignment="Left" Margin="465,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="80"/>
         <TabControl x:Name="tabBox" Margin="550,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <TabItem Header="Stats" Cursor="Hand">
                 <Grid Cursor="Arrow">
