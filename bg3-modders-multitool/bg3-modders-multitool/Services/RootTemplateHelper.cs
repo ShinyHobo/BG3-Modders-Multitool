@@ -196,6 +196,42 @@ namespace bg3_modders_multitool.Services
                                     var handle = attribute.Attribute("handle")?.Value;
                                     var value = handle ?? attribute.Attribute("value").Value;
                                     var type = attribute.Attribute("type").Value;
+
+                                    // Larian type enum
+                                    switch (type)
+                                    {
+                                        case "1":
+                                            type = "uint8";
+                                            break;
+                                        case "4":
+                                        case "6":
+                                            type = "float";
+                                            break;
+                                        case "12":
+                                            type = "fvec4";
+                                            break;
+                                        case "19":
+                                            type = "bool";
+                                            break;
+                                        case "22":
+                                            type = "FixedString";
+                                            break;
+                                        case "23":
+                                            type = "LSString";
+                                            break;
+                                        case "28":
+                                            type = "TranslatedString";
+                                            break;
+                                        case "31":
+                                            type = "guid";
+                                            break;
+                                        case "32":
+                                            type = "int32";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
                                     #if DEBUG
                                     typeBag.Add(type);
                                     idBag.Add(id);
