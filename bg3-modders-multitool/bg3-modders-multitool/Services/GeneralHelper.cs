@@ -106,10 +106,6 @@ namespace bg3_modders_multitool.Services
                         type = attribute.Item2;
                         break;
                     default:
-                        if(int.TryParse(attribute.Item2, out int integer))
-                        {
-                            break; // TODO this integer must be an enum, find it
-                        }
                         throw new Exception($"Attribute type not covered: {attribute.Item2}");
                 }
                 var camelCaseId = char.ToLowerInvariant(attribute.Item1[0]) + attribute.Item1.Substring(1);
