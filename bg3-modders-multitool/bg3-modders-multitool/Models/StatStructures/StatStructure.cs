@@ -149,7 +149,7 @@ namespace bg3_modders_multitool.Models.StatStructures
             catch
             {
                 // This can usually be fixed by adding the Modifier data to the given StatStructure type
-                // Services.GeneralHelper.WriteToConsole($"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\"\n");
+                Services.GeneralHelper.WriteToConsole($"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\"\n");
             }
         }
 
