@@ -31,12 +31,34 @@ namespace bg3_modders_multitool.Views
         /// <summary>
         /// Opens dialog for selecting bg3.exe location.
         /// </summary>
-        /// <param name="sender"></param>
+        /// <param name="sender">The sender.</param>
         /// <param name="e">The event arguments.</param>
         private void Bg3exeSelect_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
             vm.Bg3ExeLocation = vm.FileLocationDialog("bg3Exe", "Select bg3.exe or bg3_dx11.exe location");
+        }
+
+        /// <summary>
+        /// Activates the quick launch features.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.ToggleQuickLaunch(true);
+        }
+
+        /// <summary>
+        /// Deactivates the quick launch features.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.ToggleQuickLaunch(false);
         }
 
         private void Window_Closed(object sender, System.EventArgs e)

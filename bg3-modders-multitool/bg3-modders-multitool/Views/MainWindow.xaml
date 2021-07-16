@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="Baldur's Gate 3 Modder's Multitool" Height="450" Width="800">
+        <!-- Developed by ShinyHobo -->
+        <!-- Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd. -->
     <Grid>
         <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,10,526,159">
             <views:DragAndDropBox x:Name="dragAndDropBox"/>
@@ -21,24 +23,30 @@
             <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
                      IsReadOnly="True" Background="Black" Foreground="White"/>
         </ScrollViewer>
-        <Button x:Name="launchGameButton" Content="Launch Game" HorizontalAlignment="Left" Margin="483,81,0,0" VerticalAlignment="Top" Width="100" Click="LaunchGameButton_Click" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" Height="23" ToolTip="Launches the game"/>
-        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}" ToolTip="Allows you to select the game paks to unpack"/>
-        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand" ToolTip="Immediately stop all unpacking processes"/>
-        <Button x:Name="decompressButton" Content="Decompress Files" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" 
+        <Button x:Name="launchGameButton" HorizontalAlignment="Left" Margin="620,81,0,0" VerticalAlignment="Top" Width="100" Height="100" Click="LaunchGameButton_Click" Cursor="Hand"
+                IsEnabled="{Binding LaunchGameAllowed}" ToolTip="Launches the game" BorderThickness="0" Background="Transparent">
+            <Grid>
+                <Image Source="..\Images\bg3_icon.ico" Margin="0,0,0,10"/>
+                <TextBlock Text="Launch Game" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="DemiBold"/>
+            </Grid>
+        </Button>
+        <Button x:Name="unpack" Content="Unpack .pak Files" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}" ToolTip="Allows you to select the game paks to unpack"/>
+        <Button x:Name="unpack_Cancel" Content="Cancel Unpacking" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand" ToolTip="Immediately stop all unpacking processes"/>
+        <Button x:Name="decompressButton" Content="Decompress Files" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" 
                 Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding NotDecompressing}" ToolTip="Converts all convertable, unpacked files to .lsx"/>
         <Grid Margin="273,115,60,260">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="321*"/>
                 <ColumnDefinition Width="122*"/>
             </Grid.ColumnDefinitions>
-            <Grid Visibility="{Binding SearchResults.IndexingVisibility}" Grid.ColumnSpan="2" Margin="210,10,0,3">
-                <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="125" HorizontalAlignment="Left" Height="23" VerticalAlignment="Bottom"/>
+            <Grid Visibility="{Binding SearchResults.IndexingVisibility}" Grid.ColumnSpan="2" Margin="210,10,0,0">
+                <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="125" HorizontalAlignment="Left" Height="23" Margin="0,0,0,0" VerticalAlignment="Top"/>
                 <TextBlock Margin="15,4,0,0" FontWeight="Bold">
                     <Run Text="{Binding SearchResults.IndexFileCount, Mode=OneWay}"/> /
                     <Run Text="{Binding SearchResults.IndexFileTotal, Mode=OneWay}"/>
                 </TextBlock>
-                <TextBlock Margin="130,4,0,0" Text="Estimate: "></TextBlock>
-                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="180,4,0,0" TextWrapping="Wrap"  Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
+                <TextBlock Margin="0,25,0,-34" Text="Estimate: "></TextBlock>
+                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="50,25,0,-34" TextWrapping="Wrap" Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
             </Grid>
             <Button x:Name="indexFiles" Content="Index Files" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="IndexFiles_Click" 
                     Cursor="Hand" ToolTip="Click to begin indexing" IsEnabled="{Binding SearchResults.AllowIndexing}"/>

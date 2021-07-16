@@ -253,5 +253,42 @@ namespace bg3_modders_multitool.Services
             }
             return objectOut;
         }
+
+        /// <summary>
+        /// Creates and destroys the mod to skip splash screens.
+        /// </summary>
+        /// <param name="setting">Whether to enable or disable the mod.</param>
+        public static void CreateDestroyQuickLaunchMod(bool setting)
+        {
+            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            var modLocation = Path.Combine(dataDir, "Localization\\English\\Video\\");
+            var modFilepath = Path.Combine(modLocation,"Splash_Logo_Larian.bk2");
+            if (setting)
+            {
+                GeneralHelper.WriteToConsole("Disabling splash screen...\n");
+                if(!Directory.Exists(modLocation))
+                    Directory.CreateDirectory(modLocation);
+                if(!File.Exists(modFilepath))
+                {
+                    var modFile = File.Create(modFilepath);
+                    modFile.Close();
+                }
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole("Enabling splash screen...\n");
+                if(File.Exists(modFilepath))
+                {
+                    try
+                    {
+                        File.Delete(modFilepath);
+                    }
+                    catch
+                    {
+                        GeneralHelper.WriteToConsole("Failed to enable splash screen...\n");
+                    }
+                }
+            }
+        }
     }
 }
