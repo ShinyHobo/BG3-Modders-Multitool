@@ -42,7 +42,20 @@ namespace bg3_modders_multitool.Services
         {
             GeneralHelper.WriteToConsole($"Loading GameObjects...\n");
             var start = DateTime.Now;
-            LoadRootTemplates().ContinueWith(delegate {
+            var rootTemplateTask = LoadRootTemplates();
+
+            rootTemplateTask.ContinueWith(t => {
+                var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
+                GeneralHelper.WriteToConsole($"GameObjects failed to load. {timePassed} seconds past.\n");
+                GeneralHelper.WriteToConsole($"{t.Exception.Message}\n");
+                foreach(var ex in t.Exception.InnerExceptions)
+                {
+                    GeneralHelper.WriteToConsole($"{ex.InnerException.InnerException}\n");
+                    GeneralHelper.WriteToConsole($"{ex.InnerException.StackTrace}\n");
+                }
+            }, TaskContinuationOptions.OnlyOnFaulted);
+
+            rootTemplateTask.ContinueWith(delegate {
                 if(Loaded)
                 {
                     var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
@@ -53,7 +66,7 @@ namespace bg3_modders_multitool.Services
                 {
                     GeneralHelper.WriteToConsole($"GameObjects loading cancelled.\n");
                 }
-            });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         /// <summary>
@@ -183,6 +196,8 @@ namespace bg3_modders_multitool.Services
                                     var handle = attribute.Attribute("handle")?.Value;
                                     var value = handle ?? attribute.Attribute("value").Value;
                                     var type = attribute.Attribute("type").Value;
+                                    type = GeneralHelper.LarianTypeEnumConvert(type);
+
                                     #if DEBUG
                                     typeBag.Add(type);
                                     idBag.Add(id);
@@ -238,7 +253,7 @@ namespace bg3_modders_multitool.Services
             GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
             GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name).ToList();
             var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
-            var lookup = GameObjects.GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
+            var lookup = GameObjects.Where(go => !string.IsNullOrEmpty(go.MapKey)).GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
             Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name), gameObject =>
             {
                 var goChildren = lookup.FirstOrDefault(l => l.Key == gameObject.ParentTemplateId).Value?.Children;
@@ -442,37 +457,45 @@ namespace bg3_modders_multitool.Services
                         reader.Read();
                         while (!reader.EOF)
                         {
-                            var sectionId = reader.GetAttribute("id");
-                            if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node" && (sectionId == "CharacterVisualBank" || sectionId == "VisualBank"))
+                            try
                             {
-                                // read children for resource nodes
-                                var xml = (XElement)XNode.ReadFrom(reader);
-                                var children = xml.Element("children");
-                                if (children != null)
+                                var sectionId = reader.GetAttribute("id");
+                                if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node" && (sectionId == "CharacterVisualBank" || sectionId == "VisualBank"))
                                 {
-                                    var nodes = children.Elements("node");
-                                    foreach (XElement node in nodes)
+                                    // read children for resource nodes
+                                    var xml = (XElement)XNode.ReadFrom(reader);
+                                    var children = xml.Element("children");
+                                    if (children != null)
                                     {
-                                        var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                        if (sectionId == "CharacterVisualBank")
+                                        var nodes = children.Elements("node");
+                                        foreach (XElement node in nodes)
                                         {
-                                            characterVisualBanks.TryAdd(id, filePath);
-                                            var bodySetVisual = node.Elements("attribute").Single(a => a.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
-                                            if (bodySetVisual != null)
-                                                bodySetVisuals.TryAdd(bodySetVisual, filePath);
-                                        }
-                                        else
-                                        {
-                                            visualBanks.TryAdd(id, filePath);
+                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
+                                            if (sectionId == "CharacterVisualBank")
+                                            {
+                                                characterVisualBanks.TryAdd(id, filePath);
+                                                var bodySetVisual = node.Elements("attribute").Single(a => a.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
+                                                if (bodySetVisual != null)
+                                                    bodySetVisuals.TryAdd(bodySetVisual, filePath);
+                                            }
+                                            else
+                                            {
+                                                visualBanks.TryAdd(id, filePath);
+                                            }
                                         }
                                     }
-                                }
 
-                                reader.Skip();
+                                    reader.Skip();
+                                }
+                                else
+                                {
+                                    reader.Read();
+                                }
                             }
-                            else
+                            catch(Exception ex)
                             {
-                                reader.Read();
+                                GeneralHelper.WriteToConsole($"Failed to load {filePath}.\n");
+                                break;
                             }
                         }
                         reader.Close();
