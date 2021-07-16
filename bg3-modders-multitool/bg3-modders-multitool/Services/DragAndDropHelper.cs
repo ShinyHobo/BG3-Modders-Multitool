@@ -133,12 +133,12 @@ namespace bg3_modders_multitool.Services
             var moduleInfo = doc.SelectSingleNode("//node[@id='ModuleInfo']");
             var metadata = new MetaLsx
             {
-                Author = moduleInfo.SelectSingleNode("attribute[@id='Author']").Attributes["value"].InnerText,
-                Name = moduleInfo.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
-                Description = moduleInfo.SelectSingleNode("attribute[@id='Description']").Attributes["value"].InnerText,
-                Version = moduleInfo.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText,
-                Folder = moduleInfo.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
-                UUID = moduleInfo.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText,
+                Author = moduleInfo.SelectSingleNode("attribute[@id='Author']")?.Attributes["value"].InnerText,
+                Name = moduleInfo.SelectSingleNode("attribute[@id='Name']")?.Attributes["value"].InnerText,
+                Description = moduleInfo.SelectSingleNode("attribute[@id='Description']")?.Attributes["value"].InnerText,
+                Version = moduleInfo.SelectSingleNode("attribute[@id='Version']")?.Attributes["value"].InnerText,
+                Folder = moduleInfo.SelectSingleNode("attribute[@id='Folder']")?.Attributes["value"].InnerText,
+                UUID = moduleInfo.SelectSingleNode("attribute[@id='UUID']")?.Attributes["value"].InnerText,
                 Created = created,
                 Group = modGroup?.Key ?? string.Empty,
                 Dependencies = new List<ModuleShortDesc>()
