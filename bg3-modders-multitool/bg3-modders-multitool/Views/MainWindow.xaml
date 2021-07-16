@@ -23,10 +23,10 @@
             <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
                      IsReadOnly="True" Background="Black" Foreground="White"/>
         </ScrollViewer>
-        <Button x:Name="launchGameButton" HorizontalAlignment="Left" Margin="620,81,0,0" VerticalAlignment="Top" Width="100" Height="100" Click="LaunchGameButton_Click" BorderThickness="0" Background="Transparent"
-                Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" ToolTip="Launches the game">
+        <Button x:Name="launchGameButton" HorizontalAlignment="Left" Margin="620,81,0,0" VerticalAlignment="Top" Width="100" Height="100" Click="LaunchGameButton_Click" Cursor="Hand"
+                IsEnabled="{Binding LaunchGameAllowed}" ToolTip="Launches the game" BorderThickness="0" Background="Transparent">
             <Grid>
-                <Image Source="..\Images\bg3_icon.png" Margin="0,0,0,15"/>
+                <Image Source="..\Images\bg3_icon.ico" Margin="0,0,0,10"/>
                 <TextBlock Text="Launch Game" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="DemiBold"/>
             </Grid>
         </Button>

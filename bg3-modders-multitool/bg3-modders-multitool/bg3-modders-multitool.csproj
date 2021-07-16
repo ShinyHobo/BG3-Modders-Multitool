@@ -512,6 +512,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Costura64\assimp.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bg3_icon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
