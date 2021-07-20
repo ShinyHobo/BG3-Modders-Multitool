@@ -470,6 +470,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="bg3-modders-multipack_TemporaryKey.pfx" />
+    <None Include="manifest.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -507,13 +508,19 @@
     <Folder Include="Views\GameObjectTabs\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icon.ico" />
+    <Resource Include="Images\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Costura64\assimp.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\bg3_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -531,4 +538,9 @@
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Import Project="..\packages\Fody.4.2.1\build\Fody.targets" Condition="Exists('..\packages\Fody.4.2.1\build\Fody.targets')" />
   <Import Project="..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y $(ProjectDir)manifest.json $(ProjectDir)$(OutDir)app.publish
+xcopy /y $(ProjectDir)Images\icon.png $(ProjectDir)$(OutDir)app.publish
+xcopy /y $(ProjectDir)\..\..\README.md $(ProjectDir)$(OutDir)app.publish</PostBuildEvent>
+  </PropertyGroup>
 </Project>
