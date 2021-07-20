@@ -105,8 +105,8 @@ namespace bg3_modders_multitool.Services
                     case "TranslatedString":
                         type = attribute.Item2;
                         break;
-                    case "18":
-                        type = "List<Tuple<float, float, float>>";
+                    case "mat4x4":
+                        type = "List<Tuple<float, float, float, float>>";
                         break;
                     default:
                         throw new Exception($"Attribute type not covered: {attribute.Item2}");
@@ -139,10 +139,12 @@ namespace bg3_modders_multitool.Services
                 case "2":
                     type = "int16";
                     break;
+                case "4":
+                    type = "int";
+                    break;
                 case "5":
                     type = "uint32";
                     break;
-                case "4":
                 case "6":
                     type = "float";
                     break;
@@ -156,12 +158,12 @@ namespace bg3_modders_multitool.Services
                     type = "fvec4";
                     break;
                 case "18": // CustomPointTransform
+                    type = "mat4x4";
                     break;
                 case "19":
                     type = "bool";
                     break;
                 case "22":
-                case "27":
                     type = "FixedString";
                     break;
                 case "23":
@@ -169,6 +171,9 @@ namespace bg3_modders_multitool.Services
                     break;
                 case "24":
                     type = "uint64";
+                    break;
+                case "27":
+                    type = "int8";
                     break;
                 case "28":
                     type = "TranslatedString";
@@ -180,7 +185,7 @@ namespace bg3_modders_multitool.Services
                     type = "int32";
                     break;
                 default:
-                    break;
+                    throw new Exception($"Type {type} not covered for conversion.");
             }
             return type;
         }
