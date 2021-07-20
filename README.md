@@ -112,7 +112,7 @@ ModFolder
       |->File.lsf
 ```
 
-[Playable Minotaur example](https://github.com/ShinyHobo/PlayableMinotaur):
+[Playable Minotaur example](https://github.com/ShinyHobo/PlayableMinotaur):  
 ![Minotaur workspace](https://i.imgur.com/nz0SIMd.png)
 
 If you do everything correctly, you will get a .zip of the same name as your mod directory immediately next to it, containing your pak(s) and info.json metadata file. It is compatible with [ShadowChild](https://github.com/ShadowChild)'s [Candor Mod Manager](https://github.com/ShadowChild/BaldursGate3/releases)
