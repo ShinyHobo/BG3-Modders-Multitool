@@ -25,7 +25,7 @@ By clicking on the "Index" button, you will be able to create an index of all un
 
 Don't hit the "Index Files" button more than once unless you want to reset your index and start from scratch. The old index has to be completely deleted to generate a new one. Unpacking all files and indexing them should result in an index around 450 MB, and will take roughly 10 minutes to generate. Audio, video, image, and model files do not have their contents indexed, only their file names.
 
-####GameObject Exploration
+#### GameObject Exploration
 Clicking the GameObject Explorer button will open a new window allowing to look at GameObjects such as characters and weapons in a more human friendly manner. As long as you have the necessary game .paks unpacked, it will automatically generate connections between things such as stats, icons, and translations in a hierarchal format. It is possible to search for GameObjects on multiple fields as well as within individual objects through the Stats tab property grid.
 
 ![GameObject Stats](https://i.imgur.com/3LvsDtE.png)
@@ -112,7 +112,7 @@ ModFolder
       |->File.lsf
 ```
 
-Playable Minotaur example:
+[Playable Minotaur example](https://github.com/ShinyHobo/PlayableMinotaur):
 ![Minotaur workspace](https://i.imgur.com/nz0SIMd.png)
 
 If you do everything correctly, you will get a .zip of the same name as your mod directory immediately next to it, containing your pak(s) and info.json metadata file. It is compatible with [ShadowChild](https://github.com/ShadowChild)'s [Candor Mod Manager](https://github.com/ShadowChild/BaldursGate3/releases)
