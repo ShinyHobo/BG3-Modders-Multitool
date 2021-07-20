@@ -1,7 +1,7 @@
 # BG3 Modder's Multitool
 Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace.
 
-####Features
+#### Features
 - Automatically paks, zips, and generates metadata  
 - Automatically converts files named like example.lsf.lsx and example.lsb.lsx to example.lsf and example.lsb, respectively. This means you no longer have to manually convert files and then copy them into their respective directories.  
 - Supports dependencies and multipaks (multiple mods in the same workspace, and multiple workspaces)  
@@ -18,7 +18,7 @@ Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked worksp
 
 ![Main window](https://i.imgur.com/ZkNE25B.png)
 
-####Indexing/Searching
+#### Indexing/Searching
 By clicking on the "Index" button, you will be able to create an index of all unpacked .pak files you have in your UnpackedData directory. Double-click the Index button to begin indexing. After indexing, open an Index Search window, type your keywords into the search bar, and hit Enter (or "Search Files") to get results within a matter of seconds. Double click a listing to open it; hover for a file preview (matching lines only).
 
 ![Indexing and searching, multiple simultaneous windows possible](https://i.imgur.com/fTID9zq.png)
@@ -35,7 +35,7 @@ The model viewer tab allows you to view the model associated with a given object
 
 ![GameObject render](https://i.imgur.com/fJOHBVE.png)
 
-####Making mod paks
+#### Making mod paks
 - Run bg3-mod-packer.exe  
 - Select the location of your [LSLib 1.15.8 (or higher)](https://github.com/Norbyte/lslib) divine.exe  
 - Drag and drop your unpacked workspace into the large blue box to generate an info.json file and .pak with the same name as your workspace.
@@ -112,6 +112,9 @@ ModFolder
       |->File.lsf
 ```
 
+Playable Minotaur example:
+![Minotaur workspace](https://i.imgur.com/nz0SIMd.png)
+
 If you do everything correctly, you will get a .zip of the same name as your mod directory immediately next to it, containing your pak(s) and info.json metadata file. It is compatible with [ShadowChild](https://github.com/ShadowChild)'s [Candor Mod Manager](https://github.com/ShadowChild/BaldursGate3/releases)
 
-Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
+### Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
