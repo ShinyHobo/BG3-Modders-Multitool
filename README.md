@@ -2,17 +2,26 @@
 Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace.
 
 To use:
-* Run bg3-mod-packer.exe
-* Select the location of your LSLib 1.15.2 (or higher) divine.exe 
-* Drag and drop your unpacked workspace into the large blue box to generate an info.json file and .pak with the same name as your workspace.
+- Run bg3-mod-packer.exe  
+- Select the location of your LSLib 1.15.2 (or higher) divine.exe  
+- Drag and drop your unpacked workspace into the large blue box to generate an info.json file and .pak with the same name as your workspace.  
 
 Extras:
-* Utility for extracting some/all game assets at once. It can take more than an hour for the complete set, but will place all the extracted files in a folder in the same directory as divine.exe
-* Unpacked file indexer
-* Index search functionality
-* File previews
-* UUID generator
-* TranslatedString handle generator
+- Automatically paks, zips, and generates metadata  
+- Automatically converts files named like example.lsf.lsx and example.lsb.lsx to example.lsf and example.lsb, respectively. This means you no longer have to manually convert files and then copy them into their respective directories.  
+- Supports dependencies and multipaks (multiple mods in the same workspace, and multiple workspaces)  
+- Utility for extracting some/all game assets at once. It can take more than an hour for the complete set, but will place all the extracted files in a folder in the same directory as the application  
+- Unpacked file indexer  
+- Index search functionality  
+- File previews  
+- Open (and automatically convert) files from index searcher  
+- UUID and TranslatedString handle generator  
+- Launch game directly  
+- GameObject Explorer (stats, attributes, icon, model, and model files)  
+- Mass LSX converter  
+- Colada model conversion  
+
+![](https://i.imgur.com/ZkNE25B.png)
 
 meta.lsx template:
 ```
@@ -80,6 +89,6 @@ ModFolder
       |->File.lsf
 ```
 
-Upon working correctly, you will get a .zip of the same name as your mod directory immediately next to it. It is compatible with ShadowChild's <a href='https://github.com/ShadowChild/BaldursGate3/releases'>Candor Mod Manager</a>
+Upon working correctly, you will get a .zip of the same name as your mod directory immediately next to it. It is compatible with ShadowChild's [Candor Mod Manager](https://github.com/ShadowChild/BaldursGate3/releases)
 
 Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
