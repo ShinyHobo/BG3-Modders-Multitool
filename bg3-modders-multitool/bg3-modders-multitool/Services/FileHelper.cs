@@ -10,6 +10,7 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public static class FileHelper
     {
@@ -137,6 +138,32 @@ namespace bg3_modders_multitool.Services
         {
             var extension = Path.GetExtension(file);
             return extension == ".wem";
+        }
+
+        /// <summary>
+        /// Converts .wem files to .ogg and plays them.
+        /// </summary>
+        /// <param name="file">The file to play.</param>
+        public static void PlayAudio(string file)
+        {
+            file = ConvertToOgg(file);
+
+            try
+            {
+                Task.Run(() => {
+                    using (var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(file))
+                    using (var waveOut = new NAudio.Wave.WaveOutEvent())
+                    {
+                        waveOut.Init(vorbisStream);
+                        waveOut.Play(); // is async
+                        while (waveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped) ;
+                    }
+                });
+            }
+            catch
+            {
+                GeneralHelper.WriteToConsole($"Problem playing audio file!!\n");
+            }
         }
 
         /// <summary>

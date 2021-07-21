@@ -8,7 +8,6 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -99,11 +98,11 @@ namespace bg3_modders_multitool.Views
                     }
                     else if(FileHelper.CanConvertToLsx(vm.SelectedPath))
                     {
-                        convertAndOpenButton.Content = "Convert & Open (lsx)";
+                        convertAndOpenButton.Content = "Convert & Open";
                     }
                     else if (FileHelper.CanConvertToOgg(vm.SelectedPath))
                     {
-                        convertAndOpenButton.Content = "Play Audio (ogg)";
+                        convertAndOpenButton.Content = "Play Audio";
                     }
                     else
                     {
@@ -119,31 +118,13 @@ namespace bg3_modders_multitool.Views
             convertAndOpenButton.IsEnabled = false;
             var vm = DataContext as SearchResults;
             var ext = Path.GetExtension(vm.SelectedPath);
-            var newFile = vm.SelectedPath;
             if(ext == ".wem")
             {
-                newFile = FileHelper.ConvertToOgg(vm.SelectedPath);
-
-                try
-                {
-                    Task.Run(() => {
-                        using (var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(newFile))
-                        using (var waveOut = new NAudio.Wave.WaveOutEvent())
-                        {
-                            waveOut.Init(vorbisStream);
-                            waveOut.Play(); // is async
-                            while (waveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped) ;
-                        }
-                    });
-                }
-                catch
-                {
-                    GeneralHelper.WriteToConsole($"Problem playing audio file!!\n");
-                }
+                FileHelper.PlayAudio(vm.SelectedPath);
             }
             else
             {
-                newFile = FileHelper.Convert(vm.SelectedPath, "lsx");
+                var newFile = FileHelper.Convert(vm.SelectedPath, "lsx");
                 FileHelper.OpenFile(newFile);
             }
             convertAndOpenButton.IsEnabled = true;
