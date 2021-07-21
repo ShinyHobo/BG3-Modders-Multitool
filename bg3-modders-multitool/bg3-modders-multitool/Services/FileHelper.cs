@@ -10,6 +10,7 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public static class FileHelper
     {
@@ -17,9 +18,11 @@ namespace bg3_modders_multitool.Services
         public static string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
         /// <summary>
-        /// Converts the given file to .lsx in-place
+        /// Converts the given file to .lsx type resource in-place
         /// </summary>
         /// <param name="file">The file to convert.</param>
+        /// <param name="extension">The extension to convert to.</param>
+        /// <param name="newPath">The new path to use.</param>
         /// <returns>The new file path.</returns>
         public static string Convert(string file, string extension, string newPath = null)
         {
@@ -74,10 +77,93 @@ namespace bg3_modders_multitool.Services
             return isConvertable ? newFile : file;
         }
 
+        /// <summary>
+        /// Checks to see if the file is convertable to lsx.
+        /// </summary>
+        /// <param name="file">The file to check.</param>
+        /// <returns>Whether or not the file is convertable.</returns>
         public static bool CanConvertToLsx(string file)
         {
             var extension = Path.GetExtension(file);
             return ConvertableLsxResources.Contains(extension);
+        }
+
+        /// <summary>
+        /// Converts a .wem file to an .ogg file in-place.
+        /// </summary>
+        /// <param name="file">The file to convert.</param>
+        /// <returns>The new file path.</returns>
+        public static string ConvertToOgg(string file)
+        {
+            try
+            {
+                if (CanConvertToOgg(file))
+                {
+                    file = GetPath(file);
+                    var newFile = file.Replace(Path.GetExtension(file), ".ogg");
+                    if (File.Exists(newFile))
+                    {
+                        return newFile;
+                    }
+                    var tempFile = Path.GetTempFileName();
+                    using (System.IO.FileStream fs = new System.IO.FileStream(tempFile,
+                        System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None,
+                        4096, System.IO.FileOptions.RandomAccess))
+                    {
+                        WEMSharp.WEMFile wem = new WEMSharp.WEMFile(file, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
+                        var resource = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("bg3_modders_multitool.packed_codebooks_aoTuV_603.bin");
+                        for (int i = 0; i < resource.Length; i++)
+                            fs.WriteByte((byte)resource.ReadByte());
+                        fs.Close();
+
+                        wem.GenerateOGG(newFile, tempFile, false, false);
+                        file = newFile;
+                    }
+                    System.IO.File.Delete(tempFile);
+                }
+            }
+            catch
+            {
+                GeneralHelper.WriteToConsole($"Problem converting input file to .ogg!\n");
+            }
+            return file;
+        }
+
+        /// <summary>
+        /// Checks to see if the file is convertable to ogg.
+        /// </summary>
+        /// <param name="file">The file to check.</param>
+        /// <returns>Whether or not the file is convertable.</returns>
+        public static bool CanConvertToOgg(string file)
+        {
+            var extension = Path.GetExtension(file);
+            return extension == ".wem";
+        }
+
+        /// <summary>
+        /// Converts .wem files to .ogg and plays them.
+        /// </summary>
+        /// <param name="file">The file to play.</param>
+        public static void PlayAudio(string file)
+        {
+            file = ConvertToOgg(file);
+
+            try
+            {
+                Task.Run(() => {
+                    using (var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(file))
+                    using (var waveOut = new NAudio.Wave.WaveOutEvent())
+                    {
+                        waveOut.Init(vorbisStream);
+                        waveOut.Play(); // is async
+                        while (waveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped);
+                    }
+                });
+            }
+            catch
+            {
+                GeneralHelper.WriteToConsole($"Problem playing audio file!!\n");
+            }
         }
 
         /// <summary>
