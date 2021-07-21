@@ -96,16 +96,14 @@ namespace bg3_modders_multitool.Services
         {
             try
             {
-                file = GetPath(file);
-                var extension = Path.GetExtension(file);
-                var newFile = file.Replace(extension, ".ogg");
-                if(File.Exists(newFile))
+                if (CanConvertToOgg(file))
                 {
-                    return newFile;
-                }
-
-                if (extension == ".wem")
-                {
+                    file = GetPath(file);
+                    var newFile = file.Replace(Path.GetExtension(file), ".ogg");
+                    if (File.Exists(newFile))
+                    {
+                        return newFile;
+                    }
                     var tempFile = Path.GetTempFileName();
                     using (System.IO.FileStream fs = new System.IO.FileStream(tempFile,
                         System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None,
@@ -128,6 +126,17 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole($"Problem converting input file to .ogg!\n");
             }
             return file;
+        }
+
+        /// <summary>
+        /// Checks to see if the file is convertable to ogg.
+        /// </summary>
+        /// <param name="file">The file to check.</param>
+        /// <returns>Whether or not the file is convertable.</returns>
+        public static bool CanConvertToOgg(string file)
+        {
+            var extension = Path.GetExtension(file);
+            return extension == ".wem";
         }
 
         /// <summary>

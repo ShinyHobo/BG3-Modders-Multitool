@@ -8,7 +8,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
-    using System.Media;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -23,7 +23,6 @@ namespace bg3_modders_multitool.Views
         private bool isMouseOver = false;
         private string hoverFile;
         private Button pathButton;
-        private SoundPlayer player;
 
         public IndexingWindow()
         {
@@ -94,7 +93,22 @@ namespace bg3_modders_multitool.Views
                         vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
                     }
                     convertAndOpenButton.IsEnabled = true;
-                    convertAndOpenButton.Content = isGr2 ? "Open .dae" : (FileHelper.CanConvertToLsx(vm.SelectedPath) ? "Convert & Open" : "Open");
+                    if(isGr2)
+                    {
+                        convertAndOpenButton.Content = "Open .dae";
+                    }
+                    else if(FileHelper.CanConvertToLsx(vm.SelectedPath))
+                    {
+                        convertAndOpenButton.Content = "Convert & Open (lsx)";
+                    }
+                    else if (FileHelper.CanConvertToOgg(vm.SelectedPath))
+                    {
+                        convertAndOpenButton.Content = "Play Audio (ogg)";
+                    }
+                    else
+                    {
+                        convertAndOpenButton.Content = "Open";
+                    }
                 }
             }
             timer.Stop();
@@ -109,9 +123,23 @@ namespace bg3_modders_multitool.Views
             if(ext == ".wem")
             {
                 newFile = FileHelper.ConvertToOgg(vm.SelectedPath);
-                player = new SoundPlayer(newFile);
-                player.Load();
-                player.Play();
+
+                try
+                {
+                    Task.Run(() => {
+                        using (var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(newFile))
+                        using (var waveOut = new NAudio.Wave.WaveOutEvent())
+                        {
+                            waveOut.Init(vorbisStream);
+                            waveOut.Play(); // is async
+                            while (waveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped) ;
+                        }
+                    });
+                }
+                catch
+                {
+                    GeneralHelper.WriteToConsole($"Problem playing audio file!!\n");
+                }
             }
             else
             {
@@ -119,6 +147,11 @@ namespace bg3_modders_multitool.Views
                 FileHelper.OpenFile(newFile);
             }
             convertAndOpenButton.IsEnabled = true;
+        }
+
+        private void WaveOut_PlaybackStopped(object sender, NAudio.Wave.StoppedEventArgs e)
+        {
+            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
