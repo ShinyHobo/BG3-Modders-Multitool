@@ -231,7 +231,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole($"Available index is corrupt. Please rerun the indexer to create a new one.\n");
                 }
 
-                return matches;
+                return matches.OrderBy(m => m).ToList();
             });
         }
         #endregion
