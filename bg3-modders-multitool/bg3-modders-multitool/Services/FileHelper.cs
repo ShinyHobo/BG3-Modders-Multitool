@@ -156,7 +156,7 @@ namespace bg3_modders_multitool.Services
                     {
                         waveOut.Init(vorbisStream);
                         waveOut.Play(); // is async
-                        while (waveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped) ;
+                        while (waveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped);
                     }
                 });
             }
