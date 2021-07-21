@@ -102,7 +102,7 @@ namespace bg3_modders_multitool.Views
                     }
                     else if (FileHelper.CanConvertToOgg(vm.SelectedPath))
                     {
-                        convertAndOpenButton.Content = "Play Audio";
+                        convertAndOpenButton.Content = "Play Audio (ogg)";
                     }
                     else
                     {
@@ -128,11 +128,6 @@ namespace bg3_modders_multitool.Views
                 FileHelper.OpenFile(newFile);
             }
             convertAndOpenButton.IsEnabled = true;
-        }
-
-        private void WaveOut_PlaybackStopped(object sender, NAudio.Wave.StoppedEventArgs e)
-        {
-            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
