@@ -15,6 +15,7 @@ Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked worksp
 - GameObject Explorer (stats, attributes, icon, model, and model files)  
 - Mass LSX converter  
 - Colada model conversion  
+- .wem => .ogg file conversion and playback
 
 ![Main window](https://i.imgur.com/ZkNE25B.png)
 
