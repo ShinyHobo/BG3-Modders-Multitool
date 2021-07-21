@@ -251,7 +251,7 @@ namespace bg3_modders_multitool.Services
                 var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    var stream = File.OpenText(path);
+                    using (var stream = File.OpenText(path))
                     using (System.IO.StreamReader r = stream)
                     {
                         string line;

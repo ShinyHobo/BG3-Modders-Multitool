@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
+    using System.Media;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -22,6 +23,7 @@ namespace bg3_modders_multitool.Views
         private bool isMouseOver = false;
         private string hoverFile;
         private Button pathButton;
+        private SoundPlayer player;
 
         public IndexingWindow()
         {
@@ -102,8 +104,20 @@ namespace bg3_modders_multitool.Views
         {
             convertAndOpenButton.IsEnabled = false;
             var vm = DataContext as SearchResults;
-            var newFile = FileHelper.Convert(vm.SelectedPath,"lsx");
-            FileHelper.OpenFile(newFile);
+            var ext = Path.GetExtension(vm.SelectedPath);
+            var newFile = vm.SelectedPath;
+            if(ext == ".wem")
+            {
+                newFile = FileHelper.ConvertToOgg(vm.SelectedPath);
+                player = new SoundPlayer(newFile);
+                player.Load();
+                player.Play();
+            }
+            else
+            {
+                newFile = FileHelper.Convert(vm.SelectedPath, "lsx");
+                FileHelper.OpenFile(newFile);
+            }
             convertAndOpenButton.IsEnabled = true;
         }
 
