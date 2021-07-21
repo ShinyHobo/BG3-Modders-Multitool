@@ -231,7 +231,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole($"Available index is corrupt. Please rerun the indexer to create a new one.\n");
                 }
 
-                return matches;
+                return matches.OrderBy(m => m).ToList();
             });
         }
         #endregion
@@ -251,7 +251,7 @@ namespace bg3_modders_multitool.Services
                 var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    var stream = File.OpenText(path);
+                    using (var stream = File.OpenText(path))
                     using (System.IO.StreamReader r = stream)
                     {
                         string line;
