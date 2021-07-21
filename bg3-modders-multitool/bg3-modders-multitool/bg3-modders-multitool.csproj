@@ -283,6 +283,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="UIAutomationProvider" />
+    <Reference Include="WEMSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Costura64\WEMSharp.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -472,6 +476,7 @@
     <None Include="bg3-modders-multipack_TemporaryKey.pfx" />
     <None Include="manifest.json" />
     <None Include="packages.config" />
+    <None Include="packed_codebooks_aoTuV_603.bin" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -521,6 +526,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Costura64\WEMSharp.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
