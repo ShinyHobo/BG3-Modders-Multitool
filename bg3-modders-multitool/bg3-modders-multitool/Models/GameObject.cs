@@ -7,6 +7,7 @@ namespace bg3_modders_multitool.Models
     using bg3_modders_multitool.Models.GameObjectTypes;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
     public class GameObject
@@ -199,23 +200,23 @@ namespace bg3_modders_multitool.Models
                     propertyValue = new TranslatedString(value);
                     break;
                 case "int8":
-                    propertyValue = sbyte.Parse(value);
+                    propertyValue = sbyte.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "int16":
-                    propertyValue = short.Parse(value);
+                    propertyValue = short.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "int":
                 case "int32":
-                    propertyValue = int.Parse(value);
+                    propertyValue = int.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "uint8":
-                    propertyValue = byte.Parse(value);
+                    propertyValue = byte.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "uint32":
-                    propertyValue = uint.Parse(value);
+                    propertyValue = uint.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "uint64":
-                    propertyValue = ulong.Parse(value);
+                    propertyValue = ulong.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "bool":
                     propertyValue = bool.Parse(value);
@@ -224,18 +225,18 @@ namespace bg3_modders_multitool.Models
                     propertyValue = new Guid(value);
                     break;
                 case "float":
-                    propertyValue = float.Parse(value);
+                    propertyValue = float.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "fvec2":
-                    var fvec2 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    var fvec2 = value.Split(' ').Select(v => float.Parse(v, CultureInfo.InvariantCulture)).ToArray();
                     propertyValue = new Tuple<float, float>(fvec2[0], fvec2[1]);
                     break;
                 case "fvec3":
-                    var fvec3 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    var fvec3 = value.Split(' ').Select(v => float.Parse(v, CultureInfo.InvariantCulture)).ToArray();
                     propertyValue = new Tuple<float, float, float>(fvec3[0], fvec3[1], fvec3[2]);
                     break;
                 case "fvec4":
-                    var fvec4 = value.Split(' ').Select(v => float.Parse(v)).ToArray();
+                    var fvec4 = value.Split(' ').Select(v => float.Parse(v, CultureInfo.InvariantCulture)).ToArray();
                     propertyValue = new Tuple<float, float, float, float>(fvec4[0], fvec4[1], fvec4[2], fvec4[3]);
                     break;
                 default:
