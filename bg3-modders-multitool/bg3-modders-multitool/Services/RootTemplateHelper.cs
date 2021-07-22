@@ -196,7 +196,8 @@ namespace bg3_modders_multitool.Services
                                     var handle = attribute.Attribute("handle")?.Value;
                                     var value = handle ?? attribute.Attribute("value").Value;
                                     var type = attribute.Attribute("type").Value;
-                                    type = GeneralHelper.LarianTypeEnumConvert(type);
+                                    if (int.TryParse(type, out int typeInt))
+                                        type = GeneralHelper.LarianTypeEnumConvert(type);
 
                                     #if DEBUG
                                     typeBag.Add(type);
