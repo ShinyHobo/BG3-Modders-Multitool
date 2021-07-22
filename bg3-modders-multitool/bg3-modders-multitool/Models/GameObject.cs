@@ -204,6 +204,7 @@ namespace bg3_modders_multitool.Models
                 case "int16":
                     propertyValue = short.Parse(value);
                     break;
+                case "int":
                 case "int32":
                     propertyValue = int.Parse(value);
                     break;

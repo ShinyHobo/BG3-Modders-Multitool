@@ -79,6 +79,7 @@ namespace bg3_modders_multitool.Services
                     case "int16":
                         type = "short";
                         break;
+                    case "int":
                     case "int32":
                         type = "int";
                         break;

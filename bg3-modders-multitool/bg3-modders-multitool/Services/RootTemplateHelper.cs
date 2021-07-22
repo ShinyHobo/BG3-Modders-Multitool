@@ -46,12 +46,12 @@ namespace bg3_modders_multitool.Services
 
             rootTemplateTask.ContinueWith(t => {
                 var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
-                GeneralHelper.WriteToConsole($"GameObjects failed to load. {timePassed} seconds past.\n");
+                GeneralHelper.WriteToConsole($"GameObjects failed to load. {timePassed} seconds passed.\n");
                 GeneralHelper.WriteToConsole($"{t.Exception.Message}\n");
                 foreach(var ex in t.Exception.InnerExceptions)
                 {
-                    GeneralHelper.WriteToConsole($"{ex.InnerException.InnerException}\n");
-                    GeneralHelper.WriteToConsole($"{ex.InnerException.StackTrace}\n");
+                    GeneralHelper.WriteToConsole($"{ex.Message}\n");
+                    GeneralHelper.WriteToConsole($"{ex.StackTrace}\n");
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
 
