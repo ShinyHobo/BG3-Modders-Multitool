@@ -12,10 +12,13 @@ namespace bg3_modders_multitool.ViewModels
     using HelixToolkit.Wpf.SharpDX;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using Alphaleonis.Win32.Filesystem;
 
     public class GameObjectViewModel : BaseViewModel
     {
@@ -216,7 +219,29 @@ namespace bg3_modders_multitool.ViewModels
                         foreach (var model in lod)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
-                                var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                                Stream texture = null; // TODO - move texture loading elsewhere
+                                if (Alphaleonis.Win32.Filesystem.File.Exists(model.BaseTexture))
+                                {
+                                    using (FileStream fs = Alphaleonis.Win32.Filesystem.File.Open(model.BaseTexture, FileMode.Open))
+                                    {
+                                        BitmapImage img = new BitmapImage();
+                                        img.BeginInit();
+                                        img.CacheOption = BitmapCacheOption.OnLoad;
+                                        img.StreamSource = fs;
+                                        img.EndInit();
+                                        img.Freeze();
+                                        texture = BitmapSourceToStream(img);
+                                    }
+                                }
+                                var map = new PhongMaterial
+                                {
+                                    AmbientColor = Colors.Gray.ToColor4(),
+                                    DiffuseColor = Colors.White.ToColor4(),
+                                    SpecularColor = Colors.White.ToColor4(),
+                                    SpecularShininess = 100f,
+                                    DiffuseAlphaMap = texture
+                                };
+                                var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
                                 ViewPort.Items.Add(mesh);
                             });
                         }
@@ -227,6 +252,16 @@ namespace bg3_modders_multitool.ViewModels
 
                 OnNotifyPropertyChanged();
             }
+        }
+
+        private Stream BitmapSourceToStream(BitmapSource writeBmp)
+        {
+            Stream stream = new MemoryStream();
+            BitmapEncoder enc = new BmpBitmapEncoder();
+            enc.Frames.Add(BitmapFrame.Create(writeBmp));
+            enc.Save(stream);
+
+            return stream;
         }
 
         private List<GameObjectAttribute> _gameObjectAttributes;
