@@ -3,12 +3,11 @@
 /// </summary>
 namespace bg3_modders_multitool.Models
 {
-    using HelixToolkit.Wpf.SharpDX;
     using System.Collections.Generic;
 
     public class MeshGeometry
     {
-        public MeshGeometry(string file, Dictionary<string, List<MeshGeometry3D>> meshList)
+        public MeshGeometry(string file, Dictionary<string, List<MeshGeometry3DObject>> meshList)
         {
             File = file;
             var filepath = file.Split('\\');
@@ -20,6 +19,6 @@ namespace bg3_modders_multitool.Models
 
         public string FileName { get; set; }
 
-        public Dictionary<string, List<MeshGeometry3D>> MeshList { get; set; }
+        public Dictionary<string, List<MeshGeometry3DObject>> MeshList { get; set; }
     }
 }

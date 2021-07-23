@@ -91,6 +91,7 @@ namespace bg3_modders_multitool.Services
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
                 ReadTranslations();
                 ReadVisualBanks();
+                // ReadTextureBanks();
                 ReadRootTemplate();
                 foreach (var pak in Paks)
                 {

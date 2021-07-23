@@ -385,6 +385,7 @@
     <Compile Include="Models\GameObjectTypes\FixedString.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\MeshGeometry.cs" />
+    <Compile Include="Models\MeshGeometry3DObject.cs" />
     <Compile Include="Models\TextureAtlas.cs" />
     <Compile Include="Models\IconUV.cs" />
     <Compile Include="Models\Races\Component.cs" />
