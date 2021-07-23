@@ -212,6 +212,9 @@ namespace bg3_modders_multitool.Models
                 case "uint8":
                     propertyValue = byte.Parse(value, CultureInfo.InvariantCulture);
                     break;
+                case "uint16":
+                    propertyValue = ushort.Parse(value, CultureInfo.InvariantCulture);
+                    break;
                 case "uint32":
                     propertyValue = uint.Parse(value, CultureInfo.InvariantCulture);
                     break;
