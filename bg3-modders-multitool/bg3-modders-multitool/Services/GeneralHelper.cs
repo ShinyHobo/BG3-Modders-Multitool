@@ -86,6 +86,9 @@ namespace bg3_modders_multitool.Services
                     case "uint8":
                         type = "byte";
                         break;
+                    case "uint16":
+                        type = "uint16";
+                        break;
                     case "uint32":
                         type = "uint";
                         break;
@@ -139,6 +142,9 @@ namespace bg3_modders_multitool.Services
                     break;
                 case "2":
                     type = "int16";
+                    break;
+                case "3":
+                    type = "uint16";
                     break;
                 case "4":
                     type = "int";

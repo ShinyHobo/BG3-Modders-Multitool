@@ -99,7 +99,8 @@ namespace bg3_modders_multitool.Services
                 foreach(var mesh in meshGroup)
                 {
                     var name = mesh.Name.Split('-').First();
-                    materials.TryGetValue(name, out string materialGuid);
+                    string materialGuid = null;
+                    materials?.TryGetValue(name, out materialGuid);
                     var meshNode = mesh.Items.Last() as MeshNode;
                     var meshGeometry = meshNode.Geometry as MeshGeometry3D;
                     meshGeometry.Normals = meshGeometry.CalculateNormals();
