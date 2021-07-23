@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.ViewModels
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.ViewModels.Reusables;
 
@@ -19,12 +20,16 @@ namespace bg3_modders_multitool.ViewModels
             PakList = new ObservableCollection<CheckBox>();
             foreach (string file in files)
             {
-                PakList.Add(new CheckBox
-                {
-                    Name = Path.GetFileName(file),
-                    IsSelected = false
-                });
+                var fileName = Path.GetFileName(file);
+                var isMultipartNumber = fileName.Split('_').Select(v => int.TryParse(v.Split('.')[0], out var num)).Last();
+                if (!isMultipartNumber)
+                    PakList.Add(new CheckBox
+                    {
+                        Name = fileName,
+                        IsSelected = false
+                    });
             }
+            PakList = new ObservableCollection<CheckBox>(PakList.OrderBy(pak => pak.Name));
         }
 
         /// <summary>
