@@ -215,7 +215,7 @@ namespace bg3_modders_multitool.ViewModels
                                     DiffuseColor = Colors.White.ToColor4(),
                                     SpecularColor = Colors.White.ToColor4(),
                                     SpecularShininess = 100f,
-                                    DiffuseAlphaMap = texture
+                                    DiffuseMap = texture,
                                 };
 
                                 var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
