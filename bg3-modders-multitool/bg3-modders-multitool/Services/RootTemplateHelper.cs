@@ -554,7 +554,7 @@ namespace bg3_modders_multitool.Services
             FileHelper.SerializeObject(VisualBanks, "VisualBanks");
             FileHelper.SerializeObject(BodySetVisuals, "BodySetVisuals");
             FileHelper.SerializeObject(MaterialBanks, "MaterialBanks");
-            FileHelper.SerializeObject(MaterialBanks, "TextureBanks");
+            FileHelper.SerializeObject(TextureBanks, "TextureBanks");
             return true;
         }
 
