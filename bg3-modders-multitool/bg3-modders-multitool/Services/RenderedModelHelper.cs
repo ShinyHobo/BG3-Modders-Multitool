@@ -31,6 +31,7 @@ namespace bg3_modders_multitool.Services
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
             var gr2Files = new List<string>();
+            var materials = new Dictionary<string, string>();
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             // CharacterVisualResourceID => characters, load CharacterVisualBank, then VisualBanks
@@ -45,7 +46,10 @@ namespace bg3_modders_multitool.Services
                 case "TileConstruction":
                     var itemVisualResource = LoadVisualResource(template, visualBanks);
                     if (itemVisualResource != null)
+                    {
+                        materials = LoadMaterials(template, visualBanks);
                         gr2Files.Add(itemVisualResource);
+                    }
                     break;
                 default:
                     break;
@@ -55,9 +59,11 @@ namespace bg3_modders_multitool.Services
 
             foreach(var gr2File in gr2Files)
             {
-                var geometry = GetMesh(gr2File);
+                var geometry = GetMesh(gr2File, materials);
                 if(geometry != null)
-                    geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty).Replace('/','\\'), geometry));
+                {
+                    geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
+                }
             }
 
             return geometryGroup;
@@ -67,8 +73,9 @@ namespace bg3_modders_multitool.Services
         /// Gets the model geometry from a given .GR2 file and organizes it by LOD level.
         /// </summary>
         /// <param name="filename">The filename.</param>
+        /// <param name="materials">The materials list.</param>
         /// <returns>The geometry lookup table.</returns>
-        public static Dictionary<string, List<MeshGeometry3D>> GetMesh(string filename)
+        public static Dictionary<string, List<MeshGeometry3DObject>> GetMesh(string filename, Dictionary<string, string> materials)
         {
             var file = LoadFile(filename);
             if (file == null)
@@ -78,18 +85,20 @@ namespace bg3_modders_multitool.Services
             var meshes = file.Root.Items.Where(x => x.Items.Any(y => y as MeshNode != null)).ToList();
             // Group meshes by lod
             var meshGroups = meshes.GroupBy(mesh => mesh.Name.Split('_').Last()).ToList();
-            var geometryLookup = new Dictionary<string, List<MeshGeometry3D>>();
+            var geometryLookup = new Dictionary<string, List<MeshGeometry3DObject>>();
             foreach (var meshGroup in meshGroups)
             {
-                var geometryList = new List<MeshGeometry3D>();
+                var geometryList = new List<MeshGeometry3DObject>();
 
                 // Selecting body first
                 foreach(var mesh in meshGroup)
                 {
+                    var name = mesh.Name.Split('-').First();
+                    materials.TryGetValue(name, out string material);
                     var meshNode = mesh.Items.Last() as MeshNode;
                     var meshGeometry = meshNode.Geometry as MeshGeometry3D;
                     meshGeometry.Normals = meshGeometry.CalculateNormals();
-                    geometryList.Add(meshGeometry);
+                    geometryList.Add(new MeshGeometry3DObject(name, material, meshGeometry));
                 }
                 geometryLookup.Add(meshGroup.Key, geometryList);
             }
@@ -227,6 +236,40 @@ namespace bg3_modders_multitool.Services
                         return null;
                     gr2File = gr2File.Replace(".GR2", string.Empty);
                     return FileHelper.GetPath($"Models\\{gr2File}");
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the materials used for each LOD level of an object's components.
+        /// </summary>
+        /// <param name="id">The id to match.</param>
+        /// <param name="visualBanks">The visualbanks to lookup.</param>
+        /// <returns>The list of material/lod relationships.</returns>
+        private static Dictionary<string, string> LoadMaterials(string id, Dictionary<string, string> visualBanks)
+        {
+            if (id !=null)
+            {
+                visualBanks.TryGetValue(id, out string visualResourceFile);
+                if (visualResourceFile != null)
+                {
+                    var xml = XDocument.Load(FileHelper.GetPath(visualResourceFile));
+                    var visualResourceNode = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
+                    var children = visualResourceNode.Element("children");
+                    if (children != null)
+                    {
+                        var materialIds = new Dictionary<string, string>();
+                        var nodes = children.Elements("node");
+                        foreach (XElement node in nodes.Where(node => node.Attribute("id").Value == "Objects"))
+                        {
+                                var materialId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "MaterialID").Attribute("value").Value;
+                                var objectId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ObjectID").Attribute("value").Value;
+                                if (materialId != null)
+                                    materialIds.Add(objectId.Split('.')[1], materialId);
+                        }
+                        return materialIds;
+                    }
                 }
             }
             return null;
