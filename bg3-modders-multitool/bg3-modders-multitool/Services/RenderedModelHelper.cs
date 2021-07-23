@@ -107,10 +107,23 @@ namespace bg3_modders_multitool.Services
                     materials?.TryGetValue(name, out materialGuid);
                     var meshNode = mesh.Items.Last() as MeshNode;
                     var meshGeometry = meshNode.Geometry as MeshGeometry3D;
-                    meshGeometry.Normals = meshGeometry.CalculateNormals();
-                    var baseMaterialId = LoadMaterial(materialGuid, materialBanks);
-                    var texture = LoadTexture(baseMaterialId, textureBanks);
-                    geometryList.Add(new MeshGeometry3DObject(name, materialGuid, baseMaterialId, texture, meshGeometry));
+                    var baseMaterialId = LoadMaterial(materialGuid, "basecolor", materialBanks);
+                    var baseTexture = LoadTexture(baseMaterialId, textureBanks);
+                    var normalMaterialId = LoadMaterial(materialGuid, "normalmap", materialBanks);
+                    var normalTexture = LoadTexture(baseMaterialId, textureBanks);
+                    var mraoMaterialId = LoadMaterial(materialGuid, "physicalmap", materialBanks);
+                    var mraoTexture = LoadTexture(baseMaterialId, textureBanks);
+                    geometryList.Add(new MeshGeometry3DObject {
+                        ObjectId = name,
+                        MaterialId = materialGuid,
+                        BaseMaterialId = baseMaterialId,
+                        BaseMap = baseTexture,
+                        NormalMaterialId = normalMaterialId,
+                        NormalMap = normalTexture,
+                        MRAOMaterialId = mraoMaterialId,
+                        MRAOMap = mraoTexture,
+                        MeshGeometry3D = meshGeometry 
+                    });
                 }
                 geometryLookup.Add(meshGroup.Key, geometryList);
             }
@@ -228,7 +241,8 @@ namespace bg3_modders_multitool.Services
                         var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
                         foreach (var material in LoadMaterials(visualResourceId, visualBanks))
                         {
-                            materials.Add(material.Key, material.Value);
+                            if (!materials.ContainsKey(material.Key))
+                                materials.Add(material.Key, material.Value);
                         }
                         var visualResource = LoadVisualResource(visualResourceId, visualBanks);
                         if (visualResource != null)
@@ -301,9 +315,10 @@ namespace bg3_modders_multitool.Services
         /// Finds the base material id from the material banks.
         /// </summary>
         /// <param name="id">The material id to match.</param>
+        /// <param name="type">The map type.</param>
         /// <param name="materialBanks">The materialbanks lookup.</param>
         /// <returns>The base material id.</returns>
-        private static string LoadMaterial(string id, Dictionary<string, string> materialBanks)
+        private static string LoadMaterial(string id, string type, Dictionary<string, string> materialBanks)
         {
             if (id != null)
             {
@@ -313,9 +328,9 @@ namespace bg3_modders_multitool.Services
                     var xml = XDocument.Load(FileHelper.GetPath(materialBankFile));
                     var materialNode = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute")
                         .Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
-                    var basecolorTexture2DParams = materialNode.Descendants().Where(x => x.Name.LocalName == "attribute" && x.Attribute("id").Value == "ParameterName").SingleOrDefault(x => x.Attribute("value").Value == "basecolor")?.Parent;
-                    if (basecolorTexture2DParams != null)
-                        return basecolorTexture2DParams.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "ID")?.Attribute("value").Value;
+                    var texture2DParams = materialNode.Descendants().Where(x => x.Name.LocalName == "attribute" && x.Attribute("id").Value == "ParameterName").SingleOrDefault(x => x.Attribute("value").Value == type)?.Parent;
+                    if (texture2DParams != null)
+                        return texture2DParams.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "ID")?.Attribute("value").Value;
                 }
             }
             return null;

@@ -12,11 +12,9 @@ namespace bg3_modders_multitool.ViewModels
     using HelixToolkit.Wpf.SharpDX;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
     public class GameObjectViewModel : BaseViewModel
@@ -207,15 +205,12 @@ namespace bg3_modders_multitool.ViewModels
                         foreach (var model in lod)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
-                                Stream texture = GeneralHelper.DDSToTextureStream(model.BaseTexture);
-                                
-                                var map = new PhongMaterial
+                                var map = new PBRMaterial
                                 {
-                                    AmbientColor = Colors.Gray.ToColor4(),
-                                    DiffuseColor = Colors.White.ToColor4(),
-                                    SpecularColor = Colors.White.ToColor4(),
-                                    SpecularShininess = 100f,
-                                    DiffuseMap = texture,
+                                    AlbedoMap = GeneralHelper.DDSToTextureStream(model.BaseMap),
+                                    // RenderAlbedoMap = type != "character", //// non-skin
+                                    NormalMap = GeneralHelper.DDSToTextureStream(model.NormalMap),
+                                    RoughnessMetallicMap = GeneralHelper.DDSToTextureStream(model.MRAOMap)
                                 };
 
                                 var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
