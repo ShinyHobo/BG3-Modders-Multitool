@@ -197,7 +197,6 @@ namespace bg3_modders_multitool.ViewModels
                         RootTemplateHelper.MaterialBanks, RootTemplateHelper.TextureBanks);
                     MeshFiles = slots.OrderBy(slot => slot.File).ToList();
 
-                    // Loop through slots
                     foreach (var lodLevels in slots)
                     {
                         // TODO - need lod slider, selecting highest lod first
