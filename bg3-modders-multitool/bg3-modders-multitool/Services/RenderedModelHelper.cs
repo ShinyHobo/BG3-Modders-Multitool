@@ -113,6 +113,10 @@ namespace bg3_modders_multitool.Services
                     var normalTexture = LoadTexture(baseMaterialId, textureBanks);
                     var mraoMaterialId = LoadMaterial(materialGuid, "physicalmap", materialBanks);
                     var mraoTexture = LoadTexture(baseMaterialId, textureBanks);
+                    var hmvyMaterialId = LoadMaterial(materialGuid, "HMVY", materialBanks);
+                    var hmvyTexture = LoadTexture(hmvyMaterialId, textureBanks);
+                    var cleaMaterialId = LoadMaterial(materialGuid, "CLEA", materialBanks);
+                    var cleaTexture = LoadTexture(cleaMaterialId, textureBanks);
                     geometryList.Add(new MeshGeometry3DObject {
                         ObjectId = name,
                         MaterialId = materialGuid,
@@ -122,7 +126,11 @@ namespace bg3_modders_multitool.Services
                         NormalMap = normalTexture,
                         MRAOMaterialId = mraoMaterialId,
                         MRAOMap = mraoTexture,
-                        MeshGeometry3D = meshGeometry 
+                        HMVYMaterialId = hmvyMaterialId,
+                        HMVYMap = hmvyTexture,
+                        CLEAMaterialId = cleaMaterialId,
+                        CLEAMap = cleaTexture,
+                        MeshGeometry3D = meshGeometry
                     });
                 }
                 geometryLookup.Add(meshGroup.Key, geometryList);

@@ -24,5 +24,13 @@ namespace bg3_modders_multitool.Models
         public string MRAOMaterialId { get; set; }
 
         public string MRAOMap { get; set; }
+
+        public string HMVYMaterialId { get; set; }
+
+        public string HMVYMap { get; set; }
+
+        public string CLEAMaterialId { get; set; }
+
+        public string CLEAMap { get; set; }
     }
 }
