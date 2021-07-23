@@ -24,14 +24,17 @@ namespace bg3_modders_multitool.Services
         /// <param name="bodySetVisuals">The body set visualbanks file lookup.</param>
         /// <param name="characterVisualBanks">The character visualbanks file lookup.</param>
         /// <param name="visualBanks">The visualbanks file lookup.</param>
+        /// <param name="materialBanks">The materialBanks file lookup.</param>
+        /// <param name="textureBanks">The texturebanks file lookup.</param>
         /// <returns>The list of geometry lookups.</returns>
-        public static List<MeshGeometry> GetMeshes(string type, string template, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
+        public static List<MeshGeometry> GetMeshes(string type, string template, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks,
+            Dictionary<string, string> bodySetVisuals, Dictionary<string, string> materialBanks, Dictionary<string, string> textureBanks)
         {
             //var importFormats = Importer.SupportedFormats;
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
             var gr2Files = new List<string>();
-            var materials = new Dictionary<string, string>();
+            var materials = LoadMaterials(template, visualBanks);
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             // CharacterVisualResourceID => characters, load CharacterVisualBank, then VisualBanks
@@ -47,7 +50,6 @@ namespace bg3_modders_multitool.Services
                     var itemVisualResource = LoadVisualResource(template, visualBanks);
                     if (itemVisualResource != null)
                     {
-                        materials = LoadMaterials(template, visualBanks);
                         gr2Files.Add(itemVisualResource);
                     }
                     break;
