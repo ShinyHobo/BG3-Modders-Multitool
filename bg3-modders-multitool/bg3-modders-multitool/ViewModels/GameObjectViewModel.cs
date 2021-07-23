@@ -205,6 +205,16 @@ namespace bg3_modders_multitool.ViewModels
                         foreach (var model in lod)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
+                                // items are traditional PBR
+                                // albedo from BM
+                                // MRAO from PM
+                                // normals from NM
+                                // for characters
+                                // for skinned parts, the BM is unused for characters
+                                // non - skin albedo from BM, hemoglobin / melanin / veins / yellowing HMVY, cavity / lips / eyes / ambient occlusion from CLEA
+                                // skin removal, melanin removal, detail normal removal from CancelMSK
+                                // blood mask, dirt mask, bruises mask from SkinSharedMSK
+                                // lips makeup roughness, head occlusion from RoughnessMSK
                                 var map = new PBRMaterial
                                 {
                                     AlbedoMap = GeneralHelper.DDSToTextureStream(model.BaseMap),
