@@ -24,7 +24,7 @@ namespace bg3_modders_multitool.ViewModels
             RootTemplateHelper = new RootTemplateHelper(this);
 
             EffectsManager = new DefaultEffectsManager();
-            Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
+            Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75, CreateLeftHandSystem = true };
             var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
             matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
             matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
@@ -228,8 +228,7 @@ namespace bg3_modders_multitool.ViewModels
                                     //GeneralHelper.DDSToTextureStream(model.HMVYMap),
                                     //GeneralHelper.DDSToTextureStream(model.CLEAMap)
                                 };
-
-                                var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                                var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.None, Transform = Transform };
                                 ViewPort.Items.Add(mesh);
                             });
                         }
