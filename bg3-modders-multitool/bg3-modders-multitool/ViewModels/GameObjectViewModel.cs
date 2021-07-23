@@ -18,7 +18,6 @@ namespace bg3_modders_multitool.ViewModels
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using Alphaleonis.Win32.Filesystem;
 
     public class GameObjectViewModel : BaseViewModel
     {
@@ -28,7 +27,6 @@ namespace bg3_modders_multitool.ViewModels
 
             EffectsManager = new DefaultEffectsManager();
             Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
-            Material = PhongMaterials.LightGray;
             var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
             matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
             matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
@@ -105,16 +103,6 @@ namespace bg3_modders_multitool.ViewModels
         public Viewport3DX ViewPort { get; internal set; }
         public EffectsManager EffectsManager { get; }
         public Camera Camera { get; }
-
-        private Material _material;
-
-        public Material Material { 
-            get { return _material; }
-            set {
-                _material = value;
-                OnNotifyPropertyChanged();
-            }
-        }
 
         private List<MeshGeometry3D> _meshList;
 
@@ -219,20 +207,8 @@ namespace bg3_modders_multitool.ViewModels
                         foreach (var model in lod)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
-                                Stream texture = null; // TODO - move texture loading elsewhere
-                                if (Alphaleonis.Win32.Filesystem.File.Exists(model.BaseTexture))
-                                {
-                                    using (FileStream fs = Alphaleonis.Win32.Filesystem.File.Open(model.BaseTexture, FileMode.Open))
-                                    {
-                                        BitmapImage img = new BitmapImage();
-                                        img.BeginInit();
-                                        img.CacheOption = BitmapCacheOption.OnLoad;
-                                        img.StreamSource = fs;
-                                        img.EndInit();
-                                        img.Freeze();
-                                        texture = BitmapSourceToStream(img);
-                                    }
-                                }
+                                Stream texture = GeneralHelper.DDSToTextureStream(model.BaseTexture);
+                                
                                 var map = new PhongMaterial
                                 {
                                     AmbientColor = Colors.Gray.ToColor4(),
@@ -241,6 +217,7 @@ namespace bg3_modders_multitool.ViewModels
                                     SpecularShininess = 100f,
                                     DiffuseAlphaMap = texture
                                 };
+
                                 var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
                                 ViewPort.Items.Add(mesh);
                             });
@@ -252,16 +229,6 @@ namespace bg3_modders_multitool.ViewModels
 
                 OnNotifyPropertyChanged();
             }
-        }
-
-        private Stream BitmapSourceToStream(BitmapSource writeBmp)
-        {
-            Stream stream = new MemoryStream();
-            BitmapEncoder enc = new BmpBitmapEncoder();
-            enc.Frames.Add(BitmapFrame.Create(writeBmp));
-            enc.Save(stream);
-
-            return stream;
         }
 
         private List<GameObjectAttribute> _gameObjectAttributes;

@@ -34,7 +34,8 @@ namespace bg3_modders_multitool.Services
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
             var gr2Files = new List<string>();
-            var materials = LoadMaterials(template, visualBanks);
+            var materials = new Dictionary<string, string>();
+            
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             // CharacterVisualResourceID => characters, load CharacterVisualBank, then VisualBanks
@@ -42,11 +43,13 @@ namespace bg3_modders_multitool.Services
             switch (type)
             {
                 case "character":
-                    gr2Files.AddRange(LoadCharacterVisualResources(template, characterVisualBanks, visualBanks, bodySetVisuals));
+                    var characterVisualResources = LoadCharacterVisualResources(template, characterVisualBanks, visualBanks);
+                    gr2Files.AddRange(characterVisualResources);
                     break;
                 case "item":
                 case "scenery":
                 case "TileConstruction":
+                    materials = LoadMaterials(template, visualBanks);
                     var itemVisualResource = LoadVisualResource(template, visualBanks);
                     if (itemVisualResource != null)
                     {
@@ -196,26 +199,29 @@ namespace bg3_modders_multitool.Services
         /// <param name="id">The character visualresource id.</param>
         /// <param name="characterVisualBanks">The character visualbanks lookup.</param>
         /// <param name="visualBanks">The visualbanks lookup.</param>
-        /// <param name="bodySetVisuals">The bodysetvisuals lookup.</param>
         /// <returns>The list of character visual resources found.</returns>
-        private static List<string> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
+        private static List<string> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
         {
             var characterVisualResources = new List<string>();
             if (id != null)
             {
                 characterVisualBanks.TryGetValue(id, out string file);
+                if (string.IsNullOrEmpty(file))
+                    visualBanks.TryGetValue(id, out file);
                 if (file != null)
                 {
                     var xml = XDocument.Load(FileHelper.GetPath(file));
                     var characterVisualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
                     var bodySetVisualId = characterVisualResource.Elements("attribute").Single(x => x.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
                     var bodySetVisual = LoadVisualResource(bodySetVisualId, visualBanks);
-                    if(bodySetVisual != null)
+                    var bodyMaterials = LoadMaterials(bodySetVisualId, visualBanks);
+                    if (bodySetVisual != null)
                         characterVisualResources.Add(bodySetVisual);
                     var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
                     foreach (var slot in slots)
                     {
                         var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
+                        var slotMaterials = LoadMaterials(visualResourceId, visualBanks);
                         var visualResource = LoadVisualResource(visualResourceId, visualBanks);
                         if (visualResource != null)
                             characterVisualResources.Add(visualResource);
@@ -276,6 +282,41 @@ namespace bg3_modders_multitool.Services
                                 var objectId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ObjectID").Attribute("value").Value;
                                 if (materialId != null)
                                     materialIds.Add(objectId.Split('.')[1], materialId);
+                        }
+                        return materialIds;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the materials used for each LOD level of an character's components.
+        /// </summary>
+        /// <param name="id">The id to match.</param>
+        /// <param name="visualBanks">The visualbanks to lookup.</param>
+        /// <returns>The list of material/lod relationships.</returns>
+        private static Dictionary<string, string> LoadCharacterMaterials(string id, Dictionary<string, string> visualBanks)
+        {
+            if (id != null)
+            {
+                visualBanks.TryGetValue(id, out string visualResourceFile);
+                if (visualResourceFile != null)
+                {
+                    var xml = XDocument.Load(FileHelper.GetPath(visualResourceFile));
+                    var sner = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource");
+                    var visualResourceNode = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "BodySetVisual").Attribute("value").Value == id).First();
+                    var children = visualResourceNode.Element("children");
+                    if (children != null)
+                    {
+                        var materialIds = new Dictionary<string, string>();
+                        var nodes = children.Elements("node");
+                        foreach (XElement node in nodes.Where(node => node.Attribute("id").Value == "Objects"))
+                        {
+                            var materialId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "MaterialID").Attribute("value").Value;
+                            var objectId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ObjectID").Attribute("value").Value;
+                            if (materialId != null)
+                                materialIds.Add(objectId.Split('.')[1], materialId);
                         }
                         return materialIds;
                     }

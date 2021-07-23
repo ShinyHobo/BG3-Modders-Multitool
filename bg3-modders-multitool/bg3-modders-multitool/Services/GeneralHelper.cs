@@ -10,6 +10,7 @@ namespace bg3_modders_multitool.Services
     using System.Linq;
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Media.Imaging;
 
     public static class GeneralHelper
     {
@@ -211,6 +212,45 @@ namespace bg3_modders_multitool.Services
                 var toggleText = setting ? "on" : "off";
                 GeneralHelper.WriteToConsole($"Quick launch settings toggled {toggleText}!\n");
             }
+        }
+
+        /// <summary>
+        /// Converts a DDS texture into a usable stream for displaying on models.
+        /// </summary>
+        /// <param name="texturePath">The filepath to the texture file.</param>
+        /// <returns>The texture stream</returns>
+        public static System.IO.Stream DDSToTextureStream(string texturePath)
+        {
+            System.IO.Stream texture = null;
+            if (File.Exists(texturePath))
+            {
+                using (System.IO.FileStream fs = File.Open(texturePath, System.IO.FileMode.Open))
+                {
+                    BitmapImage img = new BitmapImage();
+                    img.BeginInit();
+                    img.CacheOption = BitmapCacheOption.OnLoad;
+                    img.StreamSource = fs;
+                    img.EndInit();
+                    img.Freeze();
+                    texture = BitmapSourceToStream(img);
+                }
+            }
+            return texture;
+        }
+
+        /// <summary>
+        /// Converts a bitmap source to a stream.
+        /// </summary>
+        /// <param name="writeBmp">The bitmap image.</param>
+        /// <returns>The stream.</returns>
+        public static System.IO.Stream BitmapSourceToStream(BitmapSource writeBmp)
+        {
+            System.IO.Stream stream = new System.IO.MemoryStream();
+            BitmapEncoder enc = new BmpBitmapEncoder();
+            enc.Frames.Add(BitmapFrame.Create(writeBmp));
+            enc.Save(stream);
+
+            return stream;
         }
     }
 }
