@@ -61,7 +61,7 @@ namespace bg3_modders_multitool.Services
 
             foreach(var gr2File in gr2Files)
             {
-                var geometry = GetMesh(gr2File, materials);
+                var geometry = GetMesh(gr2File, materials, materialBanks, textureBanks);
                 if(geometry != null)
                 {
                     geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
@@ -76,8 +76,11 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <param name="materials">The materials list.</param>
+        /// <param name="materialBanks">The materialbanks lookup.</param>
+        /// <param name="textureBanks">The texturebanks lookup.</param>
         /// <returns>The geometry lookup table.</returns>
-        public static Dictionary<string, List<MeshGeometry3DObject>> GetMesh(string filename, Dictionary<string, string> materials)
+        public static Dictionary<string, List<MeshGeometry3DObject>> GetMesh(string filename, Dictionary<string, string> materials,
+            Dictionary<string, string> materialBanks, Dictionary<string, string> textureBanks)
         {
             var file = LoadFile(filename);
             if (file == null)
@@ -96,11 +99,13 @@ namespace bg3_modders_multitool.Services
                 foreach(var mesh in meshGroup)
                 {
                     var name = mesh.Name.Split('-').First();
-                    materials.TryGetValue(name, out string material);
+                    materials.TryGetValue(name, out string materialGuid);
                     var meshNode = mesh.Items.Last() as MeshNode;
                     var meshGeometry = meshNode.Geometry as MeshGeometry3D;
                     meshGeometry.Normals = meshGeometry.CalculateNormals();
-                    geometryList.Add(new MeshGeometry3DObject(name, material, meshGeometry));
+                    var baseMaterialId = LoadMaterial(materialGuid, materialBanks);
+                    var texture = LoadTexture(baseMaterialId, textureBanks);
+                    geometryList.Add(new MeshGeometry3DObject(name, materialGuid, baseMaterialId, texture, meshGeometry));
                 }
                 geometryLookup.Add(meshGroup.Key, geometryList);
             }
@@ -190,6 +195,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="id">The character visualresource id.</param>
         /// <param name="characterVisualBanks">The character visualbanks lookup.</param>
         /// <param name="visualBanks">The visualbanks lookup.</param>
+        /// <param name="bodySetVisuals">The bodysetvisuals lookup.</param>
         /// <returns>The list of character visual resources found.</returns>
         private static List<string> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks, Dictionary<string, string> bodySetVisuals)
         {
@@ -272,6 +278,55 @@ namespace bg3_modders_multitool.Services
                         }
                         return materialIds;
                     }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the base material id from the material banks.
+        /// </summary>
+        /// <param name="id">The material id to match.</param>
+        /// <param name="materialBanks">The materialbanks lookup.</param>
+        /// <returns>The base material id.</returns>
+        private static string LoadMaterial(string id, Dictionary<string, string> materialBanks)
+        {
+            if (id != null)
+            {
+                materialBanks.TryGetValue(id, out string materialBankFile);
+                if (materialBankFile != null)
+                {
+                    var xml = XDocument.Load(FileHelper.GetPath(materialBankFile));
+                    var materialNode = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute")
+                        .Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
+                    var basecolorTexture2DParams = materialNode.Descendants().Where(x => x.Name.LocalName == "attribute" && x.Attribute("id").Value == "ParameterName").SingleOrDefault(x => x.Attribute("value").Value == "basecolor")?.Parent;
+                    if (basecolorTexture2DParams != null)
+                        return basecolorTexture2DParams.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "ID")?.Attribute("value").Value;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the given texture file by id from the texture banks.
+        /// </summary>
+        /// <param name="id">The texture id to match.</param>
+        /// <param name="textureBanks">The texturebanks lookup.</param>
+        /// <returns>The texture filepath.</returns>
+        private static string LoadTexture(string id, Dictionary<string, string> textureBanks)
+        {
+            if (id != null)
+            {
+                textureBanks.TryGetValue(id, out string textureBankFile);
+                if (textureBankFile != null)
+                {
+                    var xml = XDocument.Load(FileHelper.GetPath(textureBankFile));
+                    var textureResourceNode = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" &&
+                        x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
+                    var ddsFile = textureResourceNode.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
+                    if (ddsFile == null)
+                        return null;
+                    return FileHelper.GetPath($"Textures\\{ddsFile}");
                 }
             }
             return null;
