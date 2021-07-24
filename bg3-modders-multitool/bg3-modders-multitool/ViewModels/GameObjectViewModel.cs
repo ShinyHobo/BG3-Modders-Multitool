@@ -214,12 +214,14 @@ namespace bg3_modders_multitool.ViewModels
                                 // skin removal, melanin removal, detail normal removal from CancelMSK
                                 // blood mask, dirt mask, bruises mask from SkinSharedMSK
                                 // lips makeup roughness, head occlusion from RoughnessMSK
+                                var isSkin = (model.SlotType == null || model.SlotType == "Head") && type == "character";
                                 var MRAOMap = GeneralHelper.DDSToTextureStream(model.MRAOMap);
                                 var map = new PBRMaterial
                                 {
                                     AlbedoMap = GeneralHelper.DDSToTextureStream(model.BaseMap),
-                                    // RenderAlbedoMap = type != "character", //// non-skin
+                                    RenderAlbedoMap = !isSkin, //// non-skin
                                     NormalMap = GeneralHelper.DDSToTextureStream(model.NormalMap),
+                                    RenderNormalMap = !isSkin,
                                     RoughnessMetallicMap = MRAOMap,
                                     //AmbientOcculsionMap = MRAOMap,
                                     //MetallicFactor = 0.1,

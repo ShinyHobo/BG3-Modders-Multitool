@@ -183,8 +183,8 @@ namespace bg3_modders_multitool.ViewModels
                 }
 
                 Task.Run(() => {
-                    var mesh = RenderedModelHelper.GetMesh(Path.ChangeExtension(FileHelper.GetPath(SelectedPath), null), new System.Collections.Generic.Dictionary<string, string>(),
-                        new System.Collections.Generic.Dictionary<string, string>(), new System.Collections.Generic.Dictionary<string, string>()); // TODO get materials
+                    var mesh = RenderedModelHelper.GetMesh(Path.ChangeExtension(FileHelper.GetPath(SelectedPath), null), new System.Collections.Generic.Dictionary<string, Tuple<string, string>>(),
+                        new System.Collections.Generic.Dictionary<string, string>(), new System.Collections.Generic.Dictionary<string, string>(), new System.Collections.Generic.Dictionary<string, string>()); // TODO get materials
                     if (mesh != null && mesh.Any())
                     {
                         var lod = mesh.First().Value;
