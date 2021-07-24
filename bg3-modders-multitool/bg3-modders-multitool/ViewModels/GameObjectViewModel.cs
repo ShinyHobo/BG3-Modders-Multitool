@@ -221,7 +221,7 @@ namespace bg3_modders_multitool.ViewModels
                                     // RenderAlbedoMap = type != "character", //// non-skin
                                     NormalMap = GeneralHelper.DDSToTextureStream(model.NormalMap),
                                     RoughnessMetallicMap = MRAOMap,
-                                    AmbientOcculsionMap = MRAOMap,
+                                    //AmbientOcculsionMap = MRAOMap,
                                     //MetallicFactor = 0.1,
                                     //RoughnessFactor = 0.1,
                                     //ReflectanceFactor = 0.1

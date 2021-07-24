@@ -74,6 +74,9 @@ namespace bg3_modders_multitool.Services
                     case "float":
                         type = "float";
                         break;
+                    case "double":
+                        type = "double";
+                        break;
                     case "int8":
                         type = "sbyte";
                         break;
@@ -156,6 +159,9 @@ namespace bg3_modders_multitool.Services
                 case "6":
                     type = "float";
                     break;
+                case "7":
+                    type = "double";
+                    break;
                 case "11":
                     type = "fvec2";
                     break;
@@ -224,16 +230,20 @@ namespace bg3_modders_multitool.Services
             System.IO.Stream texture = null;
             if (File.Exists(texturePath))
             {
-                using (System.IO.FileStream fs = File.Open(texturePath, System.IO.FileMode.Open))
+                try
                 {
-                    BitmapImage img = new BitmapImage();
-                    img.BeginInit();
-                    img.CacheOption = BitmapCacheOption.OnLoad;
-                    img.StreamSource = fs;
-                    img.EndInit();
-                    img.Freeze();
-                    texture = BitmapSourceToStream(img);
+                    using (System.IO.FileStream fs = File.Open(texturePath, System.IO.FileMode.Open))
+                    {
+                        BitmapImage img = new BitmapImage();
+                        img.BeginInit();
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.StreamSource = fs;
+                        img.EndInit();
+                        img.Freeze();
+                        texture = BitmapSourceToStream(img);
+                    }
                 }
+                catch { }
             }
             return texture;
         }
