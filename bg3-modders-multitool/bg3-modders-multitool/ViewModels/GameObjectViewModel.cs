@@ -217,14 +217,11 @@ namespace bg3_modders_multitool.ViewModels
                                 var map = new PBRMaterial
                                 {
                                     AlbedoMap = GeneralHelper.DDSToTextureStream(model.BaseMap),
-                                    RenderAlbedoMap = !isSkin, //// non-skin
+                                    //RenderAlbedoMap = !isSkin, //// non-skin
                                     NormalMap = GeneralHelper.DDSToTextureStream(model.NormalMap),
                                     RenderNormalMap = !isSkin,
                                     RoughnessMetallicMap = MRAOMap,
                                     //AmbientOcculsionMap = MRAOMap,
-                                    //MetallicFactor = 0.1,
-                                    //RoughnessFactor = 0.1,
-                                    //ReflectanceFactor = 0.1
                                     //GeneralHelper.DDSToTextureStream(model.HMVYMap),
                                     //GeneralHelper.DDSToTextureStream(model.CLEAMap)
                                 };
