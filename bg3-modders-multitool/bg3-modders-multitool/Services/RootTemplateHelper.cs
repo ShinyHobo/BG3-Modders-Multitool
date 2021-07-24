@@ -455,6 +455,11 @@ namespace bg3_modders_multitool.Services
             var materialBanks = new ConcurrentDictionary<string, string>();
             var textureBanks = new ConcurrentDictionary<string, string>();
             var visualBankFiles = GetFileList("VisualBank");
+            var materialBankFiles = GetFileList("MaterialBank");
+            var textureBankFiles = GetFileList("TextureBank");
+            visualBankFiles.AddRange(materialBankFiles);
+            visualBankFiles.AddRange(textureBankFiles);
+            visualBankFiles = visualBankFiles.Distinct().ToList();
             Parallel.ForEach(visualBankFiles, visualBankFile => {
                 if (File.Exists(visualBankFile))
                 {

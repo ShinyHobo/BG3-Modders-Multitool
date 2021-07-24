@@ -108,11 +108,17 @@ namespace bg3_modders_multitool.Services
                     var meshNode = mesh.Items.Last() as MeshNode;
                     var meshGeometry = meshNode.Geometry as MeshGeometry3D;
                     var baseMaterialId = LoadMaterial(materialGuid, "basecolor", materialBanks);
+                    if (baseMaterialId == null)
+                        baseMaterialId = LoadMaterial(materialGuid, "Body_color_texture", materialBanks);
                     var baseTexture = LoadTexture(baseMaterialId, textureBanks);
                     var normalMaterialId = LoadMaterial(materialGuid, "normalmap", materialBanks);
-                    var normalTexture = LoadTexture(baseMaterialId, textureBanks);
+                    if (normalMaterialId == null)
+                        normalMaterialId = LoadMaterial(materialGuid, "Fur_normalmap", materialBanks);
+                    if (normalMaterialId == null)
+                        normalMaterialId = LoadMaterial(materialGuid, "IrisNormal", materialBanks);
+                    var normalTexture = LoadTexture(normalMaterialId, textureBanks);
                     var mraoMaterialId = LoadMaterial(materialGuid, "physicalmap", materialBanks);
-                    var mraoTexture = LoadTexture(baseMaterialId, textureBanks);
+                    var mraoTexture = LoadTexture(mraoMaterialId, textureBanks);
                     var hmvyMaterialId = LoadMaterial(materialGuid, "HMVY", materialBanks);
                     var hmvyTexture = LoadTexture(hmvyMaterialId, textureBanks);
                     var cleaMaterialId = LoadMaterial(materialGuid, "CLEA", materialBanks);

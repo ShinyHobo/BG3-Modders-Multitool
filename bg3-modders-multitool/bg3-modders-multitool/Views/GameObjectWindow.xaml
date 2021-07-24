@@ -155,10 +155,11 @@
             <TabItem Header="3D Model" Cursor="Hand">
                 <Grid Cursor="Arrow">
                     <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" UseDefaultGestures="False"
-                                    IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Gray">
-                        <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,50,0" Attenuation="1,0,0"/>
-                        <hx:PointLight3D x:Name="pointLight2" Color="White" Position="0,10,10" Attenuation="1,0.05,0"/>
-                        <hx:PointLight3D x:Name="pointLight3" Color="White" Position="0,10,-10" Attenuation="5,0,0"/>
+                                    IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="White">
+                        <!--<hx:AmbientLight3D x:Name="sner" Color="White" />-->
+                        <hx:PointLight3D x:Name="pointLight1" Color="White" Position="0,10,10"/>
+                        <hx:PointLight3D x:Name="pointLight2" Color="White" Position="0,-10,-10"/>
+                        <hx:PointLight3D x:Name="pointLight3" Color="White" Position="0,-10,0"/>
                         <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
                         <hx:Viewport3DX.InputBindings>
                             <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
