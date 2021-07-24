@@ -34,8 +34,8 @@ namespace bg3_modders_multitool.Services
             //var exportFormats = HelixToolkit.Wpf.SharpDX.Assimp.Exporter.SupportedFormats;
 
             var gr2Files = new List<string>();
-            var materials = new Dictionary<string, string>();
-            
+            var materials = new Dictionary<string, Tuple<string, string>>();
+            var slotTypes = new Dictionary<string, string>();
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             // CharacterVisualResourceID => characters, load CharacterVisualBank, then VisualBanks
@@ -44,6 +44,7 @@ namespace bg3_modders_multitool.Services
             {
                 case "character":
                     var characterVisualResources = LoadCharacterVisualResources(template, characterVisualBanks, visualBanks);
+                    slotTypes = characterVisualResources.Item3;
                     materials = characterVisualResources.Item2;
                     gr2Files.AddRange(characterVisualResources.Item1);
                     break;
@@ -65,7 +66,7 @@ namespace bg3_modders_multitool.Services
 
             foreach(var gr2File in gr2Files)
             {
-                var geometry = GetMesh(gr2File, materials, materialBanks, textureBanks);
+                var geometry = GetMesh(gr2File, materials, slotTypes, materialBanks, textureBanks);
                 if(geometry != null)
                 {
                     geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
@@ -83,8 +84,8 @@ namespace bg3_modders_multitool.Services
         /// <param name="materialBanks">The materialbanks lookup.</param>
         /// <param name="textureBanks">The texturebanks lookup.</param>
         /// <returns>The geometry lookup table.</returns>
-        public static Dictionary<string, List<MeshGeometry3DObject>> GetMesh(string filename, Dictionary<string, string> materials,
-            Dictionary<string, string> materialBanks, Dictionary<string, string> textureBanks)
+        public static Dictionary<string, List<MeshGeometry3DObject>> GetMesh(string filename, Dictionary<string, Tuple<string, string>> materials,
+            Dictionary<string, string> slotTypes, Dictionary<string, string> materialBanks, Dictionary<string, string> textureBanks)
         {
             var file = LoadFile(filename);
             if (file == null)
@@ -103,29 +104,30 @@ namespace bg3_modders_multitool.Services
                 foreach(var mesh in meshGroup)
                 {
                     var name = mesh.Name.Split('-').First();
-                    string materialGuid = null;
+                    Tuple<string, string> materialGuid = null;
                     materials?.TryGetValue(name, out materialGuid);
                     var meshNode = mesh.Items.Last() as MeshNode;
                     var meshGeometry = meshNode.Geometry as MeshGeometry3D;
-                    var baseMaterialId = LoadMaterial(materialGuid, "basecolor", materialBanks);
+                    var baseMaterialId = LoadMaterial(materialGuid.Item1, "basecolor", materialBanks);
                     if (baseMaterialId == null)
-                        baseMaterialId = LoadMaterial(materialGuid, "Body_color_texture", materialBanks);
+                        baseMaterialId = LoadMaterial(materialGuid.Item1, "Body_color_texture", materialBanks);
                     var baseTexture = LoadTexture(baseMaterialId, textureBanks);
-                    var normalMaterialId = LoadMaterial(materialGuid, "normalmap", materialBanks);
+                    var normalMaterialId = LoadMaterial(materialGuid.Item1, "normalmap", materialBanks);
                     if (normalMaterialId == null)
-                        normalMaterialId = LoadMaterial(materialGuid, "Fur_normalmap", materialBanks);
+                        normalMaterialId = LoadMaterial(materialGuid.Item1, "Fur_normalmap", materialBanks);
                     if (normalMaterialId == null)
-                        normalMaterialId = LoadMaterial(materialGuid, "IrisNormal", materialBanks);
+                        normalMaterialId = LoadMaterial(materialGuid.Item1, "IrisNormal", materialBanks);
                     var normalTexture = LoadTexture(normalMaterialId, textureBanks);
-                    var mraoMaterialId = LoadMaterial(materialGuid, "physicalmap", materialBanks);
+                    var mraoMaterialId = LoadMaterial(materialGuid.Item1, "physicalmap", materialBanks);
                     var mraoTexture = LoadTexture(mraoMaterialId, textureBanks);
-                    var hmvyMaterialId = LoadMaterial(materialGuid, "HMVY", materialBanks);
+                    var hmvyMaterialId = LoadMaterial(materialGuid.Item1, "HMVY", materialBanks);
                     var hmvyTexture = LoadTexture(hmvyMaterialId, textureBanks);
-                    var cleaMaterialId = LoadMaterial(materialGuid, "CLEA", materialBanks);
+                    var cleaMaterialId = LoadMaterial(materialGuid.Item1, "CLEA", materialBanks);
                     var cleaTexture = LoadTexture(cleaMaterialId, textureBanks);
+                    slotTypes.TryGetValue(materialGuid.Item2, out string slotType);
                     geometryList.Add(new MeshGeometry3DObject {
                         ObjectId = name,
-                        MaterialId = materialGuid,
+                        MaterialId = materialGuid.Item1,
                         BaseMaterialId = baseMaterialId,
                         BaseMap = baseTexture,
                         NormalMaterialId = normalMaterialId,
@@ -136,7 +138,8 @@ namespace bg3_modders_multitool.Services
                         HMVYMap = hmvyTexture,
                         CLEAMaterialId = cleaMaterialId,
                         CLEAMap = cleaTexture,
-                        MeshGeometry3D = meshGeometry
+                        MeshGeometry3D = meshGeometry,
+                        SlotType = slotType
                     });
                 }
                 geometryLookup.Add(meshGroup.Key, geometryList);
@@ -228,10 +231,11 @@ namespace bg3_modders_multitool.Services
         /// <param name="characterVisualBanks">The character visualbanks lookup.</param>
         /// <param name="visualBanks">The visualbanks lookup.</param>
         /// <returns>The list of character visual resources found.</returns>
-        private static Tuple<List<string>, Dictionary<string, string>> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
+        private static Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
         {
             var characterVisualResources = new List<string>();
-            var materials = new Dictionary<string, string>();
+            var materials = new Dictionary<string, Tuple<string, string>>();
+            var slotTypes = new Dictionary<string, string>();
             if (id != null)
             {
                 characterVisualBanks.TryGetValue(id, out string file);
@@ -245,7 +249,7 @@ namespace bg3_modders_multitool.Services
                     var bodySetVisual = LoadVisualResource(bodySetVisualId, visualBanks);
                     foreach (var material in LoadMaterials(bodySetVisualId, visualBanks))
                     {
-                        materials.Add(material.Key, material.Value);
+                        materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, id));
                     }
                     if (bodySetVisual != null)
                         characterVisualResources.Add(bodySetVisual);
@@ -253,10 +257,12 @@ namespace bg3_modders_multitool.Services
                     foreach (var slot in slots)
                     {
                         var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
+                        var slotType = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "Slot").Attribute("value").Value;
+                        slotTypes.Add(visualResourceId, slotType);
                         foreach (var material in LoadMaterials(visualResourceId, visualBanks))
                         {
                             if (!materials.ContainsKey(material.Key))
-                                materials.Add(material.Key, material.Value);
+                                materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, visualResourceId));
                         }
                         var visualResource = LoadVisualResource(visualResourceId, visualBanks);
                         if (visualResource != null)
@@ -264,7 +270,7 @@ namespace bg3_modders_multitool.Services
                     }
                 }
             }
-            return new Tuple<List<string>, Dictionary<string, string>>(characterVisualResources, materials);
+            return new Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>>(characterVisualResources, materials, slotTypes);
         }
 
         /// <summary>
@@ -298,9 +304,9 @@ namespace bg3_modders_multitool.Services
         /// <param name="id">The id to match.</param>
         /// <param name="visualBanks">The visualbanks to lookup.</param>
         /// <returns>The list of material/lod relationships.</returns>
-        private static Dictionary<string, string> LoadMaterials(string id, Dictionary<string, string> visualBanks)
+        private static Dictionary<string, Tuple<string, string>> LoadMaterials(string id, Dictionary<string, string> visualBanks)
         {
-            var materialIds = new Dictionary<string, string>();
+            var materialIds = new Dictionary<string, Tuple<string, string>>();
             if (id !=null)
             {
                 visualBanks.TryGetValue(id, out string visualResourceFile);
@@ -317,7 +323,7 @@ namespace bg3_modders_multitool.Services
                                 var materialId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "MaterialID").Attribute("value").Value;
                                 var objectId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ObjectID").Attribute("value").Value;
                                 if (materialId != null)
-                                    materialIds.Add(objectId.Split('.')[1], materialId);
+                                    materialIds.Add(objectId.Split('.')[1], new Tuple<string, string>(materialId, id));
                         }
                     }
                 }

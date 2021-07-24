@@ -32,5 +32,7 @@ namespace bg3_modders_multitool.Models
         public string CLEAMaterialId { get; set; }
 
         public string CLEAMap { get; set; }
+
+        public string SlotType { get; set; }
     }
 }
