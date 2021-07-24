@@ -176,8 +176,6 @@ namespace bg3_modders_multitool.ViewModels
                 GameObjectAttributes = autoGenGameObject?.Attributes;
                 GameObjectChildren = autoGenGameObject?.Children;
                 var hasModel = GameObjectAttributes?.Any(goa => goa.Name == "CharacterVisualResourceID" || goa.Name == "VisualTemplate");
-                if(hasModel == true)
-                    ModelLoading = Visibility.Visible;
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
 
