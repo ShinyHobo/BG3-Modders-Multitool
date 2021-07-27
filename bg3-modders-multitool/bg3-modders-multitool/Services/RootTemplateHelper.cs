@@ -37,6 +37,8 @@ namespace bg3_modders_multitool.Services
         public Dictionary<string, string> CharacterVisualBanks { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> VisualBanks { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> BodySetVisuals { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> MaterialBanks { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> TextureBanks { get; set; } = new Dictionary<string, string>();
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
@@ -46,12 +48,12 @@ namespace bg3_modders_multitool.Services
 
             rootTemplateTask.ContinueWith(t => {
                 var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
-                GeneralHelper.WriteToConsole($"GameObjects failed to load. {timePassed} seconds past.\n");
+                GeneralHelper.WriteToConsole($"GameObjects failed to load. {timePassed} seconds passed.\n");
                 GeneralHelper.WriteToConsole($"{t.Exception.Message}\n");
                 foreach(var ex in t.Exception.InnerExceptions)
                 {
-                    GeneralHelper.WriteToConsole($"{ex.InnerException.InnerException}\n");
-                    GeneralHelper.WriteToConsole($"{ex.InnerException.StackTrace}\n");
+                    GeneralHelper.WriteToConsole($"{ex.Message}\n");
+                    GeneralHelper.WriteToConsole($"{ex.StackTrace}\n");
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
 
@@ -91,6 +93,7 @@ namespace bg3_modders_multitool.Services
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
                 ReadTranslations();
                 ReadVisualBanks();
+                // ReadTextureBanks();
                 ReadRootTemplate();
                 foreach (var pak in Paks)
                 {
@@ -196,7 +199,8 @@ namespace bg3_modders_multitool.Services
                                     var handle = attribute.Attribute("handle")?.Value;
                                     var value = handle ?? attribute.Attribute("value").Value;
                                     var type = attribute.Attribute("type").Value;
-                                    type = GeneralHelper.LarianTypeEnumConvert(type);
+                                    if (int.TryParse(type, out int typeInt))
+                                        type = GeneralHelper.LarianTypeEnumConvert(type);
 
                                     #if DEBUG
                                     typeBag.Add(type);
@@ -431,12 +435,16 @@ namespace bg3_modders_multitool.Services
             var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string,string>>("CharacterVisualBanks");
             var deserializedVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("VisualBanks");
             var deserializedBodySetVisuals = FileHelper.DeserializeObject<Dictionary<string, string>>("BodySetVisuals");
+            var deserializedMaterialBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("MaterialBanks");
+            var deserializedTextureBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("TextureBanks");
 
-            if (deserializedVisualBanks != null && deserializedCharacterVisualBanks != null && deserializedBodySetVisuals != null)
+            if (deserializedVisualBanks != null && deserializedCharacterVisualBanks != null && deserializedBodySetVisuals != null && deserializedMaterialBanks != null && deserializedTextureBanks != null)
             {
                 CharacterVisualBanks = deserializedCharacterVisualBanks;
                 VisualBanks = deserializedVisualBanks;
                 BodySetVisuals = deserializedBodySetVisuals;
+                MaterialBanks = deserializedMaterialBanks;
+                TextureBanks = deserializedTextureBanks;
                 return true;
             }
 
@@ -444,7 +452,14 @@ namespace bg3_modders_multitool.Services
             var characterVisualBanks = new ConcurrentDictionary<string, string>();
             var visualBanks = new ConcurrentDictionary<string, string>();
             var bodySetVisuals = new ConcurrentDictionary<string, string>();
+            var materialBanks = new ConcurrentDictionary<string, string>();
+            var textureBanks = new ConcurrentDictionary<string, string>();
             var visualBankFiles = GetFileList("VisualBank");
+            var materialBankFiles = GetFileList("MaterialBank");
+            var textureBankFiles = GetFileList("TextureBank");
+            visualBankFiles.AddRange(materialBankFiles);
+            visualBankFiles.AddRange(textureBankFiles);
+            visualBankFiles = visualBankFiles.Distinct().ToList();
             Parallel.ForEach(visualBankFiles, visualBankFile => {
                 if (File.Exists(visualBankFile))
                 {
@@ -460,7 +475,8 @@ namespace bg3_modders_multitool.Services
                             try
                             {
                                 var sectionId = reader.GetAttribute("id");
-                                if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node" && (sectionId == "CharacterVisualBank" || sectionId == "VisualBank"))
+                                var isNode = reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node";
+                                if (isNode && (sectionId == "CharacterVisualBank" || sectionId == "VisualBank"))
                                 {
                                     // read children for resource nodes
                                     var xml = (XElement)XNode.ReadFrom(reader);
@@ -487,6 +503,36 @@ namespace bg3_modders_multitool.Services
 
                                     reader.Skip();
                                 }
+                                else if(isNode && sectionId == "MaterialBank")
+                                {
+                                    var xml = (XElement)XNode.ReadFrom(reader);
+                                    var children = xml.Element("children");
+                                    if (children != null)
+                                    {
+                                        var nodes = children.Elements("node");
+                                        foreach (XElement node in nodes)
+                                        {
+                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
+                                            materialBanks.TryAdd(id, filePath);
+                                        }
+                                    }
+                                    reader.Skip();
+                                }
+                                else if (isNode && sectionId == "TextureBank")
+                                {
+                                    var xml = (XElement)XNode.ReadFrom(reader);
+                                    var children = xml.Element("children");
+                                    if (children != null)
+                                    {
+                                        var nodes = children.Elements("node");
+                                        foreach (XElement node in nodes)
+                                        {
+                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
+                                            textureBanks.TryAdd(id, filePath);
+                                        }
+                                    }
+                                    reader.Skip();
+                                }
                                 else
                                 {
                                     reader.Read();
@@ -506,10 +552,14 @@ namespace bg3_modders_multitool.Services
             CharacterVisualBanks = characterVisualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             VisualBanks = visualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             BodySetVisuals = bodySetVisuals.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            MaterialBanks = materialBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            TextureBanks = textureBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             FileHelper.SerializeObject(CharacterVisualBanks, "CharacterVisualBanks");
             FileHelper.SerializeObject(VisualBanks, "VisualBanks");
             FileHelper.SerializeObject(BodySetVisuals, "BodySetVisuals");
+            FileHelper.SerializeObject(MaterialBanks, "MaterialBanks");
+            FileHelper.SerializeObject(TextureBanks, "TextureBanks");
             return true;
         }
 

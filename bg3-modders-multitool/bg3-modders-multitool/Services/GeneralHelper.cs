@@ -10,6 +10,7 @@ namespace bg3_modders_multitool.Services
     using System.Linq;
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Media.Imaging;
 
     public static class GeneralHelper
     {
@@ -73,17 +74,24 @@ namespace bg3_modders_multitool.Services
                     case "float":
                         type = "float";
                         break;
+                    case "double":
+                        type = "double";
+                        break;
                     case "int8":
                         type = "sbyte";
                         break;
                     case "int16":
                         type = "short";
                         break;
+                    case "int":
                     case "int32":
                         type = "int";
                         break;
                     case "uint8":
                         type = "byte";
+                        break;
+                    case "uint16":
+                        type = "uint16";
                         break;
                     case "uint32":
                         type = "uint";
@@ -105,8 +113,8 @@ namespace bg3_modders_multitool.Services
                     case "TranslatedString":
                         type = attribute.Item2;
                         break;
-                    case "18":
-                        type = "List<Tuple<float, float, float>>";
+                    case "mat4x4":
+                        type = "List<Tuple<float, float, float, float>>";
                         break;
                     default:
                         throw new Exception($"Attribute type not covered: {attribute.Item2}");
@@ -139,12 +147,20 @@ namespace bg3_modders_multitool.Services
                 case "2":
                     type = "int16";
                     break;
+                case "3":
+                    type = "uint16";
+                    break;
+                case "4":
+                    type = "int";
+                    break;
                 case "5":
                     type = "uint32";
                     break;
-                case "4":
                 case "6":
                     type = "float";
+                    break;
+                case "7":
+                    type = "double";
                     break;
                 case "11":
                     type = "fvec2";
@@ -156,12 +172,12 @@ namespace bg3_modders_multitool.Services
                     type = "fvec4";
                     break;
                 case "18": // CustomPointTransform
+                    type = "mat4x4";
                     break;
                 case "19":
                     type = "bool";
                     break;
                 case "22":
-                case "27":
                     type = "FixedString";
                     break;
                 case "23":
@@ -169,6 +185,9 @@ namespace bg3_modders_multitool.Services
                     break;
                 case "24":
                     type = "uint64";
+                    break;
+                case "27":
+                    type = "int8";
                     break;
                 case "28":
                     type = "TranslatedString";
@@ -180,7 +199,7 @@ namespace bg3_modders_multitool.Services
                     type = "int32";
                     break;
                 default:
-                    break;
+                    throw new Exception($"Type {type} not covered for conversion.");
             }
             return type;
         }
@@ -199,6 +218,49 @@ namespace bg3_modders_multitool.Services
                 var toggleText = setting ? "on" : "off";
                 GeneralHelper.WriteToConsole($"Quick launch settings toggled {toggleText}!\n");
             }
+        }
+
+        /// <summary>
+        /// Converts a DDS texture into a usable stream for displaying on models.
+        /// </summary>
+        /// <param name="texturePath">The filepath to the texture file.</param>
+        /// <returns>The texture stream</returns>
+        public static System.IO.Stream DDSToTextureStream(string texturePath)
+        {
+            System.IO.Stream texture = null;
+            if (File.Exists(texturePath))
+            {
+                try
+                {
+                    using (System.IO.FileStream fs = File.Open(texturePath, System.IO.FileMode.Open))
+                    {
+                        BitmapImage img = new BitmapImage();
+                        img.BeginInit();
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.StreamSource = fs;
+                        img.EndInit();
+                        img.Freeze();
+                        texture = BitmapSourceToStream(img);
+                    }
+                }
+                catch { }
+            }
+            return texture;
+        }
+
+        /// <summary>
+        /// Converts a bitmap source to a stream.
+        /// </summary>
+        /// <param name="writeBmp">The bitmap image.</param>
+        /// <returns>The stream.</returns>
+        public static System.IO.Stream BitmapSourceToStream(BitmapSource writeBmp)
+        {
+            System.IO.Stream stream = new System.IO.MemoryStream();
+            BitmapEncoder enc = new BmpBitmapEncoder();
+            enc.Frames.Add(BitmapFrame.Create(writeBmp));
+            enc.Save(stream);
+
+            return stream;
         }
     }
 }

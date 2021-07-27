@@ -92,7 +92,22 @@ namespace bg3_modders_multitool.Views
                         vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
                     }
                     convertAndOpenButton.IsEnabled = true;
-                    convertAndOpenButton.Content = isGr2 ? "Open .dae" : (FileHelper.CanConvertToLsx(vm.SelectedPath) ? "Convert & Open" : "Open");
+                    if(isGr2)
+                    {
+                        convertAndOpenButton.Content = "Open .dae";
+                    }
+                    else if(FileHelper.CanConvertToLsx(vm.SelectedPath))
+                    {
+                        convertAndOpenButton.Content = "Convert & Open";
+                    }
+                    else if (FileHelper.CanConvertToOgg(vm.SelectedPath))
+                    {
+                        convertAndOpenButton.Content = "Play Audio (ogg)";
+                    }
+                    else
+                    {
+                        convertAndOpenButton.Content = "Open";
+                    }
                 }
             }
             timer.Stop();
@@ -102,8 +117,16 @@ namespace bg3_modders_multitool.Views
         {
             convertAndOpenButton.IsEnabled = false;
             var vm = DataContext as SearchResults;
-            var newFile = FileHelper.Convert(vm.SelectedPath,"lsx");
-            FileHelper.OpenFile(newFile);
+            var ext = Path.GetExtension(vm.SelectedPath);
+            if(ext == ".wem")
+            {
+                FileHelper.PlayAudio(vm.SelectedPath);
+            }
+            else
+            {
+                var newFile = FileHelper.Convert(vm.SelectedPath, "lsx");
+                FileHelper.OpenFile(newFile);
+            }
             convertAndOpenButton.IsEnabled = true;
         }
 
