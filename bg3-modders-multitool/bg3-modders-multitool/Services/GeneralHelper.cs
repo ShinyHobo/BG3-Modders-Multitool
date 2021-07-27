@@ -10,6 +10,7 @@ namespace bg3_modders_multitool.Services
     using System.Linq;
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Media.Imaging;
 
     public static class GeneralHelper
     {
@@ -73,6 +74,9 @@ namespace bg3_modders_multitool.Services
                     case "float":
                         type = "float";
                         break;
+                    case "double":
+                        type = "double";
+                        break;
                     case "int8":
                         type = "sbyte";
                         break;
@@ -85,6 +89,9 @@ namespace bg3_modders_multitool.Services
                         break;
                     case "uint8":
                         type = "byte";
+                        break;
+                    case "uint16":
+                        type = "uint16";
                         break;
                     case "uint32":
                         type = "uint";
@@ -140,6 +147,9 @@ namespace bg3_modders_multitool.Services
                 case "2":
                     type = "int16";
                     break;
+                case "3":
+                    type = "uint16";
+                    break;
                 case "4":
                     type = "int";
                     break;
@@ -148,6 +158,9 @@ namespace bg3_modders_multitool.Services
                     break;
                 case "6":
                     type = "float";
+                    break;
+                case "7":
+                    type = "double";
                     break;
                 case "11":
                     type = "fvec2";
@@ -205,6 +218,49 @@ namespace bg3_modders_multitool.Services
                 var toggleText = setting ? "on" : "off";
                 GeneralHelper.WriteToConsole($"Quick launch settings toggled {toggleText}!\n");
             }
+        }
+
+        /// <summary>
+        /// Converts a DDS texture into a usable stream for displaying on models.
+        /// </summary>
+        /// <param name="texturePath">The filepath to the texture file.</param>
+        /// <returns>The texture stream</returns>
+        public static System.IO.Stream DDSToTextureStream(string texturePath)
+        {
+            System.IO.Stream texture = null;
+            if (File.Exists(texturePath))
+            {
+                try
+                {
+                    using (System.IO.FileStream fs = File.Open(texturePath, System.IO.FileMode.Open))
+                    {
+                        BitmapImage img = new BitmapImage();
+                        img.BeginInit();
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.StreamSource = fs;
+                        img.EndInit();
+                        img.Freeze();
+                        texture = BitmapSourceToStream(img);
+                    }
+                }
+                catch { }
+            }
+            return texture;
+        }
+
+        /// <summary>
+        /// Converts a bitmap source to a stream.
+        /// </summary>
+        /// <param name="writeBmp">The bitmap image.</param>
+        /// <returns>The stream.</returns>
+        public static System.IO.Stream BitmapSourceToStream(BitmapSource writeBmp)
+        {
+            System.IO.Stream stream = new System.IO.MemoryStream();
+            BitmapEncoder enc = new BmpBitmapEncoder();
+            enc.Frames.Add(BitmapFrame.Create(writeBmp));
+            enc.Save(stream);
+
+            return stream;
         }
     }
 }
