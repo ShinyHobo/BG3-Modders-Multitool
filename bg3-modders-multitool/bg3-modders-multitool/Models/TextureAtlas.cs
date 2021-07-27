@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Models
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
+    using System.Globalization;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Media.Imaging;
@@ -67,12 +68,12 @@ namespace bg3_modders_multitool.Models
             newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}".Replace("/","\\");
 
             var textureAtlasIconSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasIconSize']");
-            newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText);
-            newTextureAtlas.IconWidth = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText);
+            newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
+            newTextureAtlas.IconWidth = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
 
             var textureAtlasTextureSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasTextureSize']");
-            newTextureAtlas.Height = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText);
-            newTextureAtlas.Width = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText);
+            newTextureAtlas.Height = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
+            newTextureAtlas.Width = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
 
             var iconUVList = doc.SelectSingleNode("//region[@id='IconUVList']");
             iconUVList = iconUVList.SelectSingleNode("node[@id='root']");
@@ -82,10 +83,10 @@ namespace bg3_modders_multitool.Models
             {
                 var icon = new IconUV {
                     MapKey = iconNode.SelectSingleNode("attribute[@id='MapKey']").Attributes["value"].InnerText,
-                    U1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U1']").Attributes["value"].InnerText),
-                    U2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U2']").Attributes["value"].InnerText),
-                    V1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='V1']").Attributes["value"].InnerText),
-                    V2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='V2']").Attributes["value"].InnerText)
+                    U1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U1']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
+                    U2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U2']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
+                    V1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='V1']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
+                    V2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='V2']").Attributes["value"].InnerText, CultureInfo.InvariantCulture)
                 };
                 newTextureAtlas.Icons.Add(icon);
             }

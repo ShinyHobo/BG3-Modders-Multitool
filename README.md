@@ -38,7 +38,7 @@ The model viewer tab allows you to view the model associated with a given object
 
 #### Making mod paks
 - Run bg3-mod-packer.exe  
-- Select the location of your [LSLib 1.15.8 (or higher)](https://github.com/Norbyte/lslib) divine.exe  
+- Select the location of your [LSLib 1.15.9 (or higher)](https://github.com/Norbyte/lslib) divine.exe  
 - Drag and drop your unpacked workspace into the large blue box to generate an info.json file and .pak with the same name as your workspace.
 
 [Padme4000](https://github.com/Padme4000) has created a tutorial [here](https://www.youtube.com/watch?v=frgJdEibMNA) on how to use this tool to create mods in more depth.

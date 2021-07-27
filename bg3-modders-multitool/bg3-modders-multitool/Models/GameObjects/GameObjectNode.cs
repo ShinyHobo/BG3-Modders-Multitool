@@ -27,7 +27,8 @@ namespace bg3_modders_multitool.Models.GameObjects
                     var handle = attribute.Attribute("handle")?.Value;
                     var value = handle ?? attribute.Attribute("value").Value;
                     var type = attribute.Attribute("type").Value;
-                    type = GeneralHelper.LarianTypeEnumConvert(type);
+                    if (int.TryParse(type, out int typeInt))
+                        type = GeneralHelper.LarianTypeEnumConvert(type);
                     this.LoadAttribute(id, type, value);
                 }
             }
