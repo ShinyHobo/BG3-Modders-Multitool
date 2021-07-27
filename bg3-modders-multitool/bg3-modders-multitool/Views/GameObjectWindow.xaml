@@ -119,7 +119,7 @@
                     <Grid Margin="0,20,0,0">
                         <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False" ShowTitle="False" IsVirtualizing="True"/>
                     </Grid>
-                    <Grid Margin="0,0,0,384" Height="20">
+                    <Grid>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Stats, Mode=OneWay}" Background="Transparent" FontWeight="Bold"
                                                 Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </Grid>
@@ -155,10 +155,11 @@
             <TabItem Header="3D Model" Cursor="Hand">
                 <Grid Cursor="Arrow">
                     <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" UseDefaultGestures="False"
-                                    IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black">
-                        <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
-                        <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
-                        <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
+                                    IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="White">
+                        <!--<hx:AmbientLight3D x:Name="sner" Color="White" />-->
+                        <hx:PointLight3D x:Name="pointLight1" Color="White" Position="0,10,10"/>
+                        <hx:PointLight3D x:Name="pointLight2" Color="White" Position="0,-10,-10"/>
+                        <hx:PointLight3D x:Name="pointLight3" Color="White" Position="0,-10,0"/>
                         <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
                         <hx:Viewport3DX.InputBindings>
                             <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />

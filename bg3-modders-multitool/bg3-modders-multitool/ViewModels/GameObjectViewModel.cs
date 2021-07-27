@@ -24,8 +24,7 @@ namespace bg3_modders_multitool.ViewModels
             RootTemplateHelper = new RootTemplateHelper(this);
 
             EffectsManager = new DefaultEffectsManager();
-            Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
-            Material = PhongMaterials.LightGray;
+            Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75, CreateLeftHandSystem = true };
             var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
             matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
             matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
@@ -103,16 +102,6 @@ namespace bg3_modders_multitool.ViewModels
         public EffectsManager EffectsManager { get; }
         public Camera Camera { get; }
 
-        private Material _material;
-
-        public Material Material { 
-            get { return _material; }
-            set {
-                _material = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-
         private List<MeshGeometry3D> _meshList;
 
         public List<MeshGeometry3D> MeshList {
@@ -187,8 +176,6 @@ namespace bg3_modders_multitool.ViewModels
                 GameObjectAttributes = autoGenGameObject?.Attributes;
                 GameObjectChildren = autoGenGameObject?.Children;
                 var hasModel = GameObjectAttributes?.Any(goa => goa.Name == "CharacterVisualResourceID" || goa.Name == "VisualTemplate");
-                if(hasModel == true)
-                    ModelLoading = Visibility.Visible;
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
 
@@ -204,10 +191,10 @@ namespace bg3_modders_multitool.ViewModels
                     var characterVisualResourceId = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value ?? value.CharacterVisualResourceID;
                     var visualTemplate = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value ?? value.VisualTemplate;
                     // this should dynamically create meshes based on the number of objects, assemble them based on transforms
-                    var slots = RenderedModelHelper.GetMeshes(type, characterVisualResourceId ?? visualTemplate, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals);
+                    var slots = RenderedModelHelper.GetMeshes(type, characterVisualResourceId ?? visualTemplate, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals,
+                        RootTemplateHelper.MaterialBanks, RootTemplateHelper.TextureBanks);
                     MeshFiles = slots.OrderBy(slot => slot.File).ToList();
 
-                    // Loop through slots
                     foreach (var lodLevels in slots)
                     {
                         // TODO - need lod slider, selecting highest lod first
@@ -215,7 +202,30 @@ namespace bg3_modders_multitool.ViewModels
                         foreach (var model in lod)
                         {
                             Application.Current.Dispatcher.Invoke(() => {
-                                var mesh = new MeshGeometryModel3D() { Geometry = model, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                                // items are traditional PBR
+                                // albedo from BM
+                                // MRAO from PM
+                                // normals from NM
+                                // for characters
+                                // for skinned parts, the BM is unused for characters
+                                // non - skin albedo from BM, hemoglobin / melanin / veins / yellowing HMVY, cavity / lips / eyes / ambient occlusion from CLEA
+                                // skin removal, melanin removal, detail normal removal from CancelMSK
+                                // blood mask, dirt mask, bruises mask from SkinSharedMSK
+                                // lips makeup roughness, head occlusion from RoughnessMSK
+                                var isSkin = (model.SlotType == null || model.SlotType == "Head") && type == "character";
+                                var MRAOMap = GeneralHelper.DDSToTextureStream(model.MRAOMap);
+                                var map = new PBRMaterial
+                                {
+                                    AlbedoMap = GeneralHelper.DDSToTextureStream(model.BaseMap),
+                                    //RenderAlbedoMap = !isSkin, //// non-skin
+                                    NormalMap = GeneralHelper.DDSToTextureStream(model.NormalMap),
+                                    RenderNormalMap = !isSkin,
+                                    RoughnessMetallicMap = MRAOMap,
+                                    //AmbientOcculsionMap = MRAOMap,
+                                    //GeneralHelper.DDSToTextureStream(model.HMVYMap),
+                                    //GeneralHelper.DDSToTextureStream(model.CLEAMap)
+                                };
+                                var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform, FrontCounterClockwise = false };
                                 ViewPort.Items.Add(mesh);
                             });
                         }
