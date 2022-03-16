@@ -118,4 +118,7 @@ ModFolder
 
 If you do everything correctly, you will get a .zip of the same name as your mod directory immediately next to it, containing your pak(s) and info.json metadata file. It is compatible with [ShadowChild](https://github.com/ShadowChild)'s [Candor Mod Manager](https://github.com/ShadowChild/BaldursGate3/releases)
 
+## Linux Users ##
+I have been told that [Bottles](https://github.com/bottlesdevs/Bottles) is a good resource for running this application under Linux
+
 ### Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
