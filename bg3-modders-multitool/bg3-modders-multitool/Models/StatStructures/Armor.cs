@@ -24,7 +24,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int ValueRounding { get; set; }
         public int ValueOverride { get; set; }
         public Rarity Rarity { get; set; }
-        public int Weight { get; set; }
+        public float Weight { get; set; }
         public string Spells { get; set; }
         public string Tags { get; set; }
         public string ExtraProperties { get; set; }
@@ -53,7 +53,9 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string FallingHitEffect { get; set; }
         public string FallinglandEffect { get; set; }
         public string ColorPresetResource { get; set; }
+        public string UseCosts { get; set; } // TODO - Add types, such as ActionPoints
         public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
+        public StatusBoost StatusOnEquip { get; set; }
 
         public override StatStructure Clone()
         {

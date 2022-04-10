@@ -158,21 +158,31 @@ namespace bg3_modders_multitool.Models
                     var property = GetType().GetProperty(id);
                     if (property != null)
                     {
-                        var propertyType = property.PropertyType;
-                        if (propertyType.IsEnum)
+                        try
                         {
-                            property.SetValue(this, Enum.Parse(property.PropertyType, value), null);
-                        }
-                        else
-                        {
-                            if(propertyType == typeof(string))
+                            var propertyType = property.PropertyType;
+                            if (propertyType.IsEnum)
                             {
-                                property.SetValue(this, value);
+                                property.SetValue(this, Enum.Parse(property.PropertyType, value), null);
                             }
                             else
                             {
-                                property.SetValue(this, new StringType(value, type));
+                                if (propertyType == typeof(string))
+                                {
+                                    property.SetValue(this, value);
+                                }
+                                else
+                                {
+                                    property.SetValue(this, new StringType(value, type));
+                                }
                             }
+                        } 
+                        catch
+                        {
+                            // This can usually be fixed by adding properties to the given property type
+                            #if DEBUG
+                            Services.GeneralHelper.WriteToConsole($"Error parsing \"{value}\" for \"{property.PropertyType.Name}\"\n");
+                            #endif
                         }
                     }
                 }

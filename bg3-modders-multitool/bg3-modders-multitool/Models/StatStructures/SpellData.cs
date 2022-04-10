@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Models.StatStructures
 {
     using bg3_modders_multitool.Enums.ValueLists;
+    using System;
     using System.Collections.Generic;
 
     public class SpellData : StatStructure
@@ -63,7 +64,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int JumpDelay { get; set; }
         public bool TeleportSelf { get; set; }
         public int Angle { get; set; }
-        public int HitRadius { get; set; }
+        public float HitRadius { get; set; }
         public bool TeleportSurface { get; set; }
         public int TravelSpeed { get; set; }
         public string Template { get; set; }
@@ -159,7 +160,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string DualWieldingUseCosts { get; set; }
         public bool Stealth { get; set; }
         public int ConsequencesDuration { get; set; }
-        public string ThrowableTargetConditions {get; set; } // TargetConditions
+        public string ThrowableTargetConditions { get; set; } // TargetConditions
         public string HitCosts { get; set; }
         public string SpellAnimationArcaneMagic { get; set; }
         public int SurfaceRadius { get; set; }
@@ -190,6 +191,19 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string RootSpellID { get; set; }
         public int PowerLevel { get; set; }
         public int SourceLimbIndex { get; set; }
+        public float TargetCeiling { get; set; }
+        public float TargetFloor { get; set; }
+        public List<Guid> Trajectories { get; set; }
+        public List<string> SpellAnimation { get; set; } // TODO - Create type for this, has complex form "73afb4e5-8cfe-4479-95cf-16889597fee3(CMBT_Range_RHand_01_Prepare),,"
+        public List<string> DualWieldingSpellAnimation { get; set; } // TODO - See SpellAnimation
+        public SpellHitAnimationType HitAnimationType { get; set; }
+        public SpellStyleGroup SpellStyleGroup { get; set; }
+        public SpellCategoryFlag SpellCategory { get; set; }
+        public int MinJumpDistance { get; set; }
+        public bool StopAtFirstContact { get; set; }
+        public float HitExtension { get; set; }
+        public bool OnlyHit1Target { get; set; }
+        public List<CinematicArenaFlag> CinematicArenaFlags { get; set; }
 
         public override StatStructure Clone()
         {

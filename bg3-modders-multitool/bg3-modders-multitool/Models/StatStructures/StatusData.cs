@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Models.StatStructures
 {
     using bg3_modders_multitool.Enums.ValueLists;
+    using System;
     using System.Collections.Generic;
 
     public class StatusData : StatStructure
@@ -104,6 +105,23 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string OnRemoveFunctors { get; set; } // StatsFunctors
         public LEDEffectType LEDEffect { get; set; }
         public List<StatusGroupFlags> StatusGroups { get; set; }
+        public SpellHitAnimationType HitAnimationType { get; set; }
+        public float SplatterDirtAmount { get; set; }
+        public float SplatterBloodAmount { get; set; }
+        public float SplatterSweatAmount { get; set; }
+        public string TooltipDamage { get; set; }
+        public string OnTickRoll { get; set; }
+        public string OnTickSuccess { get; set; }
+        public string OnTickFail { get; set; }
+        public bool IsUnique { get; set; }
+        public string OnApplyRoll { get; set; }
+        public string OnApplySuccess { get; set; }
+        public string OnApplyFail { get; set; }
+        public Guid StatusSoundState { get; set; }
+        public List<string> AnimationSetOverride { get; set; }
+        public List<string> MeshEffect { get; set; }
+        public string UseCosts { get; set; } // TODO - Create model for this
+        public StatusStackType StackType { get; set; }
 
         public override StatStructure Clone()
         {

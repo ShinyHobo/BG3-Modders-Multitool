@@ -19,8 +19,8 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string Icon { get; set; }
         public List<PassiveFlag> Properties { get; set; }
         public string Boosts { get; set; }
-        public StatsFunctorContext StatsFunctorContext { get; set; }
-        public StatsFunctorContext BoostContext { get; set; }
+        public List<StatsFunctorContext> StatsFunctorContext { get; set; }
+        public List<StatsFunctorContext> BoostContext { get; set; }
         public string ToggleOnEffect { get; set; }
         public string ToggleOffEffect { get; set; }
 
@@ -32,6 +32,13 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string StatsFunctors { get; set; }
         public string ToggleOnFunctors { get; set; }
         public string ToggleOffFunctors { get; set; }
+        public string TooltipUseCosts { get; set; } // TODO - Add ActionPoint type enum list
+        public string EnabledConditions { get; set; }
+        public List<StatsFunctorContext> EnabledContext { get; set; }
+        public StatsFunctorContext ToggleOffContext { get; set; }
+        public string ToggleGroup { get; set; } // TODO - Determine list of togglegroups
+        public string TooltipSave { get; set; } // TODO - Determine what these are and add enum list
+        public int PriorityOrder { get; set; }
 
         public override StatStructure Clone()
         {

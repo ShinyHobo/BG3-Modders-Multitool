@@ -11,6 +11,12 @@ namespace bg3_modders_multitool.Enums.ValueLists
         IsHidden,
         IsToggled,
         ToggledDefaultOn,
-        ToggledDefaultAddToHotbar
+        ToggledDefaultAddToHotbar,
+        OncePerCombat,
+        OncePerShortRest,
+        OncePerLongRest,
+        MetaMagic,
+        OncePerAttack,
+        Highlighted
     }
 }
