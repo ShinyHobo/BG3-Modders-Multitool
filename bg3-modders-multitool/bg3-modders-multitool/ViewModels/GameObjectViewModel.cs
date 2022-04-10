@@ -298,6 +298,7 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         public string SelectedKey { get; set; }
+        public System.Windows.Controls.Button SelectedButton { get; set; }
         #endregion
     }
 }
