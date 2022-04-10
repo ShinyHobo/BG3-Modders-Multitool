@@ -26,7 +26,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int ValueRounding { get; set; }
         public int ValueOverride { get; set; }
         public Rarity Rarity { get; set; }
-        public int Weight { get; set; }
+        public float Weight { get; set; }
         public WeaponType WeaponType { get; set; }
         public ItemSlot Slot { get; set; }
         public string Projectile { get; set; }
@@ -60,6 +60,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string FallingLandEffect { get; set; }
         public string ColorPresetResource { get; set; }
         public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
+        public List<string> BoostsOnEquipMainHand { get; set; }
+        public string UseCosts { get; set; } // TODO - Create model for this
+        public string PassivesMainHand { get; set; } // TODO - Create enum for this
+        public int SupplyValue { get; set; }
 
         public override StatStructure Clone()
         {

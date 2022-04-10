@@ -19,6 +19,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OnHeal,
         OnObscurityChanged,
         OnSightRelationsChanged,
-        OnSurfaceEnter
+        OnSurfaceEnter,
+        OnStatusApplied,
+        OnStatusRemoved
     }
 }

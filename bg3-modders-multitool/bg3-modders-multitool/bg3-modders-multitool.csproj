@@ -20,7 +20,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>E:\Users\Devon\Documents\bg3-modders-multitool\publishes\</PublishUrl>
+    <PublishUrl>G:\BG3\bg3-modders-multitool\publishes\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -85,7 +85,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
@@ -344,6 +344,7 @@
     <Compile Include="Enums\ValueLists\LineOfSightFlags.cs" />
     <Compile Include="Enums\ValueLists\MaterialType.cs" />
     <Compile Include="Enums\ValueLists\ObjectSize.cs" />
+    <Compile Include="Enums\ValueLists\CinematicArenaFlag.cs" />
     <Compile Include="Enums\ValueLists\PassiveFlag.cs" />
     <Compile Include="Enums\ValueLists\ProficiencyGroupFlags.cs" />
     <Compile Include="Enums\ValueLists\ProgressionType.cs" />
@@ -355,6 +356,8 @@
     <Compile Include="Enums\ValueLists\SpellActionType.cs" />
     <Compile Include="Enums\ValueLists\SpellAnimationIntentType.cs" />
     <Compile Include="Enums\ValueLists\SpellAnimationType.cs" />
+    <Compile Include="Enums\ValueLists\SpellCategoryFlag.cs" />
+    <Compile Include="Enums\ValueLists\SpellStyleGroup.cs" />
     <Compile Include="Enums\ValueLists\SpellFlagList.cs" />
     <Compile Include="Enums\ValueLists\SpellHitAnimationType.cs" />
     <Compile Include="Enums\ValueLists\SpellJumpType.cs" />
@@ -362,9 +365,11 @@
     <Compile Include="Enums\ValueLists\SpellSchool.cs" />
     <Compile Include="Enums\ValueLists\StatsFunctorContext.cs" />
     <Compile Include="Enums\ValueLists\StatusAnimationType.cs" />
+    <Compile Include="Enums\ValueLists\StatusBoost.cs" />
     <Compile Include="Enums\ValueLists\StatusEvent.cs" />
     <Compile Include="Enums\ValueLists\StatusGroupFlags.cs" />
     <Compile Include="Enums\ValueLists\StatusHealType.cs" />
+    <Compile Include="Enums\ValueLists\StatusStackType.cs" />
     <Compile Include="Enums\ValueLists\StatusPropertyFlags.cs" />
     <Compile Include="Enums\ValueLists\StepsType.cs" />
     <Compile Include="Enums\ValueLists\StillAnimPriority.cs" />

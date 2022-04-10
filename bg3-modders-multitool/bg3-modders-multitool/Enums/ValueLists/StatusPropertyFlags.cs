@@ -12,18 +12,18 @@ namespace bg3_modders_multitool.Enums.ValueLists
         ForceOverhead,
         IsChanneled,
         IsInvulnerable,
-        DEPRECATED,
+        ForceSheathed,
         LoseControl,
         PlayerSameParty,
         PeaceOnly,
         AllowLeaveCombat,
-        ScaleWithVitality,
+        DisableImmunityOverhead,
         DisableInteractions,
         Toggle,
         IgnoreResting,
         IgnoredByImmobilized,
         Blind,
-        DisableRunning,
+        MultiplyEffectsByDuration,
         TickingWithSource,
         DisableOverhead,
         DisableCombatlog,
@@ -32,6 +32,10 @@ namespace bg3_modders_multitool.Enums.ValueLists
         IsInvulnerableVisible,
         ApplyToDead,
         GiveExp,
-        Burning
+        Burning,
+        NonExtendable,
+        FreezeDuration,
+        UnavailableInActiveRoll,
+        OverheadOnTurn
     }
 }

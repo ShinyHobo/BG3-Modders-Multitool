@@ -21,7 +21,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int Sight { get; set; }
         public int Hearing { get; set; }
         public int FOV { get; set; }
-        public int Weight { get; set; }
+        public float Weight { get; set; }
         public StepsType StepsType { get; set; }
         public string ExtraProperties { get; set; }
         public List<AttributeFlag> Flags { get; set; }
@@ -42,6 +42,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string DarkvisionRange { get; set; }
         public string FallingHitEffect { get; set; }
         public string FallingLandEffect { get; set; }
+        public ObjectSize GameSize { get; set; }
         public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
 
         #region Armor

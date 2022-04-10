@@ -127,14 +127,39 @@ namespace bg3_modders_multitool.Models.StatStructures
                     {
                         property.SetValue(this, Guid.Parse(paramPair[1]), null);
                     }
-                    else if (propertyType.Name == "List`1")
+                    else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                     {
-                        var paramList = paramPair[1].Split(';').ToList();
-                        var arg = propertyType.GenericTypeArguments.First();
-                        var enums = paramList.Select(p => Enum.Parse(arg, p)).ToList();
-                        var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { enums });
-                        var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { arg }).Invoke(null, new object[] { cast });
-                        property.SetValue(this, Convert.ChangeType(enumList, property.PropertyType), null);
+                        List<string> paramList = null; 
+                        if (paramPair[1].Contains(';'))
+                        {
+                            paramList = paramPair[1].Split(';').ToList();
+                        } 
+                        else
+                        {
+                            paramList = paramPair[1].Split(',').ToList();
+                            if(paramList.Count > 1)
+                            {
+                                var sner = "";
+                                var bler = sner;
+                            }
+                        }
+
+                        Type itemType = propertyType.GetGenericArguments().First();
+                        if (itemType == typeof(Guid))
+                        {
+                            property.SetValue(this, paramList.Select(Guid.Parse).ToList(), null);
+                        }
+                        else if(itemType == typeof(string))
+                        {
+                            property.SetValue(this, paramList, null);
+                        }
+                        else
+                        {
+                            var enums = paramList.Select(p => Enum.Parse(itemType, p)).ToList();
+                            var cast = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(new Type[] { itemType }).Invoke(null, new object[] { enums });
+                            var enumList = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(new Type[] { itemType }).Invoke(null, new object[] { cast });
+                            property.SetValue(this, Convert.ChangeType(enumList, property.PropertyType), null);
+                        }
                     }
                     else if (propertyType == typeof(bool))
                     {
@@ -146,11 +171,11 @@ namespace bg3_modders_multitool.Models.StatStructures
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 // This can usually be fixed by adding the Modifier data to the given StatStructure type
                 #if DEBUG
-                Services.GeneralHelper.WriteToConsole($"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\"\n");
+                Services.GeneralHelper.WriteToConsole($"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\": {ex.Message}\n");
                 #endif
             }
         }

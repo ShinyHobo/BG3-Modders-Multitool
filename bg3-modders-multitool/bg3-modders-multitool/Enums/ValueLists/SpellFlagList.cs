@@ -15,9 +15,9 @@ namespace bg3_modders_multitool.Enums.ValueLists
         IsConcentration,
         AddFallDamageOnLand,
         ConcentrationIgnoresResting,
-        DefaultThrow,
+        InventorySelection,
         IsSpell,
-        ForGameMaster,
+        UnsheathedFall,
         IsEnemySpell,
         CannotTargetCharacter,
         CannotTargetItems,
@@ -41,9 +41,13 @@ namespace bg3_modders_multitool.Enums.ValueLists
         CanDualWield,
         IsLinkedSpellContainer,
         Invisible,
-        WildShape,
         AllowMoveAndCast,
+        SwitchSheathUnsheathOnCast,
+        WildShape,
         Force1HSSubSetDuringCast,
-        SwitchSheathUnsheathOnCast
+        UnavailableInDialogs,
+        TrajectoryRules,
+        PickupEntityAndMove,
+        Temporary
     }
 }

@@ -195,13 +195,14 @@ namespace bg3_modders_multitool.ViewModels
                         RootTemplateHelper.MaterialBanks, RootTemplateHelper.TextureBanks);
                     MeshFiles = slots.OrderBy(slot => slot.File).ToList();
 
-                    foreach (var lodLevels in slots)
+                    Parallel.ForEach(slots, lodLevels =>
                     {
-                        // TODO - need lod slider, selecting highest lod first
-                        var lod = lodLevels.MeshList.First().Value;
-                        foreach (var model in lod)
+                        // TODO - need lod slider, selecting highest lod first (mesh-node, then Lod-#) TODO - Order lod levels
+                        var lod = lodLevels.MeshList.First(m => m.Key == "Mesh-node").Value;
+                        Parallel.ForEach(lod, model =>
                         {
-                            Application.Current.Dispatcher.Invoke(() => {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
                                 // items are traditional PBR
                                 // albedo from BM
                                 // MRAO from PM
@@ -228,8 +229,8 @@ namespace bg3_modders_multitool.ViewModels
                                 var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform, FrontCounterClockwise = false };
                                 ViewPort.Items.Add(mesh);
                             });
-                        }
-                    }
+                        });
+                    });
 
                     ModelLoading = Visibility.Hidden; 
                 });
@@ -298,6 +299,7 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         public string SelectedKey { get; set; }
+        public System.Windows.Controls.Button SelectedButton { get; set; }
         #endregion
     }
 }

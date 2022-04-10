@@ -75,16 +75,15 @@ namespace bg3_modders_multitool.Views
         {
             var button = (Button)sender;
             var vm = DataContext as GameObjectViewModel;
-            var MapKey = button.Uid;
-            if (MapKey != vm.SelectedKey && vm.ModelLoading != Visibility.Visible && button.IsEnabled)
+            if (vm.ModelLoading != Visibility.Visible && button.IsEnabled)
             {
                 button.IsEnabled = false;
+                if (vm.SelectedButton != null)
+                    vm.SelectedButton.IsEnabled = true;
                 vm.ModelLoading = Visibility.Visible;
-                var disabledButton = GeneralHelper.FindUid(treeView, vm.SelectedKey);
-                if (disabledButton != null)
-                    disabledButton.IsEnabled = true;
-                vm.Info = vm.FindGameObject(MapKey);
-                vm.SelectedKey = MapKey;
+                vm.Info = vm.FindGameObject(button.Uid);
+                vm.SelectedKey = button.Uid;
+                vm.SelectedButton = button;
             }
         }
 

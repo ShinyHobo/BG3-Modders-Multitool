@@ -11,6 +11,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         IgnoreBuff,
         StatusIsSecondary,
         IgnoreControl,
-        CanNotTargetFrozen
+        CanNotTargetFrozen,
+        GrantsResources,
+        UseAsSupportingActionOnly
     }
 }
