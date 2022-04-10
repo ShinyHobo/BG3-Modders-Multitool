@@ -20,6 +20,9 @@ namespace bg3_modders_multitool.Enums
         terrain,
         TileConstruction,
         trigger,
-        invalid_template
+        invalid_template,
+        fogVolume,
+        CombinedLight,
+        constellationHelper
     }
 }

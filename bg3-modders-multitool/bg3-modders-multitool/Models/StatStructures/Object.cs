@@ -21,7 +21,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int ValueRounding { get; set; }
         public int ValueOverride { get; set; }
         public Rarity Rarity { get; set; }
-        public int Weight { get; set; }
+        public float Weight { get; set; }
         public string ComboCategory { get; set; }
         public string Requirements { get; set; } // Requirements
         public int Vitality { get; set; }
@@ -70,6 +70,13 @@ namespace bg3_modders_multitool.Models.StatStructures
         public List<ResistanceFlag> RadiantResistance { get; set; }
         [Category("Damage Resistance")]
         public List<ResistanceFlag> ThunderResistance { get; set; }
+        public int Sight { get; set; }
+        public int FOV { get; set; }
+        public int DarkvisionRange { get; set; }
+        public int MinimumDetectionRange { get; set; }
+        public ObjectSize GameSize { get; set; }
+        public int SupplyValue { get; set; }
+        public ObjectSize SoundSize { get; set; }
 
         public override StatStructure Clone()
         {

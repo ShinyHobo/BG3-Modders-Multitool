@@ -7,6 +7,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
     {
         None,
         Dipping,
-        Assisting
+        Assisting,
+        Throwing,
+        ImprovisedWeapon
     }
 }
