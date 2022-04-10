@@ -197,8 +197,8 @@ namespace bg3_modders_multitool.ViewModels
 
                     Parallel.ForEach(slots, lodLevels =>
                     {
-                        // TODO - need lod slider, selecting highest lod first
-                        var lod = lodLevels.MeshList.First().Value;
+                        // TODO - need lod slider, selecting highest lod first (mesh-node, then Lod-#) TODO - Order lod levels
+                        var lod = lodLevels.MeshList.First(m => m.Key == "Mesh-node").Value;
                         Parallel.ForEach(lod, model =>
                         {
                             Application.Current.Dispatcher.Invoke(() =>
