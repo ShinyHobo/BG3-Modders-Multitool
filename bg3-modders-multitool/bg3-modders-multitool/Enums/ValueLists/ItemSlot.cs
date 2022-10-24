@@ -26,6 +26,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Ring2,
         Wings,
         Horns,
-        Overhead
+        Overhead,
+        MusicalInstrument
     }
 }

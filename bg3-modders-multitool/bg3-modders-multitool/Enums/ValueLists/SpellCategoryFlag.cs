@@ -16,6 +16,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         SC_IntentDebuff,
         SC_IntentUtility,
         SC_Jump,
-        SC_Dash
+        SC_Dash,
+        SC_DetectThoughts
     }
 }

@@ -48,6 +48,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         UnavailableInDialogs,
         TrajectoryRules,
         PickupEntityAndMove,
-        Temporary
+        Temporary,
+        CantUseMusicalInstrumentForCasting
     }
 }

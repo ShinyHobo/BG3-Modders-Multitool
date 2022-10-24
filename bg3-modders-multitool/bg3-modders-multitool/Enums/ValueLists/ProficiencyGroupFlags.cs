@@ -44,6 +44,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Halberds,
         Flails,
         Tridents,
-        Warpicks
+        Warpicks,
+        MusicalInstrument
     }
 }
