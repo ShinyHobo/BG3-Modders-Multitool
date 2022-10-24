@@ -21,6 +21,9 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OnSightRelationsChanged,
         OnSurfaceEnter,
         OnStatusApplied,
-        OnStatusRemoved
+        OnStatusRemoved,
+        OnCombatEnded,
+        OnMove,
+        OnRemovePerformanceRequest
     }
 }

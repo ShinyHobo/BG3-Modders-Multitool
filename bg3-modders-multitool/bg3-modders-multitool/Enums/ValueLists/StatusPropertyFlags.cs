@@ -36,6 +36,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         NonExtendable,
         FreezeDuration,
         UnavailableInActiveRoll,
-        OverheadOnTurn
+        OverheadOnTurn,
+        Performing,
+        UnsheathInstrument
     }
 }

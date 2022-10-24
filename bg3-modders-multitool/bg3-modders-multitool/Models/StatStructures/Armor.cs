@@ -55,7 +55,8 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ColorPresetResource { get; set; }
         public string UseCosts { get; set; } // TODO - Add types, such as ActionPoints
         public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
-        public StatusBoost StatusOnEquip { get; set; }
+        public List<StatusBoost> StatusOnEquip { get; set; }
+        public InstrumentType InstrumentType { get; set; }
 
         public override StatStructure Clone()
         {

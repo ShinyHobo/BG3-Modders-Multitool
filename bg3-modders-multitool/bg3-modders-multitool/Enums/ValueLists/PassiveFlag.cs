@@ -17,6 +17,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OncePerLongRest,
         MetaMagic,
         OncePerAttack,
-        Highlighted
+        Highlighted,
+        Temporary
     }
 }

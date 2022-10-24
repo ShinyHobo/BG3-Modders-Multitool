@@ -92,6 +92,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int FXScale { get; set; }
         public string TooltipAttackSave { get; set; }
         public string TooltipStatusApply { get; set; }
+        public string TooltipPermanentWarnings { get; set; }
         public string CastSelfAnimation { get; set; }
         public string PrepareEffect { get; set; }
         public string CastEffect { get; set; }
@@ -204,6 +205,12 @@ namespace bg3_modders_multitool.Models.StatStructures
         public float HitExtension { get; set; }
         public bool OnlyHit1Target { get; set; }
         public List<CinematicArenaFlag> CinematicArenaFlags { get; set; }
+        public SpellSoundMagnitude SpellSoundMagnitude {get; set;}
+        public List<RequirementEvent> RequirementEvents { get; set; }
+        public string InstrumentComponentPrepareSound { get; set; }
+        public string InstrumentComponentLoopingSound { get; set; }
+        public string InstrumentComponentCastSound { get; set; }
+        public string InstrumentComponentImpactSound { get; set; }
 
         public override StatStructure Clone()
         {

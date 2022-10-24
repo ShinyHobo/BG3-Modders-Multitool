@@ -337,6 +337,7 @@
     <Compile Include="Enums\ValueLists\DeathType.cs" />
     <Compile Include="Enums\ValueLists\FormatStringColor.cs" />
     <Compile Include="Enums\ValueLists\HealValueType.cs" />
+    <Compile Include="Enums\ValueLists\InstrumentType.cs" />
     <Compile Include="Enums\ValueLists\InventoryTabs.cs" />
     <Compile Include="Enums\ValueLists\ItemSlot.cs" />
     <Compile Include="Enums\ValueLists\ItemUseTypes.cs" />
@@ -351,12 +352,14 @@
     <Compile Include="Enums\ValueLists\ProjectileDistribution.cs" />
     <Compile Include="Enums\ValueLists\ProjectileType.cs" />
     <Compile Include="Enums\ValueLists\Rarity.cs" />
+    <Compile Include="Enums\ValueLists\RequirementEvent.cs" />
     <Compile Include="Enums\ValueLists\Skill.cs" />
     <Compile Include="Enums\ValueLists\SoundVocalType.cs" />
     <Compile Include="Enums\ValueLists\SpellActionType.cs" />
     <Compile Include="Enums\ValueLists\SpellAnimationIntentType.cs" />
     <Compile Include="Enums\ValueLists\SpellAnimationType.cs" />
     <Compile Include="Enums\ValueLists\SpellCategoryFlag.cs" />
+    <Compile Include="Enums\ValueLists\SpellSoundMagnitude.cs" />
     <Compile Include="Enums\ValueLists\SpellStyleGroup.cs" />
     <Compile Include="Enums\ValueLists\SpellFlagList.cs" />
     <Compile Include="Enums\ValueLists\SpellHitAnimationType.cs" />
