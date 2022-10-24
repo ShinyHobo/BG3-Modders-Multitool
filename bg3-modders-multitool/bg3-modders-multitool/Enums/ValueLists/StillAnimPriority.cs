@@ -17,6 +17,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Sleeping,
         KO,
         Downed,
-        Shouting
+        Shouting,
+        Performing
     }
 }

@@ -9,6 +9,6 @@ namespace bg3_modders_multitool.Enums.ValueLists
     public enum RequirementEvent
     {
         OnEquip,
-        OnUnEquip
+        OnUnequip
     }
 }

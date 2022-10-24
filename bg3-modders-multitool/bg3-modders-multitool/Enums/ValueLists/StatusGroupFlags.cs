@@ -33,6 +33,12 @@ namespace bg3_modders_multitool.Enums.ValueLists
         SG_Poisoned_Story_Nonremovable,
         SG_Charmed_Subtle,
         SG_Helpable_Condition,
-        SG_Rage
+        SG_Rage,
+        SG_Taunted,
+        SG_Approaching,
+        SG_DetectThoughts,
+        SG_Mad,
+        SG_Confused,
+        SG_Fleeing
     }
 }

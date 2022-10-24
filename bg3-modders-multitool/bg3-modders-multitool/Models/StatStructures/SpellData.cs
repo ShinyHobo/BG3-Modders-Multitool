@@ -207,6 +207,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public List<CinematicArenaFlag> CinematicArenaFlags { get; set; }
         public SpellSoundMagnitude SpellSoundMagnitude {get; set;}
         public List<RequirementEvent> RequirementEvents { get; set; }
+        public string InstrumentComponentPrepareSound { get; set; }
+        public string InstrumentComponentLoopingSound { get; set; }
+        public string InstrumentComponentCastSound { get; set; }
+        public string InstrumentComponentImpactSound { get; set; }
 
         public override StatStructure Clone()
         {
