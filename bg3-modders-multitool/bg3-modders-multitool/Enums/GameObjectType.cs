@@ -23,6 +23,7 @@ namespace bg3_modders_multitool.Enums
         invalid_template,
         fogVolume,
         CombinedLight,
+        constellation,
         constellationHelper
     }
 }

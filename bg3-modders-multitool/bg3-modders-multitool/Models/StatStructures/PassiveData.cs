@@ -39,6 +39,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ToggleGroup { get; set; } // TODO - Determine list of togglegroups
         public string TooltipSave { get; set; } // TODO - Determine what these are and add enum list
         public int PriorityOrder { get; set; }
+        public string TooltipConditionalDamage { get; set; }
 
         public override StatStructure Clone()
         {

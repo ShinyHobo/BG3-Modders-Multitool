@@ -16,6 +16,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Knockout,
         Shove,
         Throw,
-        Dismiss
+        Dismiss,
+        ImprovisedWeapon
     }
 }

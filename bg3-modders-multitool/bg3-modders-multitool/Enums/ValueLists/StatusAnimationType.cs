@@ -20,6 +20,9 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Sneaking,
         Shouting,
         Sitting,
-        LongRest
+        LongRest,
+        Performing1,
+        Performing2,
+        Performing3
     }
 }

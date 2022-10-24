@@ -131,7 +131,7 @@ namespace bg3_modders_multitool.Services
                     geometryList.Add(new MeshGeometry3DObject
                     {
                         ObjectId = name,
-                        MaterialId = materialGuid.Item1,
+                        MaterialId = materialGuid?.Item1,
                         BaseMaterialId = baseMaterialId,
                         BaseMap = baseTexture,
                         NormalMaterialId = normalMaterialId,

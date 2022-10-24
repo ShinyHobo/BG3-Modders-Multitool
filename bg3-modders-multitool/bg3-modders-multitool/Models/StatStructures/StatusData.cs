@@ -110,6 +110,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public float SplatterBloodAmount { get; set; }
         public float SplatterSweatAmount { get; set; }
         public string TooltipDamage { get; set; }
+        public Ability TooltipSave { get; set; }
         public string OnTickRoll { get; set; }
         public string OnTickSuccess { get; set; }
         public string OnTickFail { get; set; }
@@ -122,6 +123,9 @@ namespace bg3_modders_multitool.Models.StatStructures
         public List<string> MeshEffect { get; set; }
         public string UseCosts { get; set; } // TODO - Create model for this
         public StatusStackType StackType { get; set; }
+        public string ManagedStatusEffectType { get; set; }
+        public string ManagedStatusEffectGroup { get; set; }
+        public string PerformEventName { get; set; }
 
         public override StatStructure Clone()
         {

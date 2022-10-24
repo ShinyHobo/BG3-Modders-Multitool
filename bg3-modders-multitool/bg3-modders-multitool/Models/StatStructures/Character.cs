@@ -44,6 +44,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string FallingLandEffect { get; set; }
         public ObjectSize GameSize { get; set; }
         public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
+        public ObjectSize SoundSize { get; set; }
 
         #region Armor
         [Category("Armor")]
