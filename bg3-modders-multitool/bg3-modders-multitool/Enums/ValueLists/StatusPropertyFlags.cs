@@ -6,7 +6,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
     public enum StatusPropertyFlags
     {
         None,
-        ForGameMaster,
+        Performing,
         InitiateCombat,
         BringIntoCombat,
         ForceOverhead,
@@ -14,7 +14,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         IsInvulnerable,
         ForceSheathed,
         LoseControl,
-        PlayerSameParty,
+        ForceNeutralInteractions,
         PeaceOnly,
         AllowLeaveCombat,
         DisableImmunityOverhead,
@@ -22,7 +22,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Toggle,
         IgnoreResting,
         IgnoredByImmobilized,
-        Blind,
+        UNUSED_1,
         MultiplyEffectsByDuration,
         TickingWithSource,
         DisableOverhead,
@@ -37,7 +37,6 @@ namespace bg3_modders_multitool.Enums.ValueLists
         FreezeDuration,
         UnavailableInActiveRoll,
         OverheadOnTurn,
-        Performing,
         UnsheathInstrument
     }
 }

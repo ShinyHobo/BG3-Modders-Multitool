@@ -29,7 +29,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int SurfaceLifetime { get; set; }
         public int ExplodeRadius { get; set; }
         public int SurfaceGrowStep { get; set; }
-        public int AmountOfTargets { get; set; }
+        public string AmountOfTargets { get; set; } // can be int or function, ie LevelMapValue(EldritchBlast)
         public int StrikeCount { get; set; }
         public int SurfaceGrowInterval { get; set; }
         public int MaxDistance { get; set; }
@@ -215,6 +215,14 @@ namespace bg3_modders_multitool.Models.StatStructures
         public Guid TooltipUpcastDescription { get; set; }
         public List<string> TooltipUpcastDescriptionParams { get; set; }
         public Guid TooltipOnMiss { get; set; }
+        public string PrepareLoopSound { get; set; }
+        public string ShortDescription { get; set; }
+        public List<string> ShortDescriptionParams { get; set; }
+        public Guid TooltipOnSave { get; set; }
+        public string ConcentrationSpellID { get; set; }
+        public string InterruptPrototype { get; set; }
+        public List<string> OriginSpellProperties { get; set; }
+        public string OriginTargetConditions { get; set; }
 
         public override StatStructure Clone()
         {

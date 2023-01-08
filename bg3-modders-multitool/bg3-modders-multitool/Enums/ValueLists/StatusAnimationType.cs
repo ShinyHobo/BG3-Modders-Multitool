@@ -21,8 +21,18 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Shouting,
         Sitting,
         LongRest,
+        Laughing,
+        Swapped,
+        Grappled,
+        Grappling,
         Performing1,
         Performing2,
-        Performing3
+        Performing3,
+        PerformingFail,
+        Dancing,
+        Suffocating,
+        Laughing_Hideous,
+        Frightened,
+        Petrified
     }
 }

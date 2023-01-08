@@ -376,6 +376,7 @@
     <Compile Include="Enums\ValueLists\StatusEvent.cs" />
     <Compile Include="Enums\ValueLists\StatusGroupFlags.cs" />
     <Compile Include="Enums\ValueLists\StatusHealType.cs" />
+    <Compile Include="Enums\ValueLists\StatusSheathing.cs" />
     <Compile Include="Enums\ValueLists\StatusStackType.cs" />
     <Compile Include="Enums\ValueLists\StatusPropertyFlags.cs" />
     <Compile Include="Enums\ValueLists\StepsType.cs" />
@@ -398,7 +399,7 @@
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\MeshGeometry.cs" />
     <Compile Include="Models\MeshGeometry3DObject.cs" />
-    <Compile Include="Models\StatStructures\Interupt.cs" />
+    <Compile Include="Models\StatStructures\Interrupt.cs" />
     <Compile Include="Models\TextureAtlas.cs" />
     <Compile Include="Models\IconUV.cs" />
     <Compile Include="Models\Races\Component.cs" />

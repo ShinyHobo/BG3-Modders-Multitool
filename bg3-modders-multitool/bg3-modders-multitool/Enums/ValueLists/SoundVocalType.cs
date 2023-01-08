@@ -28,6 +28,15 @@ namespace bg3_modders_multitool.Enums.ValueLists
         WEAK,
         LAUGHTER,
         RECOVER,
+        BUFF,
+        IDLE1,
+        IDLE2,
+        IDLE3,
+        IDLECOMBAT1,
+        IDLECOMBAT2,
+        IDLECOMBAT3,
+        GASP,
+        LAUGHTERMANIACAL,
         MAX
     }
 }
