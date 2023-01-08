@@ -168,6 +168,8 @@ namespace bg3_modders_multitool.Services
                 GameObjectsCached = true;
                 return true;
             }
+
+            GeneralHelper.WriteToConsole($"Reading GameObjects from root templates; this will take a while...\n");
             var rootTemplates = GetFileList("GameObjects");
             var typeBag = new ConcurrentBag<string>();
             #if DEBUG
@@ -179,62 +181,65 @@ namespace bg3_modders_multitool.Services
                 if (File.Exists(rootTemplate))
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
-                    var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
-                    var stream = File.OpenText(rootTemplatePath);
-                    using (var fileStream = stream)
-                    using(var reader = new XmlTextReader(fileStream))
+                    if(File.Exists(rootTemplatePath))
                     {
-                        reader.Read();
-                        while(!reader.EOF)
+                        var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
+                        var stream = File.OpenText(rootTemplatePath);
+                        using (var fileStream = stream)
+                        using (var reader = new XmlTextReader(fileStream))
                         {
-                            if(reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.GetAttribute("id") == "GameObjects")
+                            reader.Read();
+                            while (!reader.EOF)
                             {
-                                var xml = (XElement)XNode.ReadFrom(reader);
-                                var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty) };
-                                var attributes = xml.Elements("attribute");
-
-                                foreach(XElement attribute in attributes)
+                                if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.GetAttribute("id") == "GameObjects")
                                 {
-                                    var id = attribute.Attribute("id").Value;
-                                    var handle = attribute.Attribute("handle")?.Value;
-                                    var value = handle ?? attribute.Attribute("value").Value;
-                                    var type = attribute.Attribute("type").Value;
-                                    if (int.TryParse(type, out int typeInt))
-                                        type = GeneralHelper.LarianTypeEnumConvert(type);
+                                    var xml = (XElement)XNode.ReadFrom(reader);
+                                    var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty) };
+                                    var attributes = xml.Elements("attribute");
 
-                                    #if DEBUG
-                                    typeBag.Add(type);
-                                    idBag.Add(id);
-                                    classBag.Add(new Tuple<string, string>(id, type));
-                                    #endif
-                                    if (string.IsNullOrEmpty(handle))
+                                    foreach (XElement attribute in attributes)
                                     {
-                                        gameObject.LoadProperty(id, type, value);
+                                        var id = attribute.Attribute("id").Value;
+                                        var handle = attribute.Attribute("handle")?.Value;
+                                        var value = handle ?? attribute.Attribute("value").Value;
+                                        var type = attribute.Attribute("type").Value;
+                                        if (int.TryParse(type, out int typeInt))
+                                            type = GeneralHelper.LarianTypeEnumConvert(type);
+
+#if DEBUG
+                                        typeBag.Add(type);
+                                        idBag.Add(id);
+                                        classBag.Add(new Tuple<string, string>(id, type));
+#endif
+                                        if (string.IsNullOrEmpty(handle))
+                                        {
+                                            gameObject.LoadProperty(id, type, value);
+                                        }
+                                        else
+                                        {
+                                            gameObject.LoadProperty($"{id}Handle", type, value);
+                                            var translationText = TranslationLookup.FirstOrDefault(tl => tl.Key.Equals(value)).Value?.Value;
+                                            gameObject.LoadProperty(id, type, translationText);
+                                        }
                                     }
-                                    else
-                                    {
-                                        gameObject.LoadProperty($"{id}Handle", type, value);
-                                        var translationText = TranslationLookup.FirstOrDefault(tl => tl.Key.Equals(value)).Value?.Value;
-                                        gameObject.LoadProperty(id, type, translationText);
-                                    }
+
+                                    if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
+                                        gameObject.ParentTemplateId = gameObject.TemplateName;
+                                    if (string.IsNullOrEmpty(gameObject.Name))
+                                        gameObject.Name = gameObject.DisplayName;
+                                    if (string.IsNullOrEmpty(gameObject.Name))
+                                        gameObject.Name = gameObject.Stats;
+
+                                    GameObjectBag.Add(gameObject);
+                                    reader.Skip();
                                 }
-
-                                if(string.IsNullOrEmpty(gameObject.ParentTemplateId))
-                                    gameObject.ParentTemplateId = gameObject.TemplateName;
-                                if (string.IsNullOrEmpty(gameObject.Name))
-                                    gameObject.Name = gameObject.DisplayName;
-                                if (string.IsNullOrEmpty(gameObject.Name))
-                                    gameObject.Name = gameObject.Stats;
-
-                                GameObjectBag.Add(gameObject);
-                                reader.Skip();
+                                else
+                                {
+                                    reader.Read();
+                                }
                             }
-                            else
-                            {
-                                reader.Read();
-                            }
+                            reader.Close();
                         }
-                        reader.Close();
                     }
                 }
             });

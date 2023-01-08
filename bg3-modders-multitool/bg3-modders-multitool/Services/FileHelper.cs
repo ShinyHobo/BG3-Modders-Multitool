@@ -26,6 +26,10 @@ namespace bg3_modders_multitool.Services
         /// <returns>The new file path.</returns>
         public static string Convert(string file, string extension, string newPath = null)
         {
+            if(File.Exists(newPath)) {
+                return newPath;
+            }
+
             var originalExtension = Path.GetExtension(file);
             var newFile = file.Replace(originalExtension, $".{extension}");
             var isConvertable = true;
@@ -63,11 +67,19 @@ namespace bg3_modders_multitool.Services
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
-                if(string.IsNullOrEmpty(newPath))
+                var output = process.StandardOutput.ReadToEnd();
+                var error = process.StandardError.ReadToEnd();
+                if (string.IsNullOrEmpty(newPath))
                 {
-                    GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
-                    GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
+                    GeneralHelper.WriteToConsole(output);
+                    GeneralHelper.WriteToConsole(error);
                 }
+
+                if(output.Contains("Failed to convert resource"))
+                {
+                    GeneralHelper.WriteToConsole($"Failed to convert {file} to .{extension}!\n");
+                }
+
                 if (MustRenameLsxResources.Contains(originalExtension))
                 {
                     File.Move(path, Path.ChangeExtension(path, ""));

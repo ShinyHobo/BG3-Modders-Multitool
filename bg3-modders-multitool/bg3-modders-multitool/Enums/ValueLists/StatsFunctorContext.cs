@@ -38,6 +38,10 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OnPushed,
         OnInventoryChanged,
         OnEnterAttackRange,
-        OnProjectileExploded
+        OnProjectileExploded,
+        OnCombatEnded,
+        OnTurn,
+        OnActionResourcesChanged,
+        OnSurfaceEnter
     }
 }

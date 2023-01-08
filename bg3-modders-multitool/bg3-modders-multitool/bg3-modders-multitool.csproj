@@ -338,6 +338,9 @@
     <Compile Include="Enums\ValueLists\FormatStringColor.cs" />
     <Compile Include="Enums\ValueLists\HealValueType.cs" />
     <Compile Include="Enums\ValueLists\InstrumentType.cs" />
+    <Compile Include="Enums\ValueLists\InterruptContext.cs" />
+    <Compile Include="Enums\ValueLists\InterruptContextScope.cs" />
+    <Compile Include="Enums\ValueLists\InterruptDefaultValue.cs" />
     <Compile Include="Enums\ValueLists\InventoryTabs.cs" />
     <Compile Include="Enums\ValueLists\ItemSlot.cs" />
     <Compile Include="Enums\ValueLists\ItemUseTypes.cs" />
@@ -359,6 +362,7 @@
     <Compile Include="Enums\ValueLists\SpellAnimationIntentType.cs" />
     <Compile Include="Enums\ValueLists\SpellAnimationType.cs" />
     <Compile Include="Enums\ValueLists\SpellCategoryFlag.cs" />
+    <Compile Include="Enums\ValueLists\SpellSheathing.cs" />
     <Compile Include="Enums\ValueLists\SpellSoundMagnitude.cs" />
     <Compile Include="Enums\ValueLists\SpellStyleGroup.cs" />
     <Compile Include="Enums\ValueLists\SpellFlagList.cs" />
@@ -394,6 +398,7 @@
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\MeshGeometry.cs" />
     <Compile Include="Models\MeshGeometry3DObject.cs" />
+    <Compile Include="Models\StatStructures\Interupt.cs" />
     <Compile Include="Models\TextureAtlas.cs" />
     <Compile Include="Models\IconUV.cs" />
     <Compile Include="Models\Races\Component.cs" />

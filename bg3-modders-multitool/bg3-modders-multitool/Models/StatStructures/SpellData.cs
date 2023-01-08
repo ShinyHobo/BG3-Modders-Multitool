@@ -211,6 +211,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string InstrumentComponentLoopingSound { get; set; }
         public string InstrumentComponentCastSound { get; set; }
         public string InstrumentComponentImpactSound { get; set; }
+        public SpellSheathing Sheathing { get; set; }
+        public Guid TooltipUpcastDescription { get; set; }
+        public List<string> TooltipUpcastDescriptionParams { get; set; }
+        public Guid TooltipOnMiss { get; set; }
 
         public override StatStructure Clone()
         {

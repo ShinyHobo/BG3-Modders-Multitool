@@ -11,6 +11,7 @@ namespace bg3_modders_multitool.Enums
         PassiveData,
         SpellData,
         StatusData,
-        Weapon
+        Weapon,
+        Interrupt
     }
 }
