@@ -46,6 +46,10 @@ namespace bg3_modders_multitool.Models.StatStructures
             {
                 return Enums.StatStructure.StatusData;
             }
+            else if(filename == "Interrupt")
+            {
+                return Enums.StatStructure.Interrupt;
+            }
             throw new Exception($"Stat structure file type '{file}' not accounted for.");
         }
 
@@ -79,6 +83,9 @@ namespace bg3_modders_multitool.Models.StatStructures
                     break;
                 case Enums.StatStructure.Weapon:
                     newEntry = new Weapon();
+                    break;
+                case Enums.StatStructure.Interrupt:
+                    newEntry = new Interrupt();
                     break;
                 default:
                     throw new Exception($"Stats structure {fileType} not recognized.");

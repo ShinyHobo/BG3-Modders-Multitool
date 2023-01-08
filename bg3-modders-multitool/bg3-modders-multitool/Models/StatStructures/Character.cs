@@ -45,6 +45,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public ObjectSize GameSize { get; set; }
         public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
         public ObjectSize SoundSize { get; set; }
+        public Guid ProficiencyBonusScaling { get; set; }
 
         #region Armor
         [Category("Armor")]

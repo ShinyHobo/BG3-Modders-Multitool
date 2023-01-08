@@ -64,6 +64,9 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string UseCosts { get; set; } // TODO - Create model for this
         public string PassivesMainHand { get; set; } // TODO - Create enum for this
         public int SupplyValue { get; set; }
+        public ObjectSize GameSize { get; set; }
+        public string PassivesOnEquip { get; set; }
+        public string StatusOnEquip { get; set; }
 
         public override StatStructure Clone()
         {

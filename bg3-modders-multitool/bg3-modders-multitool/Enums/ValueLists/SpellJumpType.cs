@@ -7,6 +7,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
     {
         None,
         Locomotion,
-        Pounce
+        Pounce,
+        Jump,
+        Flight
     }
 }

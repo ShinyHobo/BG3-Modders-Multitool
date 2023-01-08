@@ -36,9 +36,15 @@ namespace bg3_modders_multitool.Enums.ValueLists
         SG_Rage,
         SG_Taunted,
         SG_Approaching,
-        SG_DetectThoughts,
-        SG_Mad,
+        SG_Dominated,
+        SG_Fleeing,
         SG_Confused,
-        SG_Fleeing
+        SG_Mad,
+        SG_DetectThoughts,
+        SG_DifficultTerrain,
+        SG_ScriptedPeaceBehaviour,
+        SG_DropForNonMutingDialog,
+        SG_WeaponCoating,
+        SG_DG
     }
 }

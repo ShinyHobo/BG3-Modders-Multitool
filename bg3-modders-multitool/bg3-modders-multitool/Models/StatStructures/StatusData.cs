@@ -126,6 +126,8 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ManagedStatusEffectType { get; set; }
         public string ManagedStatusEffectGroup { get; set; }
         public string PerformEventName { get; set; }
+        public Guid DynamicAnimationTag { get; set; }
+        public StatusSheathing Sheathing { get; set; }
 
         public override StatStructure Clone()
         {
