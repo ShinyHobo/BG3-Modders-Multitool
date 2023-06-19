@@ -57,6 +57,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public List<ProficiencyGroupFlags> ProficiencyGroup { get; set; }
         public List<StatusBoost> StatusOnEquip { get; set; }
         public InstrumentType InstrumentType { get; set; }
+        public string PassivesOnEquip { get; set; }
 
         public override StatStructure Clone()
         {
