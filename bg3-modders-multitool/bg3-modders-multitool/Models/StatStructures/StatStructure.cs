@@ -144,11 +144,6 @@ namespace bg3_modders_multitool.Models.StatStructures
                         else
                         {
                             paramList = paramPair[1].Split(',').ToList();
-                            if(paramList.Count > 1)
-                            {
-                                var sner = "";
-                                var bler = sner;
-                            }
                         }
 
                         Type itemType = propertyType.GetGenericArguments().First();
