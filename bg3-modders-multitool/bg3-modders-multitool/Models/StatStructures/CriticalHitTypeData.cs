@@ -5,7 +5,7 @@ namespace bg3_modders_multitool.Models.StatStructures
 {
     public class CriticalHitTypeData : StatStructure
     {
-        public string AcidFx { get; set; }
+        public string AcidFX { get; set; }
         public string BludgeoningFX { get; set; }
         public string ColdFX { get; set; }
         public string FireFX { get; set; }
