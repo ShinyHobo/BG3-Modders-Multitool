@@ -399,6 +399,7 @@
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\MeshGeometry.cs" />
     <Compile Include="Models\MeshGeometry3DObject.cs" />
+    <Compile Include="Models\StatStructures\CriticalHitTypeData.cs" />
     <Compile Include="Models\StatStructures\Interrupt.cs" />
     <Compile Include="Models\TextureAtlas.cs" />
     <Compile Include="Models\IconUV.cs" />
@@ -575,8 +576,8 @@
   <Import Project="..\packages\Fody.4.2.1\build\Fody.targets" Condition="Exists('..\packages\Fody.4.2.1\build\Fody.targets')" />
   <Import Project="..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(ProjectDir)manifest.json $(ProjectDir)$(OutDir)app.publish
-xcopy /y $(ProjectDir)Images\icon.png $(ProjectDir)$(OutDir)app.publish
-xcopy /y $(ProjectDir)\..\..\README.md $(ProjectDir)$(OutDir)app.publish</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(ProjectDir)manifest.json" "$(ProjectDir)$(OutDir)app.publish"
+xcopy /y "$(ProjectDir)Images\icon.png" "$(ProjectDir)$(OutDir)app.publish"
+xcopy /y "$(ProjectDir)\..\..\README.md" "$(ProjectDir)$(OutDir)app.publish"</PostBuildEvent>
   </PropertyGroup>
 </Project>
