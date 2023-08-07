@@ -226,6 +226,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int CastTargetHitDelay { get; set; }
         public CombatAIOverrideSpell CombatAIOverrideSpell { get; set; }
         public List<string> RitualCosts { get; set; }
+        public float SteerSpeedMultipler { get; set; }
+        public string HighlightConditions { get; set; }
+        public string ThrowableSpellRoll { get; set; }
+        public string ThrowableSpellSuccess { get; set; }
 
         public override StatStructure Clone()
         {

@@ -27,6 +27,10 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OnRemovePerformanceRequest,
         OnLockpickingSucceeded,
         OnSourceDeath,
-        OnSourceStatusApplied
+        OnSourceStatusApplied,
+        OnFactionChanged,
+        OnEntityPickUp,
+        OnEntityDrop,
+        OnEntityDrag
     }
 }

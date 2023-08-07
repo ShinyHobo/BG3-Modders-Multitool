@@ -367,6 +367,7 @@
     <Compile Include="Enums\ValueLists\ArmorType.cs" />
     <Compile Include="Enums\ValueLists\AtmosphereType.cs" />
     <Compile Include="Enums\ValueLists\AttributeFlag.cs" />
+    <Compile Include="Enums\ValueLists\AuraFlag.cs" />
     <Compile Include="Enums\ValueLists\CombatAIOverrideSpell.cs" />
     <Compile Include="Enums\ValueLists\CooldownType.cs" />
     <Compile Include="Enums\ValueLists\CursorMode.cs" />

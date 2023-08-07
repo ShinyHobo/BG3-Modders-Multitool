@@ -11,6 +11,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OncePerRest,
         OncePerTurnNoRealtime,
         OncePerShortRest,
-        OncePerRestPerItem
+        OncePerRestPerItem,
+        OnCombatEnded,
+        OncePerShortRestPerItem
     }
 }
