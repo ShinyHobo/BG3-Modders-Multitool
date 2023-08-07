@@ -27,6 +27,9 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Wings,
         Horns,
         Overhead,
-        MusicalInstrument
+        MusicalInstrument,
+        VanityBody,
+        VanityBoots,
+        Underwear
     }
 }

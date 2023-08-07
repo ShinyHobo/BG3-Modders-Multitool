@@ -252,6 +252,9 @@ namespace bg3_modders_multitool.Models
                     var fvec4 = value.Split(' ').Select(v => float.Parse(v, CultureInfo.InvariantCulture)).ToArray();
                     propertyValue = new Tuple<float, float, float, float>(fvec4[0], fvec4[1], fvec4[2], fvec4[3]);
                     break;
+                case "double":
+                    propertyValue = double.Parse(value, CultureInfo.InvariantCulture);
+                    break;
                 default:
                     Services.GeneralHelper.WriteToConsole($"GameObject attribute type [{type}] not covered.\n");
                     break;

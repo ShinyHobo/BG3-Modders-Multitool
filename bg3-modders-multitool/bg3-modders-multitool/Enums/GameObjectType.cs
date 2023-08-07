@@ -24,6 +24,7 @@ namespace bg3_modders_multitool.Enums
         fogVolume,
         CombinedLight,
         constellation,
-        constellationHelper
+        constellationHelper,
+        Schematic
     }
 }

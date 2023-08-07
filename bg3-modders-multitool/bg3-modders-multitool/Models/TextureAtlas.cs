@@ -94,7 +94,7 @@ namespace bg3_modders_multitool.Models
             var newTextureAtlasPath = FileHelper.GetPath(newTextureAtlas.Path);
             if (File.Exists(@"\\?\" + newTextureAtlasPath))
             {
-                using (var image = Pfim.Pfim.FromFile(newTextureAtlasPath))
+                using (var image = Pfim.Pfimage.FromFile(newTextureAtlasPath))
                 {
                     var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
                     var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);

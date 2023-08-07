@@ -37,6 +37,11 @@ namespace bg3_modders_multitool.Enums.ValueLists
         FreezeDuration,
         UnavailableInActiveRoll,
         OverheadOnTurn,
-        UnsheathInstrument
+        UnsheathInstrument,
+        StatusPropertyFlags,
+        Blind,
+        Suffocating,
+        LoseControlFriendly,
+        ExcludeFromPortraitRendering
     }
 }

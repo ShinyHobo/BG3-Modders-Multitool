@@ -60,6 +60,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         DisplayInItemTooltip,
         HideInItemTooltip,
         DisableBlood,
-        IgnorePreviouslyPickedEntities
+        IgnorePreviouslyPickedEntities,
+        CombatLogSetSingleLineRoll,
+        NoCameraMove
     }
 }

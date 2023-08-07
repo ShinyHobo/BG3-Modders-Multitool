@@ -54,6 +54,10 @@ namespace bg3_modders_multitool.Models.StatStructures
             {
                 return Enums.StatStructure.CriticalHitTypeData;
             }
+            else if (filename == "CriticalHitTypes")
+            {
+                return Enums.StatStructure.CriticalHitTypes;
+            }
             throw new Exception($"Stat structure file type '{file}' not accounted for.");
         }
 
@@ -101,6 +105,10 @@ namespace bg3_modders_multitool.Models.StatStructures
 
                 case Enums.StatStructure.CriticalHitTypeData:
                     newEntry = new CriticalHitTypeData();
+                    break;
+
+                case Enums.StatStructure.CriticalHitTypes:
+                    newEntry = new CriticalHitType();
                     break;
 
                 default:
@@ -192,9 +200,9 @@ namespace bg3_modders_multitool.Models.StatStructures
             catch (Exception ex)
             {
                 // This can usually be fixed by adding the Modifier data to the given StatStructure type
-#if DEBUG
+                #if DEBUG
                 Services.GeneralHelper.WriteToConsole($"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\": {ex.Message}\n");
-#endif
+                #endif
             }
         }
 
