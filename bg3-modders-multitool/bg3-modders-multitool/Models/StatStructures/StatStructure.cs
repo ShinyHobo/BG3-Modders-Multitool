@@ -18,37 +18,41 @@ namespace bg3_modders_multitool.Models.StatStructures
         public static Enums.StatStructure FileType(string file)
         {
             var filename = Path.GetFileNameWithoutExtension(file);
-            if(filename == "Armor")
+            if (filename == "Armor")
             {
                 return Enums.StatStructure.Armor;
             }
-            else if(filename == "Character")
+            else if (filename == "Character")
             {
                 return Enums.StatStructure.Character;
             }
-            else if(filename == "Object")
+            else if (filename == "Object")
             {
                 return Enums.StatStructure.Object;
             }
-            else if(filename == "Weapon")
+            else if (filename == "Weapon")
             {
                 return Enums.StatStructure.Weapon;
             }
-            else if(filename == "Passive")
+            else if (filename == "Passive")
             {
                 return Enums.StatStructure.PassiveData;
             }
-            else if(filename.Contains("Spell_"))
+            else if (filename.Contains("Spell_"))
             {
                 return Enums.StatStructure.SpellData;
             }
-            else if(filename.Contains("Status_"))
+            else if (filename.Contains("Status_"))
             {
                 return Enums.StatStructure.StatusData;
             }
-            else if(filename == "Interrupt")
+            else if (filename == "Interrupt")
             {
                 return Enums.StatStructure.Interrupt;
+            }
+            else if (filename == "CriticalHitTypeData")
+            {
+                return Enums.StatStructure.CriticalHitTypeData;
             }
             throw new Exception($"Stat structure file type '{file}' not accounted for.");
         }
@@ -66,27 +70,39 @@ namespace bg3_modders_multitool.Models.StatStructures
                 case Enums.StatStructure.Armor:
                     newEntry = new Armor();
                     break;
+
                 case Enums.StatStructure.Character:
                     newEntry = new Character();
                     break;
+
                 case Enums.StatStructure.Object:
                     newEntry = new Object();
                     break;
+
                 case Enums.StatStructure.PassiveData:
                     newEntry = new PassiveData();
                     break;
+
                 case Enums.StatStructure.SpellData:
                     newEntry = new SpellData();
                     break;
+
                 case Enums.StatStructure.StatusData:
                     newEntry = new StatusData();
                     break;
+
                 case Enums.StatStructure.Weapon:
                     newEntry = new Weapon();
                     break;
+
                 case Enums.StatStructure.Interrupt:
                     newEntry = new Interrupt();
                     break;
+
+                case Enums.StatStructure.CriticalHitTypeData:
+                    newEntry = new CriticalHitTypeData();
+                    break;
+
                 default:
                     throw new Exception($"Stats structure {fileType} not recognized.");
             }
@@ -136,11 +152,11 @@ namespace bg3_modders_multitool.Models.StatStructures
                     }
                     else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                     {
-                        List<string> paramList = null; 
+                        List<string> paramList = null;
                         if (paramPair[1].Contains(';'))
                         {
                             paramList = paramPair[1].Split(';').ToList();
-                        } 
+                        }
                         else
                         {
                             paramList = paramPair[1].Split(',').ToList();
@@ -151,7 +167,7 @@ namespace bg3_modders_multitool.Models.StatStructures
                         {
                             property.SetValue(this, paramList.Select(Guid.Parse).ToList(), null);
                         }
-                        else if(itemType == typeof(string))
+                        else if (itemType == typeof(string))
                         {
                             property.SetValue(this, paramList, null);
                         }
@@ -173,12 +189,12 @@ namespace bg3_modders_multitool.Models.StatStructures
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // This can usually be fixed by adding the Modifier data to the given StatStructure type
-                #if DEBUG
+#if DEBUG
                 Services.GeneralHelper.WriteToConsole($"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\": {ex.Message}\n");
-                #endif
+#endif
             }
         }
 
