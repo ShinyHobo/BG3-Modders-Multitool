@@ -123,20 +123,33 @@ namespace bg3_modders_multitool.Services
                 var fileList = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
                 GeneralHelper.WriteToConsole($"Retrived file list. Starting decompression; this could take awhile.\n");
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
-                var lsxFiles = new List<string>();
+                var convertFiles = new List<string>();
                 Parallel.ForEach(fileList, file => {
-                    if (!string.IsNullOrEmpty(Path.GetExtension(file)))
+                    var extension = Path.GetExtension(file);
+                    if (!string.IsNullOrEmpty(extension))
                     {
-                        var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
-                        if (Path.GetExtension(convertedFile) == ".lsx")
+                        if(extension == ".loca")
                         {
-                            lsxFiles.Add(convertedFile);
+                            var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
+                            if (Path.GetExtension(convertedFile) == ".xml")
+                            {
+                                convertFiles.Add(convertedFile);
+                            }
+                        } 
+                        else
+                        {
+                            var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
+                            if (Path.GetExtension(convertedFile) == ".lsx")
+                            {
+                                convertFiles.Add(convertedFile);
+                            }
                         }
+                        
                     }
                 });
                 fileList.Clear();
                 GeneralHelper.WriteToConsole($"Decompression complete.\n");
-                return lsxFiles;
+                return convertFiles;
             });
         }
     }
