@@ -8,6 +8,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         None,
         OnSpellCast,
         OnPostRoll,
-        OnCastHit
+        OnCastHit,
+        OnPreDamage,
+        OnLeaveAttackRange
     }
 }

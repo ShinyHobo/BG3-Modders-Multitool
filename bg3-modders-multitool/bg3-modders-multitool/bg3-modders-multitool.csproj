@@ -160,8 +160,8 @@
     <Reference Include="NAudio.Vorbis, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.Vorbis.1.1.0\lib\net45\NAudio.Vorbis.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NVorbis, Version=0.9.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NVorbis.0.9.1\lib\net45\NVorbis.dll</HintPath>
@@ -337,6 +337,7 @@
     <Compile Include="Enums\ValueLists\ArmorType.cs" />
     <Compile Include="Enums\ValueLists\AtmosphereType.cs" />
     <Compile Include="Enums\ValueLists\AttributeFlag.cs" />
+    <Compile Include="Enums\ValueLists\CombatAIOverrideSpell.cs" />
     <Compile Include="Enums\ValueLists\CooldownType.cs" />
     <Compile Include="Enums\ValueLists\CursorMode.cs" />
     <Compile Include="Enums\ValueLists\DamageType.cs" />
@@ -405,6 +406,7 @@
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\MeshGeometry.cs" />
     <Compile Include="Models\MeshGeometry3DObject.cs" />
+    <Compile Include="Models\StatStructures\CriticalHitType.cs" />
     <Compile Include="Models\StatStructures\CriticalHitTypeData.cs" />
     <Compile Include="Models\StatStructures\Interrupt.cs" />
     <Compile Include="Models\TextureAtlas.cs" />

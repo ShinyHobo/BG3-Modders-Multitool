@@ -18,6 +18,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         MetaMagic,
         OncePerAttack,
         Highlighted,
-        Temporary
+        Temporary,
+        ToggleForParty,
+        ForceShowInCC
     }
 }

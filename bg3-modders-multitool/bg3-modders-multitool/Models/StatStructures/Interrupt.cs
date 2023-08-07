@@ -23,6 +23,12 @@ namespace bg3_modders_multitool.Models.StatStructures
         public List<string> Cost { get; set; }
         public List<InterruptDefaultValue> InterruptDefaultValue { get; set; }
         public string Stack { get; set; }
+        public string Roll { get; set; }
+        public string Success { get; set; }
+        public string Failure { get; set; }
+        public string EnableCondition { get; set; }
+        public string EnableContext { get; set; }
+        public CooldownType Cooldown { get; set; }
 
         public override StatStructure Clone()
         {
