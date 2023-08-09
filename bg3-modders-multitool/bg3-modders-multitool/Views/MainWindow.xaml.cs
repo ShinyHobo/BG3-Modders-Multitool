@@ -140,30 +140,24 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        /// <summary>
+        /// Opens the mods folder in the file explorer. 
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void OpenModsFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var path = PathHelper.ModsFolderPath;
-            if (Directory.Exists(path))
-            {
-                System.Diagnostics.Process.Start(path);
-            }
-            else
-            {
-                System.Windows.MessageBox.Show("Mods folder not found. Please check your settings.", "Mods folder not found", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            System.Diagnostics.Process.Start(PathHelper.ModsFolderPath);
         }
 
+        /// <summary>
+        /// Opens the player profiles folder in the file explorer. 
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void OpenProfilesFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var path = PathHelper.PlayerProfilesFolderPath;
-            if (Directory.Exists(path))
-            {
-                System.Diagnostics.Process.Start(path);
-            }
-            else
-            {
-                System.Windows.MessageBox.Show("Profiles folder not found. Please check your settings.", "Profiles folder not found", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
         }
     }
 }

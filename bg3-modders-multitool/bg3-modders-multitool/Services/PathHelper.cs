@@ -1,9 +1,12 @@
-﻿using bg3_modders_multitool.Properties;
-using System;
-using System.IO;
-
+﻿/// <summary>
+/// Service helper for get the paths for the mods and player profiles folders.
+/// </summary>
 namespace bg3_modders_multitool.Services
 {
+    using bg3_modders_multitool.Properties;
+    using System;
+    using System.IO;
+
     public class PathHelper
     {
         private static readonly PathHelper _instance = new PathHelper();
@@ -12,53 +15,75 @@ namespace bg3_modders_multitool.Services
         public static string ModsFolderPath { get; private set; }
         public static string PlayerProfilesFolderPath { get; private set; }
 
+        private readonly string _companyName = "Larian Studios";
+        private readonly string _gameName = "Baldur's Gate 3";
+        private readonly string _modsFolderName = "Mods";
+        private readonly string _playerProfilesFolderName = "PlayerProfiles";
+
+        private bool _ignoreSettingsPropertyChangedEvent = false;
+
         private PathHelper()
         {
+            // We subscribe to the PropertyChanged event of the Settings.
+            // When gameDocumentsPath changes, we reinitialize the paths.
+            Settings.Default.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName.Equals(nameof(Settings.gameDocumentsPath)))
+                {
+                    if(!_ignoreSettingsPropertyChangedEvent)
+                        InitializePaths();
+
+                    // If flag is on, reset the flag so we can process the event next time.
+                    _ignoreSettingsPropertyChangedEvent = false;
+                }
+            };
+
             InitializePaths();
         }
 
+        /// <summary>
+        /// Initializes the paths for the mods and player profiles folders based on game documents path.
+        /// If not defined, it will try to find the game documents path automatically using the default installation location.
+        /// </summary>
         private void InitializePaths()
         {
-            try
+            // Clear any value that might have been set before...
+            ModsFolderPath = string.Empty;
+            PlayerProfilesFolderPath = string.Empty;
+
+            // Gets the current config value for the game path..
+            var gameDocumentsPath = Settings.Default.gameDocumentsPath;
+            
+            if (string.IsNullOrEmpty(gameDocumentsPath))
             {
-                // Gets the current config value for the game path..
-                var gameDocumentsPath = Settings.Default.gameDocumentsPath;
-
-                if (string.IsNullOrEmpty(gameDocumentsPath))
-                {
-                    // As the config value is empty, we'll try to find the game path automatically by
-                    // looking for the default location..
-                    gameDocumentsPath = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.DoNotVerify),
-                        "Larian Studios",
-                        "Baldur's Gate 3"
-                    );
-                }
-
-                // In case the game path is still empty, we'll throw an exception...
-                if (!Directory.Exists(gameDocumentsPath))
-                    throw new Exception($"Game Documents path not found at '{gameDocumentsPath}'.");
-
-                // Set the paths for the mods and player profiles folders
-                // and create them if they don't exist..
-                ModsFolderPath = Path.Combine(gameDocumentsPath, "Mods");
-                if (!Directory.Exists(ModsFolderPath))
-                    Directory.CreateDirectory(ModsFolderPath);
-
-                PlayerProfilesFolderPath = Path.Combine(gameDocumentsPath, "PlayerProfiles");
-                if (!Directory.Exists(PlayerProfilesFolderPath))
-                    Directory.CreateDirectory(PlayerProfilesFolderPath);
-
-                // If the game path has changed, we update the config value...
-                if (!gameDocumentsPath.Equals(Settings.Default.gameDocumentsPath))
-                {
-                    Settings.Default.gameDocumentsPath = gameDocumentsPath;
-                    Settings.Default.Save();
-                }
+                // As the config value is empty, we'll try to find the game path automatically by
+                // looking for the default location..
+                gameDocumentsPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.DoNotVerify),
+                    _companyName,
+                    _gameName
+                );
             }
-            catch (Exception ex)
+
+            // In case the game path is still empty we exit.
+            if (!Directory.Exists(gameDocumentsPath))
+                return;
+            
+            // Set the paths for the mods and player profiles folders..
+            ModsFolderPath = Path.Combine(gameDocumentsPath, _modsFolderName);
+            PlayerProfilesFolderPath = Path.Combine(gameDocumentsPath, _playerProfilesFolderName);
+
+            // Most of times gameDocumentsPath will be the same as the config value,
+            // however, there is a special case on first run, where the config does not
+            // have a value, and the default installation path is used instead. When
+            // this happens, we need to update the config value with the new path.
+            if (!gameDocumentsPath.Equals(Settings.Default.gameDocumentsPath))
             {
-                GeneralHelper.WriteToConsole(ex.Message);
+                // Flags the event handler so we skip the event processing in subscription.
+                _ignoreSettingsPropertyChangedEvent = true; 
+
+                Settings.Default.gameDocumentsPath = gameDocumentsPath;
+                Settings.Default.Save();
             }
         }
     }

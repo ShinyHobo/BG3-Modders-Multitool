@@ -56,11 +56,11 @@
         <Button x:Name="gameObjectButton" Content="GameObject Explorer" HorizontalAlignment="Left" Margin="273,165,0,220" VerticalAlignment="Center" Width="122" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
                 Height="25" Cursor="Hand" ToolTip="Allows you to graphically navigate unpacked gameobjects including characters, items, and more"/>
 
-        <Button x:Name="modFolderButton" Content="Mods Folder" HorizontalAlignment="Left" Margin="274,217,0,0" VerticalAlignment="Top" Width="122" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
-                Height="25" Cursor="Hand" ToolTip="Shortcut to open the Mods folder"/>
+        <Button x:Name="modFolderButton" Content="Mods Folder" HorizontalAlignment="Left" Margin="273,217,0,0" VerticalAlignment="Top" Width="100" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
+                Height="23" Cursor="Hand" ToolTip="Shortcut to open the Mods folder"/>
 
-        <Button x:Name="profilesFolderButton" Content="Profiles Folder" HorizontalAlignment="Left" Margin="402,217,0,0" VerticalAlignment="Top" Width="122" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
-                Height="25" Cursor="Hand" ToolTip="Shortcut to open the Player Profiles folder"/>
+        <Button x:Name="profilesFolderButton" Content="Profiles Folder" HorizontalAlignment="Left" Margin="378,217,0,0" VerticalAlignment="Top" Width="100" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
+                Height="23" Cursor="Hand" ToolTip="Shortcut to open the Player Profiles folder"/>
 
         <TextBlock x:Name="configMenu" Text="*" FontSize="44" LineStackingStrategy="BlockLineHeight"  LineHeight="44" Cursor="Hand" Margin="757,240,10,140" ToolTip="Essential configuration options" MouseLeftButtonUp="configMenu_MouseLeftButtonUp">
             <TextBlock.Style>

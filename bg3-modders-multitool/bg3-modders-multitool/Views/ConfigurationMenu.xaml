@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bg3_modders_multitool.Views"
         mc:Ignorable="d"
-        Title="Configuration v0.9.0" Height="230" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner">
+        Title="Configuration v0.9.0" Height="260" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid Margin="10,10,10,0">
             <Label x:Name="divineLabel" Content="LSLib divine.exe location (1.18.1+ Required)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
@@ -17,9 +17,20 @@
             <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding Bg3ExeLocation, Mode=TwoWay}" IsReadOnly="True"/>
             <Button x:Name="bg3exeSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click" Cursor="Hand"/>
         </Grid>
-        <Grid Margin="10,119,275,45">
-            <Label x:Name="quickLaunchToggle" Content="Quick Launch" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
-            <CheckBox Margin="81,5,28,5" ToolTip="Loads game directly into last save. Skips splashscreen at loadup." Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"
+        <Grid Margin="10,116,10,0">
+            <Label x:Name="gameDocumentPathLabel" Content="Game's Documents folder location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="gameDocumentPath" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding GameDocumentsLocation, Mode=TwoWay}" IsReadOnly="True" />
+            <Button x:Name="gameDocumentPathSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GameDocumentsLocationSelect_Click" Cursor="Hand">
+                <Button.ToolTip>
+                    <ToolTip>
+                        Please select you game's Documents folder. (e.g: ...\AppData\Local\Larian Studios\Baldur's Gate 3)
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+        </Grid>
+        <Grid Margin="10,173,275,10">
+            <Label x:Name="quickLaunchToggle" Content="Quick Launch" HorizontalAlignment="Left" Margin="0,-2,0,0" VerticalAlignment="Top"/>
+            <CheckBox Margin="81,3,28,-15" ToolTip="Loads game directly into last save. Skips splashscreen at loadup." Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"
                           IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" RenderTransformOrigin="0.841,0.773" />
         </Grid>
     </Grid>

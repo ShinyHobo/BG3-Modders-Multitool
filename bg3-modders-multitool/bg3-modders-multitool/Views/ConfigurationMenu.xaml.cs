@@ -40,6 +40,17 @@ namespace bg3_modders_multitool.Views
         }
 
         /// <summary>
+        /// Opens dialog for selecting game's document folder location.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void GameDocumentsLocationSelect_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.GameDocumentsLocation = vm.FolderLocationDialog(nameof(Properties.Settings.gameDocumentsPath), "Select your game's documents folder location");
+        }
+
+        /// <summary>
         /// Activates the quick launch features.
         /// </summary>
         /// <param name="sender">The sender.</param>
