@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Services;
     using System;
+    using System.IO;
     using System.Windows;
 
     public class MainWindow : BaseViewModel
@@ -16,6 +17,9 @@ namespace bg3_modders_multitool.ViewModels
             Unpacker = new PakUnpackHelper();
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
+
+            ModsFolderLoaded = !string.IsNullOrEmpty(PathHelper.ModsFolderPath) && Directory.Exists(PathHelper.ModsFolderPath);
+            ProfilesFolderLoaded = !string.IsNullOrEmpty(PathHelper.PlayerProfilesFolderPath) && Directory.Exists(PathHelper.PlayerProfilesFolderPath);
         }
 
         #region File Selection Methods
@@ -189,6 +193,31 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        private bool _modsFolderLoaded;
+
+        public bool ModsFolderLoaded
+        {
+            get { return _modsFolderLoaded; }
+            set
+            {
+                _modsFolderLoaded = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _profilesFolderLoaded;
+
+        public bool ProfilesFolderLoaded
+        {
+            get { return _profilesFolderLoaded; }
+            set
+            {
+                _profilesFolderLoaded = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region UUID Generation Properties

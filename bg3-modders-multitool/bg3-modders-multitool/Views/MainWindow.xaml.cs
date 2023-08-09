@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
+    using System.IO;
     using System.Windows;
 
     /// <summary>
@@ -136,6 +137,32 @@ namespace bg3_modders_multitool.Views
                 var config = new ConfigurationMenu(vm);
                 config.Owner = this;
                 config.Show();
+            }
+        }
+
+        private void OpenModsFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var path = PathHelper.ModsFolderPath;
+            if (Directory.Exists(path))
+            {
+                System.Diagnostics.Process.Start(path);
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("Mods folder not found. Please check your settings.", "Mods folder not found", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void OpenProfilesFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var path = PathHelper.PlayerProfilesFolderPath;
+            if (Directory.Exists(path))
+            {
+                System.Diagnostics.Process.Start(path);
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("Profiles folder not found. Please check your settings.", "Profiles folder not found", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
