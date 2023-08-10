@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
+    using System.IO;
     using System.Windows;
 
     /// <summary>
@@ -137,6 +138,26 @@ namespace bg3_modders_multitool.Views
                 config.Owner = this;
                 config.Show();
             }
+        }
+
+        /// <summary>
+        /// Opens the mods folder in the file explorer. 
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OpenModsFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(PathHelper.ModsFolderPath);
+        }
+
+        /// <summary>
+        /// Opens the player profiles folder in the file explorer. 
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OpenProfilesFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
         }
     }
 }

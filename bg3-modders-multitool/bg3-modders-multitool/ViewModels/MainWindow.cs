@@ -3,8 +3,10 @@
 /// </summary>
 namespace bg3_modders_multitool.ViewModels
 {
+    using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
     using System;
+    using System.IO;
     using System.Windows;
 
     public class MainWindow : BaseViewModel
@@ -13,6 +15,7 @@ namespace bg3_modders_multitool.ViewModels
         {
             DivineLocation = Properties.Settings.Default.divineExe;
             Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
+            GameDocumentsLocation = Settings.Default.gameDocumentsPath;
             Unpacker = new PakUnpackHelper();
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
@@ -43,6 +46,35 @@ namespace bg3_modders_multitool.ViewModels
             }
             
             return file;
+        }
+
+        /// <summary>
+        /// Sets folder location in application settings.
+        /// </summary>
+        /// <param name="property">The property to update.</param>
+        /// <param name="title">The title to give the folder selection window.</param>
+        /// <returns>Returns the folder location.</returns>
+        public string FolderLocationDialog(string property, string title)
+        {
+            var folder = (string)Settings.Default[property];
+            var folderDialog = new System.Windows.Forms.FolderBrowserDialog
+            {
+                Description = title,
+            };
+
+            var result = folderDialog.ShowDialog();
+            switch (result)
+            {
+                case System.Windows.Forms.DialogResult.OK:
+                { 
+                    folder = folderDialog.SelectedPath;
+                    Settings.Default[property] = folder;
+                    Settings.Default.Save();
+                    break;
+                }
+            }
+
+            return folder;
         }
         #endregion
 
@@ -135,7 +167,31 @@ namespace bg3_modders_multitool.ViewModels
                 _bg3exeLocation = value;
                 UnpackAllowed = !string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(DivineLocation);
                 LaunchGameAllowed = !string.IsNullOrEmpty(value);
-                ConfigNeeded = UnpackAllowed && LaunchGameAllowed ? Visibility.Hidden : Visibility.Visible;
+                ConfigNeeded = ValidateConfigNeeded();
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _gameDocumentsLocation;
+
+        public string GameDocumentsLocation
+        {
+            get { return _gameDocumentsLocation; }
+            set
+            {
+                _gameDocumentsLocation = value;
+
+                // Validate the mods folder path.
+                ModsFolderLoaded = Directory.Exists(PathHelper.ModsFolderPath);
+                if(!ModsFolderLoaded)
+                    ConsoleOutput += $"Error: Unable to find the Mods folder at {PathHelper.ModsFolderPath}. Please check your settings.\n";
+
+                // Validate the player profiles folder path.
+                ProfilesFolderLoaded = Directory.Exists(PathHelper.PlayerProfilesFolderPath);
+                if (!ProfilesFolderLoaded)
+                    ConsoleOutput += $"Error: Unable to find the PlayerProfiles folder at {PathHelper.PlayerProfilesFolderPath}. Please check your settings.\n";
+
+                ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();
             }
         }
@@ -189,6 +245,31 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        private bool _modsFolderLoaded;
+
+        public bool ModsFolderLoaded
+        {
+            get { return _modsFolderLoaded; }
+            set
+            {
+                _modsFolderLoaded = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _profilesFolderLoaded;
+
+        public bool ProfilesFolderLoaded
+        {
+            get { return _profilesFolderLoaded; }
+            set
+            {
+                _profilesFolderLoaded = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region UUID Generation Properties
@@ -212,6 +293,22 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
         #endregion
+        #endregion
+
+        #region Auxiliary Methods
+
+        /// <summary>
+        /// Determines the value of <see cref="Visibility"/> which should have the ConfigNeeded Label
+        /// based on whether current configuration is ok: all paths must be specified and valid.
+        /// </summary>
+        /// <returns></returns>
+        private Visibility ValidateConfigNeeded()
+        {
+            return UnpackAllowed && LaunchGameAllowed && Directory.Exists(PathHelper.ModsFolderPath) && Directory.Exists(PathHelper.PlayerProfilesFolderPath) 
+                ? Visibility.Hidden 
+                : Visibility.Visible;
+        }
+
         #endregion
     }
 }
