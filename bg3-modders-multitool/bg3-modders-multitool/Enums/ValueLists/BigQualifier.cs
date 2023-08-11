@@ -1,10 +1,10 @@
-﻿using System.Runtime.Serialization;
-
-/// <summary>
+﻿/// <summary>
 /// The BigQualifier
 /// </summary>
 namespace bg3_modders_multitool.Enums.ValueLists
 {
+    using System.Runtime.Serialization;
+
     public enum BigQualifier
     {
         [EnumMember(Value = "None")]

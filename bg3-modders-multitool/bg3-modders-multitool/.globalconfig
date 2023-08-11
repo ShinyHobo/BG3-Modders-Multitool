@@ -1,0 +1,4 @@
+is_global = true
+
+# Put using directives inside the namespace
+csharp_using_directive_placement = inside_namespace

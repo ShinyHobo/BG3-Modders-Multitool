@@ -1,9 +1,9 @@
-﻿using System.Globalization;
-using System.Windows;
-using System.Windows.Controls;
-
-namespace bg3_modders_multitool
+﻿namespace bg3_modders_multitool
 {
+    using System.Globalization;
+    using System.Windows;
+    using System.Windows.Controls;
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>

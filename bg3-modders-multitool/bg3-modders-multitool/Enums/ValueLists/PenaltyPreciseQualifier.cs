@@ -1,8 +1,8 @@
-using System.Runtime.Serialization;
-
 /// <summary> The Penalty PreciseQualifier <summary>
 namespace bg3_modders_multitool.Enums.ValueLists
 {
+    using System.Runtime.Serialization;
+
     [DataContract]
     public enum PenaltyPreciseQualifier
     {

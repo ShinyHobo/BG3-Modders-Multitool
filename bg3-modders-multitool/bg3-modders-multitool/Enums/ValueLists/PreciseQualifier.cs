@@ -1,10 +1,10 @@
-﻿using System.Runtime.Serialization;
-
-/// <summary>
+﻿/// <summary>
 /// The PreciseQualifier
 /// </summary>
 namespace bg3_modders_multitool.Enums.ValueLists
 {
+    using System.Runtime.Serialization;
+
     [DataContract]
     public enum PreciseQualifier
     {

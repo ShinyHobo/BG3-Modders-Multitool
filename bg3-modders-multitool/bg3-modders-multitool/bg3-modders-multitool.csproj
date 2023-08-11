@@ -577,6 +577,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include=".globalconfig" />
     <None Include="bg3-modders-multipack_TemporaryKey.pfx" />
     <None Include="manifest.json" />
     <None Include="packages.config" />
