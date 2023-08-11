@@ -14,11 +14,22 @@ namespace bg3_modders_multitool.ViewModels
             _packAllowedDrop = PackAllowed;
         }
 
+        public async Task ProcessClick(IDataObject data)
+        {
+            PackAllowed = false;
+            _packAllowedDrop = false;
+            await Services.DragAndDropHelper.ProcessDrop(data).ContinueWith(delegate
+            {
+                PackAllowed = true;
+            });
+        }
+
         public async Task ProcessDrop(IDataObject data)
         {
             PackAllowed = false;
             _packAllowedDrop = false;
-            await Services.DragAndDropHelper.ProcessDrop(data).ContinueWith(delegate {
+            await Services.DragAndDropHelper.ProcessDrop(data).ContinueWith(delegate
+            {
                 PackAllowed = true;
             });
         }
@@ -36,32 +47,29 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         #region Properties
-        private string _packBoxColor;
-
-        public string PackBoxColor {
-            get { return _packBoxColor; }
-            set {
-                _packBoxColor = value;
-                OnNotifyPropertyChanged();
-            }
-        }
 
         private string _descriptionColor;
+        private bool _packAllowed;
+        private bool _packAllowedDrop;
+        private string _packBoxColor;
 
-        public string DescriptionColor {
+        private string _packBoxInstructions;
+
+        public string DescriptionColor
+        {
             get { return _descriptionColor; }
-            set {
+            set
+            {
                 _descriptionColor = value;
                 OnNotifyPropertyChanged();
             }
         }
 
-        private bool _packAllowed;
-        private bool _packAllowedDrop;
-
-        public bool PackAllowed {
+        public bool PackAllowed
+        {
             get { return _packAllowed; }
-            set {
+            set
+            {
                 _packAllowed = value;
                 if (value)
                 {
@@ -77,15 +85,26 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private string _packBoxInstructions;
+        public string PackBoxColor
+        {
+            get { return _packBoxColor; }
+            set
+            {
+                _packBoxColor = value;
+                OnNotifyPropertyChanged();
+            }
+        }
 
-        public string PackBoxInstructions {
+        public string PackBoxInstructions
+        {
             get { return _packBoxInstructions; }
-            set {
+            set
+            {
                 _packBoxInstructions = value;
                 OnNotifyPropertyChanged();
             }
         }
-        #endregion
+
+        #endregion Properties
     }
 }
