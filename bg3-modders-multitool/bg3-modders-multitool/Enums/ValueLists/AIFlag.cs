@@ -13,6 +13,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         IgnoreControl,
         CanNotTargetFrozen,
         GrantsResources,
-        UseAsSupportingActionOnly
+        UseAsSupportingActionOnly,
+        UseAsSeekActionOnly
     }
 }

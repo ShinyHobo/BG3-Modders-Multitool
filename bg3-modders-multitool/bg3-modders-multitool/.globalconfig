@@ -1,0 +1,7 @@
+is_global = true
+
+# Put using directives inside the namespace
+csharp_using_directive_placement = inside_namespace
+
+# Promote Rule to Warning
+dotnet_diagnostic.IDE0065.severity = warning

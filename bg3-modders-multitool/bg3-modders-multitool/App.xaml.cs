@@ -1,12 +1,12 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-
 namespace bg3_modders_multitool
 {
+    using System;
+    using System.Globalization;
+    using System.IO;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Threading;
+  
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
