@@ -70,5 +70,17 @@ namespace bg3_modders_multitool.Properties {
                 this["gameDocumentsPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool enableConsoleTimestamp {
+            get {
+                return ((bool)(this["enableConsoleTimestamp"]));
+            }
+            set {
+                this["enableConsoleTimestamp"] = value;
+            }
+        }
     }
 }

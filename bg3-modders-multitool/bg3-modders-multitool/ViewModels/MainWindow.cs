@@ -99,7 +99,7 @@ namespace bg3_modders_multitool.ViewModels
             if (GuidText != null)
             {
                 Clipboard.SetText(GuidText);
-                ConsoleOutput += $"{type} [{GuidText}] copied to clipboard!\n";
+                WriteToConsole($"{type} [{GuidText}] copied to clipboard!");
             }
         }
         #endregion
@@ -184,12 +184,12 @@ namespace bg3_modders_multitool.ViewModels
                 // Validate the mods folder path.
                 ModsFolderLoaded = Directory.Exists(PathHelper.ModsFolderPath);
                 if(!ModsFolderLoaded)
-                    ConsoleOutput += $"Error: Unable to find the Mods folder at {PathHelper.ModsFolderPath}. Please check your settings.\n";
+                    WriteToConsole($"Error: Unable to find the Mods folder at {PathHelper.ModsFolderPath}. Please check your settings.");
 
                 // Validate the player profiles folder path.
                 ProfilesFolderLoaded = Directory.Exists(PathHelper.PlayerProfilesFolderPath);
                 if (!ProfilesFolderLoaded)
-                    ConsoleOutput += $"Error: Unable to find the PlayerProfiles folder at {PathHelper.PlayerProfilesFolderPath}. Please check your settings.\n";
+                    WriteToConsole($"Error: Unable to find the PlayerProfiles folder at {PathHelper.PlayerProfilesFolderPath}. Please check your settings.");
 
                 ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();
@@ -296,6 +296,23 @@ namespace bg3_modders_multitool.ViewModels
         #endregion
 
         #region Auxiliary Methods
+
+        /// <summary>
+        /// Appends a message as a new line to the ConsoleOutput string.
+        /// </summary>
+        /// <param name="message">The message to be appended.</param>
+        public void WriteToConsole(string message)
+        {
+            // Add a timestamp to the message if requested.
+            if (Settings.Default.enableConsoleTimestamp)
+                message = $"[{DateTime.Now.ToLocalTime()}] {message}";
+
+            // Add a newline to the message if it doesn't already have one.
+            if(!message.EndsWith("\n"))
+                message += "\n";
+
+            ConsoleOutput += message;
+        }
 
         /// <summary>
         /// Determines the value of <see cref="Visibility"/> which should have the ConfigNeeded Label
