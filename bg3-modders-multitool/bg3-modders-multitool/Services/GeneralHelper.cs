@@ -21,7 +21,7 @@ namespace bg3_modders_multitool.Services
         public static void WriteToConsole(string text)
         {
             Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).ConsoleOutput += text;
+                ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(text);
             });
         }
 
