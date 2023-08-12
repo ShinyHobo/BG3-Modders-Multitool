@@ -98,7 +98,8 @@ namespace bg3_modders_multitool.ViewModels
             var type = isHandle ? "TranslatedString handle" : "v4 UUID";
             if (GuidText != null)
             {
-                Clipboard.SetText(GuidText);
+                // https://stackoverflow.com/questions/12769264/openclipboard-failed-when-copy-pasting-data-from-wpf-datagrid/17678542#17678542
+                Clipboard.SetDataObject(GuidText);
                 WriteToConsole($"{type} [{GuidText}] copied to clipboard!");
             }
         }
