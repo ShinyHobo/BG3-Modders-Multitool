@@ -7,7 +7,9 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -262,5 +264,48 @@ namespace bg3_modders_multitool.Services
 
             return stream;
         }
+
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetOpenClipboardWindow();
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        /// <summary>
+        /// Gets the Process that's holding the clipboard
+        /// https://stackoverflow.com/questions/12769264/openclipboard-failed-when-copy-pasting-data-from-wpf-datagrid/21311270#21311270
+        /// </summary>
+        /// <returns>A Process object holding the clipboard, or null</returns>
+        public static Process ProcessHoldingClipboard()
+        {
+            Process theProc = null;
+
+            IntPtr hwnd = GetOpenClipboardWindow();
+
+            if (hwnd != IntPtr.Zero)
+            {
+                uint processId;
+                uint threadId = GetWindowThreadProcessId(hwnd, out processId);
+
+                Process[] procs = Process.GetProcesses();
+                foreach (Process proc in procs)
+                {
+                    IntPtr handle = proc.MainWindowHandle;
+
+                    if (handle == hwnd)
+                    {
+                        theProc = proc;
+                    }
+                    else if (processId == proc.Id)
+                    {
+                        theProc = proc;
+                    }
+                }
+            }
+
+            return theProc;
+        }
+
     }
 }

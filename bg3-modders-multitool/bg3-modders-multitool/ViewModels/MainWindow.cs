@@ -7,6 +7,7 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Services;
     using System;
     using System.IO;
+    using System.Runtime.InteropServices;
     using System.Windows;
 
     public class MainWindow : BaseViewModel
@@ -99,8 +100,16 @@ namespace bg3_modders_multitool.ViewModels
             if (GuidText != null)
             {
                 // https://stackoverflow.com/questions/12769264/openclipboard-failed-when-copy-pasting-data-from-wpf-datagrid/17678542#17678542
-                Clipboard.SetDataObject(GuidText);
-                WriteToConsole($"{type} [{GuidText}] copied to clipboard!");
+                // https://stackoverflow.com/questions/930219/how-to-handle-a-blocked-clipboard-and-other-oddities
+                try
+                {
+                    System.Windows.Forms.Clipboard.SetDataObject(GuidText, false, 10, 10);
+                    WriteToConsole($"{type} [{GuidText}] copied to clipboard!");
+                } 
+                catch (Exception ex)
+                {
+                    WriteToConsole($"Failed to copy to clipboard ({GeneralHelper.ProcessHoldingClipboard().ProcessName} blocking):\n{ex.Message}\n{ex.StackTrace}");
+                }
             }
         }
         #endregion
