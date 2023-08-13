@@ -33,7 +33,7 @@ namespace bg3_modders_multitool.ViewModels
 
         public void Clear()
         {
-            RootTemplateHelper.Clear();
+            RootTemplateHelper?.Clear();
         }
 
         /// <summary>
