@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -44,6 +45,11 @@ namespace bg3_modders_multitool.Views
                 vm.Results = new ObservableCollection<SearchResult>();
                 foreach (string result in await vm.IndexHelper.SearchFiles(search.Text))
                 {
+                    var ext = Path.GetExtension(result);
+                    if(IndexHelper.BinaryExtensions.Contains(ext)) // TODO - add option to turn this off in config
+                    {
+                        continue;
+                    }
                     vm.Results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
                 searchFilesButton.IsEnabled = true;
