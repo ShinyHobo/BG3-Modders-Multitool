@@ -70,7 +70,8 @@ namespace bg3_modders_multitool.Services
                 var geometry = GetMesh(gr2File, materials, slotTypes, materialBanks, textureBanks);
                 if (geometry != null)
                 {
-                    geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
+                    lock (geometryGroup)
+                        geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
                 }
             });
 
@@ -146,7 +147,8 @@ namespace bg3_modders_multitool.Services
                         SlotType = slotType
                     });
                 });
-                geometryLookup.Add(meshGroup.Key, geometryList);
+                lock (geometryList)
+                    geometryLookup.Add(meshGroup.Key, geometryList);
             });
             return geometryLookup;
         }
