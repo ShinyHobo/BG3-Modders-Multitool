@@ -42,6 +42,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OnCombatEnded,
         OnTurn,
         OnActionResourcesChanged,
-        OnSurfaceEnter
+        OnSurfaceEnter,
+        OnDamagedPrevented
     }
 }

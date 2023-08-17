@@ -45,6 +45,10 @@ namespace bg3_modders_multitool.Services
             {
                 case "character":
                     var characterVisualResources = LoadCharacterVisualResources(template, characterVisualBanks, visualBanks);
+                    if(characterVisualResources == null)
+                    {
+                        break;
+                    }
                     slotTypes = characterVisualResources.Item3;
                     materials = characterVisualResources.Item2;
                     gr2Files.AddRange(characterVisualResources.Item1);
@@ -70,7 +74,8 @@ namespace bg3_modders_multitool.Services
                 var geometry = GetMesh(gr2File, materials, slotTypes, materialBanks, textureBanks);
                 if (geometry != null)
                 {
-                    geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
+                    lock (geometryGroup)
+                        geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
                 }
             });
 
@@ -146,7 +151,8 @@ namespace bg3_modders_multitool.Services
                         SlotType = slotType
                     });
                 });
-                geometryLookup.Add(meshGroup.Key, geometryList);
+                lock (geometryList)
+                    geometryLookup.Add(meshGroup.Key, geometryList);
             });
             return geometryLookup;
         }
@@ -160,7 +166,7 @@ namespace bg3_modders_multitool.Services
         {
             var dae = $"{filename}.dae";
 
-            if (!File.Exists(dae))
+            if (!File.Exists(dae) && File.Exists($"{filename}.GR2"))
             {
                 GeneralHelper.WriteToConsole($"Converting model to .dae for rendering...\n");
                 var divine = $" -g \"bg3\" --action \"convert-model\" --output-format \"dae\" --source \"\\\\?\\{filename}.GR2\" --destination \"\\\\?\\{dae}\" -l \"all\"";
@@ -185,41 +191,47 @@ namespace bg3_modders_multitool.Services
             {
                 var importer = new Importer();
                 // Update material here?
-                var file = importer.Load(dae);
-                if (file == null && File.Exists(dae))
+                if(File.Exists(dae))
                 {
-                    GeneralHelper.WriteToConsole("Fixing vertices...\n");
-                    try
+                    var file = importer.Load(dae);
+                    if (file == null && File.Exists(dae))
                     {
-                        var xml = XDocument.Load(dae);
-                        var geometryList = xml.Descendants().Where(x => x.Name.LocalName == "geometry").ToList();
-                        Parallel.ForEach(geometryList, lod =>
+                        GeneralHelper.WriteToConsole("Fixing vertices...\n");
+                        try
                         {
-                            var vertexId = lod.Descendants().Where(x => x.Name.LocalName == "vertices").Select(x => x.Attribute("id").Value).First();
-                            var vertex = lod.Descendants().Single(x => x.Name.LocalName == "input" && x.Attribute("semantic").Value == "VERTEX");
-                            vertex.Attribute("source").Value = $"#{vertexId}";
-                        });
-                        xml.Save(dae);
-                        GeneralHelper.WriteToConsole("Model conversion complete!\n");
-                        file = importer.Load(dae);
+                            var xml = XDocument.Load(dae);
+                            var geometryList = xml.Descendants().Where(x => x.Name.LocalName == "geometry").ToList();
+                            Parallel.ForEach(geometryList, lod =>
+                            {
+                                var vertexId = lod.Descendants().Where(x => x.Name.LocalName == "vertices").Select(x => x.Attribute("id").Value).First();
+                                var vertex = lod.Descendants().Single(x => x.Name.LocalName == "input" && x.Attribute("semantic").Value == "VERTEX");
+                                vertex.Attribute("source").Value = $"#{vertexId}";
+                            });
+                            xml.Save(dae);
+                            GeneralHelper.WriteToConsole("Model conversion complete!\n");
+                            file = importer.Load(dae);
+                        }
+                        catch (Exception ex)
+                        {
+                            // in use by another process
+                            GeneralHelper.WriteToConsole($"Error : {ex.Message}\n");
+                        }
                     }
-                    catch (Exception ex)
+
+                    if (!File.Exists($"{filename}.fbx"))
                     {
-                        // in use by another process
-                        GeneralHelper.WriteToConsole($"Error : {ex.Message}\n");
+                        var converter = new Assimp.AssimpContext();
+                        var exportFormats = converter.GetSupportedExportFormats().Select(e => e.FormatId);
+                        var importFormats = converter.GetSupportedImportFormats();
+                        var imported = converter.ImportFile(dae);
+                        converter.ExportFile(imported, $"{filename}.fbx", "fbx");
                     }
+                    importer.Dispose();
+                    return file;
                 }
-                
-                if(!File.Exists($"{filename}.fbx"))
-                {
-                    var converter = new Assimp.AssimpContext();
-                    var exportFormats = converter.GetSupportedExportFormats().Select(e => e.FormatId);
-                    var importFormats = converter.GetSupportedImportFormats();
-                    var imported = converter.ImportFile(dae);
-                    converter.ExportFile(imported, $"{filename}.fbx", "fbx");
-                }
+                GeneralHelper.WriteToConsole($"Could not load model: {filename}\n");
                 importer.Dispose();
-                return file;
+                return null;
             }
             catch(Exception ex)
             {
@@ -247,7 +259,17 @@ namespace bg3_modders_multitool.Services
                     visualBanks.TryGetValue(id, out file);
                 if (file != null)
                 {
-                    var xml = XDocument.Load(FileHelper.GetPath(file));
+                    var xml = new XDocument();
+                    try
+                    {
+                        xml = XDocument.Load(FileHelper.GetPath(file));
+                    } 
+                    catch (Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"Could not load {file}:\n{ex.Message}");
+                        return null;
+                    }
+                    
                     var characterVisualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
                     var bodySetVisualId = characterVisualResource.Elements("attribute").SingleOrDefault(x => x.Attribute("id").Value == "BodySetVisual")?.Attribute("value").Value;
                     var bodySetVisual = LoadVisualResource(bodySetVisualId, visualBanks);

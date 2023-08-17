@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Enums;
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
+    using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -91,6 +92,13 @@ namespace bg3_modders_multitool.Services
         {
             return await Task.Run(() => {
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
+
+                // check if Models directory exists
+                if(!Directory.Exists($"{Directory.GetCurrentDirectory()}\\UnpackedData\\Models"))
+                {
+                    GeneralHelper.WriteToConsole($"Failed to find Models directory. Please unpack Models.pak to view models.\n");
+                }
+
                 ReadTranslations();
                 ReadVisualBanks();
                 // ReadTextureBanks();
@@ -133,10 +141,20 @@ namespace bg3_modders_multitool.Services
         private bool ReadTranslations()
         {
             TranslationLookup = new Dictionary<string, Translation>();
-            var translationFile = FileHelper.GetPath(@"English\Localization\English\english.xml");
-            if (File.Exists(translationFile))
+            var translationFile = FileHelper.GetPath(@"English\Localization\English\english.loca");
+            var translationFileConverted = FileHelper.GetPath(@"English\Localization\English\english.xml");
+            if (!File.Exists(translationFileConverted) && File.Exists(translationFile))
             {
-                using (XmlReader reader = XmlReader.Create(translationFile))
+                using (var fs = File.Open(translationFile, System.IO.FileMode.Open))
+                {
+                    var resource = LocaUtils.Load(fs, LocaFormat.Loca);
+                    LocaUtils.Save(resource, translationFileConverted, LocaFormat.Xml);
+                }
+            }
+
+            if (File.Exists(translationFileConverted))
+            {
+                using (XmlReader reader = XmlReader.Create(translationFileConverted))
                 {
                     while (reader.Read())
                     {

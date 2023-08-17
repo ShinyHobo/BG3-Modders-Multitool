@@ -29,6 +29,14 @@ Don't hit the "Index Files" button more than once unless you want to reset your 
 #### GameObject Exploration
 Clicking the GameObject Explorer button will open a new window allowing to look at GameObjects such as characters and weapons in a more human friendly manner. As long as you have the necessary game .paks unpacked, it will automatically generate connections between things such as stats, icons, and translations in a hierarchal format. It is possible to search for GameObjects on multiple fields as well as within individual objects through the Stats tab property grid.
 
+In order to use this feature, ensure that you have followed the following steps:
+1. Unpack at least the English, Gustav, Icons, Models, Shared, and Textures paks (wait for all console windows to close and completion message to show before continuing)
+2. Decompress (**DO NOT DELETE .lsf FILES**)
+3. Index
+4. GameObject Explorer (will take 20+ minutes to organize gameobjects and build a cache)
+
+**If you don't follow the above steps exactly, it will generate an empty cache and display nothing.** To troubleshoot, deleting the cache and reindexing will fix most issues.
+
 ![GameObject Stats](https://i.imgur.com/3LvsDtE.png)
 ![GameObject attributes](https://i.imgur.com/T49A0Ox.png)
 

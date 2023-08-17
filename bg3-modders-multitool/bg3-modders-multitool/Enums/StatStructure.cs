@@ -12,6 +12,8 @@ namespace bg3_modders_multitool.Enums
         SpellData,
         StatusData,
         Weapon,
-        Interrupt
+        Interrupt,
+        CriticalHitTypeData,
+        CriticalHitTypes
     }
 }

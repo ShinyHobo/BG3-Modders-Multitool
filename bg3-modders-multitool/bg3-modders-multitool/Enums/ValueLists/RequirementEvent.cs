@@ -7,6 +7,10 @@ namespace bg3_modders_multitool.Enums.ValueLists
     {
         OnEquip,
         OnUnequip,
-        OnObscurityChanged
+        OnObscurityChanged,
+        OnStatusApplied,
+        OnTurn,
+        OnStatusRemoved,
+        OnCombatEnded
     }
 }

@@ -45,6 +45,9 @@ namespace bg3_modders_multitool.Enums.ValueLists
         SG_ScriptedPeaceBehaviour,
         SG_DropForNonMutingDialog,
         SG_WeaponCoating,
-        SG_DG
+        SG_DG,
+        SG_Drunk,
+        SG_RemoveOnRespec,
+        SG_Sleeping
     }
 }

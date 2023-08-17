@@ -18,6 +18,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         KO,
         Downed,
         Shouting,
-        Performing
+        Performing,
+        Suffocating
     }
 }
