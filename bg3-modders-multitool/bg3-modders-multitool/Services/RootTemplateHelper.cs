@@ -92,6 +92,13 @@ namespace bg3_modders_multitool.Services
         {
             return await Task.Run(() => {
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
+
+                // check if Models directory exists
+                if(!Directory.Exists($"{Directory.GetCurrentDirectory()}\\UnpackedData\\Models"))
+                {
+                    GeneralHelper.WriteToConsole($"Failed to find Models directory. Please unpack Models.pak to view models.\n");
+                }
+
                 ReadTranslations();
                 ReadVisualBanks();
                 // ReadTextureBanks();
