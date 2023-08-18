@@ -133,23 +133,24 @@ namespace bg3_modders_multitool.Services
                     string slotType = null;
                     if(materialGuid != null)
                         slotTypes.TryGetValue(materialGuid.Item2, out slotType);
-                    geometryList.Add(new MeshGeometry3DObject
-                    {
-                        ObjectId = name,
-                        MaterialId = materialGuid?.Item1,
-                        BaseMaterialId = baseMaterialId,
-                        BaseMap = baseTexture,
-                        NormalMaterialId = normalMaterialId,
-                        NormalMap = normalTexture,
-                        MRAOMaterialId = mraoMaterialId,
-                        MRAOMap = mraoTexture,
-                        HMVYMaterialId = hmvyMaterialId,
-                        HMVYMap = hmvyTexture,
-                        CLEAMaterialId = cleaMaterialId,
-                        CLEAMap = cleaTexture,
-                        MeshGeometry3D = meshGeometry,
-                        SlotType = slotType
-                    });
+                    lock (geometryList)
+                        geometryList.Add(new MeshGeometry3DObject
+                        {
+                            ObjectId = name,
+                            MaterialId = materialGuid?.Item1,
+                            BaseMaterialId = baseMaterialId,
+                            BaseMap = baseTexture,
+                            NormalMaterialId = normalMaterialId,
+                            NormalMap = normalTexture,
+                            MRAOMaterialId = mraoMaterialId,
+                            MRAOMap = mraoTexture,
+                            HMVYMaterialId = hmvyMaterialId,
+                            HMVYMap = hmvyTexture,
+                            CLEAMaterialId = cleaMaterialId,
+                            CLEAMap = cleaTexture,
+                            MeshGeometry3D = meshGeometry,
+                            SlotType = slotType
+                        });
                 });
                 lock (geometryList)
                     geometryLookup.Add(meshGroup.Key, geometryList);
@@ -275,7 +276,8 @@ namespace bg3_modders_multitool.Services
                     var bodySetVisual = LoadVisualResource(bodySetVisualId, visualBanks);
                     foreach (var material in LoadMaterials(bodySetVisualId, visualBanks))
                     {
-                        materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, id));
+                        if(material.Key != null)
+                            materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, id));
                     }
                     if (bodySetVisual != null)
                         characterVisualResources.Add(bodySetVisual);
