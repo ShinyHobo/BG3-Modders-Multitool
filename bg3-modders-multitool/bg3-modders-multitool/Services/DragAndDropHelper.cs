@@ -278,6 +278,10 @@ namespace bg3_modders_multitool.Services
                     {
                         Directory.CreateDirectory(modParent);
                     }
+                    if(File.Exists(mod))
+                    {
+                        File.Delete(mod);
+                    }
                     File.Copy(file, mod);
                 }
                 else

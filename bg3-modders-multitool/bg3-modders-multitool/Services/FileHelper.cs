@@ -33,14 +33,14 @@ namespace bg3_modders_multitool.Services
 
             var originalExtension = Path.GetExtension(file);
             var newFile = file.Replace(originalExtension, $".{extension}");
-            var isConvertableToLsx = true;
-            var isConvertableToXml = originalExtension == ".loca";
+            var isConvertableToLsx = CanConvertToLsx(file);
+            var isConvertableToXml = originalExtension.Contains("loca");
+            var isConvertableToLoca = originalExtension.Contains("xml");
             string path;
             if (string.IsNullOrEmpty(newPath))
             {
                 path = GetPath(file);
                 newPath = GetPath(newFile);
-                isConvertableToLsx = CanConvertToLsx(file);
             }
             else
             {
@@ -95,6 +95,14 @@ namespace bg3_modders_multitool.Services
                     LocaUtils.Save(resource, newPath, LocaFormat.Xml);
                 }
             }
+            else if(!File.Exists(newPath) && isConvertableToLoca)
+            {
+                using (var fs = File.Open(file, System.IO.FileMode.Open))
+                {
+                    var resource = LocaUtils.Load(fs, LocaFormat.Xml);
+                    LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                }
+            }
 
             return isConvertableToLsx || isConvertableToXml  ? newFile : file;
         }
@@ -106,6 +114,10 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether or not the file is convertable.</returns>
         public static bool CanConvertToLsx(string file)
         {
+            if(string.IsNullOrEmpty(file))
+            {
+                return false;
+            }
             var extension = Path.GetExtension(file);
             return ConvertableLsxResources.Contains(extension);
         }
