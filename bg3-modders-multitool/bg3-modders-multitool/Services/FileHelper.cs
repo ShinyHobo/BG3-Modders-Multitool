@@ -385,7 +385,7 @@ namespace bg3_modders_multitool.Services
         public static void CreateDestroyQuickLaunchMod(bool setting)
         {
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            var modLocation = Path.Combine(dataDir, "Localization\\English\\Video\\");
+            var modLocation = Path.Combine(dataDir, "Video\\");
             var modFilepath = Path.Combine(modLocation,"Splash_Logo_Larian.bk2");
             if (setting)
             {
