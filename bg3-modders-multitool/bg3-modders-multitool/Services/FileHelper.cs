@@ -103,8 +103,12 @@ namespace bg3_modders_multitool.Services
                     LocaUtils.Save(resource, newPath, LocaFormat.Loca);
                 }
             }
+            else
+            {
+                GeneralHelper.WriteToConsole($"Failed to convert {file} to .{extension}; file not included!\n");
+            }
 
-            return isConvertableToLsx || isConvertableToXml  ? newFile : file;
+            return isConvertableToLsx || isConvertableToXml || isConvertableToLoca ? newFile : file;
         }
 
         /// <summary>
