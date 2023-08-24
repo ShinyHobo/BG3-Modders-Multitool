@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Services
     using Alphaleonis.Win32.Filesystem;
     using BrendanGrant.Helpers.FileAssociation;
     using LSLib.LS;
+    using LSLib.LS.Enums;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -54,33 +55,44 @@ namespace bg3_modders_multitool.Services
                     File.Move(path, renamedPath);
                     path = renamedPath;
                 }
-                var divine = $" -g \"bg3\" --action \"convert-resource\" --output-format \"{extension}\" --source \"{path}\" --destination \"{newPath}\" -l \"all\"";
-                var process = new Process();
-                var startInfo = new ProcessStartInfo
+                var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                try
                 {
-                    FileName = Properties.Settings.Default.divineExe,
-                    Arguments = divine,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
-                var output = process.StandardOutput.ReadToEnd();
-                var error = process.StandardError.ReadToEnd();
-                if (string.IsNullOrEmpty(newPath))
+                    Resource resource = ResourceUtils.LoadResource(path);
+                    ResourceUtils.SaveResource(resource, newPath, conversionParams);
+                }
+                catch (Exception ex)
                 {
-                    GeneralHelper.WriteToConsole(output);
-                    GeneralHelper.WriteToConsole(error);
+                    GeneralHelper.WriteToConsole($"Failed to convert resource: {ex.Message}");
                 }
 
-                if(output.Contains("Failed to convert resource"))
-                {
-                    GeneralHelper.WriteToConsole($"Failed to convert {file} to .{extension}!\n");
-                }
+                //var divine = $" -g \"bg3\" --action \"convert-resource\" --output-format \"{extension}\" --source \"{path}\" --destination \"{newPath}\" -l \"all\"";
+                //var process = new Process();
+                //var startInfo = new ProcessStartInfo
+                //{
+                //    FileName = Properties.Settings.Default.divineExe,
+                //    Arguments = divine,
+                //    WindowStyle = ProcessWindowStyle.Hidden,
+                //    CreateNoWindow = true,
+                //    UseShellExecute = false,
+                //    RedirectStandardOutput = true,
+                //    RedirectStandardError = true
+                //};
+                //process.StartInfo = startInfo;
+                //process.Start();
+                //process.WaitForExit();
+                //var output = process.StandardOutput.ReadToEnd();
+                //var error = process.StandardError.ReadToEnd();
+                //if (string.IsNullOrEmpty(newPath))
+                //{
+                //    //    GeneralHelper.WriteToConsole(output);
+                //    GeneralHelper.WriteToConsole(error);
+                //}
+
+                //if (output.Contains("Failed to convert resource"))
+                //{
+                //    GeneralHelper.WriteToConsole($"Failed to convert {file} to .{extension}!\n");
+                //}
 
                 if (MustRenameLsxResources.Contains(originalExtension))
                 {
