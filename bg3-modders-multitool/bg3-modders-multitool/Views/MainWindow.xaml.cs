@@ -115,13 +115,13 @@ namespace bg3_modders_multitool.Views
             new GameObjectWindow().Show();
         }
 
-        private async void Decompress_Click(object sender, RoutedEventArgs e)
+        private void Decompress_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
             if(vm.NotDecompressing)
             {
                 vm.NotDecompressing = false;
-                await PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
+                PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
                     Application.Current.Dispatcher.Invoke(() => {
                         vm.NotDecompressing = true;
                     });
