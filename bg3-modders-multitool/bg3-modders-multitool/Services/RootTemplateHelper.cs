@@ -194,7 +194,7 @@ namespace bg3_modders_multitool.Services
             var idBag = new ConcurrentBag<string>();
             var classBag = new ConcurrentBag<Tuple<string, string>>();
             #endif
-            Parallel.ForEach(rootTemplates, rootTemplate =>
+            Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
             {
                 if (File.Exists(rootTemplate))
                 {
@@ -281,7 +281,7 @@ namespace bg3_modders_multitool.Services
             GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name).ToList();
             var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
             var lookup = GameObjects.Where(go => !string.IsNullOrEmpty(go.MapKey)).GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
-            Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name), gameObject =>
+            Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name), GeneralHelper.ParallelOptions, gameObject =>
             {
                 var goChildren = lookup.FirstOrDefault(l => l.Key == gameObject.ParentTemplateId).Value?.Children;
                 if(goChildren != null)
@@ -483,7 +483,7 @@ namespace bg3_modders_multitool.Services
             visualBankFiles.AddRange(materialBankFiles);
             visualBankFiles.AddRange(textureBankFiles);
             visualBankFiles = visualBankFiles.Distinct().ToList();
-            Parallel.ForEach(visualBankFiles, visualBankFile => {
+            Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile => {
                 if (File.Exists(visualBankFile))
                 {
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));

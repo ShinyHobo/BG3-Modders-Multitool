@@ -195,11 +195,11 @@ namespace bg3_modders_multitool.ViewModels
                         RootTemplateHelper.MaterialBanks, RootTemplateHelper.TextureBanks);
                     MeshFiles = slots.OrderBy(slot => slot.File).ToList();
 
-                    Parallel.ForEach(slots, lodLevels =>
+                    Parallel.ForEach(slots, GeneralHelper.ParallelOptions, lodLevels =>
                     {
                         // TODO - need lod slider, selecting highest lod first (mesh-node, then Lod-#) TODO - Order lod levels
                         var lod = lodLevels.MeshList.First(m => m.Key == "Mesh-node").Value;
-                        Parallel.ForEach(lod, model =>
+                        Parallel.ForEach(lod, GeneralHelper.ParallelOptions, model =>
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {

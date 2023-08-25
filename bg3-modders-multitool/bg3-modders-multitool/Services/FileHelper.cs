@@ -63,7 +63,7 @@ namespace bg3_modders_multitool.Services
                 }
                 catch (Exception ex)
                 {
-                    GeneralHelper.WriteToConsole($"Failed to convert resource: {ex.Message}");
+                    GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
                 }
 
                 if (MustRenameLsxResources.Contains(originalExtension))
@@ -75,16 +75,31 @@ namespace bg3_modders_multitool.Services
             {
                 using (var fs = File.Open(file, System.IO.FileMode.Open))
                 {
-                    var resource = LocaUtils.Load(fs, LocaFormat.Loca);
-                    LocaUtils.Save(resource, newPath, LocaFormat.Xml);
+
+                    try
+                    {
+                        var resource = LocaUtils.Load(fs, LocaFormat.Loca);
+                        LocaUtils.Save(resource, newPath, LocaFormat.Xml);
+                    } 
+                    catch(Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                    }
                 }
             }
             else if(!File.Exists(newPath) && isConvertableToLoca)
             {
                 using (var fs = File.Open(file, System.IO.FileMode.Open))
                 {
-                    var resource = LocaUtils.Load(fs, LocaFormat.Xml);
-                    LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                    try
+                    {
+                        var resource = LocaUtils.Load(fs, LocaFormat.Xml);
+                        LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                    }
+                    catch (Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                    }
                 }
             }
 

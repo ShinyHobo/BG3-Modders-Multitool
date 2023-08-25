@@ -69,7 +69,7 @@ namespace bg3_modders_multitool.Services
 
             var geometryGroup = new List<MeshGeometry>();
 
-            Parallel.ForEach(gr2Files, gr2File =>
+            Parallel.ForEach(gr2Files, GeneralHelper.ParallelOptions, gr2File =>
             {
                 var geometry = GetMesh(gr2File, materials, slotTypes, materialBanks, textureBanks);
                 if (geometry != null)
@@ -102,12 +102,12 @@ namespace bg3_modders_multitool.Services
             // Group meshes by lod
             var meshGroups = meshes.GroupBy(mesh => mesh.Name.Split('_').Last()).ToList();
             var geometryLookup = new Dictionary<string, List<MeshGeometry3DObject>>();
-            Parallel.ForEach(meshGroups, meshGroup =>
+            Parallel.ForEach(meshGroups, GeneralHelper.ParallelOptions, meshGroup =>
             {
                 var geometryList = new List<MeshGeometry3DObject>();
 
                 // Selecting body first
-                Parallel.ForEach(meshGroup, mesh =>
+                Parallel.ForEach(meshGroup, GeneralHelper.ParallelOptions, mesh =>
                 {
                     var name = mesh.Name.Split('-').First();
                     Tuple<string, string> materialGuid = null;
@@ -202,7 +202,7 @@ namespace bg3_modders_multitool.Services
                         {
                             var xml = XDocument.Load(dae);
                             var geometryList = xml.Descendants().Where(x => x.Name.LocalName == "geometry").ToList();
-                            Parallel.ForEach(geometryList, lod =>
+                            Parallel.ForEach(geometryList, GeneralHelper.ParallelOptions, lod =>
                             {
                                 var vertexId = lod.Descendants().Where(x => x.Name.LocalName == "vertices").Select(x => x.Attribute("id").Value).First();
                                 var vertex = lod.Descendants().Single(x => x.Name.LocalName == "input" && x.Attribute("semantic").Value == "VERTEX");
@@ -282,11 +282,11 @@ namespace bg3_modders_multitool.Services
                     if (bodySetVisual != null)
                         characterVisualResources.Add(bodySetVisual);
                     var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
-                    Parallel.ForEach(slots, slot => {
+                    Parallel.ForEach(slots, GeneralHelper.ParallelOptions, slot => {
                         var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
                         var slotType = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "Slot").Attribute("value").Value;
                         slotTypes.Add(visualResourceId, slotType);
-                        Parallel.ForEach(LoadMaterials(visualResourceId, visualBanks), material => {
+                        Parallel.ForEach(LoadMaterials(visualResourceId, visualBanks), GeneralHelper.ParallelOptions, material => {
                             if (material.Key != null && !materials.ContainsKey(material.Key))
                             {
                                 lock (materials)
@@ -347,7 +347,7 @@ namespace bg3_modders_multitool.Services
                     if (children != null)
                     {
                         var nodes = children.Elements("node");
-                        Parallel.ForEach(nodes.Where(node => node.Attribute("id").Value == "Objects"), node =>
+                        Parallel.ForEach(nodes.Where(node => node.Attribute("id").Value == "Objects"), GeneralHelper.ParallelOptions, node =>
                         {
                             var materialId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "MaterialID").Attribute("value").Value;
                             var objectId = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ObjectID").Attribute("value").Value;

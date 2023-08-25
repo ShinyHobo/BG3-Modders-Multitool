@@ -10,6 +10,7 @@ namespace bg3_modders_multitool.Services
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -307,5 +308,6 @@ namespace bg3_modders_multitool.Services
             return theProc;
         }
 
+        public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 1.0)) };
     }
 }
