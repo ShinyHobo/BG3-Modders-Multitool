@@ -63,7 +63,12 @@ namespace bg3_modders_multitool.Services
                 }
                 catch (Exception ex)
                 {
-                    GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                    // Larian decided to rename the .lsx to .lsbs instead of properly LSF encoding them
+                    // These are invalid .lsbs/.lsbc files if this error pops up
+                    if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                    {
+                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                    }
                 }
 
                 if (MustRenameLsxResources.Contains(originalExtension))
