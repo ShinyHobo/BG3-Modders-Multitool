@@ -43,7 +43,7 @@ namespace bg3_modders_multitool.Services
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
-            GeneralHelper.WriteToConsole($"Loading GameObjects...\n");
+            GeneralHelper.WriteToConsole($"Beginning GameObject assembly process, this will take a while...\n");
             var start = DateTime.Now;
             var rootTemplateTask = LoadRootTemplates();
 
@@ -172,6 +172,7 @@ namespace bg3_modders_multitool.Services
                             }
                         }
                         TranslationLookup = Translations.ToDictionary(go => go.ContentUid);
+                        GeneralHelper.WriteToConsole($"Translations loaded...\n");
                         return true;
                     }
                 }
@@ -280,7 +281,8 @@ namespace bg3_modders_multitool.Services
             FileHelper.SerializeObject(typeBag.ToList().Distinct().ToList(), "GameObjectTypes");
             FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
             GeneralHelper.ClassBuilder(classBag.ToList().Distinct().ToList());
-            #endif
+#endif
+            GeneralHelper.WriteToConsole($"GameObjects loaded...\n");
             return true;
         }
 
@@ -295,14 +297,18 @@ namespace bg3_modders_multitool.Services
             GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
             GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name).ToList();
             var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+            var orderedChildren = children.AsParallel().WithDegreeOfParallelism(GeneralHelper.ParallelOptions.MaxDegreeOfParallelism).OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name);
             var lookup = GameObjects.Where(go => !string.IsNullOrEmpty(go.MapKey)).GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
-            Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name), GeneralHelper.ParallelOptions, gameObject =>
+            Parallel.ForEach(orderedChildren, GeneralHelper.ParallelOptions, gameObject =>
             {
-                var goChildren = lookup.FirstOrDefault(l => l.Key == gameObject.ParentTemplateId).Value?.Children;
-                if(goChildren != null)
+                if(lookup.ContainsKey(gameObject.ParentTemplateId))
                 {
-                    lock (goChildren)
-                        goChildren.Add(gameObject);
+                    var goChildren = lookup[gameObject.ParentTemplateId].Children;
+                    if (goChildren != null)
+                    {
+                        lock (goChildren)
+                            goChildren.Add(gameObject);
+                    }
                 }
             });
             GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
@@ -492,6 +498,8 @@ namespace bg3_modders_multitool.Services
                 return true;
             }
 
+            GeneralHelper.WriteToConsole($"Loading bank files...\n");
+
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             var characterVisualBanks = new ConcurrentDictionary<string, string>();
             var visualBanks = new ConcurrentDictionary<string, string>();
@@ -499,11 +507,15 @@ namespace bg3_modders_multitool.Services
             var materialBanks = new ConcurrentDictionary<string, string>();
             var textureBanks = new ConcurrentDictionary<string, string>();
             var visualBankFiles = GetFileList("VisualBank");
+            GeneralHelper.WriteToConsole($"VisualBanks found...\n");
             var materialBankFiles = GetFileList("MaterialBank");
+            GeneralHelper.WriteToConsole($"MaterialBanks found...\n");
             var textureBankFiles = GetFileList("TextureBank");
+            GeneralHelper.WriteToConsole($"TextureBanks found...\n");
             visualBankFiles.AddRange(materialBankFiles);
             visualBankFiles.AddRange(textureBankFiles);
             visualBankFiles = visualBankFiles.Distinct().ToList();
+            GeneralHelper.WriteToConsole($"Sorting bank files...\n");
             Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile => {
                 if (File.Exists(visualBankFile))
                 {
@@ -512,7 +524,8 @@ namespace bg3_modders_multitool.Services
 
                     if (!FileHelper.TryParseXml(filePath))
                     {
-                        GeneralHelper.WriteToConsole($"{filePath} appears to be corrupt. Skipping file.\n");
+                        var filePath2 = visualBankFilePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+                        GeneralHelper.WriteToConsole($"{filePath2} appears to be corrupt. Skipping file.\n");
                         return;
                     }
 
