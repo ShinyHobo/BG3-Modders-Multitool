@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("bg3-modders-multitool")]
-[assembly: AssemblyCopyright("Copyright © ShinyHobo 2020")]
+[assembly: AssemblyCopyright("Copyright © ShinyHobo 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

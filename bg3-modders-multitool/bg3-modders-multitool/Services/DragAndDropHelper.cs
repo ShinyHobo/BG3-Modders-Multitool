@@ -5,6 +5,8 @@ namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Models;
+    using LSLib.LS.Enums;
+    using LSLib.LS;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -57,25 +59,38 @@ namespace bg3_modders_multitool.Services
         public static void PackMod(string fullpath, string destination)
         {
             Directory.CreateDirectory(TempFolder);
-            var divine = $" -g \"bg3\" --action \"create-package\" --source \"{fullpath}\" --destination \"{destination}\" -l \"all\"";
+            //var divine = $" -g \"bg3\" --action \"create-package\" --source \"{fullpath}\" --destination \"{destination}\" -l \"all\"";
 
-            // generate .pak files
-            var process = new System.Diagnostics.Process();
-            var startInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = Properties.Settings.Default.divineExe,
-                Arguments = divine,
-                WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
+            //// generate .pak files
+            //var process = new System.Diagnostics.Process();
+            //var startInfo = new System.Diagnostics.ProcessStartInfo
+            //{
+            //    FileName = Properties.Settings.Default.divineExe,
+            //    Arguments = divine,
+            //    WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
+            //    CreateNoWindow = true,
+            //    UseShellExecute = false,
+            //    RedirectStandardOutput = true,
+            //    RedirectStandardError = true
+            //};
+            //process.StartInfo = startInfo;
+            //process.Start();
+            //GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
+            //GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
+            //process.WaitForExit();
+
+            var packageOptions = new PackageCreationOptions() { 
+                Version = Game.BaldursGate3.PAKVersion() 
             };
-            process.StartInfo = startInfo;
-            process.Start();
-            GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
-            GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
-            process.WaitForExit();
+            try
+            {
+                new Packager().CreatePackage(destination, fullpath, packageOptions);
+                
+            }
+            catch (Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"Failed to pack mod: {ex.Message}");
+            }
         }
 
         /// <summary>
