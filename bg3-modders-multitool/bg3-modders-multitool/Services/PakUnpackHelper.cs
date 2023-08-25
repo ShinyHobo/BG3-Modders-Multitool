@@ -127,27 +127,38 @@ namespace bg3_modders_multitool.Services
                 var convertFiles = new List<string>();
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
-                Parallel.ForEach(fileList, file => {
-                    var extension = Path.GetExtension(file);
-                    if (!string.IsNullOrEmpty(extension))
+                Parallel.ForEach(fileList, GeneralHelper.ParallelOptions, file => {
+                    lock(file)
                     {
-                        if(extension == ".loca")
+                        var extension = Path.GetExtension(file);
+                        if (!string.IsNullOrEmpty(extension))
                         {
-                            var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
-                            if (Path.GetExtension(convertedFile) == ".xml")
+                            switch (extension)
                             {
-                                convertFiles.Add(convertedFile);
+                                case ".loca":
+                                    {
+                                        var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
+                                        if (Path.GetExtension(convertedFile) == ".xml")
+                                        {
+                                            convertFiles.Add(convertedFile);
+                                        }
+                                    }
+                                    break;
+                                case ".xml":
+                                    // no conversion necessary
+                                    break;
+                                default:
+                                    {
+                                        var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
+                                        if (Path.GetExtension(convertedFile) == ".lsx")
+                                        {
+                                            convertFiles.Add(convertedFile);
+                                        }
+                                    }
+                                    break;
                             }
-                        } 
-                        else
-                        {
-                            var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
-                            if (Path.GetExtension(convertedFile) == ".lsx")
-                            {
-                                convertFiles.Add(convertedFile);
-                            }
+
                         }
-                        
                     }
                 });
                 stopWatch.Stop();

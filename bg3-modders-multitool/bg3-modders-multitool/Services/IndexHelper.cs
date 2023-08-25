@@ -90,13 +90,13 @@ namespace bg3_modders_multitool.Services
         /// <param name="analyzer">The analyzer to use when indexing.</param>
         private void IndexFiles(List<string> files, Analyzer analyzer)
         {
-            GeneralHelper.WriteToConsole($"Starting index process.\n");
+            GeneralHelper.WriteToConsole($"Indexing in progress...\n");
             using (Analyzer a = analyzer)
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
                 using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                 {
-                    Parallel.ForEach(files, file => {
+                    Parallel.ForEach(files, GeneralHelper.ParallelOptions, file => {
                         try
                         {
                             IndexLuceneFile(file, writer);

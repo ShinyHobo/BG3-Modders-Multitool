@@ -63,7 +63,12 @@ namespace bg3_modders_multitool.Services
                 }
                 catch (Exception ex)
                 {
-                    GeneralHelper.WriteToConsole($"Failed to convert resource: {ex.Message}");
+                    // Larian decided to rename the .lsx to .lsbs instead of properly LSF encoding them
+                    // These are invalid .lsbs/.lsbc files if this error pops up
+                    if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                    {
+                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                    }
                 }
 
                 if (MustRenameLsxResources.Contains(originalExtension))
@@ -75,16 +80,31 @@ namespace bg3_modders_multitool.Services
             {
                 using (var fs = File.Open(file, System.IO.FileMode.Open))
                 {
-                    var resource = LocaUtils.Load(fs, LocaFormat.Loca);
-                    LocaUtils.Save(resource, newPath, LocaFormat.Xml);
+
+                    try
+                    {
+                        var resource = LocaUtils.Load(fs, LocaFormat.Loca);
+                        LocaUtils.Save(resource, newPath, LocaFormat.Xml);
+                    } 
+                    catch(Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                    }
                 }
             }
             else if(!File.Exists(newPath) && isConvertableToLoca)
             {
                 using (var fs = File.Open(file, System.IO.FileMode.Open))
                 {
-                    var resource = LocaUtils.Load(fs, LocaFormat.Xml);
-                    LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                    try
+                    {
+                        var resource = LocaUtils.Load(fs, LocaFormat.Xml);
+                        LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                    }
+                    catch (Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                    }
                 }
             }
 
@@ -392,6 +412,24 @@ namespace bg3_modders_multitool.Services
                         GeneralHelper.WriteToConsole("Failed to enable splash screen...\n");
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Determines if the file is valid xml
+        /// </summary>
+        /// <param name="filepath">The file path to test</param>
+        /// <returns>Whether the file is valid or not</returns>
+        public static bool TryParseXml(string filepath)
+        {
+            try
+            {
+                System.Xml.Linq.XDocument.Load(filepath);
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }
