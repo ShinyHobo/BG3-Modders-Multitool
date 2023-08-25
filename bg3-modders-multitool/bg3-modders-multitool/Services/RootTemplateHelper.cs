@@ -208,7 +208,7 @@ namespace bg3_modders_multitool.Services
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
                     if(File.Exists(rootTemplatePath))
                     {
-                        var fileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
+                        var fileLocation = rootTemplatePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
                         if (!FileHelper.TryParseXml(rootTemplatePath))
                         {
                             GeneralHelper.WriteToConsole($"{fileLocation} appears to be corrupt. Skipping file.\n");
