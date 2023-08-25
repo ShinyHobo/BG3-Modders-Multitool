@@ -243,7 +243,11 @@ namespace bg3_modders_multitool.ViewModels
                         });
                     }
                 });
-                ModelLoading = Visibility.Hidden;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ViewPort.Items.Add(new MeshGeometryModel3D());
+                    ModelLoading = Visibility.Hidden;
+                });
             });
         }
 
