@@ -178,27 +178,38 @@ namespace bg3_modders_multitool.ViewModels
                 var hasModel = GameObjectAttributes?.Any(goa => goa.Name == "CharacterVisualResourceID" || goa.Name == "VisualTemplate");
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                LoadModels();
+                OnNotifyPropertyChanged();
+            }
+        }
 
-                // reset viewport items
-                var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
-                foreach (var model in modelsToRemove)
+        /// <summary>
+        /// Loads the models for the given GameObject info and displays them in the viewport
+        /// </summary>
+        private void LoadModels()
+        {
+            // reset viewport items, doesn't delete lights
+            var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
+            foreach (var model in modelsToRemove)
+            {
+                ViewPort.Items.Remove(model);
+            }
+
+            Task.Run(() => {
+                var type = (FixedString)GameObjectAttributes?.Single(goa => goa.Name == "Type").Value;
+                var characterVisualResourceId = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value ?? Info.CharacterVisualResourceID;
+                var visualTemplate = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value ?? Info.VisualTemplate;
+                // this should dynamically create meshes based on the number of objects, assemble them based on transforms
+                var slots = RenderedModelHelper.GetMeshes(type, characterVisualResourceId ?? visualTemplate, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals,
+                    RootTemplateHelper.MaterialBanks, RootTemplateHelper.TextureBanks);
+                MeshFiles = slots.OrderBy(slot => slot.File).ToList();
+
+                Parallel.ForEach(slots, GeneralHelper.ParallelOptions, lodLevels =>
                 {
-                    ViewPort.Items.Remove(model);
-                }
-
-                Task.Run(() => {
-                    var type = (FixedString)GameObjectAttributes?.Single(goa => goa.Name == "Type").Value;
-                    var characterVisualResourceId = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value ?? value.CharacterVisualResourceID;
-                    var visualTemplate = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value ?? value.VisualTemplate;
-                    // this should dynamically create meshes based on the number of objects, assemble them based on transforms
-                    var slots = RenderedModelHelper.GetMeshes(type, characterVisualResourceId ?? visualTemplate, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals,
-                        RootTemplateHelper.MaterialBanks, RootTemplateHelper.TextureBanks);
-                    MeshFiles = slots.OrderBy(slot => slot.File).ToList();
-
-                    Parallel.ForEach(slots, GeneralHelper.ParallelOptions, lodLevels =>
+                    if(lodLevels.MeshList.ContainsKey("Mesh-node"))
                     {
                         // TODO - need lod slider, selecting highest lod first (mesh-node, then Lod-#) TODO - Order lod levels
-                        var lod = lodLevels.MeshList.First(m => m.Key == "Mesh-node").Value;
+                        var lod = lodLevels.MeshList["Mesh-node"];
                         Parallel.ForEach(lod, GeneralHelper.ParallelOptions, model =>
                         {
                             Application.Current.Dispatcher.Invoke(() =>
@@ -230,13 +241,10 @@ namespace bg3_modders_multitool.ViewModels
                                 ViewPort.Items.Add(mesh);
                             });
                         });
-                    });
-
-                    ModelLoading = Visibility.Hidden; 
+                    }
                 });
-
-                OnNotifyPropertyChanged();
-            }
+                ModelLoading = Visibility.Hidden;
+            });
         }
 
         private List<GameObjectAttribute> _gameObjectAttributes;
