@@ -59,26 +59,6 @@ namespace bg3_modders_multitool.Services
         public static void PackMod(string fullpath, string destination)
         {
             Directory.CreateDirectory(TempFolder);
-            //var divine = $" -g \"bg3\" --action \"create-package\" --source \"{fullpath}\" --destination \"{destination}\" -l \"all\"";
-
-            //// generate .pak files
-            //var process = new System.Diagnostics.Process();
-            //var startInfo = new System.Diagnostics.ProcessStartInfo
-            //{
-            //    FileName = Properties.Settings.Default.divineExe,
-            //    Arguments = divine,
-            //    WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
-            //    CreateNoWindow = true,
-            //    UseShellExecute = false,
-            //    RedirectStandardOutput = true,
-            //    RedirectStandardError = true
-            //};
-            //process.StartInfo = startInfo;
-            //process.Start();
-            //GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
-            //GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
-            //process.WaitForExit();
-
             var packageOptions = new PackageCreationOptions() { 
                 Version = Game.BaldursGate3.PAKVersion() 
             };
@@ -317,6 +297,18 @@ namespace bg3_modders_multitool.Services
         /// <returns></returns>
         private static List<string> ProcessMod(string path, string dirName)
         {
+            // Clean out temp folder
+            var tempFolder = new DirectoryInfo(TempFolder);
+            foreach (FileInfo file in tempFolder.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in tempFolder.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+
+            // Pack mod
             var destination =  $"{TempFolder}\\{dirName}.pak";
             GeneralHelper.WriteToConsole($"Destination: {destination}\n");
             GeneralHelper.WriteToConsole($"Attempting to pack mod.\n");
