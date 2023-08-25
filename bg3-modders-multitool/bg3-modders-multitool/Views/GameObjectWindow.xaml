@@ -156,10 +156,10 @@
                 <Grid Cursor="Arrow">
                     <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" UseDefaultGestures="False"
                                     IsMoveEnabled="True" IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black">
-                        <!--<hx:AmbientLight3D x:Name="sner" Color="White" />-->
+                        <!--<hx:AmbientLight3D Color="LightBlue" />-->
                         <hx:PointLight3D x:Name="pointLight1" Color="White" Position="0,10,10"/>
-                        <hx:PointLight3D x:Name="pointLight2" Color="White" Position="10,-50,-20"/>
-                        <hx:PointLight3D x:Name="pointLight3" Color="White" Position="0,-10,0"/>
+                        <hx:PointLight3D x:Name="pointLight2" Color="White" Position="10,-10,-10"/>
+                        <hx:PointLight3D x:Name="pointLight3" Color="White" Position="-10,-10,0"/>
                         <!--<hx:AxisPlaneGridModel3D GridThickness="0.01" GridPattern="Tile" GridSpacing="1"/>-->
                         <hx:Viewport3DX.InputBindings>
                             <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
