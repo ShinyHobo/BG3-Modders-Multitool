@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.ViewModels;
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -124,6 +125,8 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole($"Retrived file list. Starting decompression; this could take awhile.\n");
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
                 var convertFiles = new List<string>();
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
                 Parallel.ForEach(fileList, file => {
                     var extension = Path.GetExtension(file);
                     if (!string.IsNullOrEmpty(extension))
@@ -147,8 +150,12 @@ namespace bg3_modders_multitool.Services
                         
                     }
                 });
+                stopWatch.Stop();
+                TimeSpan ts = stopWatch.Elapsed;
+                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+
                 fileList.Clear();
-                GeneralHelper.WriteToConsole($"Decompression complete.\n");
+                GeneralHelper.WriteToConsole($"Decompression completed in {elapsedTime}.\n");
                 return convertFiles;
             });
         }
