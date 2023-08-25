@@ -414,5 +414,23 @@ namespace bg3_modders_multitool.Services
                 }
             }
         }
+
+        /// <summary>
+        /// Determines if the file is valid xml
+        /// </summary>
+        /// <param name="filepath">The file path to test</param>
+        /// <returns>Whether the file is valid or not</returns>
+        public static bool TryParseXml(string filepath)
+        {
+            try
+            {
+                System.Xml.Linq.XDocument.Load(filepath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

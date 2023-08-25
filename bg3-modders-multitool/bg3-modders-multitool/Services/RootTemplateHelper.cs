@@ -154,19 +154,26 @@ namespace bg3_modders_multitool.Services
 
             if (File.Exists(translationFileConverted))
             {
-                using (XmlReader reader = XmlReader.Create(translationFileConverted))
+                if (!FileHelper.TryParseXml(translationFileConverted))
                 {
-                    while (reader.Read())
+                    GeneralHelper.WriteToConsole($"{translationFileConverted} appears to be corrupt. Skipping file.\n");
+                }
+                else
+                {
+                    using (XmlReader reader = XmlReader.Create(translationFileConverted))
                     {
-                        if (reader.Name == "content")
+                        while (reader.Read())
                         {
-                            var id = reader.GetAttribute("contentuid");
-                            var text = reader.ReadInnerXml();
-                            Translations.Add(new Translation { ContentUid = id, Value = text });
+                            if (reader.Name == "content")
+                            {
+                                var id = reader.GetAttribute("contentuid");
+                                var text = reader.ReadInnerXml();
+                                Translations.Add(new Translation { ContentUid = id, Value = text });
+                            }
                         }
+                        TranslationLookup = Translations.ToDictionary(go => go.ContentUid);
+                        return true;
                     }
-                    TranslationLookup = Translations.ToDictionary(go => go.ContentUid);
-                    return true;
                 }
             }
             GeneralHelper.WriteToConsole($"Failed to load english.xml. Please unpack English.pak to generate translations. Skipping...\n");
@@ -201,8 +208,16 @@ namespace bg3_modders_multitool.Services
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
                     if(File.Exists(rootTemplatePath))
                     {
+                        var fileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
+                        if (!FileHelper.TryParseXml(rootTemplatePath))
+                        {
+                            GeneralHelper.WriteToConsole($"{fileLocation} appears to be corrupt. Skipping file.\n");
+                            return;
+                        }
+
                         var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
                         var stream = File.OpenText(rootTemplatePath);
+
                         using (var fileStream = stream)
                         using (var reader = new XmlTextReader(fileStream))
                         {
@@ -212,7 +227,7 @@ namespace bg3_modders_multitool.Services
                                 if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.GetAttribute("id") == "GameObjects")
                                 {
                                     var xml = (XElement)XNode.ReadFrom(reader);
-                                    var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty) };
+                                    var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileLocation };
                                     var attributes = xml.Elements("attribute");
 
                                     foreach (XElement attribute in attributes)
@@ -310,6 +325,12 @@ namespace bg3_modders_multitool.Services
             var raceFile = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Races\\Races.lsx");
             if (File.Exists(raceFile))
             {
+                if (!FileHelper.TryParseXml(raceFile))
+                {
+                    GeneralHelper.WriteToConsole($"{raceFile} appears to be corrupt. Skipping file.\n");
+                    return false;
+                }
+
                 using (XmlReader reader = XmlReader.Create(raceFile))
                 {
                     Race race = null;
@@ -488,6 +509,13 @@ namespace bg3_modders_multitool.Services
                 {
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
                     var filePath = visualBankFilePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
+
+                    if (!FileHelper.TryParseXml(filePath))
+                    {
+                        GeneralHelper.WriteToConsole($"{filePath} appears to be corrupt. Skipping file.\n");
+                        return;
+                    }
+
                     var stream = File.OpenText(visualBankFilePath);
                     using (var fileStream = stream)
                     using (var reader = new XmlTextReader(fileStream))
@@ -561,7 +589,7 @@ namespace bg3_modders_multitool.Services
                                     reader.Read();
                                 }
                             }
-                            catch(Exception ex)
+                            catch
                             {
                                 GeneralHelper.WriteToConsole($"Failed to load {filePath}.\n");
                                 break;

@@ -308,6 +308,6 @@ namespace bg3_modders_multitool.Services
             return theProc;
         }
 
-        public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 1.0)) };
+        public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
     }
 }
