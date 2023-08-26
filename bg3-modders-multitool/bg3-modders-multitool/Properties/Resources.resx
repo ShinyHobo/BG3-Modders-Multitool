@@ -117,9 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AttemptingToPack" xml:space="preserve">
+    <value>Attempting to pack mod.</value>
+  </data>
+  <data name="CachingFile" xml:space="preserve">
+    <value>Caching {0}...</value>
+    <comment>file name</comment>
+  </data>
   <data name="DecompressionComplete" xml:space="preserve">
     <value>Decompression completed in {0}.</value>
     <comment>elapsed time</comment>
+  </data>
+  <data name="Destination" xml:space="preserve">
+    <value>Destination: {0}</value>
+    <comment>destination name</comment>
+  </data>
+  <data name="DirectoryName" xml:space="preserve">
+    <value>Directory name: {0}</value>
+    <comment>directory name</comment>
   </data>
   <data name="ErrorParsingProperty" xml:space="preserve">
     <value>Error parsing \"{0}\" for \"{1}\"</value>
@@ -129,13 +144,38 @@
     <value>Error parsing line [{0}] for structure type \"{1}\": {2}</value>
     <comment>line number, type, error message</comment>
   </data>
+  <data name="FailedToConvertOgg" xml:space="preserve">
+    <value>Problem converting input file to .ogg!</value>
+  </data>
+  <data name="FailedToConvertResource" xml:space="preserve">
+    <value>Failed to convert resource to {0} ({1}): {2}</value>
+    <comment>extension, file, error message</comment>
+  </data>
+  <data name="FailedToIndexFile" xml:space="preserve">
+    <value>Failed to index file [{0}]:\n{1}</value>
+    <comment>file path, error message</comment>
+  </data>
   <data name="FailedToPackMod" xml:space="preserve">
     <value>Failed to pack mod: {0}</value>
     <comment>error message</comment>
   </data>
+  <data name="FailedToReadDirectory" xml:space="preserve">
+    <value>Could not read from directory: {0}</value>
+    <comment>directory</comment>
+  </data>
   <data name="FileCorrupt" xml:space="preserve">
     <value>{0} appears to be corrupt. Skipping file.</value>
     <comment>filepath</comment>
+  </data>
+  <data name="FileDroppingNotSupported" xml:space="preserve">
+    <value>File dropping is not yet supported.</value>
+  </data>
+  <data name="FileListRetrieved" xml:space="preserve">
+    <value>File list retrieved.</value>
+  </data>
+  <data name="FileNoExist" xml:space="preserve">
+    <value>File does not exist on the given path ({0}).</value>
+    <comment>file path</comment>
   </data>
   <data name="FoundMaterialBanks" xml:space="preserve">
     <value>MaterialBanks found...</value>
@@ -150,8 +190,26 @@
     <value>GameObject attribute type [{0}] not covered.</value>
     <comment>type</comment>
   </data>
+  <data name="IndexFinished" xml:space="preserve">
+    <value>Indexing process finished in {0}.</value>
+    <comment>formatted time</comment>
+  </data>
+  <data name="IndexingInProgress" xml:space="preserve">
+    <value>Indexing in progress...</value>
+  </data>
+  <data name="InfoGenerated" xml:space="preserve">
+    <value>info.json generated.</value>
+  </data>
   <data name="LoadingBankFiles" xml:space="preserve">
     <value>Loading bank files...</value>
+  </data>
+  <data name="LoadingCachedFile" xml:space="preserve">
+    <value>Loading {0} from cache...</value>
+    <comment>file name</comment>
+  </data>
+  <data name="MetadataCreated" xml:space="preserve">
+    <value>Metadata for {0} created.</value>
+    <comment>metadata name</comment>
   </data>
   <data name="MetaLsxNotFound1" xml:space="preserve">
     <value>meta.lsx file found in {0}.</value>
@@ -160,7 +218,37 @@
   <data name="MetaLsxNotFound2" xml:space="preserve">
     <value>meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.</value>
   </data>
+  <data name="NoFilesFound" xml:space="preserve">
+    <value>No files found!</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>off</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>on</value>
+  </data>
+  <data name="OutOfMemFailedToIndex" xml:space="preserve">
+    <value>OOME: Failed to index {0}</value>
+    <comment>file path</comment>
+  </data>
+  <data name="ProblemPlayingAudio" xml:space="preserve">
+    <value>Problem playing audio file!!</value>
+  </data>
+  <data name="QuickLaunchEnabled" xml:space="preserve">
+    <value>Quick launch settings toggled {0}!</value>
+    <comment>toggle setting</comment>
+  </data>
+  <data name="RetrievingFileList" xml:space="preserve">
+    <value>Retrieving file list.</value>
+  </data>
   <data name="SortingBanksFiles" xml:space="preserve">
     <value>Sorting bank files...</value>
+  </data>
+  <data name="TempFilesCleaned" xml:space="preserve">
+    <value>Temp files cleaned.</value>
+  </data>
+  <data name="ZipCreated" xml:space="preserve">
+    <value>{0}.zip created.</value>
+    <comment>file name</comment>
   </data>
 </root>

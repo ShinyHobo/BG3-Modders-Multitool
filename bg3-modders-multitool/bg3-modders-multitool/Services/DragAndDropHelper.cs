@@ -15,6 +15,7 @@ namespace bg3_modders_multitool.Services
     using System.Threading.Tasks;
     using System.Windows;
     using System.Xml;
+    using bg3_modders_multitool.Properties;
 
     public static class DragAndDropHelper
     {
@@ -173,7 +174,7 @@ namespace bg3_modders_multitool.Services
                 File.Delete(zip);
             }
             ZipFile.CreateFromDirectory(TempFolder, zip);
-            GeneralHelper.WriteToConsole($"{name}.zip created.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.ZipCreated, name);
         }
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace bg3_modders_multitool.Services
             {
                 file.Delete();
             }
-            GeneralHelper.WriteToConsole($"Temp files cleaned.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.ZipCreated);
         }
 
         /// <summary>
@@ -213,7 +214,7 @@ namespace bg3_modders_multitool.Services
                                 {
                                     var metaList = new Dictionary<string, List<string>>();
                                     var dirName = new DirectoryInfo(fullPath).Name;
-                                    GeneralHelper.WriteToConsole($"Directory name: {dirName}\n");
+                                    GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName);
                                     if (Directory.Exists(fullPath + "\\Mods"))
                                     {
                                         // single mod directory
@@ -234,7 +235,7 @@ namespace bg3_modders_multitool.Services
                                 else
                                 {
                                     // File dropping unsupported
-                                    GeneralHelper.WriteToConsole($"File dropping is not yet supported.");
+                                    GeneralHelper.WriteToConsole(Properties.Resources.FileDroppingNotSupported);
                                 }
                             }
                         }
@@ -310,8 +311,8 @@ namespace bg3_modders_multitool.Services
 
             // Pack mod
             var destination =  $"{TempFolder}\\{dirName}.pak";
-            GeneralHelper.WriteToConsole($"Destination: {destination}\n");
-            GeneralHelper.WriteToConsole($"Attempting to pack mod.\n");
+            GeneralHelper.WriteToConsole(Resources.Destination, destination);
+            GeneralHelper.WriteToConsole(Resources.AttemptingToPack);
             var buildDir = BuildPack(path);
             PackMod(buildDir, destination);
             Directory.Delete(buildDir,true);

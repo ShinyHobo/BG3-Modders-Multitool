@@ -61,11 +61,47 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attempting to pack mod..
+        /// </summary>
+        public static string AttemptingToPack {
+            get {
+                return ResourceManager.GetString("AttemptingToPack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Caching {0}....
+        /// </summary>
+        public static string CachingFile {
+            get {
+                return ResourceManager.GetString("CachingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decompression completed in {0}..
         /// </summary>
         public static string DecompressionComplete {
             get {
                 return ResourceManager.GetString("DecompressionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Destination: {0}.
+        /// </summary>
+        public static string Destination {
+            get {
+                return ResourceManager.GetString("Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Directory name: {0}.
+        /// </summary>
+        public static string DirectoryName {
+            get {
+                return ResourceManager.GetString("DirectoryName", resourceCulture);
             }
         }
         
@@ -88,6 +124,33 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Problem converting input file to .ogg!.
+        /// </summary>
+        public static string FailedToConvertOgg {
+            get {
+                return ResourceManager.GetString("FailedToConvertOgg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to convert resource to {0} ({1}): {2}.
+        /// </summary>
+        public static string FailedToConvertResource {
+            get {
+                return ResourceManager.GetString("FailedToConvertResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to index file [{0}]:\n{1}.
+        /// </summary>
+        public static string FailedToIndexFile {
+            get {
+                return ResourceManager.GetString("FailedToIndexFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to pack mod: {0}.
         /// </summary>
         public static string FailedToPackMod {
@@ -97,11 +160,47 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not read from directory: {0}.
+        /// </summary>
+        public static string FailedToReadDirectory {
+            get {
+                return ResourceManager.GetString("FailedToReadDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} appears to be corrupt. Skipping file..
         /// </summary>
         public static string FileCorrupt {
             get {
                 return ResourceManager.GetString("FileCorrupt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File dropping is not yet supported..
+        /// </summary>
+        public static string FileDroppingNotSupported {
+            get {
+                return ResourceManager.GetString("FileDroppingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File list retrieved..
+        /// </summary>
+        public static string FileListRetrieved {
+            get {
+                return ResourceManager.GetString("FileListRetrieved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File does not exist on the given path ({0})..
+        /// </summary>
+        public static string FileNoExist {
+            get {
+                return ResourceManager.GetString("FileNoExist", resourceCulture);
             }
         }
         
@@ -142,6 +241,42 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Indexing process finished in {0}..
+        /// </summary>
+        public static string IndexFinished {
+            get {
+                return ResourceManager.GetString("IndexFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indexing in progress....
+        /// </summary>
+        public static string IndexingInProgress {
+            get {
+                return ResourceManager.GetString("IndexingInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No index available! Please unpack game assets and generate an index..
+        /// </summary>
+        public static string IndexNotFound {
+            get {
+                return ResourceManager.GetString("IndexNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search started..
+        /// </summary>
+        public static string IndexSearchStarted {
+            get {
+                return ResourceManager.GetString("IndexSearchStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to info.json generated..
         /// </summary>
         public static string InfoGenerated {
@@ -156,6 +291,15 @@ namespace bg3_modders_multitool.Properties {
         public static string LoadingBankFiles {
             get {
                 return ResourceManager.GetString("LoadingBankFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading {0} from cache....
+        /// </summary>
+        public static string LoadingCachedFile {
+            get {
+                return ResourceManager.GetString("LoadingCachedFile", resourceCulture);
             }
         }
         
@@ -187,11 +331,92 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No files found!.
+        /// </summary>
+        public static string NoFilesFound {
+            get {
+                return ResourceManager.GetString("NoFilesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to off.
+        /// </summary>
+        public static string Off {
+            get {
+                return ResourceManager.GetString("Off", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to on.
+        /// </summary>
+        public static string On {
+            get {
+                return ResourceManager.GetString("On", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OOME: Failed to index {0}.
+        /// </summary>
+        public static string OutOfMemFailedToIndex {
+            get {
+                return ResourceManager.GetString("OutOfMemFailedToIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem playing audio file!!.
+        /// </summary>
+        public static string ProblemPlayingAudio {
+            get {
+                return ResourceManager.GetString("ProblemPlayingAudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick launch settings toggled {0}!.
+        /// </summary>
+        public static string QuickLaunchEnabled {
+            get {
+                return ResourceManager.GetString("QuickLaunchEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving file list..
+        /// </summary>
+        public static string RetrievingFileList {
+            get {
+                return ResourceManager.GetString("RetrievingFileList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sorting bank files....
         /// </summary>
         public static string SortingBanksFiles {
             get {
                 return ResourceManager.GetString("SortingBanksFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temp files cleaned..
+        /// </summary>
+        public static string TempFilesCleaned {
+            get {
+                return ResourceManager.GetString("TempFilesCleaned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}.zip created..
+        /// </summary>
+        public static string ZipCreated {
+            get {
+                return ResourceManager.GetString("ZipCreated", resourceCulture);
             }
         }
     }

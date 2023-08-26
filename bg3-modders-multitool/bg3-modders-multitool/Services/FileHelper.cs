@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Services
     using LSLib.LS;
     using LSLib.LS.Enums;
     using Newtonsoft.Json;
+    using SharpDX.Direct3D11;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -67,7 +68,7 @@ namespace bg3_modders_multitool.Services
                     // These are invalid .lsbs/.lsbc files if this error pops up
                     if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
                     {
-                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file, ex.Message);
                     }
                 }
 
@@ -88,7 +89,7 @@ namespace bg3_modders_multitool.Services
                     } 
                     catch(Exception ex)
                     {
-                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file, ex.Message);
                     }
                 }
             }
@@ -103,7 +104,7 @@ namespace bg3_modders_multitool.Services
                     }
                     catch (Exception ex)
                     {
-                        GeneralHelper.WriteToConsole($"Failed to convert resource to {extension} ({file}): {ex.Message}");
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file, ex.Message);
                     }
                 }
             }
@@ -162,7 +163,7 @@ namespace bg3_modders_multitool.Services
             }
             catch
             {
-                GeneralHelper.WriteToConsole($"Problem converting input file to .ogg!\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertOgg);
             }
             return file;
         }
@@ -200,7 +201,7 @@ namespace bg3_modders_multitool.Services
             }
             catch
             {
-                GeneralHelper.WriteToConsole($"Problem playing audio file!!\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.ProblemPlayingAudio);
             }
         }
 
@@ -218,7 +219,7 @@ namespace bg3_modders_multitool.Services
             var fileList = RecursiveFileSearch(directory);
             if (fileList.Count == 0)
             {
-                GeneralHelper.WriteToConsole($"No files found!\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.NoFilesFound);
             }
             return fileList;
         }
@@ -243,7 +244,7 @@ namespace bg3_modders_multitool.Services
                 }
                 catch
                 {
-                    GeneralHelper.WriteToConsole($"Could not read from directory: {directory}\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToReadDirectory, directory);
                 }
             }
             return fileList;
@@ -316,7 +317,7 @@ namespace bg3_modders_multitool.Services
             }
             else
             {
-                GeneralHelper.WriteToConsole($"File does not exist on the given path ({path}).\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.FileNoExist, path);
             }
         }
 
@@ -330,7 +331,7 @@ namespace bg3_modders_multitool.Services
             var file = $"Cache/{filename}.json";
             if (!File.Exists(file))
             {
-                GeneralHelper.WriteToConsole($"Caching {filename}...\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.CachingFile);
                 System.IO.TextWriter writer = null;
                 try
                 {
@@ -360,7 +361,7 @@ namespace bg3_modders_multitool.Services
             T objectOut = default(T);
             if (File.Exists(file))
             {
-                GeneralHelper.WriteToConsole($"Loading {filename} from cache...\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.LoadingCachedFile, filename);
                 System.IO.TextReader reader = null;
                 try
                 {
