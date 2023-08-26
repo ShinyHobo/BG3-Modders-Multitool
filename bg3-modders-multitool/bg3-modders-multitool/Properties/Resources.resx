@@ -145,6 +145,9 @@
   <data name="CancelUnpackingButton" xml:space="preserve">
     <value>Cancel Unpacking</value>
   </data>
+  <data name="ClickOrDropModPacker" xml:space="preserve">
+    <value>Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically.</value>
+  </data>
   <data name="ConfigButtonTooltip" xml:space="preserve">
     <value>Essential configuration options</value>
   </data>
