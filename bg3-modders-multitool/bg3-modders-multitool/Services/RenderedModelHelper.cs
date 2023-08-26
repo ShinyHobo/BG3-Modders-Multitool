@@ -172,7 +172,8 @@ namespace bg3_modders_multitool.Services
 
             if (!File.Exists(dae) && File.Exists($"{filename}.GR2"))
             {
-                GeneralHelper.WriteToConsole($"Converting model to .dae for rendering...\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.ConvertingModelDae);
+                // TODO - replace divine
                 var divine = $" -g \"bg3\" --action \"convert-model\" --output-format \"dae\" --source \"\\\\?\\{filename}.GR2\" --destination \"\\\\?\\{dae}\" -l \"all\"";
                 var process = new Process();
                 var startInfo = new ProcessStartInfo
@@ -200,7 +201,7 @@ namespace bg3_modders_multitool.Services
                     var file = importer.Load(dae);
                     if (file == null && File.Exists(dae))
                     {
-                        GeneralHelper.WriteToConsole("Fixing vertices...\n");
+                        GeneralHelper.WriteToConsole(Properties.Resources.FixingVerticies);
                         try
                         {
                             var xml = XDocument.Load(dae);
@@ -212,13 +213,13 @@ namespace bg3_modders_multitool.Services
                                 vertex.Attribute("source").Value = $"#{vertexId}";
                             });
                             xml.Save(dae);
-                            GeneralHelper.WriteToConsole("Model conversion complete!\n");
+                            GeneralHelper.WriteToConsole(Properties.Resources.ModelConversionComplete);
                             file = importer.Load(dae);
                         }
                         catch (Exception ex)
                         {
                             // in use by another process
-                            GeneralHelper.WriteToConsole($"Error : {ex.Message}\n");
+                            GeneralHelper.WriteToConsole(ex.Message);
                         }
                     }
 
@@ -233,13 +234,13 @@ namespace bg3_modders_multitool.Services
                     importer.Dispose();
                     return file;
                 }
-                GeneralHelper.WriteToConsole($"Could not load model: {filename}\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadModel, filename);
                 importer.Dispose();
                 return null;
             }
             catch(Exception ex)
             {
-                GeneralHelper.WriteToConsole($"Error loading .dae: {ex.Message}. Inner exception: {ex.InnerException?.Message}\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadDae, ex.Message, ex.InnerException?.Message);
             }
             return null;
         }
@@ -271,7 +272,7 @@ namespace bg3_modders_multitool.Services
                 } 
                 catch (Exception ex)
                 {
-                    GeneralHelper.WriteToConsole($"Could not load {file}:\n{ex.Message}");
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, file, ex.Message);
                     return null;
                 }
                     

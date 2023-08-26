@@ -59,7 +59,7 @@ namespace bg3_modders_multitool.Services
                 var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                 try
                 {
-                    Resource resource = ResourceUtils.LoadResource(path);
+                    LSLib.LS.Resource resource = ResourceUtils.LoadResource(path);
                     ResourceUtils.SaveResource(resource, newPath, conversionParams);
                 }
                 catch (Exception ex)
@@ -390,7 +390,7 @@ namespace bg3_modders_multitool.Services
             var modFilepath = Path.Combine(modLocation,"Splash_Logo_Larian.bk2");
             if (setting)
             {
-                GeneralHelper.WriteToConsole("Disabling splash screen...\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.DisablingSplashScreen);
                 if(!Directory.Exists(modLocation))
                     Directory.CreateDirectory(modLocation);
                 if(!File.Exists(modFilepath))
@@ -401,7 +401,7 @@ namespace bg3_modders_multitool.Services
             }
             else
             {
-                GeneralHelper.WriteToConsole("Enabling splash screen...\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.EnablingSplashScreen);
                 if(File.Exists(modFilepath))
                 {
                     try
@@ -410,7 +410,7 @@ namespace bg3_modders_multitool.Services
                     }
                     catch
                     {
-                        GeneralHelper.WriteToConsole("Failed to enable splash screen...\n");
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToEnableSplashScreen);
                     }
                 }
             }

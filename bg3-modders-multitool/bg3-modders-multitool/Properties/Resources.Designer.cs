@@ -79,6 +79,33 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GameObjects loading cancelled..
+        /// </summary>
+        public static string CancelledGOE {
+            get {
+                return ResourceManager.GetString("CancelledGOE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converting model to .dae for rendering....
+        /// </summary>
+        public static string ConvertingModelDae {
+            get {
+                return ResourceManager.GetString("ConvertingModelDae", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} appears to be corrupt. Skipping file..
+        /// </summary>
+        public static string CorruptXmlFile {
+            get {
+                return ResourceManager.GetString("CorruptXmlFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decompression completed in {0}..
         /// </summary>
         public static string DecompressionComplete {
@@ -106,6 +133,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disabling splash screen....
+        /// </summary>
+        public static string DisablingSplashScreen {
+            get {
+                return ResourceManager.GetString("DisablingSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabling splash screen....
+        /// </summary>
+        public static string EnablingSplashScreen {
+            get {
+                return ResourceManager.GetString("EnablingSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error parsing \&quot;{0}\&quot; for \&quot;{1}\&quot;.
         /// </summary>
         public static string ErrorParsingProperty {
@@ -120,6 +165,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ErrorParsingStructure {
             get {
                 return ResourceManager.GetString("ErrorParsingStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObjects failed to load. {0} seconds passed..
+        /// </summary>
+        public static string FailedGOE {
+            get {
+                return ResourceManager.GetString("FailedGOE", resourceCulture);
             }
         }
         
@@ -142,11 +196,83 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to enable splash screen....
+        /// </summary>
+        public static string FailedToEnableSplashScreen {
+            get {
+                return ResourceManager.GetString("FailedToEnableSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load english.xml. Please unpack English.pak to generate translations. Skipping....
+        /// </summary>
+        public static string FailedToFindEnglishPak {
+            get {
+                return ResourceManager.GetString("FailedToFindEnglishPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping....
+        /// </summary>
+        public static string FailedToFindIconsPak {
+            get {
+                return ResourceManager.GetString("FailedToFindIconsPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to find Models directory. Please unpack Models.pak to view models..
+        /// </summary>
+        public static string FailedToFindModelsPak {
+            get {
+                return ResourceManager.GetString("FailedToFindModelsPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to index file [{0}]:\n{1}.
         /// </summary>
         public static string FailedToIndexFile {
             get {
                 return ResourceManager.GetString("FailedToIndexFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error loading .dae: {0}. Inner exception: {1}.
+        /// </summary>
+        public static string FailedToLoadDae {
+            get {
+                return ResourceManager.GetString("FailedToLoadDae", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load {0}:\n{1}.
+        /// </summary>
+        public static string FailedToLoadFile {
+            get {
+                return ResourceManager.GetString("FailedToLoadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load model: {0}.
+        /// </summary>
+        public static string FailedToLoadModel {
+            get {
+                return ResourceManager.GetString("FailedToLoadModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load Races.lsx for {0}.pak..
+        /// </summary>
+        public static string FailedToLoadRaces {
+            get {
+                return ResourceManager.GetString("FailedToLoadRaces", resourceCulture);
             }
         }
         
@@ -165,15 +291,6 @@ namespace bg3_modders_multitool.Properties {
         public static string FailedToReadDirectory {
             get {
                 return ResourceManager.GetString("FailedToReadDirectory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} appears to be corrupt. Skipping file..
-        /// </summary>
-        public static string FileCorrupt {
-            get {
-                return ResourceManager.GetString("FileCorrupt", resourceCulture);
             }
         }
         
@@ -205,6 +322,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fixing vertices....
+        /// </summary>
+        public static string FixingVerticies {
+            get {
+                return ResourceManager.GetString("FixingVerticies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MaterialBanks found....
         /// </summary>
         public static string FoundMaterialBanks {
@@ -232,11 +358,29 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GameObjects loaded....
+        /// </summary>
+        public static string GameObjectsLoaded {
+            get {
+                return ResourceManager.GetString("GameObjectsLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObject attribute type [{0}] not covered..
         /// </summary>
         public static string GameObjectUncovered {
             get {
                 return ResourceManager.GetString("GameObjectUncovered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available index is corrupt. Please rerun the indexer to create a new one..
+        /// </summary>
+        public static string IndexCorrupt {
+            get {
+                return ResourceManager.GetString("IndexCorrupt", resourceCulture);
             }
         }
         
@@ -268,6 +412,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No documents available. Please generate the index again..
+        /// </summary>
+        public static string IndexSearchNoDocuments {
+            get {
+                return ResourceManager.GetString("IndexSearchNoDocuments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search returned {0} results in {1} ms.
+        /// </summary>
+        public static string IndexSearchReturned {
+            get {
+                return ResourceManager.GetString("IndexSearchReturned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search started..
         /// </summary>
         public static string IndexSearchStarted {
@@ -282,6 +444,15 @@ namespace bg3_modders_multitool.Properties {
         public static string InfoGenerated {
             get {
                 return ResourceManager.GetString("InfoGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObjects loaded in {0} seconds..
+        /// </summary>
+        public static string LoadedGOE {
+            get {
+                return ResourceManager.GetString("LoadedGOE", resourceCulture);
             }
         }
         
@@ -331,6 +502,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Model conversion complete!.
+        /// </summary>
+        public static string ModelConversionComplete {
+            get {
+                return ResourceManager.GetString("ModelConversionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No files found!.
         /// </summary>
         public static string NoFilesFound {
@@ -354,6 +534,15 @@ namespace bg3_modders_multitool.Properties {
         public static string On {
             get {
                 return ResourceManager.GetString("On", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opening GameObject Explorer. This could take a while..
+        /// </summary>
+        public static string OpeningGOE {
+            get {
+                return ResourceManager.GetString("OpeningGOE", resourceCulture);
             }
         }
         
@@ -385,11 +574,38 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading GameObjects from root templates; this will take a while....
+        /// </summary>
+        public static string ReadingGameObjects {
+            get {
+                return ResourceManager.GetString("ReadingGameObjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrived file list. Starting decompression; this could take awhile..
+        /// </summary>
+        public static string RetrievedFileListDecompression {
+            get {
+                return ResourceManager.GetString("RetrievedFileListDecompression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retrieving file list..
         /// </summary>
         public static string RetrievingFileList {
             get {
                 return ResourceManager.GetString("RetrievingFileList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving file list for decompression..
+        /// </summary>
+        public static string RetrievingFileListDecompression {
+            get {
+                return ResourceManager.GetString("RetrievingFileListDecompression", resourceCulture);
             }
         }
         
@@ -403,11 +619,65 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorting GameObjects....
+        /// </summary>
+        public static string SortingGameObjects {
+            get {
+                return ResourceManager.GetString("SortingGameObjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temp files cleaned..
         /// </summary>
         public static string TempFilesCleaned {
             get {
                 return ResourceManager.GetString("TempFilesCleaned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translations loaded....
+        /// </summary>
+        public static string TranslationsLoaded {
+            get {
+                return ResourceManager.GetString("TranslationsLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacking processes cancelled successfully!.
+        /// </summary>
+        public static string UnpackingCancelled {
+            get {
+                return ResourceManager.GetString("UnpackingCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacking complete!.
+        /// </summary>
+        public static string UnpackingComplete {
+            get {
+                return ResourceManager.GetString("UnpackingComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All unpacking processes finished..
+        /// </summary>
+        public static string UnpackingProcessComplete {
+            get {
+                return ResourceManager.GetString("UnpackingProcessComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacking processes starting. This could take a while; please wait for all console processes to close on their own..
+        /// </summary>
+        public static string UnpackingProcessStarted {
+            get {
+                return ResourceManager.GetString("UnpackingProcessStarted", resourceCulture);
             }
         }
         

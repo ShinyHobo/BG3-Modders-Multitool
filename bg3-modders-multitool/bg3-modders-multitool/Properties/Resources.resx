@@ -124,6 +124,16 @@
     <value>Caching {0}...</value>
     <comment>file name</comment>
   </data>
+  <data name="CancelledGOE" xml:space="preserve">
+    <value>GameObjects loading cancelled.</value>
+  </data>
+  <data name="ConvertingModelDae" xml:space="preserve">
+    <value>Converting model to .dae for rendering...</value>
+  </data>
+  <data name="CorruptXmlFile" xml:space="preserve">
+    <value>{0} appears to be corrupt. Skipping file.</value>
+    <comment>file path</comment>
+  </data>
   <data name="DecompressionComplete" xml:space="preserve">
     <value>Decompression completed in {0}.</value>
     <comment>elapsed time</comment>
@@ -136,6 +146,12 @@
     <value>Directory name: {0}</value>
     <comment>directory name</comment>
   </data>
+  <data name="DisablingSplashScreen" xml:space="preserve">
+    <value>Disabling splash screen...</value>
+  </data>
+  <data name="EnablingSplashScreen" xml:space="preserve">
+    <value>Enabling splash screen...</value>
+  </data>
   <data name="ErrorParsingProperty" xml:space="preserve">
     <value>Error parsing \"{0}\" for \"{1}\"</value>
     <comment>value, PropertyType name</comment>
@@ -144,6 +160,10 @@
     <value>Error parsing line [{0}] for structure type \"{1}\": {2}</value>
     <comment>line number, type, error message</comment>
   </data>
+  <data name="FailedGOE" xml:space="preserve">
+    <value>GameObjects failed to load. {0} seconds passed.</value>
+    <comment>seconds</comment>
+  </data>
   <data name="FailedToConvertOgg" xml:space="preserve">
     <value>Problem converting input file to .ogg!</value>
   </data>
@@ -151,9 +171,37 @@
     <value>Failed to convert resource to {0} ({1}): {2}</value>
     <comment>extension, file, error message</comment>
   </data>
+  <data name="FailedToEnableSplashScreen" xml:space="preserve">
+    <value>Failed to enable splash screen...</value>
+  </data>
+  <data name="FailedToFindEnglishPak" xml:space="preserve">
+    <value>Failed to load english.xml. Please unpack English.pak to generate translations. Skipping...</value>
+  </data>
+  <data name="FailedToFindIconsPak" xml:space="preserve">
+    <value>No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping...</value>
+  </data>
+  <data name="FailedToFindModelsPak" xml:space="preserve">
+    <value>Failed to find Models directory. Please unpack Models.pak to view models.</value>
+  </data>
   <data name="FailedToIndexFile" xml:space="preserve">
     <value>Failed to index file [{0}]:\n{1}</value>
     <comment>file path, error message</comment>
+  </data>
+  <data name="FailedToLoadDae" xml:space="preserve">
+    <value>Error loading .dae: {0}. Inner exception: {1}</value>
+    <comment>error message, inner error message</comment>
+  </data>
+  <data name="FailedToLoadFile" xml:space="preserve">
+    <value>Could not load {0}:\n{1}</value>
+    <comment>file path, error message</comment>
+  </data>
+  <data name="FailedToLoadModel" xml:space="preserve">
+    <value>Could not load model: {0}</value>
+    <comment>file name</comment>
+  </data>
+  <data name="FailedToLoadRaces" xml:space="preserve">
+    <value>Failed to load Races.lsx for {0}.pak.</value>
+    <comment>pak name</comment>
   </data>
   <data name="FailedToPackMod" xml:space="preserve">
     <value>Failed to pack mod: {0}</value>
@@ -162,10 +210,6 @@
   <data name="FailedToReadDirectory" xml:space="preserve">
     <value>Could not read from directory: {0}</value>
     <comment>directory</comment>
-  </data>
-  <data name="FileCorrupt" xml:space="preserve">
-    <value>{0} appears to be corrupt. Skipping file.</value>
-    <comment>filepath</comment>
   </data>
   <data name="FileDroppingNotSupported" xml:space="preserve">
     <value>File dropping is not yet supported.</value>
@@ -177,6 +221,9 @@
     <value>File does not exist on the given path ({0}).</value>
     <comment>file path</comment>
   </data>
+  <data name="FixingVerticies" xml:space="preserve">
+    <value>Fixing vertices...</value>
+  </data>
   <data name="FoundMaterialBanks" xml:space="preserve">
     <value>MaterialBanks found...</value>
   </data>
@@ -186,9 +233,15 @@
   <data name="FoundVisualBanks" xml:space="preserve">
     <value>VisualBanks found...</value>
   </data>
+  <data name="GameObjectsLoaded" xml:space="preserve">
+    <value>GameObjects loaded...</value>
+  </data>
   <data name="GameObjectUncovered" xml:space="preserve">
     <value>GameObject attribute type [{0}] not covered.</value>
     <comment>type</comment>
+  </data>
+  <data name="IndexCorrupt" xml:space="preserve">
+    <value>Available index is corrupt. Please rerun the indexer to create a new one.</value>
   </data>
   <data name="IndexFinished" xml:space="preserve">
     <value>Indexing process finished in {0}.</value>
@@ -197,8 +250,25 @@
   <data name="IndexingInProgress" xml:space="preserve">
     <value>Indexing in progress...</value>
   </data>
+  <data name="IndexNotFound" xml:space="preserve">
+    <value>No index available! Please unpack game assets and generate an index.</value>
+  </data>
+  <data name="IndexSearchNoDocuments" xml:space="preserve">
+    <value>No documents available. Please generate the index again.</value>
+  </data>
+  <data name="IndexSearchReturned" xml:space="preserve">
+    <value>Search returned {0} results in {1} ms</value>
+    <comment>results count, time in milliseconds</comment>
+  </data>
+  <data name="IndexSearchStarted" xml:space="preserve">
+    <value>Search started.</value>
+  </data>
   <data name="InfoGenerated" xml:space="preserve">
     <value>info.json generated.</value>
+  </data>
+  <data name="LoadedGOE" xml:space="preserve">
+    <value>GameObjects loaded in {0} seconds.</value>
+    <comment>seconds</comment>
   </data>
   <data name="LoadingBankFiles" xml:space="preserve">
     <value>Loading bank files...</value>
@@ -218,6 +288,9 @@
   <data name="MetaLsxNotFound2" xml:space="preserve">
     <value>meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.</value>
   </data>
+  <data name="ModelConversionComplete" xml:space="preserve">
+    <value>Model conversion complete!</value>
+  </data>
   <data name="NoFilesFound" xml:space="preserve">
     <value>No files found!</value>
   </data>
@@ -226,6 +299,9 @@
   </data>
   <data name="On" xml:space="preserve">
     <value>on</value>
+  </data>
+  <data name="OpeningGOE" xml:space="preserve">
+    <value>Opening GameObject Explorer. This could take a while.</value>
   </data>
   <data name="OutOfMemFailedToIndex" xml:space="preserve">
     <value>OOME: Failed to index {0}</value>
@@ -238,14 +314,41 @@
     <value>Quick launch settings toggled {0}!</value>
     <comment>toggle setting</comment>
   </data>
+  <data name="ReadingGameObjects" xml:space="preserve">
+    <value>Reading GameObjects from root templates; this will take a while...</value>
+  </data>
+  <data name="RetrievedFileListDecompression" xml:space="preserve">
+    <value>Retrived file list. Starting decompression; this could take awhile.</value>
+  </data>
   <data name="RetrievingFileList" xml:space="preserve">
     <value>Retrieving file list.</value>
+  </data>
+  <data name="RetrievingFileListDecompression" xml:space="preserve">
+    <value>Retrieving file list for decompression.</value>
   </data>
   <data name="SortingBanksFiles" xml:space="preserve">
     <value>Sorting bank files...</value>
   </data>
+  <data name="SortingGameObjects" xml:space="preserve">
+    <value>Sorting GameObjects...</value>
+  </data>
   <data name="TempFilesCleaned" xml:space="preserve">
     <value>Temp files cleaned.</value>
+  </data>
+  <data name="TranslationsLoaded" xml:space="preserve">
+    <value>Translations loaded...</value>
+  </data>
+  <data name="UnpackingCancelled" xml:space="preserve">
+    <value>Unpacking processes cancelled successfully!</value>
+  </data>
+  <data name="UnpackingComplete" xml:space="preserve">
+    <value>Unpacking complete!</value>
+  </data>
+  <data name="UnpackingProcessComplete" xml:space="preserve">
+    <value>All unpacking processes finished.</value>
+  </data>
+  <data name="UnpackingProcessStarted" xml:space="preserve">
+    <value>Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.</value>
   </data>
   <data name="ZipCreated" xml:space="preserve">
     <value>{0}.zip created.</value>

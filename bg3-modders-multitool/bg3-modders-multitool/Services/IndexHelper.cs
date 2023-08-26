@@ -207,7 +207,7 @@ namespace bg3_modders_multitool.Services
                             TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
                             if(writeToConsole)
-                                GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
+                                GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchReturned, topDocs.ScoreDocs.Length, TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds);
 
                             // display results
                             foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
@@ -222,14 +222,14 @@ namespace bg3_modders_multitool.Services
                         }
                         else
                         {
-                            GeneralHelper.WriteToConsole("No documents available. Please generate the index again.\n");
+                            GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchNoDocuments);
                         }
                     }
                 }
                 catch
                 {
                     // Checking if the index is corrupt is slower than just letting it fail
-                    GeneralHelper.WriteToConsole($"Available index is corrupt. Please rerun the indexer to create a new one.\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.IndexCorrupt);
                 }
 
                 return matches.OrderBy(m => m).ToList();
