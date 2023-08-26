@@ -26,10 +26,19 @@
                 </Button.ToolTip>
             </Button>
         </Grid>
-        <Grid Margin="10,173,275,10">
+        <Grid Margin="10,173,0,10">
             <Label x:Name="quickLaunchToggle" Content="{x:Static p:Resources.QuickLaunchLabel}" HorizontalAlignment="Left" Margin="0,-2,0,0" VerticalAlignment="Top"/>
-            <CheckBox Margin="81,3,28,-15" ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"
+            <CheckBox Margin="81,4,300,15" ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"
                           IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" RenderTransformOrigin="0.841,0.773" />
+            <Label Content="{x:Static p:Resources.LanguageSelectionLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="195,-3,0,-15"/>
+            <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Margin="200,20,13,-5" Cursor="Hand" 
+                      SelectionChanged="Language_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
     </Grid>
 </Window>

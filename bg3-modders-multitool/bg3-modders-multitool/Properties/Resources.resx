@@ -365,6 +365,18 @@
   <data name="InfoGenerated" xml:space="preserve">
     <value>info.json generated.</value>
   </data>
+  <data name="LangChinese" xml:space="preserve">
+    <value>Chinese</value>
+  </data>
+  <data name="LangEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="LanguageSelectionLabel" xml:space="preserve">
+    <value>Language Selection</value>
+  </data>
+  <data name="LanguageSelectionTooltip" xml:space="preserve">
+    <value>The UI language to use</value>
+  </data>
   <data name="LaunchGameButton" xml:space="preserve">
     <value>Launch Game</value>
   </data>

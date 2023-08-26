@@ -12,8 +12,6 @@ namespace bg3_modders_multitool.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string SelectedLanguage { get; private set; }
-
         public MainWindow()
         {
             // Explicitly set the translation to use
@@ -26,17 +24,6 @@ namespace bg3_modders_multitool.Views
                 DragAndDropBox = (ViewModels.DragAndDropBox)dragAndDropBox.DataContext,
                 SearchResults = new ViewModels.SearchResults()
             };
-        }
-
-        public void ReloadLanguage(string language)
-        {
-            var selectedLanguage = Properties.Settings.Default.selectedLanguage;
-            selectedLanguage = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
-            if(selectedLanguage != language)
-            {
-                SelectedLanguage = language;
-                Close();
-            }
         }
 
         #region File Unpacker

@@ -21,9 +21,10 @@ public class LocalizationController : Application
     private static void Wnd_Closed(object sender, EventArgs e)
     {
         MainWindow wnd = sender as MainWindow;
-        if (!string.IsNullOrEmpty(wnd.SelectedLanguage))
+        var dataContext = (bg3_modders_multitool.ViewModels.MainWindow)wnd.DataContext;
+        if (!string.IsNullOrEmpty(dataContext.SelectedLanguage))
         {
-            string lang = wnd.SelectedLanguage;
+            string lang = dataContext.SelectedLanguage;
             lang = lang == "en-US" ? null : lang;
 
             bg3_modders_multitool.Properties.Settings.Default.selectedLanguage = lang;

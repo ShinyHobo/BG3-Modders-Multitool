@@ -745,6 +745,42 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chinese.
+        /// </summary>
+        public static string LangChinese {
+            get {
+                return ResourceManager.GetString("LangChinese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string LangEnglish {
+            get {
+                return ResourceManager.GetString("LangEnglish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language Selection.
+        /// </summary>
+        public static string LanguageSelectionLabel {
+            get {
+                return ResourceManager.GetString("LanguageSelectionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The UI language to use.
+        /// </summary>
+        public static string LanguageSelectionTooltip {
+            get {
+                return ResourceManager.GetString("LanguageSelectionTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Launch Game.
         /// </summary>
         public static string LaunchGameButton {

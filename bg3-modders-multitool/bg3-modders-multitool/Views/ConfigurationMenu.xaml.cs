@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
+    using System.Linq;
     using System.Windows;
 
     /// <summary>
@@ -15,6 +16,11 @@ namespace bg3_modders_multitool.Views
             InitializeComponent();
             DataContext = mainWindow;
             ((ViewModels.MainWindow)DataContext).ConfigOpen = true;
+
+            var selectedLanguage = Properties.Settings.Default.selectedLanguage;
+            selectedLanguage = string.IsNullOrEmpty(selectedLanguage) ? ViewModels.MainWindow.AvailableLanguages.First().Code : selectedLanguage;
+            languageSelection.ItemsSource = ViewModels.MainWindow.AvailableLanguages;
+            languageSelection.SelectedItem = ViewModels.MainWindow.AvailableLanguages.FirstOrDefault(l => l.Code == selectedLanguage);
         }
 
         /// <summary>
@@ -76,6 +82,18 @@ namespace bg3_modders_multitool.Views
         {
             var vm = DataContext as ViewModels.MainWindow;
             vm.ConfigOpen = false;
+        }
+
+        /// <summary>
+        /// Reloads the language the application uses
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Language_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var selectedLanguage = (ViewModels.MainWindow.Language)languageSelection.SelectedItem;
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.ReloadLanguage(selectedLanguage.Code);
         }
     }
 }
