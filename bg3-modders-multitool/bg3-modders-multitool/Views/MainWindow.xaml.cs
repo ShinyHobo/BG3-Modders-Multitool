@@ -4,7 +4,7 @@
 namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
-    using System.IO;
+    using System.Globalization;
     using System.Windows;
 
     /// <summary>
@@ -12,14 +12,31 @@ namespace bg3_modders_multitool.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string SelectedLanguage { get; private set; }
+
         public MainWindow()
         {
+            // Explicitly set the translation to use
+            var selectedLanguage = Properties.Settings.Default.selectedLanguage;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = string.IsNullOrEmpty(selectedLanguage) ? CultureInfo.InvariantCulture : new CultureInfo(selectedLanguage);
+
             InitializeComponent();
             DataContext = new ViewModels.MainWindow
             {
                 DragAndDropBox = (ViewModels.DragAndDropBox)dragAndDropBox.DataContext,
                 SearchResults = new ViewModels.SearchResults()
             };
+        }
+
+        public void ReloadLanguage(string language)
+        {
+            var selectedLanguage = Properties.Settings.Default.selectedLanguage;
+            selectedLanguage = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
+            if(selectedLanguage != language)
+            {
+                SelectedLanguage = language;
+                Close();
+            }
         }
 
         #region File Unpacker
