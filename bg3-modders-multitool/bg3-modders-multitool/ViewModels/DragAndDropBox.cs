@@ -72,7 +72,7 @@ namespace bg3_modders_multitool.ViewModels
                 {
                     Darken();
                 }
-                PackBoxInstructions = value || _packAllowedDrop ? "Drop mod workspace folder here" : "Select divine.exe location";
+                PackBoxInstructions = value || _packAllowedDrop ? Properties.Resources.DropModMessage : Properties.Resources.SelectDivineMessage;
                 OnNotifyPropertyChanged();
             }
         }

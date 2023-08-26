@@ -200,6 +200,9 @@
   <data name="DisplayNameLabel" xml:space="preserve">
     <value>DisplayName</value>
   </data>
+  <data name="DropModMessage" xml:space="preserve">
+    <value>Drop mod workspace folder here</value>
+  </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>
   </data>
@@ -475,6 +478,9 @@
   </data>
   <data name="SelectAllButton" xml:space="preserve">
     <value>Select All</value>
+  </data>
+  <data name="SelectDivineMessage" xml:space="preserve">
+    <value>Select divine.exe location</value>
   </data>
   <data name="SelectLocation" xml:space="preserve">
     <value>Select</value>

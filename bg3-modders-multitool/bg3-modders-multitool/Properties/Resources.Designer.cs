@@ -295,6 +295,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drop mod workspace folder here.
+        /// </summary>
+        public static string DropModMessage {
+            get {
+                return ResourceManager.GetString("DropModMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enabling splash screen....
         /// </summary>
         public static string EnablingSplashScreen {
@@ -1056,6 +1065,15 @@ namespace bg3_modders_multitool.Properties {
         public static string SelectAllButton {
             get {
                 return ResourceManager.GetString("SelectAllButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select divine.exe location.
+        /// </summary>
+        public static string SelectDivineMessage {
+            get {
+                return ResourceManager.GetString("SelectDivineMessage", resourceCulture);
             }
         }
         
