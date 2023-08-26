@@ -15,6 +15,7 @@ namespace bg3_modders_multitool.Services
     using System.Threading.Tasks;
     using System.Windows;
     using System.Xml;
+    using bg3_modders_multitool.Properties;
 
     public static class DragAndDropHelper
     {
@@ -38,7 +39,7 @@ namespace bg3_modders_multitool.Services
                     if (Path.GetFileName(file).Equals("meta.lsx"))
                     {
                         metaList.Add(file);
-                        GeneralHelper.WriteToConsole($"meta.lsx file found in {mod}.\n");
+                        GeneralHelper.WriteToConsole(Properties.Resources.MetaLsxNotFound1, mod);
                     }
                 }
             }
@@ -46,7 +47,7 @@ namespace bg3_modders_multitool.Services
             if (metaList.Count == 0)
             {
                 // meta.lsx not found, discontinue
-                throw new Exception("meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.\n");
+                throw new Exception(Properties.Resources.MetaLsxNotFound2);
             }
             return metaList;
         }
@@ -69,7 +70,7 @@ namespace bg3_modders_multitool.Services
             }
             catch (Exception ex)
             {
-                GeneralHelper.WriteToConsole($"Failed to pack mod: {ex.Message}");
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToPackMod, ex.Message);
             }
         }
 
@@ -92,7 +93,7 @@ namespace bg3_modders_multitool.Services
                 {
                     var metadata = ReadMeta(meta, created, modGroup);
                     mods.Add(metadata);
-                    GeneralHelper.WriteToConsole($"Metadata for {metadata.Name} created.\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.MetadataCreated);
                 }
                 info.Mods.AddRange(mods);
             }
@@ -116,7 +117,7 @@ namespace bg3_modders_multitool.Services
 
             var json = JsonConvert.SerializeObject(info);
             File.WriteAllText(TempFolder + @"\info.json", json);
-            GeneralHelper.WriteToConsole($"info.json generated.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.InfoGenerated);
         }
 
         public static MetaLsx ReadMeta(string meta, DateTime? created = null, KeyValuePair<string, List<string>>? modGroup = null)
@@ -173,7 +174,7 @@ namespace bg3_modders_multitool.Services
                 File.Delete(zip);
             }
             ZipFile.CreateFromDirectory(TempFolder, zip);
-            GeneralHelper.WriteToConsole($"{name}.zip created.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.ZipCreated, name);
         }
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace bg3_modders_multitool.Services
             {
                 file.Delete();
             }
-            GeneralHelper.WriteToConsole($"Temp files cleaned.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.ZipCreated);
         }
 
         /// <summary>
@@ -213,7 +214,7 @@ namespace bg3_modders_multitool.Services
                                 {
                                     var metaList = new Dictionary<string, List<string>>();
                                     var dirName = new DirectoryInfo(fullPath).Name;
-                                    GeneralHelper.WriteToConsole($"Directory name: {dirName}\n");
+                                    GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName);
                                     if (Directory.Exists(fullPath + "\\Mods"))
                                     {
                                         // single mod directory
@@ -234,7 +235,7 @@ namespace bg3_modders_multitool.Services
                                 else
                                 {
                                     // File dropping unsupported
-                                    GeneralHelper.WriteToConsole($"File dropping is not yet supported.");
+                                    GeneralHelper.WriteToConsole(Properties.Resources.FileDroppingNotSupported);
                                 }
                             }
                         }
@@ -310,8 +311,8 @@ namespace bg3_modders_multitool.Services
 
             // Pack mod
             var destination =  $"{TempFolder}\\{dirName}.pak";
-            GeneralHelper.WriteToConsole($"Destination: {destination}\n");
-            GeneralHelper.WriteToConsole($"Attempting to pack mod.\n");
+            GeneralHelper.WriteToConsole(Resources.Destination, destination);
+            GeneralHelper.WriteToConsole(Resources.AttemptingToPack);
             var buildDir = BuildPack(path);
             PackMod(buildDir, destination);
             Directory.Delete(buildDir,true);

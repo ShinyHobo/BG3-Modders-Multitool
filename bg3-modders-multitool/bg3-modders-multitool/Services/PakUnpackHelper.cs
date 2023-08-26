@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            GeneralHelper.WriteToConsole("Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
             Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
@@ -45,10 +46,10 @@ namespace bg3_modders_multitool.Services
                 }));
             }).ContinueWith(delegate
             {
-                GeneralHelper.WriteToConsole("All unpacking processes finished.\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
                 if (!Cancelled)
                 {
-                    GeneralHelper.WriteToConsole("Unpacking complete!\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
             });
         }
@@ -108,7 +109,7 @@ namespace bg3_modders_multitool.Services
                         catch { }// only exception should be "Process with ID #### not found", safe to ignore
                     }
                 }
-                GeneralHelper.WriteToConsole("Unpacking processes cancelled successfully!\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.UnpackingCancelled);
             }
         }
 
@@ -120,9 +121,9 @@ namespace bg3_modders_multitool.Services
         {
             return Task.Run(() =>
             {
-                GeneralHelper.WriteToConsole($"Retrieving file list for decompression.\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
                 var fileList = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
-                GeneralHelper.WriteToConsole($"Retrived file list. Starting decompression; this could take awhile.\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
                 var convertFiles = new List<string>();
                 Stopwatch stopWatch = new Stopwatch();
@@ -163,10 +164,10 @@ namespace bg3_modders_multitool.Services
                 });
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
-                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
                 fileList.Clear();
-                GeneralHelper.WriteToConsole($"Decompression completed in {elapsedTime}.\n");
+                GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
                 return convertFiles;
             });
         }

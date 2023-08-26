@@ -4,7 +4,7 @@
 namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
-    using System.IO;
+    using System.Globalization;
     using System.Windows;
 
     /// <summary>
@@ -14,6 +14,10 @@ namespace bg3_modders_multitool.Views
     {
         public MainWindow()
         {
+            // Explicitly set the translation to use
+            var selectedLanguage = Properties.Settings.Default.selectedLanguage;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = string.IsNullOrEmpty(selectedLanguage) ? CultureInfo.InvariantCulture : new CultureInfo(selectedLanguage);
+
             InitializeComponent();
             DataContext = new ViewModels.MainWindow
             {

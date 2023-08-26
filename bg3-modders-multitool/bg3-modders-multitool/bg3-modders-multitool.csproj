@@ -90,6 +90,9 @@
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>LocalizationController</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AlphaFS, Version=2.2.0.0, Culture=neutral, PublicKeyToken=4d31a58f7d7ad5c9, processorArchitecture=MSIL">
       <HintPath>..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll</HintPath>
@@ -497,6 +500,11 @@
     <Compile Include="Models\StatStructures\StatusData.cs" />
     <Compile Include="Models\StatStructures\Weapon.cs" />
     <Compile Include="Models\Translation.cs" />
+    <Compile Include="Properties\Resources.zh-CN.Designer.cs">
+      <DependentUpon>Resources.zh-CN.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Services\DragAndDropHelper.cs" />
     <Compile Include="Services\FileHelper.cs" />
     <Compile Include="Services\GeneralHelper.cs" />
@@ -527,6 +535,7 @@
     <Compile Include="Views\GameObjectWindow.xaml.cs">
       <DependentUpon>GameObjectWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XAMLHelpers\LocalizationController.cs" />
     <Compile Include="XAMLHelpers\SelectableTextBlock.cs" />
     <Compile Include="XAMLHelpers\TextBoxFormatter.cs" />
     <Compile Include="XAMLHelpers\TextEditorWrapper.cs" />
@@ -580,8 +589,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Resources.zh-CN.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.zh-CN.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include=".globalconfig" />

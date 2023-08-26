@@ -7,13 +7,14 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:helpers="clr-namespace:bg3_modders_multitool.XAMLHelpers"
         xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
+        xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
-        Title="GameObject Explorer" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
+        Title="{x:Static p:Resources.GOETitle}" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
     <Grid>
         <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="450" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded" Cursor="Hand" IsEnabled="{Binding Loaded}" >
             <ComboBox.ItemsSource>
                 <CompositeCollection>
-                    <ComboBoxItem x:Name="defaultType" Content="Please Select GameObject Type" Focusable="False" IsHitTestVisible="False" IsEnabled="False"></ComboBoxItem>
+                    <ComboBoxItem x:Name="defaultType" Content="{x:Static p:Resources.GameObjectSelectionLabel}" Focusable="False" IsHitTestVisible="False" IsEnabled="False"></ComboBoxItem>
                     <CollectionContainer x:Name="typeOptions"/>
                 </CompositeCollection>
             </ComboBox.ItemsSource>
@@ -68,42 +69,42 @@
             <ScrollViewer Margin="0,6,0,1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" VerticalContentAlignment="Stretch" Width="533" HorizontalAlignment="Left" Grid.Row="2">
                 <ListBox Margin="0,-1,0,-1" AlternationCount="2" MaxWidth="524"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
                     <WrapPanel>
-                        <TextBlock Text="Pak: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.PakLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Pak, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <TextBlock Text="Name: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.NameLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Name, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <TextBlock Text="MapKey: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.MapKeyLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.MapKey, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <TextBlock Text="ParentTemplateId: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.ParentTemplateIdLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.ParentTemplateId, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <TextBlock Text="DisplayNameHandle: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.DisplayNameHandleLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayNameHandle, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <TextBlock Text="DisplayName: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.DisplayNameLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayName, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <TextBlock Text="DescriptionHandle: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.DescriptionHandleLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DescriptionHandle, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <TextBlock Text="Description: " FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.DescriptionLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Description, Mode=OneWay}" Background="Transparent" 
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
@@ -111,7 +112,7 @@
             </ScrollViewer>
         </Grid>
         <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="25" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="450" IsEnabled="False" KeyDown="Search_KeyDown"/>
-        <Button x:Name="search" Content="Search" HorizontalAlignment="Left" Margin="465,38,0,0" VerticalAlignment="Top" Width="80" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
+        <Button x:Name="search" Content="{x:Static p:Resources.Search}" HorizontalAlignment="Left" Margin="465,38,0,0" VerticalAlignment="Top" Width="80" Height="25" Click="Search_Click" Cursor="Hand" IsEnabled="False"/>
         <TextBlock x:Name="listCountBlock" HorizontalAlignment="Left" Margin="465,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="80"/>
         <TabControl x:Name="tabBox" Margin="550,10,10,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <TabItem Header="Stats" Cursor="Hand">
@@ -146,7 +147,7 @@
                     </Grid>
                     <Grid Margin="0,0,0,0">
                         <Border BorderBrush="Black" BorderThickness="0 1 0 0" Margin="-3,-1,-3,-1"></Border>
-                        <TextBlock Text="Icon:" FontWeight="Bold" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding Source={x:Static p:Resources.IconLabel}, StringFormat={}{0}:}" FontWeight="Bold" VerticalAlignment="Top"/>
                         <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Icon, Mode=OneWay}" Background="Transparent" Margin="32,0,0,0"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </Grid>
@@ -175,7 +176,7 @@
                         </hx:Viewport3DX.InputBindings>
                     </hx:Viewport3DX>
                     <Grid Background="Black" Visibility="{Binding ModelLoading}" x:Name="modelLoadingScreen">
-                        <TextBlock Text="Loading..." TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
+                        <TextBlock Text="{x:Static p:Resources.LoadingLabel}" TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
                     </Grid>
                 </Grid>
             </TabItem>

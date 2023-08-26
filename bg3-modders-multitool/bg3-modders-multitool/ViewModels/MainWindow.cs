@@ -6,8 +6,8 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
     using System;
+    using System.Collections.Generic;
     using System.IO;
-    using System.Runtime.InteropServices;
     using System.Windows;
 
     public class MainWindow : BaseViewModel
@@ -334,6 +334,49 @@ namespace bg3_modders_multitool.ViewModels
             return UnpackAllowed && LaunchGameAllowed && Directory.Exists(PathHelper.ModsFolderPath) && Directory.Exists(PathHelper.PlayerProfilesFolderPath) 
                 ? Visibility.Hidden 
                 : Visibility.Visible;
+        }
+        #endregion
+
+        #region Language Selection
+        public string SelectedLanguage { get; set; }
+
+        /// <summary>
+        /// The list of available languages and their I18N designations
+        /// </summary>
+        public static List<Language> AvailableLanguages = new List<Language>
+            {
+                new Language(Properties.Resources.LangEnglish, "en-US"),
+                new Language(Properties.Resources.LangChinese, "zh-CN")
+            };
+
+        /// <summary>
+        /// Reloads the application with the selected language code
+        /// </summary>
+        /// <param name="language"></param>
+        public void ReloadLanguage(string language)
+        {
+            var selectedLanguage = Settings.Default.selectedLanguage;
+            selectedLanguage = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
+            if (selectedLanguage != language)
+            {
+                SelectedLanguage = language;
+                App.Current.MainWindow.Close();
+            }
+        }
+
+        /// <summary>
+        /// Simple language model
+        /// </summary>
+        public class Language
+        {
+            public Language(string name, string code)
+            {
+                Name = name;
+                Code = code;
+            }
+
+            public string Name { get; set; }
+            public string Code { get; set; }
         }
 
         #endregion

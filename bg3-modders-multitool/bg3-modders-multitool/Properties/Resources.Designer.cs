@@ -22,7 +22,7 @@ namespace bg3_modders_multitool.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace bg3_modders_multitool.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("bg3_modders_multitool.Properties.Resources", typeof(Resources).Assembly);
@@ -51,12 +51,1182 @@ namespace bg3_modders_multitool.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Baldur&apos;s Gate 3 Modder&apos;s Multitool.
+        /// </summary>
+        public static string AppTitle {
+            get {
+                return ResourceManager.GetString("AppTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempting to pack mod..
+        /// </summary>
+        public static string AttemptingToPack {
+            get {
+                return ResourceManager.GetString("AttemptingToPack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to bg3.exe location.
+        /// </summary>
+        public static string BG3ExeLabel {
+            get {
+                return ResourceManager.GetString("BG3ExeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Caching {0}....
+        /// </summary>
+        public static string CachingFile {
+            get {
+                return ResourceManager.GetString("CachingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CancelButton {
+            get {
+                return ResourceManager.GetString("CancelButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObjects loading cancelled..
+        /// </summary>
+        public static string CancelledGOE {
+            get {
+                return ResourceManager.GetString("CancelledGOE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Immediately stop all unpacking processes.
+        /// </summary>
+        public static string CancelUnpackButtonTooltip {
+            get {
+                return ResourceManager.GetString("CancelUnpackButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel Unpacking.
+        /// </summary>
+        public static string CancelUnpackingButton {
+            get {
+                return ResourceManager.GetString("CancelUnpackingButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Essential configuration options.
+        /// </summary>
+        public static string ConfigButtonTooltip {
+            get {
+                return ResourceManager.GetString("ConfigButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration needed.
+        /// </summary>
+        public static string ConfigNeededLabel {
+            get {
+                return ResourceManager.GetString("ConfigNeededLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration.
+        /// </summary>
+        public static string ConfigurationTitle {
+            get {
+                return ResourceManager.GetString("ConfigurationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string ConfirmButton {
+            get {
+                return ResourceManager.GetString("ConfirmButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converting model to .dae for rendering....
+        /// </summary>
+        public static string ConvertingModelDae {
+            get {
+                return ResourceManager.GetString("ConvertingModelDae", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Convert &amp; Open.
+        /// </summary>
+        public static string ConvertOpenButton {
+            get {
+                return ResourceManager.GetString("ConvertOpenButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converts all convertable, unpacked files to .lsx.
+        /// </summary>
+        public static string ConvertOpenButtonTooltip {
+            get {
+                return ResourceManager.GetString("ConvertOpenButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} appears to be corrupt. Skipping file..
+        /// </summary>
+        public static string CorruptXmlFile {
+            get {
+                return ResourceManager.GetString("CorruptXmlFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Decompress Files.
+        /// </summary>
+        public static string DecompressFilesButton {
+            get {
+                return ResourceManager.GetString("DecompressFilesButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Decompression completed in {0}..
+        /// </summary>
+        public static string DecompressionComplete {
+            get {
+                return ResourceManager.GetString("DecompressionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DescriptionHandle.
+        /// </summary>
+        public static string DescriptionHandleLabel {
+            get {
+                return ResourceManager.GetString("DescriptionHandleLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string DescriptionLabel {
+            get {
+                return ResourceManager.GetString("DescriptionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deselect All.
+        /// </summary>
+        public static string DeslectAllButton {
+            get {
+                return ResourceManager.GetString("DeslectAllButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Destination: {0}.
+        /// </summary>
+        public static string Destination {
+            get {
+                return ResourceManager.GetString("Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Directory name: {0}.
+        /// </summary>
+        public static string DirectoryName {
+            get {
+                return ResourceManager.GetString("DirectoryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabling splash screen....
+        /// </summary>
+        public static string DisablingSplashScreen {
+            get {
+                return ResourceManager.GetString("DisablingSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DisplayNameHandle.
+        /// </summary>
+        public static string DisplayNameHandleLabel {
+            get {
+                return ResourceManager.GetString("DisplayNameHandleLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DisplayName.
+        /// </summary>
+        public static string DisplayNameLabel {
+            get {
+                return ResourceManager.GetString("DisplayNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drop mod workspace folder here.
+        /// </summary>
+        public static string DropModMessage {
+            get {
+                return ResourceManager.GetString("DropModMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabling splash screen....
+        /// </summary>
+        public static string EnablingSplashScreen {
+            get {
+                return ResourceManager.GetString("EnablingSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing \&quot;{0}\&quot; for \&quot;{1}\&quot;.
+        /// </summary>
+        public static string ErrorParsingProperty {
+            get {
+                return ResourceManager.GetString("ErrorParsingProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing line [{0}] for structure type \&quot;{1}\&quot;: {2}.
+        /// </summary>
+        public static string ErrorParsingStructure {
+            get {
+                return ResourceManager.GetString("ErrorParsingStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Estimate.
+        /// </summary>
+        public static string EstimateLabel {
+            get {
+                return ResourceManager.GetString("EstimateLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObjects failed to load. {0} seconds passed..
+        /// </summary>
+        public static string FailedGOE {
+            get {
+                return ResourceManager.GetString("FailedGOE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem converting input file to .ogg!.
+        /// </summary>
+        public static string FailedToConvertOgg {
+            get {
+                return ResourceManager.GetString("FailedToConvertOgg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to convert resource to {0} ({1}): {2}.
+        /// </summary>
+        public static string FailedToConvertResource {
+            get {
+                return ResourceManager.GetString("FailedToConvertResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to enable splash screen....
+        /// </summary>
+        public static string FailedToEnableSplashScreen {
+            get {
+                return ResourceManager.GetString("FailedToEnableSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load english.xml. Please unpack English.pak to generate translations. Skipping....
+        /// </summary>
+        public static string FailedToFindEnglishPak {
+            get {
+                return ResourceManager.GetString("FailedToFindEnglishPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping....
+        /// </summary>
+        public static string FailedToFindIconsPak {
+            get {
+                return ResourceManager.GetString("FailedToFindIconsPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to find Models directory. Please unpack Models.pak to view models..
+        /// </summary>
+        public static string FailedToFindModelsPak {
+            get {
+                return ResourceManager.GetString("FailedToFindModelsPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to index file [{0}]:\n{1}.
+        /// </summary>
+        public static string FailedToIndexFile {
+            get {
+                return ResourceManager.GetString("FailedToIndexFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error loading .dae: {0}. Inner exception: {1}.
+        /// </summary>
+        public static string FailedToLoadDae {
+            get {
+                return ResourceManager.GetString("FailedToLoadDae", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load {0}:\n{1}.
+        /// </summary>
+        public static string FailedToLoadFile {
+            get {
+                return ResourceManager.GetString("FailedToLoadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load model: {0}.
+        /// </summary>
+        public static string FailedToLoadModel {
+            get {
+                return ResourceManager.GetString("FailedToLoadModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load Races.lsx for {0}.pak..
+        /// </summary>
+        public static string FailedToLoadRaces {
+            get {
+                return ResourceManager.GetString("FailedToLoadRaces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to pack mod: {0}.
+        /// </summary>
+        public static string FailedToPackMod {
+            get {
+                return ResourceManager.GetString("FailedToPackMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read from directory: {0}.
+        /// </summary>
+        public static string FailedToReadDirectory {
+            get {
+                return ResourceManager.GetString("FailedToReadDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File dropping is not yet supported..
+        /// </summary>
+        public static string FileDroppingNotSupported {
+            get {
+                return ResourceManager.GetString("FileDroppingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File list retrieved..
+        /// </summary>
+        public static string FileListRetrieved {
+            get {
+                return ResourceManager.GetString("FileListRetrieved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File does not exist on the given path ({0})..
+        /// </summary>
+        public static string FileNoExist {
+            get {
+                return ResourceManager.GetString("FileNoExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fixing vertices....
+        /// </summary>
+        public static string FixingVerticies {
+            get {
+                return ResourceManager.GetString("FixingVerticies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaterialBanks found....
+        /// </summary>
+        public static string FoundMaterialBanks {
+            get {
+                return ResourceManager.GetString("FoundMaterialBanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TextureBanks found....
+        /// </summary>
+        public static string FoundTextureBanks {
+            get {
+                return ResourceManager.GetString("FoundTextureBanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VisualBanks found....
+        /// </summary>
+        public static string FoundVisualBanks {
+            get {
+                return ResourceManager.GetString("FoundVisualBanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game&apos;s Documents folder location.
+        /// </summary>
+        public static string GameDocsLocationLabel {
+            get {
+                return ResourceManager.GetString("GameDocsLocationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select you game&apos;s Documents folder. (e.g: ...\AppData\Local\Larian Studios\Baldur&apos;s Gate 3).
+        /// </summary>
+        public static string GameDocsLocationTooltip {
+            get {
+                return ResourceManager.GetString("GameDocsLocationTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please Select GameObject Type.
+        /// </summary>
+        public static string GameObjectSelectionLabel {
+            get {
+                return ResourceManager.GetString("GameObjectSelectionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObjects loaded....
+        /// </summary>
+        public static string GameObjectsLoaded {
+            get {
+                return ResourceManager.GetString("GameObjectsLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObject attribute type [{0}] not covered..
+        /// </summary>
+        public static string GameObjectUncovered {
+            get {
+                return ResourceManager.GetString("GameObjectUncovered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        public static string GenerateTitle {
+            get {
+                return ResourceManager.GetString("GenerateTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObject Explorer.
+        /// </summary>
+        public static string GOEButton {
+            get {
+                return ResourceManager.GetString("GOEButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to graphically navigate unpacked gameobjects including characters, items, and more.
+        /// </summary>
+        public static string GOEButtonTooltip {
+            get {
+                return ResourceManager.GetString("GOEButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObject Explorer.
+        /// </summary>
+        public static string GOETitle {
+            get {
+                return ResourceManager.GetString("GOETitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handle.
+        /// </summary>
+        public static string HandleLabel {
+            get {
+                return ResourceManager.GetString("HandleLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Icon.
+        /// </summary>
+        public static string IconLabel {
+            get {
+                return ResourceManager.GetString("IconLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to begin indexing.
+        /// </summary>
+        public static string IndexButtonTooltip {
+            get {
+                return ResourceManager.GetString("IndexButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available index is corrupt. Please rerun the indexer to create a new one..
+        /// </summary>
+        public static string IndexCorrupt {
+            get {
+                return ResourceManager.GetString("IndexCorrupt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index Files.
+        /// </summary>
+        public static string IndexFilesButton {
+            get {
+                return ResourceManager.GetString("IndexFilesButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indexing process finished in {0}..
+        /// </summary>
+        public static string IndexFinished {
+            get {
+                return ResourceManager.GetString("IndexFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indexing in progress....
+        /// </summary>
+        public static string IndexingInProgress {
+            get {
+                return ResourceManager.GetString("IndexingInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No index available! Please unpack game assets and generate an index..
+        /// </summary>
+        public static string IndexNotFound {
+            get {
+                return ResourceManager.GetString("IndexNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Index.
+        /// </summary>
+        public static string IndexSearchButton {
+            get {
+                return ResourceManager.GetString("IndexSearchButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to search unpacked file data.
+        /// </summary>
+        public static string IndexSearchButtonTooltip {
+            get {
+                return ResourceManager.GetString("IndexSearchButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No documents available. Please generate the index again..
+        /// </summary>
+        public static string IndexSearchNoDocuments {
+            get {
+                return ResourceManager.GetString("IndexSearchNoDocuments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search returned {0} results in {1} ms.
+        /// </summary>
+        public static string IndexSearchReturned {
+            get {
+                return ResourceManager.GetString("IndexSearchReturned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search started..
+        /// </summary>
+        public static string IndexSearchStarted {
+            get {
+                return ResourceManager.GetString("IndexSearchStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index Search.
+        /// </summary>
+        public static string IndexSearchTitle {
+            get {
+                return ResourceManager.GetString("IndexSearchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to info.json generated..
+        /// </summary>
+        public static string InfoGenerated {
+            get {
+                return ResourceManager.GetString("InfoGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chinese.
+        /// </summary>
+        public static string LangChinese {
+            get {
+                return ResourceManager.GetString("LangChinese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string LangEnglish {
+            get {
+                return ResourceManager.GetString("LangEnglish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language Selection.
+        /// </summary>
+        public static string LanguageSelectionLabel {
+            get {
+                return ResourceManager.GetString("LanguageSelectionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The UI language to use.
+        /// </summary>
+        public static string LanguageSelectionTooltip {
+            get {
+                return ResourceManager.GetString("LanguageSelectionTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch Game.
+        /// </summary>
+        public static string LaunchGameButton {
+            get {
+                return ResourceManager.GetString("LaunchGameButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launches the game.
+        /// </summary>
+        public static string LaunchGameButtonTooltip {
+            get {
+                return ResourceManager.GetString("LaunchGameButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObjects loaded in {0} seconds..
+        /// </summary>
+        public static string LoadedGOE {
+            get {
+                return ResourceManager.GetString("LoadedGOE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading bank files....
+        /// </summary>
+        public static string LoadingBankFiles {
+            get {
+                return ResourceManager.GetString("LoadingBankFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading {0} from cache....
+        /// </summary>
+        public static string LoadingCachedFile {
+            get {
+                return ResourceManager.GetString("LoadingCachedFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string LoadingLabel {
+            get {
+                return ResourceManager.GetString("LoadingLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LSLib divine.exe location (latest version is required).
+        /// </summary>
+        public static string LSLibLocation {
+            get {
+                return ResourceManager.GetString("LSLibLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MapKey.
+        /// </summary>
+        public static string MapKeyLabel {
+            get {
+                return ResourceManager.GetString("MapKeyLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metadata for {0} created..
+        /// </summary>
+        public static string MetadataCreated {
+            get {
+                return ResourceManager.GetString("MetadataCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to meta.lsx file found in {0}..
+        /// </summary>
+        public static string MetaLsxNotFound1 {
+            get {
+                return ResourceManager.GetString("MetaLsxNotFound1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process..
+        /// </summary>
+        public static string MetaLsxNotFound2 {
+            get {
+                return ResourceManager.GetString("MetaLsxNotFound2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model conversion complete!.
+        /// </summary>
+        public static string ModelConversionComplete {
+            get {
+                return ResourceManager.GetString("ModelConversionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mods Folder.
+        /// </summary>
+        public static string ModsFolderButton {
+            get {
+                return ResourceManager.GetString("ModsFolderButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shortcut to open the Mods folder.
+        /// </summary>
+        public static string ModsFolderButtonTooltip {
+            get {
+                return ResourceManager.GetString("ModsFolderButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string NameLabel {
+            get {
+                return ResourceManager.GetString("NameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No files found!.
+        /// </summary>
+        public static string NoFilesFound {
+            get {
+                return ResourceManager.GetString("NoFilesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to off.
+        /// </summary>
+        public static string Off {
+            get {
+                return ResourceManager.GetString("Off", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to on.
+        /// </summary>
+        public static string On {
+            get {
+                return ResourceManager.GetString("On", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opening GameObject Explorer. This could take a while..
+        /// </summary>
+        public static string OpeningGOE {
+            get {
+                return ResourceManager.GetString("OpeningGOE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OOME: Failed to index {0}.
+        /// </summary>
+        public static string OutOfMemFailedToIndex {
+            get {
+                return ResourceManager.GetString("OutOfMemFailedToIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pak.
+        /// </summary>
+        public static string PakLabel {
+            get {
+                return ResourceManager.GetString("PakLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .pak Selection.
+        /// </summary>
+        public static string PakSelectionTitle {
+            get {
+                return ResourceManager.GetString("PakSelectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ParentTemplateId.
+        /// </summary>
+        public static string ParentTemplateIdLabel {
+            get {
+                return ResourceManager.GetString("ParentTemplateIdLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem playing audio file!!.
+        /// </summary>
+        public static string ProblemPlayingAudio {
+            get {
+                return ResourceManager.GetString("ProblemPlayingAudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profiles Folder.
+        /// </summary>
+        public static string ProfilesFolderButton {
+            get {
+                return ResourceManager.GetString("ProfilesFolderButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shortcut to open the Player Profiles folder.
+        /// </summary>
+        public static string ProfilesFolderButtonTooltip {
+            get {
+                return ResourceManager.GetString("ProfilesFolderButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick launch settings toggled {0}!.
+        /// </summary>
+        public static string QuickLaunchEnabled {
+            get {
+                return ResourceManager.GetString("QuickLaunchEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick Launch.
+        /// </summary>
+        public static string QuickLaunchLabel {
+            get {
+                return ResourceManager.GetString("QuickLaunchLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loads game directly into last save. Skips splashscreen at loadup..
+        /// </summary>
+        public static string QuickLaunchTooltip {
+            get {
+                return ResourceManager.GetString("QuickLaunchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading GameObjects from root templates; this will take a while....
+        /// </summary>
+        public static string ReadingGameObjects {
+            get {
+                return ResourceManager.GetString("ReadingGameObjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrived file list. Starting decompression; this could take awhile..
+        /// </summary>
+        public static string RetrievedFileListDecompression {
+            get {
+                return ResourceManager.GetString("RetrievedFileListDecompression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving file list..
+        /// </summary>
+        public static string RetrievingFileList {
+            get {
+                return ResourceManager.GetString("RetrievingFileList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving file list for decompression..
+        /// </summary>
+        public static string RetrievingFileListDecompression {
+            get {
+                return ResourceManager.GetString("RetrievingFileListDecompression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Files.
+        /// </summary>
+        public static string SearchFilesButton {
+            get {
+                return ResourceManager.GetString("SearchFilesButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select All.
+        /// </summary>
+        public static string SelectAllButton {
+            get {
+                return ResourceManager.GetString("SelectAllButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select divine.exe location.
+        /// </summary>
+        public static string SelectDivineMessage {
+            get {
+                return ResourceManager.GetString("SelectDivineMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select.
+        /// </summary>
+        public static string SelectLocation {
+            get {
+                return ResourceManager.GetString("SelectLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting bank files....
+        /// </summary>
+        public static string SortingBanksFiles {
+            get {
+                return ResourceManager.GetString("SortingBanksFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting GameObjects....
+        /// </summary>
+        public static string SortingGameObjects {
+            get {
+                return ResourceManager.GetString("SortingGameObjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temp files cleaned..
+        /// </summary>
+        public static string TempFilesCleaned {
+            get {
+                return ResourceManager.GetString("TempFilesCleaned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translations loaded....
+        /// </summary>
+        public static string TranslationsLoaded {
+            get {
+                return ResourceManager.GetString("TranslationsLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to select the game paks to unpack.
+        /// </summary>
+        public static string UnpackButtonTooltip {
+            get {
+                return ResourceManager.GetString("UnpackButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpack .pak Files.
+        /// </summary>
+        public static string UnpackFilesButton {
+            get {
+                return ResourceManager.GetString("UnpackFilesButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacking processes cancelled successfully!.
+        /// </summary>
+        public static string UnpackingCancelled {
+            get {
+                return ResourceManager.GetString("UnpackingCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacking complete!.
+        /// </summary>
+        public static string UnpackingComplete {
+            get {
+                return ResourceManager.GetString("UnpackingComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All unpacking processes finished..
+        /// </summary>
+        public static string UnpackingProcessComplete {
+            get {
+                return ResourceManager.GetString("UnpackingProcessComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacking processes starting. This could take a while; please wait for all console processes to close on their own..
+        /// </summary>
+        public static string UnpackingProcessStarted {
+            get {
+                return ResourceManager.GetString("UnpackingProcessStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to v4 UUID/TranslatedString Handle Generator.
+        /// </summary>
+        public static string UUIDTitle {
+            get {
+                return ResourceManager.GetString("UUIDTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}.zip created..
+        /// </summary>
+        public static string ZipCreated {
+            get {
+                return ResourceManager.GetString("ZipCreated", resourceCulture);
             }
         }
     }

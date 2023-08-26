@@ -12,7 +12,7 @@ namespace bg3_modders_multitool
     /// </summary>
     public partial class App : Application
     {
-        private App()
+        public App()
         {
             ToolTipService.ShowDurationProperty.OverrideMetadata(
                 typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
@@ -31,6 +31,7 @@ namespace bg3_modders_multitool
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
             base.OnStartup(e);
         }
 

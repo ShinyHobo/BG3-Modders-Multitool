@@ -20,11 +20,12 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Writes text to the main window console.
         /// </summary>
-        /// <param name="text">The text to output.</param>
-        public static void WriteToConsole(string text)
+        /// <param name="resource">The text to output.</param>
+        /// <param name="args">The arguments to pass into the text</param>
+        public static void WriteToConsole(string resource, params object[] args)
         {
             Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(text);
+                ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
             });
         }
 
@@ -218,8 +219,8 @@ namespace bg3_modders_multitool.Services
                 Properties.Settings.Default.quickLaunch = setting;
                 FileHelper.CreateDestroyQuickLaunchMod(setting);
                 Properties.Settings.Default.Save();
-                var toggleText = setting ? "on" : "off";
-                GeneralHelper.WriteToConsole($"Quick launch settings toggled {toggleText}!\n");
+                var toggleText = setting ? Properties.Resources.On : Properties.Resources.Off;
+                WriteToConsole(Properties.Resources.QuickLaunchEnabled, toggleText);
             }
         }
 
