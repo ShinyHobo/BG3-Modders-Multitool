@@ -130,22 +130,58 @@
     <value>Caching {0}...</value>
     <comment>file name</comment>
   </data>
+  <data name="CancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="CancelledGOE" xml:space="preserve">
     <value>GameObjects loading cancelled.</value>
+  </data>
+  <data name="CancelUnpackButtonTooltip" xml:space="preserve">
+    <value>Immediately stop all unpacking processes</value>
+  </data>
+  <data name="CancelUnpackingButton" xml:space="preserve">
+    <value>Cancel Unpacking</value>
+  </data>
+  <data name="ConfigButtonTooltip" xml:space="preserve">
+    <value>Essential configuration options</value>
+  </data>
+  <data name="ConfigNeededLabel" xml:space="preserve">
+    <value>Configuration needed</value>
   </data>
   <data name="ConfigurationTitle" xml:space="preserve">
     <value>Configuration</value>
   </data>
+  <data name="ConfirmButton" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
   <data name="ConvertingModelDae" xml:space="preserve">
     <value>Converting model to .dae for rendering...</value>
+  </data>
+  <data name="ConvertOpenButton" xml:space="preserve">
+    <value>Convert &amp; Open</value>
+  </data>
+  <data name="ConvertOpenButtonTooltip" xml:space="preserve">
+    <value>Converts all convertable, unpacked files to .lsx</value>
   </data>
   <data name="CorruptXmlFile" xml:space="preserve">
     <value>{0} appears to be corrupt. Skipping file.</value>
     <comment>file path</comment>
   </data>
+  <data name="DecompressFilesButton" xml:space="preserve">
+    <value>Decompress Files</value>
+  </data>
   <data name="DecompressionComplete" xml:space="preserve">
     <value>Decompression completed in {0}.</value>
     <comment>elapsed time</comment>
+  </data>
+  <data name="DescriptionHandleLabel" xml:space="preserve">
+    <value>DescriptionHandle</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DeslectAllButton" xml:space="preserve">
+    <value>Deselect All</value>
   </data>
   <data name="Destination" xml:space="preserve">
     <value>Destination: {0}</value>
@@ -158,6 +194,12 @@
   <data name="DisablingSplashScreen" xml:space="preserve">
     <value>Disabling splash screen...</value>
   </data>
+  <data name="DisplayNameHandleLabel" xml:space="preserve">
+    <value>DisplayNameHandle</value>
+  </data>
+  <data name="DisplayNameLabel" xml:space="preserve">
+    <value>DisplayName</value>
+  </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>
   </data>
@@ -168,6 +210,9 @@
   <data name="ErrorParsingStructure" xml:space="preserve">
     <value>Error parsing line [{0}] for structure type \"{1}\": {2}</value>
     <comment>line number, type, error message</comment>
+  </data>
+  <data name="EstimateLabel" xml:space="preserve">
+    <value>Estimate</value>
   </data>
   <data name="FailedGOE" xml:space="preserve">
     <value>GameObjects failed to load. {0} seconds passed.</value>
@@ -248,6 +293,9 @@
   <data name="GameDocsLocationTooltip" xml:space="preserve">
     <value>Please select you game's Documents folder. (e.g: ...\AppData\Local\Larian Studios\Baldur's Gate 3)</value>
   </data>
+  <data name="GameObjectSelectionLabel" xml:space="preserve">
+    <value>Please Select GameObject Type</value>
+  </data>
   <data name="GameObjectsLoaded" xml:space="preserve">
     <value>GameObjects loaded...</value>
   </data>
@@ -258,8 +306,29 @@
   <data name="GenerateTitle" xml:space="preserve">
     <value>Generate</value>
   </data>
+  <data name="GOEButton" xml:space="preserve">
+    <value>GameObject Explorer</value>
+  </data>
+  <data name="GOEButtonTooltip" xml:space="preserve">
+    <value>Allows you to graphically navigate unpacked gameobjects including characters, items, and more</value>
+  </data>
+  <data name="GOETitle" xml:space="preserve">
+    <value>GameObject Explorer</value>
+  </data>
+  <data name="HandleLabel" xml:space="preserve">
+    <value>Handle</value>
+  </data>
+  <data name="IconLabel" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+  <data name="IndexButtonTooltip" xml:space="preserve">
+    <value>Click to begin indexing</value>
+  </data>
   <data name="IndexCorrupt" xml:space="preserve">
     <value>Available index is corrupt. Please rerun the indexer to create a new one.</value>
+  </data>
+  <data name="IndexFilesButton" xml:space="preserve">
+    <value>Index Files</value>
   </data>
   <data name="IndexFinished" xml:space="preserve">
     <value>Indexing process finished in {0}.</value>
@@ -271,6 +340,12 @@
   <data name="IndexNotFound" xml:space="preserve">
     <value>No index available! Please unpack game assets and generate an index.</value>
   </data>
+  <data name="IndexSearchButton" xml:space="preserve">
+    <value>Search Index</value>
+  </data>
+  <data name="IndexSearchButtonTooltip" xml:space="preserve">
+    <value>Click to search unpacked file data</value>
+  </data>
   <data name="IndexSearchNoDocuments" xml:space="preserve">
     <value>No documents available. Please generate the index again.</value>
   </data>
@@ -281,8 +356,17 @@
   <data name="IndexSearchStarted" xml:space="preserve">
     <value>Search started.</value>
   </data>
+  <data name="IndexSearchTitle" xml:space="preserve">
+    <value>Index Search</value>
+  </data>
   <data name="InfoGenerated" xml:space="preserve">
     <value>info.json generated.</value>
+  </data>
+  <data name="LaunchGameButton" xml:space="preserve">
+    <value>Launch Game</value>
+  </data>
+  <data name="LaunchGameButtonTooltip" xml:space="preserve">
+    <value>Launches the game</value>
   </data>
   <data name="LoadedGOE" xml:space="preserve">
     <value>GameObjects loaded in {0} seconds.</value>
@@ -295,8 +379,14 @@
     <value>Loading {0} from cache...</value>
     <comment>file name</comment>
   </data>
+  <data name="LoadingLabel" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
   <data name="LSLibLocation" xml:space="preserve">
     <value>LSLib divine.exe location (latest version is required)</value>
+  </data>
+  <data name="MapKeyLabel" xml:space="preserve">
+    <value>MapKey</value>
   </data>
   <data name="MetadataCreated" xml:space="preserve">
     <value>Metadata for {0} created.</value>
@@ -311,6 +401,15 @@
   </data>
   <data name="ModelConversionComplete" xml:space="preserve">
     <value>Model conversion complete!</value>
+  </data>
+  <data name="ModsFolderButton" xml:space="preserve">
+    <value>Mods Folder</value>
+  </data>
+  <data name="ModsFolderButtonTooltip" xml:space="preserve">
+    <value>Shortcut to open the Mods folder</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="NoFilesFound" xml:space="preserve">
     <value>No files found!</value>
@@ -328,8 +427,23 @@
     <value>OOME: Failed to index {0}</value>
     <comment>file path</comment>
   </data>
+  <data name="PakLabel" xml:space="preserve">
+    <value>Pak</value>
+  </data>
+  <data name="PakSelectionTitle" xml:space="preserve">
+    <value>.pak Selection</value>
+  </data>
+  <data name="ParentTemplateIdLabel" xml:space="preserve">
+    <value>ParentTemplateId</value>
+  </data>
   <data name="ProblemPlayingAudio" xml:space="preserve">
     <value>Problem playing audio file!!</value>
+  </data>
+  <data name="ProfilesFolderButton" xml:space="preserve">
+    <value>Profiles Folder</value>
+  </data>
+  <data name="ProfilesFolderButtonTooltip" xml:space="preserve">
+    <value>Shortcut to open the Player Profiles folder</value>
   </data>
   <data name="QuickLaunchEnabled" xml:space="preserve">
     <value>Quick launch settings toggled {0}!</value>
@@ -353,6 +467,15 @@
   <data name="RetrievingFileListDecompression" xml:space="preserve">
     <value>Retrieving file list for decompression.</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchFilesButton" xml:space="preserve">
+    <value>Search Files</value>
+  </data>
+  <data name="SelectAllButton" xml:space="preserve">
+    <value>Select All</value>
+  </data>
   <data name="SelectLocation" xml:space="preserve">
     <value>Select</value>
   </data>
@@ -367,6 +490,12 @@
   </data>
   <data name="TranslationsLoaded" xml:space="preserve">
     <value>Translations loaded...</value>
+  </data>
+  <data name="UnpackButtonTooltip" xml:space="preserve">
+    <value>Allows you to select the game paks to unpack</value>
+  </data>
+  <data name="UnpackFilesButton" xml:space="preserve">
+    <value>Unpack .pak Files</value>
   </data>
   <data name="UnpackingCancelled" xml:space="preserve">
     <value>Unpacking processes cancelled successfully!</value>

@@ -97,11 +97,56 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CancelButton {
+            get {
+                return ResourceManager.GetString("CancelButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects loading cancelled..
         /// </summary>
         public static string CancelledGOE {
             get {
                 return ResourceManager.GetString("CancelledGOE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Immediately stop all unpacking processes.
+        /// </summary>
+        public static string CancelUnpackButtonTooltip {
+            get {
+                return ResourceManager.GetString("CancelUnpackButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel Unpacking.
+        /// </summary>
+        public static string CancelUnpackingButton {
+            get {
+                return ResourceManager.GetString("CancelUnpackingButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Essential configuration options.
+        /// </summary>
+        public static string ConfigButtonTooltip {
+            get {
+                return ResourceManager.GetString("ConfigButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration needed.
+        /// </summary>
+        public static string ConfigNeededLabel {
+            get {
+                return ResourceManager.GetString("ConfigNeededLabel", resourceCulture);
             }
         }
         
@@ -115,11 +160,38 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string ConfirmButton {
+            get {
+                return ResourceManager.GetString("ConfirmButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Converting model to .dae for rendering....
         /// </summary>
         public static string ConvertingModelDae {
             get {
                 return ResourceManager.GetString("ConvertingModelDae", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Convert &amp; Open.
+        /// </summary>
+        public static string ConvertOpenButton {
+            get {
+                return ResourceManager.GetString("ConvertOpenButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converts all convertable, unpacked files to .lsx.
+        /// </summary>
+        public static string ConvertOpenButtonTooltip {
+            get {
+                return ResourceManager.GetString("ConvertOpenButtonTooltip", resourceCulture);
             }
         }
         
@@ -133,11 +205,47 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Decompress Files.
+        /// </summary>
+        public static string DecompressFilesButton {
+            get {
+                return ResourceManager.GetString("DecompressFilesButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decompression completed in {0}..
         /// </summary>
         public static string DecompressionComplete {
             get {
                 return ResourceManager.GetString("DecompressionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DescriptionHandle.
+        /// </summary>
+        public static string DescriptionHandleLabel {
+            get {
+                return ResourceManager.GetString("DescriptionHandleLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string DescriptionLabel {
+            get {
+                return ResourceManager.GetString("DescriptionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deselect All.
+        /// </summary>
+        public static string DeslectAllButton {
+            get {
+                return ResourceManager.GetString("DeslectAllButton", resourceCulture);
             }
         }
         
@@ -169,6 +277,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DisplayNameHandle.
+        /// </summary>
+        public static string DisplayNameHandleLabel {
+            get {
+                return ResourceManager.GetString("DisplayNameHandleLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DisplayName.
+        /// </summary>
+        public static string DisplayNameLabel {
+            get {
+                return ResourceManager.GetString("DisplayNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enabling splash screen....
         /// </summary>
         public static string EnablingSplashScreen {
@@ -192,6 +318,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ErrorParsingStructure {
             get {
                 return ResourceManager.GetString("ErrorParsingStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Estimate.
+        /// </summary>
+        public static string EstimateLabel {
+            get {
+                return ResourceManager.GetString("EstimateLabel", resourceCulture);
             }
         }
         
@@ -403,6 +538,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please Select GameObject Type.
+        /// </summary>
+        public static string GameObjectSelectionLabel {
+            get {
+                return ResourceManager.GetString("GameObjectSelectionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects loaded....
         /// </summary>
         public static string GameObjectsLoaded {
@@ -430,11 +574,74 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GameObject Explorer.
+        /// </summary>
+        public static string GOEButton {
+            get {
+                return ResourceManager.GetString("GOEButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to graphically navigate unpacked gameobjects including characters, items, and more.
+        /// </summary>
+        public static string GOEButtonTooltip {
+            get {
+                return ResourceManager.GetString("GOEButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObject Explorer.
+        /// </summary>
+        public static string GOETitle {
+            get {
+                return ResourceManager.GetString("GOETitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handle.
+        /// </summary>
+        public static string HandleLabel {
+            get {
+                return ResourceManager.GetString("HandleLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Icon.
+        /// </summary>
+        public static string IconLabel {
+            get {
+                return ResourceManager.GetString("IconLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to begin indexing.
+        /// </summary>
+        public static string IndexButtonTooltip {
+            get {
+                return ResourceManager.GetString("IndexButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available index is corrupt. Please rerun the indexer to create a new one..
         /// </summary>
         public static string IndexCorrupt {
             get {
                 return ResourceManager.GetString("IndexCorrupt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index Files.
+        /// </summary>
+        public static string IndexFilesButton {
+            get {
+                return ResourceManager.GetString("IndexFilesButton", resourceCulture);
             }
         }
         
@@ -466,6 +673,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search Index.
+        /// </summary>
+        public static string IndexSearchButton {
+            get {
+                return ResourceManager.GetString("IndexSearchButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to search unpacked file data.
+        /// </summary>
+        public static string IndexSearchButtonTooltip {
+            get {
+                return ResourceManager.GetString("IndexSearchButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No documents available. Please generate the index again..
         /// </summary>
         public static string IndexSearchNoDocuments {
@@ -493,11 +718,38 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Index Search.
+        /// </summary>
+        public static string IndexSearchTitle {
+            get {
+                return ResourceManager.GetString("IndexSearchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to info.json generated..
         /// </summary>
         public static string InfoGenerated {
             get {
                 return ResourceManager.GetString("InfoGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch Game.
+        /// </summary>
+        public static string LaunchGameButton {
+            get {
+                return ResourceManager.GetString("LaunchGameButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launches the game.
+        /// </summary>
+        public static string LaunchGameButtonTooltip {
+            get {
+                return ResourceManager.GetString("LaunchGameButtonTooltip", resourceCulture);
             }
         }
         
@@ -529,11 +781,29 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string LoadingLabel {
+            get {
+                return ResourceManager.GetString("LoadingLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LSLib divine.exe location (latest version is required).
         /// </summary>
         public static string LSLibLocation {
             get {
                 return ResourceManager.GetString("LSLibLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MapKey.
+        /// </summary>
+        public static string MapKeyLabel {
+            get {
+                return ResourceManager.GetString("MapKeyLabel", resourceCulture);
             }
         }
         
@@ -570,6 +840,33 @@ namespace bg3_modders_multitool.Properties {
         public static string ModelConversionComplete {
             get {
                 return ResourceManager.GetString("ModelConversionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mods Folder.
+        /// </summary>
+        public static string ModsFolderButton {
+            get {
+                return ResourceManager.GetString("ModsFolderButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shortcut to open the Mods folder.
+        /// </summary>
+        public static string ModsFolderButtonTooltip {
+            get {
+                return ResourceManager.GetString("ModsFolderButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string NameLabel {
+            get {
+                return ResourceManager.GetString("NameLabel", resourceCulture);
             }
         }
         
@@ -619,11 +916,56 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pak.
+        /// </summary>
+        public static string PakLabel {
+            get {
+                return ResourceManager.GetString("PakLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .pak Selection.
+        /// </summary>
+        public static string PakSelectionTitle {
+            get {
+                return ResourceManager.GetString("PakSelectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ParentTemplateId.
+        /// </summary>
+        public static string ParentTemplateIdLabel {
+            get {
+                return ResourceManager.GetString("ParentTemplateIdLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem playing audio file!!.
         /// </summary>
         public static string ProblemPlayingAudio {
             get {
                 return ResourceManager.GetString("ProblemPlayingAudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profiles Folder.
+        /// </summary>
+        public static string ProfilesFolderButton {
+            get {
+                return ResourceManager.GetString("ProfilesFolderButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shortcut to open the Player Profiles folder.
+        /// </summary>
+        public static string ProfilesFolderButtonTooltip {
+            get {
+                return ResourceManager.GetString("ProfilesFolderButtonTooltip", resourceCulture);
             }
         }
         
@@ -691,6 +1033,33 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Files.
+        /// </summary>
+        public static string SearchFilesButton {
+            get {
+                return ResourceManager.GetString("SearchFilesButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select All.
+        /// </summary>
+        public static string SelectAllButton {
+            get {
+                return ResourceManager.GetString("SelectAllButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select.
         /// </summary>
         public static string SelectLocation {
@@ -732,6 +1101,24 @@ namespace bg3_modders_multitool.Properties {
         public static string TranslationsLoaded {
             get {
                 return ResourceManager.GetString("TranslationsLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to select the game paks to unpack.
+        /// </summary>
+        public static string UnpackButtonTooltip {
+            get {
+                return ResourceManager.GetString("UnpackButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpack .pak Files.
+        /// </summary>
+        public static string UnpackFilesButton {
+            get {
+                return ResourceManager.GetString("UnpackFilesButton", resourceCulture);
             }
         }
         
