@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Enums;
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
+    using bg3_modders_multitool.Properties;
     using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
@@ -252,8 +253,11 @@ namespace bg3_modders_multitool.Services
                                         else
                                         {
                                             gameObject.LoadProperty($"{id}Handle", type, value);
-                                            var translationText = TranslationLookup.FirstOrDefault(tl => tl.Key.Equals(value)).Value?.Value;
-                                            gameObject.LoadProperty(id, type, translationText);
+                                            if(value != null && TranslationLookup.ContainsKey(value))
+                                            {
+                                                var translationText = TranslationLookup[value].Value;
+                                                gameObject.LoadProperty(id, type, translationText);
+                                            }
                                         }
                                     }
 
@@ -498,7 +502,7 @@ namespace bg3_modders_multitool.Services
                 return true;
             }
 
-            GeneralHelper.WriteToConsole($"Loading bank files...\n");
+            GeneralHelper.WriteToConsole(Resources.LoadingBankFiles);
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             var characterVisualBanks = new ConcurrentDictionary<string, string>();
@@ -507,15 +511,15 @@ namespace bg3_modders_multitool.Services
             var materialBanks = new ConcurrentDictionary<string, string>();
             var textureBanks = new ConcurrentDictionary<string, string>();
             var visualBankFiles = GetFileList("VisualBank");
-            GeneralHelper.WriteToConsole($"VisualBanks found...\n");
+            GeneralHelper.WriteToConsole(Resources.FoundVisualBanks);
             var materialBankFiles = GetFileList("MaterialBank");
-            GeneralHelper.WriteToConsole($"MaterialBanks found...\n");
+            GeneralHelper.WriteToConsole(Resources.FoundMaterialBanks);
             var textureBankFiles = GetFileList("TextureBank");
-            GeneralHelper.WriteToConsole($"TextureBanks found...\n");
+            GeneralHelper.WriteToConsole(Resources.FoundTextureBanks);
             visualBankFiles.AddRange(materialBankFiles);
             visualBankFiles.AddRange(textureBankFiles);
             visualBankFiles = visualBankFiles.Distinct().ToList();
-            GeneralHelper.WriteToConsole($"Sorting bank files...\n");
+            GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
             Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile => {
                 if (File.Exists(visualBankFile))
                 {
@@ -525,7 +529,7 @@ namespace bg3_modders_multitool.Services
                     if (!FileHelper.TryParseXml(filePath))
                     {
                         var filePath2 = visualBankFilePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
-                        GeneralHelper.WriteToConsole($"{filePath2} appears to be corrupt. Skipping file.\n");
+                        GeneralHelper.WriteToConsole(Resources.FileCorrupt, filePath2);
                         return;
                     }
 

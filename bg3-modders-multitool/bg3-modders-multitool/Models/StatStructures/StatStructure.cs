@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Models.StatStructures
 {
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.Properties;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -201,7 +202,7 @@ namespace bg3_modders_multitool.Models.StatStructures
             {
                 // This can usually be fixed by adding the Modifier data to the given StatStructure type
                 #if DEBUG
-                Services.GeneralHelper.WriteToConsole($"Error parsing line [{line}] for structure type \"{Enum.GetName(Type.GetType(), Type)}\": {ex.Message}\n");
+                Services.GeneralHelper.WriteToConsole(Resources.ErrorParsingProperty, line, Enum.GetName(Type.GetType(), Type), ex.Message);
                 #endif
             }
         }

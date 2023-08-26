@@ -38,7 +38,7 @@ namespace bg3_modders_multitool.Services
                     if (Path.GetFileName(file).Equals("meta.lsx"))
                     {
                         metaList.Add(file);
-                        GeneralHelper.WriteToConsole($"meta.lsx file found in {mod}.\n");
+                        GeneralHelper.WriteToConsole(Properties.Resources.MetaLsxNotFound1, mod);
                     }
                 }
             }
@@ -46,7 +46,7 @@ namespace bg3_modders_multitool.Services
             if (metaList.Count == 0)
             {
                 // meta.lsx not found, discontinue
-                throw new Exception("meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.\n");
+                throw new Exception(Properties.Resources.MetaLsxNotFound2);
             }
             return metaList;
         }
@@ -69,7 +69,7 @@ namespace bg3_modders_multitool.Services
             }
             catch (Exception ex)
             {
-                GeneralHelper.WriteToConsole($"Failed to pack mod: {ex.Message}");
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToPackMod, ex.Message);
             }
         }
 
@@ -92,7 +92,7 @@ namespace bg3_modders_multitool.Services
                 {
                     var metadata = ReadMeta(meta, created, modGroup);
                     mods.Add(metadata);
-                    GeneralHelper.WriteToConsole($"Metadata for {metadata.Name} created.\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.MetadataCreated);
                 }
                 info.Mods.AddRange(mods);
             }
@@ -116,7 +116,7 @@ namespace bg3_modders_multitool.Services
 
             var json = JsonConvert.SerializeObject(info);
             File.WriteAllText(TempFolder + @"\info.json", json);
-            GeneralHelper.WriteToConsole($"info.json generated.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.InfoGenerated);
         }
 
         public static MetaLsx ReadMeta(string meta, DateTime? created = null, KeyValuePair<string, List<string>>? modGroup = null)

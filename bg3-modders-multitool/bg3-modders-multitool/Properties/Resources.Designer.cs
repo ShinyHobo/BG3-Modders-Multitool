@@ -22,7 +22,7 @@ namespace bg3_modders_multitool.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace bg3_modders_multitool.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("bg3_modders_multitool.Properties.Resources", typeof(Resources).Assembly);
@@ -51,12 +51,147 @@ namespace bg3_modders_multitool.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Decompression completed in {0}..
+        /// </summary>
+        public static string DecompressionComplete {
+            get {
+                return ResourceManager.GetString("DecompressionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing \&quot;{0}\&quot; for \&quot;{1}\&quot;.
+        /// </summary>
+        public static string ErrorParsingProperty {
+            get {
+                return ResourceManager.GetString("ErrorParsingProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing line [{0}] for structure type \&quot;{1}\&quot;: {2}.
+        /// </summary>
+        public static string ErrorParsingStructure {
+            get {
+                return ResourceManager.GetString("ErrorParsingStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to pack mod: {0}.
+        /// </summary>
+        public static string FailedToPackMod {
+            get {
+                return ResourceManager.GetString("FailedToPackMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} appears to be corrupt. Skipping file..
+        /// </summary>
+        public static string FileCorrupt {
+            get {
+                return ResourceManager.GetString("FileCorrupt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaterialBanks found....
+        /// </summary>
+        public static string FoundMaterialBanks {
+            get {
+                return ResourceManager.GetString("FoundMaterialBanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TextureBanks found....
+        /// </summary>
+        public static string FoundTextureBanks {
+            get {
+                return ResourceManager.GetString("FoundTextureBanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VisualBanks found....
+        /// </summary>
+        public static string FoundVisualBanks {
+            get {
+                return ResourceManager.GetString("FoundVisualBanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObject attribute type [{0}] not covered..
+        /// </summary>
+        public static string GameObjectUncovered {
+            get {
+                return ResourceManager.GetString("GameObjectUncovered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to info.json generated..
+        /// </summary>
+        public static string InfoGenerated {
+            get {
+                return ResourceManager.GetString("InfoGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading bank files....
+        /// </summary>
+        public static string LoadingBankFiles {
+            get {
+                return ResourceManager.GetString("LoadingBankFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metadata for {0} created..
+        /// </summary>
+        public static string MetadataCreated {
+            get {
+                return ResourceManager.GetString("MetadataCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to meta.lsx file found in {0}..
+        /// </summary>
+        public static string MetaLsxNotFound1 {
+            get {
+                return ResourceManager.GetString("MetaLsxNotFound1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process..
+        /// </summary>
+        public static string MetaLsxNotFound2 {
+            get {
+                return ResourceManager.GetString("MetaLsxNotFound2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting bank files....
+        /// </summary>
+        public static string SortingBanksFiles {
+            get {
+                return ResourceManager.GetString("SortingBanksFiles", resourceCulture);
             }
         }
     }

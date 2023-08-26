@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
@@ -163,10 +164,10 @@ namespace bg3_modders_multitool.Services
                 });
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
-                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
                 fileList.Clear();
-                GeneralHelper.WriteToConsole($"Decompression completed in {elapsedTime}.\n");
+                GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
                 return convertFiles;
             });
         }
