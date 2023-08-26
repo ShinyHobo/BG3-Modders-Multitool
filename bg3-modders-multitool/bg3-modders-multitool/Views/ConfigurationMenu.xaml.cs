@@ -31,7 +31,7 @@ namespace bg3_modders_multitool.Views
         private void DivineSelect_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            vm.DivineLocation = vm.FileLocationDialog("divineExe", "Select divine.exe location");
+            vm.DivineLocation = vm.FileLocationDialog("divineExe", Properties.Resources.SelectDivineMessage);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace bg3_modders_multitool.Views
         private void Bg3exeSelect_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            vm.Bg3ExeLocation = vm.FileLocationDialog("bg3Exe", "Select bg3.exe or bg3_dx11.exe location");
+            vm.Bg3ExeLocation = vm.FileLocationDialog("bg3Exe", Properties.Resources.SelectGameLocation);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace bg3_modders_multitool.Views
         private void GameDocumentsLocationSelect_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            vm.GameDocumentsLocation = vm.FolderLocationDialog(nameof(Properties.Settings.gameDocumentsPath), "Select your game's documents folder location");
+            vm.GameDocumentsLocation = vm.FolderLocationDialog(nameof(Properties.Settings.gameDocumentsPath), Properties.Resources.SelectGameDocLocation);
         }
 
         /// <summary>

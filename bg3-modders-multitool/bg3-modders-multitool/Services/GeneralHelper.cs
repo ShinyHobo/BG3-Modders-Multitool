@@ -25,7 +25,15 @@ namespace bg3_modders_multitool.Services
         public static void WriteToConsole(string resource, params object[] args)
         {
             Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
+                try
+                {
+                    var message = string.Format(resource, args);
+                    ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
+                }
+                catch
+                {
+                    ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
+                }
             });
         }
 

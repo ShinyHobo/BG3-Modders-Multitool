@@ -93,7 +93,7 @@ namespace bg3_modders_multitool.Services
                 {
                     var metadata = ReadMeta(meta, created, modGroup);
                     mods.Add(metadata);
-                    GeneralHelper.WriteToConsole(Properties.Resources.MetadataCreated);
+                    GeneralHelper.WriteToConsole(Properties.Resources.MetadataCreated, metadata);
                 }
                 info.Mods.AddRange(mods);
             }
@@ -189,7 +189,7 @@ namespace bg3_modders_multitool.Services
             {
                 file.Delete();
             }
-            GeneralHelper.WriteToConsole(Properties.Resources.ZipCreated);
+            GeneralHelper.WriteToConsole(Properties.Resources.TempFilesCleaned);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace bg3_modders_multitool.Services
                                 {
                                     var metaList = new Dictionary<string, List<string>>();
                                     var dirName = new DirectoryInfo(fullPath).Name;
-                                    GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName);
+                                    GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName, dirName);
                                     if (Directory.Exists(fullPath + "\\Mods"))
                                     {
                                         // single mod directory

@@ -79,6 +79,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bad translation.
+        /// </summary>
+        public static string BadTranslation {
+            get {
+                return ResourceManager.GetString("BadTranslation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to bg3.exe location.
         /// </summary>
         public static string BG3ExeLabel {
@@ -1110,6 +1119,33 @@ namespace bg3_modders_multitool.Properties {
         public static string SelectDivineMessage {
             get {
                 return ResourceManager.GetString("SelectDivineMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select your game&apos;s documents folder location.
+        /// </summary>
+        public static string SelectGameDocLocation {
+            get {
+                return ResourceManager.GetString("SelectGameDocLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select bg3.exe or bg3_dx11.exe location.
+        /// </summary>
+        public static string SelectGameLocation {
+            get {
+                return ResourceManager.GetString("SelectGameLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select your game mod directory.
+        /// </summary>
+        public static string SelectGameModDirectory {
+            get {
+                return ResourceManager.GetString("SelectGameModDirectory", resourceCulture);
             }
         }
         
