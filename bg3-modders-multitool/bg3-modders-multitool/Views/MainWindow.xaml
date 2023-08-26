@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:bg3_modders_multitool.Views"
+        xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Baldur's Gate 3 Modder's Multitool" Height="450" Width="800">
+        Title="{x:Static p:Resources.AppTitle}" Height="450" Width="800">
         <!-- Developed by ShinyHobo -->
         <!-- Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd. -->
     <Grid>
@@ -14,8 +15,8 @@
             <views:DragAndDropBox x:Name="dragAndDropBox"/>
         </Viewbox>
         <Grid Margin="273,10,60,340">
-            <Label x:Name="guidLabel" Content="v4 UUID/TranslatedString Handle Generator" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
-            <Button x:Name="guidGenerate" Content="Generate" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
+            <Label x:Name="guidLabel" Content="{x:Static p:Resources.UUIDTitle}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="guidGenerate" Content="{x:Static p:Resources.GenerateTitle}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
             <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
             <CheckBox x:Name="typeSwitch" Content="Handle" HorizontalAlignment="Left" Margin="390,33,0,0" VerticalAlignment="Top" Cursor="Hand"/>
         </Grid>

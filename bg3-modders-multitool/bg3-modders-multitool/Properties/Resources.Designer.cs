@@ -61,11 +61,29 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Baldur&apos;s Gate 3 Modder&apos;s Multitool.
+        /// </summary>
+        public static string AppTitle {
+            get {
+                return ResourceManager.GetString("AppTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempting to pack mod..
         /// </summary>
         public static string AttemptingToPack {
             get {
                 return ResourceManager.GetString("AttemptingToPack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to bg3.exe location.
+        /// </summary>
+        public static string BG3ExeLabel {
+            get {
+                return ResourceManager.GetString("BG3ExeLabel", resourceCulture);
             }
         }
         
@@ -84,6 +102,15 @@ namespace bg3_modders_multitool.Properties {
         public static string CancelledGOE {
             get {
                 return ResourceManager.GetString("CancelledGOE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration.
+        /// </summary>
+        public static string ConfigurationTitle {
+            get {
+                return ResourceManager.GetString("ConfigurationTitle", resourceCulture);
             }
         }
         
@@ -358,6 +385,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Game&apos;s Documents folder location.
+        /// </summary>
+        public static string GameDocsLocationLabel {
+            get {
+                return ResourceManager.GetString("GameDocsLocationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select you game&apos;s Documents folder. (e.g: ...\AppData\Local\Larian Studios\Baldur&apos;s Gate 3).
+        /// </summary>
+        public static string GameDocsLocationTooltip {
+            get {
+                return ResourceManager.GetString("GameDocsLocationTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects loaded....
         /// </summary>
         public static string GameObjectsLoaded {
@@ -372,6 +417,15 @@ namespace bg3_modders_multitool.Properties {
         public static string GameObjectUncovered {
             get {
                 return ResourceManager.GetString("GameObjectUncovered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        public static string GenerateTitle {
+            get {
+                return ResourceManager.GetString("GenerateTitle", resourceCulture);
             }
         }
         
@@ -475,6 +529,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LSLib divine.exe location (latest version is required).
+        /// </summary>
+        public static string LSLibLocation {
+            get {
+                return ResourceManager.GetString("LSLibLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Metadata for {0} created..
         /// </summary>
         public static string MetadataCreated {
@@ -574,6 +637,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quick Launch.
+        /// </summary>
+        public static string QuickLaunchLabel {
+            get {
+                return ResourceManager.GetString("QuickLaunchLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loads game directly into last save. Skips splashscreen at loadup..
+        /// </summary>
+        public static string QuickLaunchTooltip {
+            get {
+                return ResourceManager.GetString("QuickLaunchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reading GameObjects from root templates; this will take a while....
         /// </summary>
         public static string ReadingGameObjects {
@@ -606,6 +687,15 @@ namespace bg3_modders_multitool.Properties {
         public static string RetrievingFileListDecompression {
             get {
                 return ResourceManager.GetString("RetrievingFileListDecompression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select.
+        /// </summary>
+        public static string SelectLocation {
+            get {
+                return ResourceManager.GetString("SelectLocation", resourceCulture);
             }
         }
         
@@ -678,6 +768,15 @@ namespace bg3_modders_multitool.Properties {
         public static string UnpackingProcessStarted {
             get {
                 return ResourceManager.GetString("UnpackingProcessStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to v4 UUID/TranslatedString Handle Generator.
+        /// </summary>
+        public static string UUIDTitle {
+            get {
+                return ResourceManager.GetString("UUIDTitle", resourceCulture);
             }
         }
         

@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Baldur's Gate 3 Modder's Multitool</value>
+  </data>
   <data name="AttemptingToPack" xml:space="preserve">
     <value>Attempting to pack mod.</value>
+  </data>
+  <data name="BG3ExeLabel" xml:space="preserve">
+    <value>bg3.exe location</value>
   </data>
   <data name="CachingFile" xml:space="preserve">
     <value>Caching {0}...</value>
@@ -126,6 +132,9 @@
   </data>
   <data name="CancelledGOE" xml:space="preserve">
     <value>GameObjects loading cancelled.</value>
+  </data>
+  <data name="ConfigurationTitle" xml:space="preserve">
+    <value>Configuration</value>
   </data>
   <data name="ConvertingModelDae" xml:space="preserve">
     <value>Converting model to .dae for rendering...</value>
@@ -233,12 +242,21 @@
   <data name="FoundVisualBanks" xml:space="preserve">
     <value>VisualBanks found...</value>
   </data>
+  <data name="GameDocsLocationLabel" xml:space="preserve">
+    <value>Game's Documents folder location</value>
+  </data>
+  <data name="GameDocsLocationTooltip" xml:space="preserve">
+    <value>Please select you game's Documents folder. (e.g: ...\AppData\Local\Larian Studios\Baldur's Gate 3)</value>
+  </data>
   <data name="GameObjectsLoaded" xml:space="preserve">
     <value>GameObjects loaded...</value>
   </data>
   <data name="GameObjectUncovered" xml:space="preserve">
     <value>GameObject attribute type [{0}] not covered.</value>
     <comment>type</comment>
+  </data>
+  <data name="GenerateTitle" xml:space="preserve">
+    <value>Generate</value>
   </data>
   <data name="IndexCorrupt" xml:space="preserve">
     <value>Available index is corrupt. Please rerun the indexer to create a new one.</value>
@@ -277,6 +295,9 @@
     <value>Loading {0} from cache...</value>
     <comment>file name</comment>
   </data>
+  <data name="LSLibLocation" xml:space="preserve">
+    <value>LSLib divine.exe location (latest version is required)</value>
+  </data>
   <data name="MetadataCreated" xml:space="preserve">
     <value>Metadata for {0} created.</value>
     <comment>metadata name</comment>
@@ -314,6 +335,12 @@
     <value>Quick launch settings toggled {0}!</value>
     <comment>toggle setting</comment>
   </data>
+  <data name="QuickLaunchLabel" xml:space="preserve">
+    <value>Quick Launch</value>
+  </data>
+  <data name="QuickLaunchTooltip" xml:space="preserve">
+    <value>Loads game directly into last save. Skips splashscreen at loadup.</value>
+  </data>
   <data name="ReadingGameObjects" xml:space="preserve">
     <value>Reading GameObjects from root templates; this will take a while...</value>
   </data>
@@ -325,6 +352,9 @@
   </data>
   <data name="RetrievingFileListDecompression" xml:space="preserve">
     <value>Retrieving file list for decompression.</value>
+  </data>
+  <data name="SelectLocation" xml:space="preserve">
+    <value>Select</value>
   </data>
   <data name="SortingBanksFiles" xml:space="preserve">
     <value>Sorting bank files...</value>
@@ -349,6 +379,9 @@
   </data>
   <data name="UnpackingProcessStarted" xml:space="preserve">
     <value>Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.</value>
+  </data>
+  <data name="UUIDTitle" xml:space="preserve">
+    <value>v4 UUID/TranslatedString Handle Generator</value>
   </data>
   <data name="ZipCreated" xml:space="preserve">
     <value>{0}.zip created.</value>
