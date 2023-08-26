@@ -142,6 +142,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically..
+        /// </summary>
+        public static string ClickOrDropModPacker {
+            get {
+                return ResourceManager.GetString("ClickOrDropModPacker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Essential configuration options.
         /// </summary>
         public static string ConfigButtonTooltip {
