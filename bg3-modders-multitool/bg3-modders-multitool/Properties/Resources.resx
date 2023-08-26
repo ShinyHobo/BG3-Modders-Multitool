@@ -123,6 +123,9 @@
   <data name="AttemptingToPack" xml:space="preserve">
     <value>Attempting to pack mod.</value>
   </data>
+  <data name="BadTranslation" xml:space="preserve">
+    <value>Bad translation</value>
+  </data>
   <data name="BG3ExeLabel" xml:space="preserve">
     <value>bg3.exe location</value>
   </data>
@@ -493,6 +496,15 @@
   </data>
   <data name="SelectDivineMessage" xml:space="preserve">
     <value>Select divine.exe location</value>
+  </data>
+  <data name="SelectGameDocLocation" xml:space="preserve">
+    <value>Select your game's documents folder location</value>
+  </data>
+  <data name="SelectGameLocation" xml:space="preserve">
+    <value>Select bg3.exe or bg3_dx11.exe location</value>
+  </data>
+  <data name="SelectGameModDirectory" xml:space="preserve">
+    <value>Please select your game mod directory</value>
   </data>
   <data name="SelectLocation" xml:space="preserve">
     <value>Select</value>
