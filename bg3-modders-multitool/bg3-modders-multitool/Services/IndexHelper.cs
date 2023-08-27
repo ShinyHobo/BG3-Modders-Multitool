@@ -130,6 +130,7 @@ namespace bg3_modders_multitool.Services
                 var extension = Path.GetExtension(file);
                 // if file type is excluded, only track file name and path so it can be searched for by name
                 var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file);
+                file = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{System.IO.Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),

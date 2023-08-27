@@ -23,7 +23,6 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
             Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
@@ -40,15 +39,16 @@ namespace bg3_modders_multitool.Services
             var paks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
             return Task.Run(() =>
             {
+                GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
                 return Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file =>
                 {
                     await RunProcessAsync(file, unpackPath);
                 }));
             }).ContinueWith(delegate
             {
-                GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
                 if (!Cancelled)
                 {
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
             });

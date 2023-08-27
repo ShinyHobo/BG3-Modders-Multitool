@@ -174,7 +174,7 @@ namespace bg3_modders_multitool.ViewModels
             get { return _info; }
             set {
                 _info = value;
-                var autoGenGameObject = new AutoGenGameObject(value.FileLocation, value.MapKey).Data;
+                var autoGenGameObject = new AutoGenGameObject(FileHelper.GetPath(value.FileLocation), value.MapKey).Data;
                 GameObjectAttributes = autoGenGameObject?.Attributes;
                 GameObjectChildren = autoGenGameObject?.Children;
                 var hasModel = GameObjectAttributes?.Any(goa => goa.Name == "CharacterVisualResourceID" || goa.Name == "VisualTemplate");

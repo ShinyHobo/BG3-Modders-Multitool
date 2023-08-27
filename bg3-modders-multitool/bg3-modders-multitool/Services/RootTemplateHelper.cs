@@ -215,6 +215,7 @@ namespace bg3_modders_multitool.Services
             #endif
             Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
             {
+                rootTemplate = FileHelper.GetPath(rootTemplate);
                 if (File.Exists(rootTemplate))
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
@@ -543,6 +544,7 @@ namespace bg3_modders_multitool.Services
             if(visualBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
             Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile => {
+                visualBankFile = FileHelper.GetPath(visualBankFile);
                 if (File.Exists(visualBankFile))
                 {
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));

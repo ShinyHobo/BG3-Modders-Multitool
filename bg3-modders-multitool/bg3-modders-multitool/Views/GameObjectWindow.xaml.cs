@@ -77,25 +77,13 @@ namespace bg3_modders_multitool.Views
             var vm = DataContext as GameObjectViewModel;
             if (vm.ModelLoading != Visibility.Visible && button.IsEnabled)
             {
-                try
-                {
-                    button.IsEnabled = false;
-                    if (vm.SelectedButton != null)
-                        vm.SelectedButton.IsEnabled = true;
-                    vm.ModelLoading = Visibility.Visible;
-                    vm.Info = vm.FindGameObject(button.Uid);
-                    vm.SelectedKey = button.Uid;
-                    vm.SelectedButton = button;
-                }
-                catch(System.Exception ex)
-                {
-                    GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
-                } 
-                finally 
-                {
-                    vm.ModelLoading = Visibility.Hidden;
-                    button.IsEnabled = true;
-                }
+                button.IsEnabled = false;
+                if (vm.SelectedButton != null)
+                    vm.SelectedButton.IsEnabled = true;
+                vm.ModelLoading = Visibility.Visible;
+                vm.Info = vm.FindGameObject(button.Uid);
+                vm.SelectedKey = button.Uid;
+                vm.SelectedButton = button;
             }
         }
 

@@ -170,7 +170,7 @@
     <value>Converts all convertable, unpacked files to .lsx</value>
   </data>
   <data name="CorruptXmlFile" xml:space="preserve">
-    <value>{0} appears to be corrupt or missing. Delete file and decompress, then try again. Skipping file...</value>
+    <value>{0} appears to be corrupt or missing. Delete file and Decompress, then try again. Skipping file...</value>
     <comment>file path</comment>
   </data>
   <data name="DecompressFilesButton" xml:space="preserve">
