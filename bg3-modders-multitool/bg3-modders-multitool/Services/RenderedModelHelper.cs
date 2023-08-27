@@ -156,7 +156,7 @@ namespace bg3_modders_multitool.Services
                         });
                 });
                 lock (geometryList)
-                    geometryLookup.Add(meshGroup.Key, geometryList);
+                    geometryLookup.Add(meshGroup.Key, geometryList.Where(gl => gl != null).ToList());
             });
             return geometryLookup;
         }

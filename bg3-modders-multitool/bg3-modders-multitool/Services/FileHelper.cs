@@ -44,7 +44,7 @@ namespace bg3_modders_multitool.Services
 
             var originalExtension = Path.GetExtension(file);
             var newFile = file.Replace(originalExtension, $".{extension}");
-            var isConvertableToLsx = newPath == null ? CanConvertToLsx(file) : CanConvertToLsx(newPath);
+            var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
             var isConvertableToXml = originalExtension.Contains("loca");
             var isConvertableToLoca = originalExtension.Contains("xml");
             string path;
@@ -77,7 +77,7 @@ namespace bg3_modders_multitool.Services
                     // These are invalid .lsbs/.lsbc files if this error pops up
                     if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file, ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
                     }
                 }
 
@@ -98,7 +98,7 @@ namespace bg3_modders_multitool.Services
                     } 
                     catch(Exception ex)
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file, ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
                     }
                 }
             }
@@ -113,7 +113,7 @@ namespace bg3_modders_multitool.Services
                     }
                     catch (Exception ex)
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file, ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
                     }
                 }
             }

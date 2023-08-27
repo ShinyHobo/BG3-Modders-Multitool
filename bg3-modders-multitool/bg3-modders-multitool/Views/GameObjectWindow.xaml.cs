@@ -182,7 +182,14 @@ namespace bg3_modders_multitool.Views
                 {
                     foreach (var item in editor.ItemsSource)
                     {
-                        text += System.Enum.GetName(item.GetType(), item) + ";";
+                        if (item is string)
+                        {
+                            text += item + ";";
+                        }
+                        else
+                        {
+                            text += System.Enum.GetName(item.GetType(), item) + ";";
+                        }
                     }
                 }
                 editor.Content = text;
