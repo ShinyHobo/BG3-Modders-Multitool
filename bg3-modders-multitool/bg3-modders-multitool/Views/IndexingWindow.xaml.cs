@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
@@ -130,14 +131,15 @@ namespace bg3_modders_multitool.Views
             convertAndOpenButton.IsEnabled = false;
             var vm = DataContext as SearchResults;
             var ext = Path.GetExtension(vm.SelectedPath);
-            if(ext == ".wem")
+            var selectedPath = FileHelper.GetPath(vm.SelectedPath);
+            if (ext == ".wem")
             {
-                FileHelper.PlayAudio(vm.SelectedPath);
+                FileHelper.PlayAudio(selectedPath);
             }
             else
             {
-                var newFile = FileHelper.Convert(vm.SelectedPath, "lsx");
-                FileHelper.OpenFile(newFile);
+                var newFile = FileHelper.Convert(selectedPath, "lsx");
+                FileHelper.OpenFile(newFile, vm.FileContents.FirstOrDefault()?.Key);
             }
             convertAndOpenButton.IsEnabled = true;
         }
