@@ -23,7 +23,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
+            GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
             Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
