@@ -25,7 +25,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public static string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bshd",".clc",".clm",".cln",".dae",
             ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
-            ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsj",".lsx",".ogg",".patch",".png",".shd",".tga",".tmpl",".ttf",
+            ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsj",".lsx",".ogg",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
             ".txt",".wem",".xaml",".xml", Properties.Resources.Extensionless
         };
 
