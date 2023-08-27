@@ -285,7 +285,7 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether or not the file is a .GR2 file.</returns>
         public static bool IsGR2(string path)
         {
-            return Path.GetExtension(path).Contains(".GR2") || Path.GetExtension(path).Contains(".gr2");
+            return Path.GetExtension(path).ToLower().Contains(".gr2");
         }
 
         /// <summary>

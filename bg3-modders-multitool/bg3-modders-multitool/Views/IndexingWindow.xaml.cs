@@ -55,7 +55,7 @@ namespace bg3_modders_multitool.Views
                 vm.FullResultList.AddRange(matches.FilteredMatches);
                 foreach (string result in matches.Matches)
                 {
-                    vm.Results.Add(new SearchResult { Path = result.Replace($"UnpackedData\\",string.Empty) });
+                    vm.Results.Add(new SearchResult { Path = result });
                 }
                 searchFilesButton.IsEnabled = true;
                 fileTypeFilter.IsEnabled = true;
@@ -175,7 +175,7 @@ namespace bg3_modders_multitool.Views
                             ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
                             if (fileTypeFilter.SelectedItems != null && fileTypeFilter.SelectedItems.Contains(ext))
                             {
-                                vm.Results.Add(new SearchResult { Path = result.Replace($"UnpackedData\\", string.Empty) });
+                                vm.Results.Add(new SearchResult { Path = result });
                             }
                         }
                     }
