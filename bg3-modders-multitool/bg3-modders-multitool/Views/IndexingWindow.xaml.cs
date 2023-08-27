@@ -33,25 +33,27 @@ namespace bg3_modders_multitool.Views
             timer.Tick += Timer_Tick;
 
             // TODO - get full list of file types from somewhere
-            fileTypeFilter.ItemsSource = new string[] { ".lsx", ".lsf", "" };
+            fileTypeFilter.ItemsSource = FileHelper.FileTypes;
             fileTypeFilter.IsSelectAllActive = true;
             fileTypeFilter.SelectAll();
         }
 
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)
         {
-            if(!string.IsNullOrEmpty(search.Text))
+            if(!string.IsNullOrEmpty(search.Text) && fileTypeFilter.SelectedItems.Count > 0)
             {
                 searchFilesButton.IsEnabled = false;
+                fileTypeFilter.IsEnabled = false;
                 var vm = DataContext as SearchResults;
                 vm.SelectedPath = string.Empty;
                 vm.FileContents = new ObservableCollection<SearchResult>();
                 vm.Results = new ObservableCollection<SearchResult>();
-                foreach (string result in await vm.IndexHelper.SearchFiles(search.Text))
+                foreach (string result in await vm.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems))
                 {
                     vm.Results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
                 searchFilesButton.IsEnabled = true;
+                fileTypeFilter.IsEnabled = true;
             }
         }
 

@@ -170,7 +170,8 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="search">The text to search for. Supports file title and contents.</param>
         /// <param name="writeToConsole">Whether or not to write search status to console (errors still report).</param>
-        public Task<List<string>> SearchFiles(string search, bool writeToConsole = true)
+        /// <param name="selectedItems">The selected file types to filter on</param>
+        public Task<List<string>> SearchFiles(string search, bool writeToConsole = true, System.Collections.IList selectedFileTypes = null)
         {
             SearchText = search;
             return Task.Run(() => { 
@@ -207,6 +208,7 @@ namespace bg3_modders_multitool.Services
                             TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
                             var filteredSomeResults = 0;
+                            var missingExtensions = new List<string>();
 
                             // display results
                             foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
@@ -216,14 +218,23 @@ namespace bg3_modders_multitool.Services
 
                                 Document doc = searcher.Doc(docId);
                                 var path = doc.Get("path");
-                                var ext = Path.GetExtension(path);
-                                if (BinaryExtensions.Contains(ext)) // TODO - add option to turn this off in config
+                                var ext = Path.GetExtension(path).ToLower();
+                                if (selectedFileTypes != null && !selectedFileTypes.Contains(ext)) // TODO - add option to turn this off in config
                                 {
                                     filteredSomeResults++;
+                                    if(!FileHelper.FileTypes.Contains(ext))
+                                    {
+                                        missingExtensions.Add(ext);
+                                    }
                                     continue;
                                 }
 
                                 matches.Add(path);
+                            }
+
+                            if(missingExtensions.Count > 0)
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.MissingFileTypes, string.Join(",", missingExtensions.Distinct()));
                             }
 
                             if (writeToConsole)

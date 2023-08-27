@@ -423,6 +423,10 @@
   <data name="MetaLsxNotFound2" xml:space="preserve">
     <value>meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.</value>
   </data>
+  <data name="MissingFileTypes" xml:space="preserve">
+    <value>File type(s) [{0}] missing from list; please inform ShinyHobo</value>
+    <comment>file extension(s)</comment>
+  </data>
   <data name="ModelConversionComplete" xml:space="preserve">
     <value>Model conversion complete!</value>
   </data>

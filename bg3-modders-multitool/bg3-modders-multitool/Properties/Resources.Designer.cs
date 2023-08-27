@@ -907,6 +907,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File type(s) [{0}] missing from list; please inform ShinyHobo.
+        /// </summary>
+        public static string MissingFileTypes {
+            get {
+                return ResourceManager.GetString("MissingFileTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model conversion complete!.
         /// </summary>
         public static string ModelConversionComplete {
