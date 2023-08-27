@@ -223,6 +223,10 @@
   <data name="EstimateLabel" xml:space="preserve">
     <value>Estimate</value>
   </data>
+  <data name="Extensionless" xml:space="preserve">
+    <value>extensionless</value>
+    <comment>for files without an extension</comment>
+  </data>
   <data name="FailedGOE" xml:space="preserve">
     <value>GameObjects failed to load. {0} seconds passed.</value>
     <comment>seconds</comment>

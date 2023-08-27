@@ -23,8 +23,11 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// List of all known file types used
         /// </summary>
-        public static string[] FileTypes = { ".bin", ".bk2", ".bshd", ".data", ".dae", ".dds", ".fbx", ".ffxanim", ".gr2", ".gtp", ".jpg",
-            ".loca", ".lsb", ".lsbc", ".lsbs", ".lsf", ".lsx", ".ogg", ".patch", ".png", ".shd", ".txt", ".tga", ".ttf", ".wem", ".xml" };
+        public static string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bshd",".clc",".clm",".cln",".dae",
+            ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
+            ".loca",".lsb",".lsbc",".lsbs",".lsf",".lsj",".lsx",".ogg",".patch",".png",".shd",".tga",".tmpl",".ttf",
+            ".txt",".wem",".xaml",".xml", Properties.Resources.Extensionless
+        };
 
         /// <summary>
         /// Converts the given file to .lsx type resource in-place

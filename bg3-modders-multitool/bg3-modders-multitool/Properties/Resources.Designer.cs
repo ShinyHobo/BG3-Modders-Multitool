@@ -358,6 +358,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to extensionless.
+        /// </summary>
+        public static string Extensionless {
+            get {
+                return ResourceManager.GetString("Extensionless", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects failed to load. {0} seconds passed..
         /// </summary>
         public static string FailedGOE {

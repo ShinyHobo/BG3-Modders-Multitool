@@ -219,6 +219,7 @@ namespace bg3_modders_multitool.Services
                                 Document doc = searcher.Doc(docId);
                                 var path = doc.Get("path");
                                 var ext = Path.GetExtension(path).ToLower();
+                                ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
                                 if (selectedFileTypes != null && !selectedFileTypes.Contains(ext)) // TODO - add option to turn this off in config
                                 {
                                     filteredSomeResults++;
