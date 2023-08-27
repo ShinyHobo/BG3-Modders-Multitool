@@ -7,6 +7,7 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Services;
     using HelixToolkit.Wpf.SharpDX;
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
@@ -48,7 +49,6 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         #region Properties
-        public ObservableCollection<string> SelectedFileTypes { get; set; }
 
         #region Indexing
         public IndexHelper IndexHelper { get; set; }
@@ -252,6 +252,8 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        public List<string> FullResultList { get; internal set; }
         #endregion
 
         #endregion

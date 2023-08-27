@@ -662,7 +662,7 @@ namespace bg3_modders_multitool.Services
         {
             var rtList = new List<string>();
             IndexHelper.SearchFiles(searchTerm, false).ContinueWith(results => {
-                rtList.AddRange(results.Result.Where(r => r.EndsWith(".lsf")));
+                rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsf")));
             }).Wait();
             return rtList;
         }

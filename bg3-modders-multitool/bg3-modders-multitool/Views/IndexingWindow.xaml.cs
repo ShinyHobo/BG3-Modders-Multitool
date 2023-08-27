@@ -8,6 +8,8 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -48,7 +50,10 @@ namespace bg3_modders_multitool.Views
                 vm.SelectedPath = string.Empty;
                 vm.FileContents = new ObservableCollection<SearchResult>();
                 vm.Results = new ObservableCollection<SearchResult>();
-                foreach (string result in await vm.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems))
+                var matches = await vm.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems);
+                vm.FullResultList = matches.Matches;
+                vm.FullResultList.AddRange(matches.FilteredMatches);
+                foreach (string result in matches.Matches)
                 {
                     vm.Results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\",string.Empty) });
                 }
@@ -141,6 +146,41 @@ namespace bg3_modders_multitool.Views
         {
             var vm = DataContext as SearchResults;
             vm.Clear();
+        }
+
+        private CancellationTokenSource UpdateFilterCancellation { get; set; }
+
+        private void fileTypeFilter_ItemSelectionChanged(object sender, Xceed.Wpf.Toolkit.Primitives.ItemSelectionChangedEventArgs e)
+        {
+            if (UpdateFilterCancellation != null)
+            {
+                UpdateFilterCancellation.Cancel();
+            }
+            UpdateFilterCancellation = new CancellationTokenSource();
+            CancellationToken ct = UpdateFilterCancellation.Token;
+
+            Task.Factory.StartNew(() =>
+            {
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    var vm = DataContext as SearchResults;
+                    if (vm.FullResultList != null)
+                    {
+                        
+                        vm.FileContents = new ObservableCollection<SearchResult>();
+                        vm.Results = new ObservableCollection<SearchResult>();
+                        foreach (string result in vm.FullResultList)
+                        {
+                            var ext = Path.GetExtension(result).ToLower();
+                            ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
+                            if (fileTypeFilter.SelectedItems != null && fileTypeFilter.SelectedItems.Contains(ext))
+                            {
+                                vm.Results.Add(new SearchResult { Path = result.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty) });
+                            }
+                        }
+                    }
+                });
+            }, ct);
         }
     }
 }

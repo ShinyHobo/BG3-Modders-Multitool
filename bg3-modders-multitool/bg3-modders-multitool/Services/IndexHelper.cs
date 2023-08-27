@@ -170,16 +170,18 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="search">The text to search for. Supports file title and contents.</param>
         /// <param name="writeToConsole">Whether or not to write search status to console (errors still report).</param>
-        /// <param name="selectedItems">The selected file types to filter on</param>
-        public Task<List<string>> SearchFiles(string search, bool writeToConsole = true, System.Collections.IList selectedFileTypes = null)
+        /// <param name="selectedFileTypes">The selected file types to filter on</param>
+        /// <returns>The list of matches and the list of filtered matches</returns>
+        public Task<(List<string> Matches,List<string>FilteredMatches)> SearchFiles(string search, bool writeToConsole = true, System.Collections.IList selectedFileTypes = null)
         {
             SearchText = search;
             return Task.Run(() => { 
                 var matches = new List<string>();
-                if(!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
+                var filteredMatches = new List<string>();
+                if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFound);
-                    return matches;
+                    return (Matches: matches, FilteredMatches: filteredMatches);
                 }
 
                 try
@@ -227,6 +229,7 @@ namespace bg3_modders_multitool.Services
                                     {
                                         missingExtensions.Add(ext);
                                     }
+                                    filteredMatches.Add(path);
                                     continue;
                                 }
 
@@ -259,7 +262,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexCorrupt);
                 }
 
-                return matches.OrderBy(m => m).ToList();
+                return (Matches: matches.OrderBy(m => m).ToList(), FilteredMatches: matches);
             });
         }
         #endregion
