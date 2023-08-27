@@ -155,8 +155,8 @@ namespace bg3_modders_multitool.Services
                             SlotType = slotType
                         });
                 });
-                lock (geometryList)
-                    geometryLookup.Add(meshGroup.Key, geometryList.Where(gl => gl != null).ToList());
+                lock (geometryLookup)
+                    geometryLookup.Add(meshGroup.Key, geometryList);
             });
             return geometryLookup;
         }
