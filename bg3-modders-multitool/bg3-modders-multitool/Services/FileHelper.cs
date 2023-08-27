@@ -25,7 +25,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public static string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bshd",".clc",".clm",".cln",".dae",
             ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
-            ".loca",".lsb",".lsbc",".lsbs",".lsf",".lsj",".lsx",".ogg",".patch",".png",".shd",".tga",".tmpl",".ttf",
+            ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsj",".lsx",".ogg",".patch",".png",".shd",".tga",".tmpl",".ttf",
             ".txt",".wem",".xaml",".xml", Properties.Resources.Extensionless
         };
 
@@ -309,19 +309,26 @@ namespace bg3_modders_multitool.Services
             var path = GetPath(file);
             if (File.Exists(@"\\?\" + path))
             {
-                if(IsGR2(path))
+                try
                 {
-                    var dae = Path.ChangeExtension(path,".dae");
-                    // determine if you can determine if there is a default program
-                    var fileAssociation = new FileAssociationInfo(".dae");
-                    if(fileAssociation.Exists)
-                        Process.Start(dae);
-                    // open folder
-                    Process.Start("explorer.exe", $"/select,{dae}");
+                    if (IsGR2(path))
+                    {
+                        var dae = Path.ChangeExtension(path, ".dae");
+                        // determine if you can determine if there is a default program
+                        var fileAssociation = new FileAssociationInfo(".dae");
+                        if (fileAssociation.Exists)
+                            Process.Start(dae);
+                        // open folder
+                        Process.Start("explorer.exe", $"/select,{dae}");
+                    }
+                    else
+                    {
+                        Process.Start(path);
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    Process.Start(path);
+                    GeneralHelper.WriteToConsole(ex.Message);
                 }
             }
             else
