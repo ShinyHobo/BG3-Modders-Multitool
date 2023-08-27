@@ -284,6 +284,9 @@
     <value>File does not exist on the given path ({0}).</value>
     <comment>file path</comment>
   </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>File not found.</value>
+  </data>
   <data name="FixingVerticies" xml:space="preserve">
     <value>Fixing vertices...</value>
   </data>
@@ -359,7 +362,7 @@
     <value>No documents available. Please generate the index again.</value>
   </data>
   <data name="IndexSearchReturned" xml:space="preserve">
-    <value>Search returned {0} results in {1} ms</value>
+    <value>Search returned {0} valid results in {1} ms</value>
     <comment>results count, time in milliseconds</comment>
   </data>
   <data name="IndexSearchStarted" xml:space="preserve">
@@ -420,6 +423,10 @@
   <data name="MetaLsxNotFound2" xml:space="preserve">
     <value>meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.</value>
   </data>
+  <data name="MissingFileTypes" xml:space="preserve">
+    <value>File type(s) [{0}] missing from list; please inform ShinyHobo</value>
+    <comment>file extension(s)</comment>
+  </data>
   <data name="ModelConversionComplete" xml:space="preserve">
     <value>Model conversion complete!</value>
   </data>
@@ -437,6 +444,9 @@
   </data>
   <data name="NoGameObjectsFound" xml:space="preserve">
     <value>No GameObjects found; ensure that you have properly indexed and try again.</value>
+  </data>
+  <data name="NoLinesFound" xml:space="preserve">
+    <value>No lines found; search returned filename only.</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>off</value>
@@ -481,6 +491,9 @@
   </data>
   <data name="ReadingGameObjects" xml:space="preserve">
     <value>Reading GameObjects from root templates; this will take a while...</value>
+  </data>
+  <data name="ResultsHaveBeenFiltered" xml:space="preserve">
+    <value>{0} results have been filtered out.</value>
   </data>
   <data name="RetrievedFileListDecompression" xml:space="preserve">
     <value>Retrived file list. Starting decompression; this could take awhile.</value>

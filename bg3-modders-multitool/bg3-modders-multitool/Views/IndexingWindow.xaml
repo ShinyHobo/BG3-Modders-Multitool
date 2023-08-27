@@ -4,14 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:bg3_modders_multitool.XAMLHelpers" xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
         MinWidth="1250"
         MinHeight="250"
         Title="{x:Static p:Resources.IndexSearchTitle}" Height="430" Width="1250" Closing="Window_Closing">
     <Grid>
-        <Button x:Name="searchFilesButton" Content="{x:Static p:Resources.SearchFilesButton}" HorizontalAlignment="Left" Margin="668,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand"/>
-        <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="653" KeyDown="Search_KeyDown"/>
+        <Button x:Name="searchFilesButton" Content="{x:Static p:Resources.SearchFilesButton}" HorizontalAlignment="Left" Margin="568,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand"/>
+        <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="558" KeyDown="Search_KeyDown"/>
+        <xctk:CheckComboBox x:Name="fileTypeFilter" Height="23" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="668,10,0,0"
+                            SelectedItemsOverride="{Binding SelectedFileTypes}"/>
         <ListView x:Name="searchResults" Margin="10,38,0,10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Left" HorizontalAlignment="Left" MinWidth="758" Width="758" ItemsSource="{Binding Results}">
             <ListView.ItemTemplate>
                 <DataTemplate>

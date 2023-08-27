@@ -21,6 +21,12 @@ namespace bg3_modders_multitool.Services
         public static string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
         /// <summary>
+        /// List of all known file types used
+        /// </summary>
+        public static string[] FileTypes = { ".bin", ".bk2", ".bshd", ".data", ".dae", ".dds", ".fbx", ".ffxanim", ".gr2", ".gtp", ".jpg",
+            ".loca", ".lsb", ".lsbc", ".lsbs", ".lsf", ".lsx", ".ogg", ".patch", ".png", ".shd", ".txt", ".tga", ".ttf", ".wem", ".xml" };
+
+        /// <summary>
         /// Converts the given file to .lsx type resource in-place
         /// </summary>
         /// <param name="file">The file to convert.</param>
@@ -341,8 +347,6 @@ namespace bg3_modders_multitool.Services
                 {
                     return;
                 }
-
-                var sner = serialObject.GetType();
 
                 GeneralHelper.WriteToConsole(Properties.Resources.CachingFile, filename);
                 System.IO.TextWriter writer = null;

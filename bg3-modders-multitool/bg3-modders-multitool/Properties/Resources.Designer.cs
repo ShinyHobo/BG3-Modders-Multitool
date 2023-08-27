@@ -511,6 +511,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File not found..
+        /// </summary>
+        public static string FileNotFound {
+            get {
+                return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fixing vertices....
         /// </summary>
         public static string FixingVerticies {
@@ -727,7 +736,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search returned {0} results in {1} ms.
+        ///   Looks up a localized string similar to Search returned {0} valid results in {1} ms.
         /// </summary>
         public static string IndexSearchReturned {
             get {
@@ -898,6 +907,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File type(s) [{0}] missing from list; please inform ShinyHobo.
+        /// </summary>
+        public static string MissingFileTypes {
+            get {
+                return ResourceManager.GetString("MissingFileTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model conversion complete!.
         /// </summary>
         public static string ModelConversionComplete {
@@ -948,6 +966,15 @@ namespace bg3_modders_multitool.Properties {
         public static string NoGameObjectsFound {
             get {
                 return ResourceManager.GetString("NoGameObjectsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No lines found; search returned filename only..
+        /// </summary>
+        public static string NoLinesFound {
+            get {
+                return ResourceManager.GetString("NoLinesFound", resourceCulture);
             }
         }
         
@@ -1074,6 +1101,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ReadingGameObjects {
             get {
                 return ResourceManager.GetString("ReadingGameObjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} results have been filtered out..
+        /// </summary>
+        public static string ResultsHaveBeenFiltered {
+            get {
+                return ResourceManager.GetString("ResultsHaveBeenFiltered", resourceCulture);
             }
         }
         
