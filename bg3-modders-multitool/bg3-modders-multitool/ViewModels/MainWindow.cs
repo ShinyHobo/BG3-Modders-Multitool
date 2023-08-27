@@ -346,7 +346,7 @@ namespace bg3_modders_multitool.ViewModels
         public static List<Language> AvailableLanguages = new List<Language>
             {
                 new Language(Properties.Resources.LangEnglish, "en-US"),
-                new Language(Properties.Resources.LangChinese, "zh-CN")
+                //new Language(Properties.Resources.LangChinese, "zh-CN")
             };
 
         /// <summary>
