@@ -435,6 +435,9 @@
   <data name="NoFilesFound" xml:space="preserve">
     <value>No files found!</value>
   </data>
+  <data name="NoGameObjectsFound" xml:space="preserve">
+    <value>No GameObjects found; ensure that you have properly indexed and try again.</value>
+  </data>
   <data name="Off" xml:space="preserve">
     <value>off</value>
   </data>

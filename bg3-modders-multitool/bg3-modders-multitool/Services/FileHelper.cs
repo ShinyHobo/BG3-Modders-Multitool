@@ -8,8 +8,8 @@ namespace bg3_modders_multitool.Services
     using LSLib.LS;
     using LSLib.LS.Enums;
     using Newtonsoft.Json;
-    using SharpDX.Direct3D11;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -331,7 +331,20 @@ namespace bg3_modders_multitool.Services
             var file = $"Cache/{filename}.json";
             if (!File.Exists(file))
             {
-                GeneralHelper.WriteToConsole(Properties.Resources.CachingFile);
+                var listObject = serialObject as IList;
+                if (listObject != null && listObject.Count == 0)
+                {
+                    return;
+                }
+                var dictObject = serialObject as IDictionary;
+                if(dictObject != null && dictObject.Count == 0)
+                {
+                    return;
+                }
+
+                var sner = serialObject.GetType();
+
+                GeneralHelper.WriteToConsole(Properties.Resources.CachingFile, filename);
                 System.IO.TextWriter writer = null;
                 try
                 {

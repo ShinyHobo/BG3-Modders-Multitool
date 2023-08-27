@@ -943,6 +943,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No GameObjects found; ensure that you have properly indexed and try again..
+        /// </summary>
+        public static string NoGameObjectsFound {
+            get {
+                return ResourceManager.GetString("NoGameObjectsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to off.
         /// </summary>
         public static string Off {

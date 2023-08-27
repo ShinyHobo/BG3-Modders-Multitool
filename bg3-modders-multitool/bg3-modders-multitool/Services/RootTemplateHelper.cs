@@ -62,9 +62,19 @@ namespace bg3_modders_multitool.Services
             rootTemplateTask.ContinueWith(delegate {
                 if(Loaded)
                 {
-                    var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
-                    GeneralHelper.WriteToConsole(Properties.Resources.LoadedGOE, timePassed);
-                    gameObjectViewModel.Loaded = true;
+                    if(GameObjects.Count == 0)
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.NoGameObjectsFound);
+                        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                            gameObjectViewModel.View.Close();
+                        });
+                    }
+                    else
+                    {
+                        var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
+                        GeneralHelper.WriteToConsole(Properties.Resources.LoadedGOE, timePassed);
+                        gameObjectViewModel.Loaded = true;
+                    }
                 }
                 else
                 {
@@ -241,11 +251,11 @@ namespace bg3_modders_multitool.Services
                                         if (int.TryParse(type, out int typeInt))
                                             type = GeneralHelper.LarianTypeEnumConvert(type);
 
-#if DEBUG
+                                        #if DEBUG
                                         typeBag.Add(type);
                                         idBag.Add(id);
                                         classBag.Add(new Tuple<string, string>(id, type));
-#endif
+                                        #endif
                                         if (string.IsNullOrEmpty(handle))
                                         {
                                             gameObject.LoadProperty(id, type, value);
@@ -285,7 +295,13 @@ namespace bg3_modders_multitool.Services
             FileHelper.SerializeObject(typeBag.ToList().Distinct().ToList(), "GameObjectTypes");
             FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
             GeneralHelper.ClassBuilder(classBag.ToList().Distinct().ToList());
-#endif
+            #endif
+
+            if(GameObjectBag.Count == 0)
+            {
+                return false;
+            }
+
             GeneralHelper.WriteToConsole(Properties.Resources.GameObjectsLoaded);
             return true;
         }
@@ -298,6 +314,8 @@ namespace bg3_modders_multitool.Services
         {
             if (GameObjectsCached)
                 return true;
+            if (GameObjectBag.Count == 0)
+                return false;
             GeneralHelper.WriteToConsole(Properties.Resources.SortingGameObjects);
             GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name).ToList();
             var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
@@ -511,15 +529,19 @@ namespace bg3_modders_multitool.Services
             var materialBanks = new ConcurrentDictionary<string, string>();
             var textureBanks = new ConcurrentDictionary<string, string>();
             var visualBankFiles = GetFileList("VisualBank");
-            GeneralHelper.WriteToConsole(Resources.FoundVisualBanks);
+            if(visualBankFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.FoundVisualBanks);
             var materialBankFiles = GetFileList("MaterialBank");
-            GeneralHelper.WriteToConsole(Resources.FoundMaterialBanks);
+            if(materialBankFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.FoundMaterialBanks);
             var textureBankFiles = GetFileList("TextureBank");
-            GeneralHelper.WriteToConsole(Resources.FoundTextureBanks);
+            if(textureBankFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.FoundTextureBanks);
             visualBankFiles.AddRange(materialBankFiles);
             visualBankFiles.AddRange(textureBankFiles);
             visualBankFiles = visualBankFiles.Distinct().ToList();
-            GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
+            if(visualBankFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
             Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile => {
                 if (File.Exists(visualBankFile))
                 {

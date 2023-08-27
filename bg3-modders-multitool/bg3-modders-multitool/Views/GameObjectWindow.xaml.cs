@@ -18,7 +18,7 @@ namespace bg3_modders_multitool.Views
         public GameObjectWindow()
         {
             InitializeComponent();
-            DataContext = new GameObjectViewModel();
+            DataContext = new GameObjectViewModel(this);
         }
 
         #region Events

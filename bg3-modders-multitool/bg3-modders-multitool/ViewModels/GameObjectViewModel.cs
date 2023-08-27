@@ -19,8 +19,9 @@ namespace bg3_modders_multitool.ViewModels
 
     public class GameObjectViewModel : BaseViewModel
     {
-        public GameObjectViewModel()
+        public GameObjectViewModel(Views.GameObjectWindow gameObjectWindow)
         {
+            View = gameObjectWindow;
             RootTemplateHelper = new RootTemplateHelper(this);
 
             EffectsManager = new DefaultEffectsManager();
@@ -312,6 +313,7 @@ namespace bg3_modders_multitool.ViewModels
 
         public string SelectedKey { get; set; }
         public System.Windows.Controls.Button SelectedButton { get; set; }
+        public Views.GameObjectWindow View { get; internal set; }
         #endregion
     }
 }
