@@ -1,7 +1,7 @@
 {
     "name": "BG3_Modders_Multitool",
-    "version_number": "0.9.6",
-    "website_url": "https:/5github.com/ShinyHobo/BG3-Modders-Multitool",
+    "version_number": "0.9.7",
+    "website_url": "https:/github.com/ShinyHobo/BG3-Modders-Multitool",
     "description": "Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace, among other useful features.",
     "dependencies": [
     ]

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
-        Title="{Binding Source={x:Static p:Resources.ConfigurationTitle}, StringFormat={}{0} v0.9.6}" Height="260" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner">
+        Title="{Binding Source={x:Static p:Resources.ConfigurationTitle}, StringFormat={}{0} v0.9.7}" Height="260" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid Margin="10,10,10,0">
             <Label x:Name="divineLabel" Content="{x:Static p:Resources.LSLibLocation}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
