@@ -47,6 +47,7 @@ namespace bg3_modders_multitool.Views
             {
                 searchFilesButton.IsEnabled = false;
                 fileTypeFilter.IsEnabled = false;
+                search.IsEnabled = false;
                 var vm = DataContext as SearchResults;
                 vm.SelectedPath = string.Empty;
                 vm.FileContents = new ObservableCollection<SearchResult>();
@@ -60,6 +61,7 @@ namespace bg3_modders_multitool.Views
                 }
                 searchFilesButton.IsEnabled = true;
                 fileTypeFilter.IsEnabled = true;
+                search.IsEnabled = true;
             }
         }
 

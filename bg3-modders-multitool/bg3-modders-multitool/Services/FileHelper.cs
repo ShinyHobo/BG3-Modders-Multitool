@@ -47,7 +47,7 @@ namespace bg3_modders_multitool.Services
             }
 
             var originalExtension = Path.GetExtension(file);
-            var newFile = file.Replace(originalExtension, $".{extension}");
+            var newFile = string.IsNullOrEmpty(originalExtension) ? $"{file}.{extension}" : file.Replace(originalExtension, $".{extension}");
             var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
             var isConvertableToXml = originalExtension.Contains("loca");
             var isConvertableToLoca = originalExtension.Contains("xml");
