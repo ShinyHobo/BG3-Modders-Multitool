@@ -4,11 +4,18 @@
 /// </summary>
 namespace bg3_modders_multitool.XAMLHelpers
 {
+    using System;
+    using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Documents;
+    using System.Windows.Interop;
     using System.Windows.Markup;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
     using System.Xml;
 
     public class TextBlockFormatter
@@ -40,8 +47,36 @@ namespace bg3_modders_multitool.XAMLHelpers
             string @namespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
             if(formattedText.Contains("InlineUIContainer"))
             {
-                var result = (InlineUIContainer)XamlReader.Parse(formattedText);
-                textBlock.Inlines.Add(result);
+                try
+                {
+                    var result = (InlineUIContainer)XamlReader.Parse(formattedText);
+                    var image = result.Child as Image;
+                    var source = image.Source;
+                    if(source == null)
+                    {
+                        // grab image uri
+                        Regex regex = new Regex("Source=\"(.*)\" Height=");
+                        var imageLoc = regex.Match(formattedText).Groups[1].ToString();
+
+                        try
+                        {
+                            // convert image to something WPF can read
+                            using (var image2 = Pfim.Pfimage.FromFile(imageLoc))
+                            {
+                                var data = Marshal.UnsafeAddrOfPinnedArrayElement(image2.Data, 0);
+                                var bitmap = new System.Drawing.Bitmap(image2.Width, image2.Height, image2.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
+                                var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                image.Source = bitmapImage;
+                            }
+                        } catch { }
+                        textBlock.Inlines.Add(result);
+                    }
+                    else
+                    {
+                        textBlock.Inlines.Add(result);
+                    }
+                }
+                catch { }
             }
             else
             {
