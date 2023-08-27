@@ -478,23 +478,30 @@ namespace bg3_modders_multitool.Services
             var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
             if (File.Exists(@"\\?\" + metaLoc))
             {
-                var meta = DragAndDropHelper.ReadMeta(metaLoc);
-                var characterIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
-                if (File.Exists(@"\\?\" + characterIconAtlas))
+                try
                 {
-                    TextureAtlases.Add(TextureAtlas.Read(characterIconAtlas, pak));
+                    var meta = DragAndDropHelper.ReadMeta(metaLoc);
+                    var characterIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
+                    if (File.Exists(@"\\?\" + characterIconAtlas))
+                    {
+                        TextureAtlases.Add(TextureAtlas.Read(characterIconAtlas, pak));
+                    }
+                    var objectIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items.lsx");
+                    if (File.Exists(@"\\?\" + objectIconAtlas))
+                    {
+                        TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas, pak));
+                    }
+                    var objectIconAtlas2 = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items_2.lsx");
+                    if (File.Exists(@"\\?\" + objectIconAtlas2))
+                    {
+                        TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas2, pak));
+                    }
+                    return true;
                 }
-                var objectIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items.lsx");
-                if (File.Exists(@"\\?\" + objectIconAtlas))
+                catch
                 {
-                    TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas, pak));
+                    GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, metaLoc);
                 }
-                var objectIconAtlas2 = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items_2.lsx");
-                if (File.Exists(@"\\?\" + objectIconAtlas2))
-                {
-                    TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas2, pak));
-                }
-                return true;
             }
             return false;
         }
