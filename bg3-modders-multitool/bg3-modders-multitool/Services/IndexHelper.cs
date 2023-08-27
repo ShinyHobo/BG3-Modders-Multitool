@@ -206,8 +206,7 @@ namespace bg3_modders_multitool.Services
                             // perform search
                             TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
 
-                            if(writeToConsole)
-                                GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchReturned, topDocs.ScoreDocs.Length, TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds);
+                            var filteredSomeResults = 0;
 
                             // display results
                             foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
@@ -216,8 +215,24 @@ namespace bg3_modders_multitool.Services
                                 int docId = scoreDoc.Doc;
 
                                 Document doc = searcher.Doc(docId);
+                                var path = doc.Get("path");
+                                var ext = Path.GetExtension(path);
+                                if (BinaryExtensions.Contains(ext)) // TODO - add option to turn this off in config
+                                {
+                                    filteredSomeResults++;
+                                    continue;
+                                }
 
-                                matches.Add(doc.Get("path"));
+                                matches.Add(path);
+                            }
+
+                            if (writeToConsole)
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchReturned, matches.Count, TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds);
+                                if(filteredSomeResults > 0)
+                                {
+                                    GeneralHelper.WriteToConsole(Properties.Resources.ResultsHaveBeenFiltered, filteredSomeResults);
+                                }
                             }
                         }
                         else
@@ -296,7 +311,7 @@ namespace bg3_modders_multitool.Services
                     }
                     else
                     {
-                        lines.Add(0, "No lines found; search returned filename only.");
+                        lines.Add(0, Properties.Resources.NoLinesFound);
                     }
                 }
             }
@@ -304,7 +319,7 @@ namespace bg3_modders_multitool.Services
             {
                 if (lines.Count == 0)
                 {
-                    lines.Add(0, "File not found.");
+                    lines.Add(0, Properties.Resources.FileNoExist);
                 }
             }
             return lines;
