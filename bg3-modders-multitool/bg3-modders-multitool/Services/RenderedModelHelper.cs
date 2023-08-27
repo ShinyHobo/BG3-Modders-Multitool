@@ -57,11 +57,18 @@ namespace bg3_modders_multitool.Services
                 case "item":
                 case "scenery":
                 case "TileConstruction":
-                    materials = LoadMaterials(template, visualBanks);
-                    var itemVisualResource = LoadVisualResource(template, visualBanks);
-                    if (itemVisualResource != null)
+                    try
                     {
-                        gr2Files.Add(itemVisualResource);
+                        materials = LoadMaterials(template, visualBanks);
+                        var itemVisualResource = LoadVisualResource(template, visualBanks);
+                        if (itemVisualResource != null)
+                        {
+                            gr2Files.Add(itemVisualResource);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
                     }
                     break;
                 default:
@@ -70,15 +77,29 @@ namespace bg3_modders_multitool.Services
 
             var geometryGroup = new List<MeshGeometry>();
 
-            Parallel.ForEach(gr2Files, GeneralHelper.ParallelOptions, gr2File =>
+            try
             {
-                var geometry = GetMesh(gr2File, materials, slotTypes, materialBanks, textureBanks);
-                if (geometry != null)
+                Parallel.ForEach(gr2Files, GeneralHelper.ParallelOptions, gr2File =>
                 {
-                    lock (geometryGroup)
-                        geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
-                }
-            });
+                    try
+                    {
+                        var geometry = GetMesh(gr2File, materials, slotTypes, materialBanks, textureBanks);
+                        if (geometry != null)
+                        {
+                            lock (geometryGroup)
+                                geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+            }
 
             return geometryGroup;
         }
@@ -106,58 +127,72 @@ namespace bg3_modders_multitool.Services
 
             Parallel.ForEach(meshGroups, GeneralHelper.ParallelOptions, meshGroup =>
             {
-                var geometryList = new List<MeshGeometry3DObject>();
-
-                // Selecting body first
-                Parallel.ForEach(meshGroup, GeneralHelper.ParallelOptions, mesh =>
+                try
                 {
-                    var name = mesh.Name.Split('-').First();
-                    Tuple<string, string> materialGuid = null;
-                    if (materials != null && materials.ContainsKey(name))
-                        materialGuid = materials[name];
-                    var meshNode = mesh.Items.Last() as MeshNode;
-                    var meshGeometry = meshNode.Geometry as MeshGeometry3D;
-                    var baseMaterialId = LoadMaterial(materialGuid?.Item1, "basecolor", materialBanks);
-                    if (baseMaterialId == null)
-                        baseMaterialId = LoadMaterial(materialGuid?.Item1, "Body_color_texture", materialBanks);
-                    var baseTexture = LoadTexture(baseMaterialId, textureBanks);
-                    var normalMaterialId = LoadMaterial(materialGuid?.Item1, "normalmap", materialBanks);
-                    if (normalMaterialId == null)
-                        normalMaterialId = LoadMaterial(materialGuid?.Item1, "Fur_normalmap", materialBanks);
-                    if (normalMaterialId == null)
-                        normalMaterialId = LoadMaterial(materialGuid?.Item1, "IrisNormal", materialBanks);
-                    var normalTexture = LoadTexture(normalMaterialId, textureBanks);
-                    var mraoMaterialId = LoadMaterial(materialGuid?.Item1, "physicalmap", materialBanks);
-                    var mraoTexture = LoadTexture(mraoMaterialId, textureBanks);
-                    var hmvyMaterialId = LoadMaterial(materialGuid?.Item1, "HMVY", materialBanks);
-                    var hmvyTexture = LoadTexture(hmvyMaterialId, textureBanks);
-                    var cleaMaterialId = LoadMaterial(materialGuid?.Item1, "CLEA", materialBanks);
-                    var cleaTexture = LoadTexture(cleaMaterialId, textureBanks);
-                    string slotType = null;
-                    if (materialGuid != null && slotTypes.ContainsKey(materialGuid.Item2))
-                        slotType = slotTypes[materialGuid.Item2];
+                    var geometryList = new List<MeshGeometry3DObject>();
 
-                    lock (geometryList)
-                        geometryList.Add(new MeshGeometry3DObject
+                    // Selecting body first
+                    Parallel.ForEach(meshGroup, GeneralHelper.ParallelOptions, mesh =>
+                    {
+                        try
                         {
-                            ObjectId = name,
-                            MaterialId = materialGuid?.Item1,
-                            BaseMaterialId = baseMaterialId,
-                            BaseMap = baseTexture,
-                            NormalMaterialId = normalMaterialId,
-                            NormalMap = normalTexture,
-                            MRAOMaterialId = mraoMaterialId,
-                            MRAOMap = mraoTexture,
-                            HMVYMaterialId = hmvyMaterialId,
-                            HMVYMap = hmvyTexture,
-                            CLEAMaterialId = cleaMaterialId,
-                            CLEAMap = cleaTexture,
-                            MeshGeometry3D = meshGeometry,
-                            SlotType = slotType
-                        });
-                });
-                lock (geometryLookup)
-                    geometryLookup.Add(meshGroup.Key, geometryList);
+                            var name = mesh.Name.Split('-').First();
+                            Tuple<string, string> materialGuid = null;
+                            if (materials != null && materials.ContainsKey(name))
+                                materialGuid = materials[name];
+                            var meshNode = mesh.Items.Last() as MeshNode;
+                            var meshGeometry = meshNode.Geometry as MeshGeometry3D;
+                            var baseMaterialId = LoadMaterial(materialGuid?.Item1, "basecolor", materialBanks);
+                            if (baseMaterialId == null)
+                                baseMaterialId = LoadMaterial(materialGuid?.Item1, "Body_color_texture", materialBanks);
+                            var baseTexture = LoadTexture(baseMaterialId, textureBanks);
+                            var normalMaterialId = LoadMaterial(materialGuid?.Item1, "normalmap", materialBanks);
+                            if (normalMaterialId == null)
+                                normalMaterialId = LoadMaterial(materialGuid?.Item1, "Fur_normalmap", materialBanks);
+                            if (normalMaterialId == null)
+                                normalMaterialId = LoadMaterial(materialGuid?.Item1, "IrisNormal", materialBanks);
+                            var normalTexture = LoadTexture(normalMaterialId, textureBanks);
+                            var mraoMaterialId = LoadMaterial(materialGuid?.Item1, "physicalmap", materialBanks);
+                            var mraoTexture = LoadTexture(mraoMaterialId, textureBanks);
+                            var hmvyMaterialId = LoadMaterial(materialGuid?.Item1, "HMVY", materialBanks);
+                            var hmvyTexture = LoadTexture(hmvyMaterialId, textureBanks);
+                            var cleaMaterialId = LoadMaterial(materialGuid?.Item1, "CLEA", materialBanks);
+                            var cleaTexture = LoadTexture(cleaMaterialId, textureBanks);
+                            string slotType = null;
+                            if (materialGuid != null && slotTypes.ContainsKey(materialGuid.Item2))
+                                slotType = slotTypes[materialGuid.Item2];
+
+                            lock (geometryList)
+                                geometryList.Add(new MeshGeometry3DObject
+                                {
+                                    ObjectId = name,
+                                    MaterialId = materialGuid?.Item1,
+                                    BaseMaterialId = baseMaterialId,
+                                    BaseMap = baseTexture,
+                                    NormalMaterialId = normalMaterialId,
+                                    NormalMap = normalTexture,
+                                    MRAOMaterialId = mraoMaterialId,
+                                    MRAOMap = mraoTexture,
+                                    HMVYMaterialId = hmvyMaterialId,
+                                    HMVYMap = hmvyTexture,
+                                    CLEAMaterialId = cleaMaterialId,
+                                    CLEAMap = cleaTexture,
+                                    MeshGeometry3D = meshGeometry,
+                                    SlotType = slotType
+                                });
+                        }
+                        catch (Exception ex)
+                        {
+                            GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                        }
+                    });
+                    lock (geometryLookup)
+                        geometryLookup.Add(meshGroup.Key, geometryList);
+                }
+                catch (Exception ex)
+                {
+                    GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                }
             });
             return geometryLookup;
         }
@@ -257,7 +292,6 @@ namespace bg3_modders_multitool.Services
         {
             if (id == null)
                 return null;
-
             var characterVisualResources = new List<string>();
             var materials = new Dictionary<string, Tuple<string, string>>();
             var slotTypes = new Dictionary<string, string>();
@@ -288,21 +322,35 @@ namespace bg3_modders_multitool.Services
                 if (bodySetVisual != null)
                     characterVisualResources.Add(bodySetVisual);
                 var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
-                Parallel.ForEach(slots, GeneralHelper.ParallelOptions, slot => {
-                    var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
-                    var slotType = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "Slot").Attribute("value").Value;
-                    slotTypes.Add(visualResourceId, slotType);
-                    Parallel.ForEach(LoadMaterials(visualResourceId, visualBanks), GeneralHelper.ParallelOptions, material => {
-                        if (material.Key != null && !materials.ContainsKey(material.Key))
-                        {
-                            lock (materials)
-                                materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, visualResourceId));
-                        }
+                try
+                {
+                    Parallel.ForEach(slots, GeneralHelper.ParallelOptions, slot => {
+                        var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
+                        var slotType = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "Slot").Attribute("value").Value;
+                        slotTypes.Add(visualResourceId, slotType);
+                        Parallel.ForEach(LoadMaterials(visualResourceId, visualBanks), GeneralHelper.ParallelOptions, material => {
+                            try
+                            {
+                                if (material.Key != null && !materials.ContainsKey(material.Key))
+                                {
+                                    lock (materials)
+                                        materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, visualResourceId));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                            }
+                        });
+                        var visualResource = LoadVisualResource(visualResourceId, visualBanks);
+                        if (visualResource != null)
+                            characterVisualResources.Add(visualResource);
                     });
-                    var visualResource = LoadVisualResource(visualResourceId, visualBanks);
-                    if (visualResource != null)
-                        characterVisualResources.Add(visualResource);
-                });
+                }
+                catch (Exception ex)
+                {
+                    GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                }
             }
             return new Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>>(characterVisualResources, materials, slotTypes);
         }
@@ -318,31 +366,47 @@ namespace bg3_modders_multitool.Services
             if (id != null && visualBanks.ContainsKey(id))
             {
                 var visualResourceFile = visualBanks[id];
+
+                if (!FileHelper.TryParseXml(visualResourceFile))
+                {
+                    var filePath = visualResourceFile.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+                    GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, filePath);
+                    return null;
+                }
+
                 using (XmlTextReader reader = new XmlTextReader(visualResourceFile))
                 {
                     reader.Read();
                     while (!reader.EOF)
                     {
-                        var sectionId = reader.GetAttribute("id");
-                        var isNode = reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node";
-                        if (isNode && sectionId == "Resource")
+                        try
                         {
-                            var xml = (XElement)XNode.ReadFrom(reader);
-                            var attributes = xml.Elements("attribute");
-                            var nodeId = attributes.Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                            if(nodeId == id)
+                            var sectionId = reader.GetAttribute("id");
+                            var isNode = reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node";
+                            if (isNode && sectionId == "Resource")
                             {
-                                var gr2File = attributes.SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
-                                if (string.IsNullOrEmpty(gr2File))
-                                    return null;
-                                gr2File = gr2File.Replace(".GR2", string.Empty);
-                                return FileHelper.GetPath($"Models\\{gr2File}");
+                                var xml = (XElement)XNode.ReadFrom(reader);
+                                var attributes = xml.Elements("attribute");
+                                var nodeId = attributes.Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
+                                if (nodeId == id)
+                                {
+                                    var gr2File = attributes.SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
+                                    if (string.IsNullOrEmpty(gr2File))
+                                        return null;
+                                    gr2File = gr2File.Replace(".GR2", string.Empty);
+                                    return FileHelper.GetPath($"Models\\{gr2File}");
+                                }
+                                reader.Skip();
                             }
-                            reader.Skip();
+                            else
+                            {
+                                reader.Read();
+                            }
                         }
-                        else
+                        catch(Exception ex)
                         {
-                            reader.Read();
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, visualResourceFile, ex.Message);
+                            break;
                         }
                     }
                 }
