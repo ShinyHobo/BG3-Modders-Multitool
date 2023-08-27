@@ -331,6 +331,14 @@
   <data name="GOETitle" xml:space="preserve">
     <value>GameObject Explorer</value>
   </data>
+  <data name="GUIDCopied" xml:space="preserve">
+    <value>{0} [{1}] copied to clipboard!</value>
+    <comment>uuid/guid type, guid/uuid text</comment>
+  </data>
+  <data name="GUIDCopyFailed" xml:space="preserve">
+    <value>Failed to copy to clipboard ({0} blocking):\n{1}\n{2}</value>
+    <comment>process name, error message, stack trace</comment>
+  </data>
   <data name="HandleLabel" xml:space="preserve">
     <value>Handle</value>
   </data>
@@ -496,6 +504,14 @@
   <data name="ReadingGameObjects" xml:space="preserve">
     <value>Reading GameObjects from root templates; this will take a while...</value>
   </data>
+  <data name="ReadyToIndexAgainQuestion" xml:space="preserve">
+    <value>Ready to index again?</value>
+  </data>
+  <data name="ReindexQuestion" xml:space="preserve">
+    <value>Careful!
+
+Clicking "OK" will wipe your current index and rebuild it from scratch; this could take some time. Are you sure you wish you continue?</value>
+  </data>
   <data name="ResultsHaveBeenFiltered" xml:space="preserve">
     <value>{0} results have been filtered out.</value>
   </data>
@@ -541,8 +557,19 @@
   <data name="TempFilesCleaned" xml:space="preserve">
     <value>Temp files cleaned.</value>
   </data>
+  <data name="TranslatedStringHandleLabel" xml:space="preserve">
+    <value>TranslatedString handle</value>
+  </data>
   <data name="TranslationsLoaded" xml:space="preserve">
     <value>Translations loaded...</value>
+  </data>
+  <data name="UnableToFindModsFolder" xml:space="preserve">
+    <value>Error: Unable to find the Mods folder at {0}. Please check your settings.</value>
+    <comment>mods folder path</comment>
+  </data>
+  <data name="UnableToFindPlayerProfilesFolder" xml:space="preserve">
+    <value>Error: Unable to find the PlayerProfiles folder at {0}. Please check your settings.</value>
+    <comment>player profiles path</comment>
   </data>
   <data name="UnpackButtonTooltip" xml:space="preserve">
     <value>Allows you to select the game paks to unpack</value>
@@ -564,6 +591,9 @@
   </data>
   <data name="UUIDTitle" xml:space="preserve">
     <value>v4 UUID/TranslatedString Handle Generator</value>
+  </data>
+  <data name="v4UUIDLabel" xml:space="preserve">
+    <value>v4 UUID</value>
   </data>
   <data name="ZipCreated" xml:space="preserve">
     <value>{0}.zip created.</value>

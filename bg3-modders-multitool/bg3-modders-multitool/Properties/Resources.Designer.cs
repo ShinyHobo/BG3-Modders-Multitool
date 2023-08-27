@@ -646,6 +646,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} [{1}] copied to clipboard!.
+        /// </summary>
+        public static string GUIDCopied {
+            get {
+                return ResourceManager.GetString("GUIDCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to copy to clipboard ({0} blocking):\n{1}\n{2}.
+        /// </summary>
+        public static string GUIDCopyFailed {
+            get {
+                return ResourceManager.GetString("GUIDCopyFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Handle.
         /// </summary>
         public static string HandleLabel {
@@ -1114,6 +1132,26 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ready to index again?.
+        /// </summary>
+        public static string ReadyToIndexAgainQuestion {
+            get {
+                return ResourceManager.GetString("ReadyToIndexAgainQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Careful!
+        ///
+        ///Clicking &quot;OK&quot; will wipe your current index and rebuild it from scratch; this could take some time. Are you sure you wish you continue?.
+        /// </summary>
+        public static string ReindexQuestion {
+            get {
+                return ResourceManager.GetString("ReindexQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} results have been filtered out..
         /// </summary>
         public static string ResultsHaveBeenFiltered {
@@ -1249,11 +1287,38 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TranslatedString handle.
+        /// </summary>
+        public static string TranslatedStringHandleLabel {
+            get {
+                return ResourceManager.GetString("TranslatedStringHandleLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Translations loaded....
         /// </summary>
         public static string TranslationsLoaded {
             get {
                 return ResourceManager.GetString("TranslationsLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: Unable to find the Mods folder at {0}. Please check your settings..
+        /// </summary>
+        public static string UnableToFindModsFolder {
+            get {
+                return ResourceManager.GetString("UnableToFindModsFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: Unable to find the PlayerProfiles folder at {0}. Please check your settings..
+        /// </summary>
+        public static string UnableToFindPlayerProfilesFolder {
+            get {
+                return ResourceManager.GetString("UnableToFindPlayerProfilesFolder", resourceCulture);
             }
         }
         
@@ -1317,6 +1382,15 @@ namespace bg3_modders_multitool.Properties {
         public static string UUIDTitle {
             get {
                 return ResourceManager.GetString("UUIDTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to v4 UUID.
+        /// </summary>
+        public static string v4UUIDLabel {
+            get {
+                return ResourceManager.GetString("v4UUIDLabel", resourceCulture);
             }
         }
         
