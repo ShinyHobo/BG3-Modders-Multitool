@@ -52,7 +52,9 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Name="stack">
-                            <TextBlock FontWeight="Bold" Text="{Binding Key, StringFormat={}{0}:}" MinWidth="40"></TextBlock>
+                            <Button x:Name="lineNumberButton" FontWeight="Bold" MinWidth="40" Cursor="Hand" BorderThickness="0" Background="Transparent" Margin="0,0,3,0" Click="lineNumberButton_Click">
+                                <TextBlock Text="{Binding Key, StringFormat={}{0}:}"/>
+                            </Button>
                             <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Text, Mode=OneWay}" Background="Transparent" Cursor="IBeam"></helpers:SelectableTextBlock>
                         </StackPanel>
                     </DataTemplate>

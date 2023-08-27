@@ -96,7 +96,7 @@ namespace bg3_modders_multitool.ViewModels
         /// <param name="isHandle">Whether the guid is a TranslatedString handle.</param>
         public void CopyGuid(bool isHandle)
         {
-            var type = isHandle ? "TranslatedString handle" : "v4 UUID";
+            var type = isHandle ? Properties.Resources.TranslatedStringHandleLabel : Properties.Resources.v4UUIDLabel;
             if (GuidText != null)
             {
                 // https://stackoverflow.com/questions/12769264/openclipboard-failed-when-copy-pasting-data-from-wpf-datagrid/17678542#17678542
@@ -104,11 +104,11 @@ namespace bg3_modders_multitool.ViewModels
                 try
                 {
                     System.Windows.Forms.Clipboard.SetDataObject(GuidText, false, 10, 10);
-                    WriteToConsole($"{type} [{GuidText}] copied to clipboard!");
+                    GeneralHelper.WriteToConsole(Properties.Resources.GUIDCopied, type, GuidText);
                 } 
                 catch (Exception ex)
                 {
-                    WriteToConsole($"Failed to copy to clipboard ({GeneralHelper.ProcessHoldingClipboard().ProcessName} blocking):\n{ex.Message}\n{ex.StackTrace}");
+                    GeneralHelper.WriteToConsole(Properties.Resources.GUIDCopyFailed, GeneralHelper.ProcessHoldingClipboard().ProcessName, ex.Message, ex.StackTrace);
                 }
             }
         }
@@ -194,12 +194,12 @@ namespace bg3_modders_multitool.ViewModels
                 // Validate the mods folder path.
                 ModsFolderLoaded = Directory.Exists(PathHelper.ModsFolderPath);
                 if(!ModsFolderLoaded)
-                    WriteToConsole($"Error: Unable to find the Mods folder at {PathHelper.ModsFolderPath}. Please check your settings.");
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindModsFolder, PathHelper.ModsFolderPath);
 
                 // Validate the player profiles folder path.
                 ProfilesFolderLoaded = Directory.Exists(PathHelper.PlayerProfilesFolderPath);
                 if (!ProfilesFolderLoaded)
-                    WriteToConsole($"Error: Unable to find the PlayerProfiles folder at {PathHelper.PlayerProfilesFolderPath}. Please check your settings.");
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindPlayerProfilesFolder, PathHelper.PlayerProfilesFolderPath);
 
                 ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();

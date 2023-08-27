@@ -13,7 +13,11 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Runtime.InteropServices.ComTypes;
+    using System.Text;
     using System.Threading.Tasks;
+    using System.Windows.Forms;
 
     public static class FileHelper
     {
@@ -43,7 +47,7 @@ namespace bg3_modders_multitool.Services
             }
 
             var originalExtension = Path.GetExtension(file);
-            var newFile = file.Replace(originalExtension, $".{extension}");
+            var newFile = string.IsNullOrEmpty(originalExtension) ? $"{file}.{extension}" : file.Replace(originalExtension, $".{extension}");
             var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
             var isConvertableToXml = originalExtension.Contains("loca");
             var isConvertableToLoca = originalExtension.Contains("xml");
@@ -304,7 +308,8 @@ namespace bg3_modders_multitool.Services
         /// Opens the given file path in the default program.
         /// </summary>
         /// <param name="file">The file to open.</param>
-        public static void OpenFile(string file)
+        /// <param name="line">The matching file line</param>
+        public static void OpenFile(string file, int? line = null)
         {
             var path = GetPath(file);
             if (File.Exists(@"\\?\" + path))
@@ -323,7 +328,22 @@ namespace bg3_modders_multitool.Services
                     }
                     else
                     {
-                        Process.Start(path);
+                        var exe = FindExecutable(path);
+                        if(exe.Contains("notepad++") && line.HasValue)
+                        {
+                            var npp = new Process
+                            {
+                                StartInfo = {
+                                    FileName = exe,
+                                    Arguments = $"{file} -n{line}"
+                                }
+                            };
+                            npp.Start();
+                        }
+                        else
+                        {
+                            Process.Start(path);
+                        }
                     }
                 }
                 catch(Exception ex)
@@ -460,5 +480,33 @@ namespace bg3_modders_multitool.Services
                 return false;
             }
         }
+
+        #region Process Finder
+        [DllImport("shell32.dll")]
+        private static extern long FindExecutable(string lpFile, string lpDirectory, [Out] StringBuilder lpResult);
+
+        /// <summary>
+        /// Checks if the file has an associated program that will open it
+        /// </summary>
+        /// <param name="path">The file path</param>
+        /// <returns>Whether or not the file has a default program association</returns>
+        public static bool HasExecutable(string path)
+        {
+            var executable = FindExecutable(path);
+            return !string.IsNullOrEmpty(executable);
+        }
+
+        /// <summary>
+        /// Gets the name of the executable that is associated with the file
+        /// </summary>
+        /// <param name="path">The file path</param>
+        /// <returns>The executable name</returns>
+        public static string FindExecutable(string path)
+        {
+            var executable = new StringBuilder(1024);
+            FindExecutable(path, string.Empty, executable);
+            return executable.ToString();
+        }
+        #endregion
     }
 }

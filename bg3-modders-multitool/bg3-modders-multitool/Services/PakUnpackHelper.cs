@@ -16,7 +16,7 @@ namespace bg3_modders_multitool.Services
     {
         private List<int> Processes;
 
-        public bool Cancelled = true;
+        public bool Cancelled;
 
         /// <summary>
         /// Unpacks all the .pak files in the game data directory and places them in a folder next to divine.exe
@@ -37,6 +37,7 @@ namespace bg3_modders_multitool.Services
             pakSelection.ShowDialog();
             pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
             var paks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+            Cancelled = false;
             return Task.Run(() =>
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);

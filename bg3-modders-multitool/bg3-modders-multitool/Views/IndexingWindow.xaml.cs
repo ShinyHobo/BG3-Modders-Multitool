@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
@@ -46,6 +47,8 @@ namespace bg3_modders_multitool.Views
             {
                 searchFilesButton.IsEnabled = false;
                 fileTypeFilter.IsEnabled = false;
+                search.IsEnabled = false;
+                convertAndOpenButton.IsEnabled = false;
                 var vm = DataContext as SearchResults;
                 vm.SelectedPath = string.Empty;
                 vm.FileContents = new ObservableCollection<SearchResult>();
@@ -59,6 +62,8 @@ namespace bg3_modders_multitool.Views
                 }
                 searchFilesButton.IsEnabled = true;
                 fileTypeFilter.IsEnabled = true;
+                search.IsEnabled = true;
+                convertAndOpenButton.IsEnabled = true;
             }
         }
 
@@ -130,13 +135,14 @@ namespace bg3_modders_multitool.Views
             convertAndOpenButton.IsEnabled = false;
             var vm = DataContext as SearchResults;
             var ext = Path.GetExtension(vm.SelectedPath);
-            if(ext == ".wem")
+            var selectedPath = FileHelper.GetPath(vm.SelectedPath);
+            if (ext == ".wem")
             {
-                FileHelper.PlayAudio(vm.SelectedPath);
+                FileHelper.PlayAudio(selectedPath);
             }
             else
             {
-                var newFile = FileHelper.Convert(vm.SelectedPath, "lsx");
+                var newFile = FileHelper.Convert(selectedPath, "lsx");
                 FileHelper.OpenFile(newFile);
             }
             convertAndOpenButton.IsEnabled = true;
@@ -181,6 +187,17 @@ namespace bg3_modders_multitool.Views
                     }
                 });
             }, ct);
+        }
+
+        private void lineNumberButton_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var content = btn.Content as TextBlock;
+            var line = int.Parse(content.Text.Split(':').First());
+            var vm = DataContext as SearchResults;
+            var selectedPath = FileHelper.GetPath(vm.SelectedPath);
+            var newFile = FileHelper.Convert(selectedPath, "lsx");
+            FileHelper.OpenFile(newFile, line);
         }
     }
 }

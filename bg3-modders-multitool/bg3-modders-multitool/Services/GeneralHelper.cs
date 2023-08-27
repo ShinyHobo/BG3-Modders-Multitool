@@ -12,6 +12,7 @@ namespace bg3_modders_multitool.Services
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
@@ -244,15 +245,12 @@ namespace bg3_modders_multitool.Services
             {
                 try
                 {
-                    using (System.IO.FileStream fs = File.Open(texturePath, System.IO.FileMode.Open))
+                    using (var image = Pfim.Pfimage.FromFile(texturePath))
                     {
-                        BitmapImage img = new BitmapImage();
-                        img.BeginInit();
-                        img.CacheOption = BitmapCacheOption.OnLoad;
-                        img.StreamSource = fs;
-                        img.EndInit();
-                        img.Freeze();
-                        texture = BitmapSourceToStream(img);
+                        var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                        var bitmap = new System.Drawing.Bitmap(image.Width, image.Height, image.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
+                        var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        texture = BitmapSourceToStream(bitmapImage);
                     }
                 }
                 catch { }
