@@ -13,6 +13,7 @@ namespace bg3_modders_multitool.Services
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Xml;
     using System.Xml.Linq;
 
     public static class RenderedModelHelper
@@ -317,13 +318,34 @@ namespace bg3_modders_multitool.Services
             if (id != null && visualBanks.ContainsKey(id))
             {
                 var visualResourceFile = visualBanks[id];
-                var xml = XDocument.Load(FileHelper.GetPath(visualResourceFile));
-                var visualResourceNode = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
-                var gr2File = visualResourceNode.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
-                if (gr2File == null)
-                    return null;
-                gr2File = gr2File.Replace(".GR2", string.Empty);
-                return FileHelper.GetPath($"Models\\{gr2File}");
+                using (XmlTextReader reader = new XmlTextReader(visualResourceFile))
+                {
+                    reader.Read();
+                    while (!reader.EOF)
+                    {
+                        var sectionId = reader.GetAttribute("id");
+                        var isNode = reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node";
+                        if (isNode && sectionId == "Resource")
+                        {
+                            var xml = (XElement)XNode.ReadFrom(reader);
+                            var attributes = xml.Elements("attribute");
+                            var nodeId = attributes.Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
+                            if(nodeId == id)
+                            {
+                                var gr2File = attributes.SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
+                                if (string.IsNullOrEmpty(gr2File))
+                                    return null;
+                                gr2File = gr2File.Replace(".GR2", string.Empty);
+                                return FileHelper.GetPath($"Models\\{gr2File}");
+                            }
+                            reader.Skip();
+                        }
+                        else
+                        {
+                            reader.Read();
+                        }
+                    }
+                }
             }
             return null;
         }
@@ -367,7 +389,7 @@ namespace bg3_modders_multitool.Services
         /// <returns>The base material id.</returns>
         private static string LoadMaterial(string id, string type, Dictionary<string, string> materialBanks)
         {
-            if(id != null && materialBanks.ContainsKey(id))
+            if(id != null && materialBanks.ContainsKey(id) && false)
             {
                 var materialBankFile = materialBanks[id];
                 var xml = XDocument.Load(FileHelper.GetPath(materialBankFile));
