@@ -48,6 +48,7 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         #region Properties
+        public ObservableCollection<string> SelectedFileTypes { get; set; }
 
         #region Indexing
         public IndexHelper IndexHelper { get; set; }

@@ -8,7 +8,6 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.ObjectModel;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -32,6 +31,11 @@ namespace bg3_modders_multitool.Views
             ((SearchResults)DataContext).ViewPort = viewport;
             timer.Interval = TimeSpan.FromMilliseconds(400);
             timer.Tick += Timer_Tick;
+
+            // TODO - get full list of file types from somewhere
+            fileTypeFilter.ItemsSource = new string[] { ".lsx", ".lsf", "" };
+            fileTypeFilter.IsSelectAllActive = true;
+            fileTypeFilter.SelectAll();
         }
 
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)
