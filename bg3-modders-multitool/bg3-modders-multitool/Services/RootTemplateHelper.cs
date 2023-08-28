@@ -681,7 +681,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public static void ClearGameObjectCache()
         {
-            var cacheDirectory = "Cache2";
+            var cacheDirectory = "Cache";
             try
             {
                 if (Directory.Exists(cacheDirectory))
