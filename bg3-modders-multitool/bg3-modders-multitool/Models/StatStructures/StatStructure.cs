@@ -129,7 +129,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public void InheritProperties(string line, List<StatStructure> statStructures)
         {
             var usingEntry = line.Substring(6).Replace("\"", "");
-            var match = statStructures.FirstOrDefault(ss => ss.Entry == usingEntry);
+            var match = statStructures.FirstOrDefault(ss => ss?.Entry == usingEntry);
             var clone = match.Clone();
             clone.Entry = Entry;
             clone.Type = Type;

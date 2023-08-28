@@ -637,6 +637,62 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GameObject cache successfully cleared..
+        /// </summary>
+        public static string GOECacheCleared {
+            get {
+                return ResourceManager.GetString("GOECacheCleared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to delete GameObject cache. Ensure that it is not in use..
+        /// </summary>
+        public static string GOECacheClearFailed {
+            get {
+                return ResourceManager.GetString("GOECacheClearFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear cache.
+        /// </summary>
+        public static string GOEClearCacheButton {
+            get {
+                return ResourceManager.GetString("GOEClearCacheButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clears the GOE cache, if it exists.
+        /// </summary>
+        public static string GOEClearCacheToolTip {
+            get {
+                return ResourceManager.GetString("GOEClearCacheToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Careful! This is irreversable!
+        ///
+        ///Are you sure you want to delete the GameObject cache?.
+        /// </summary>
+        public static string GOEDeleteQuestion {
+            get {
+                return ResourceManager.GetString("GOEDeleteQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No GameObject cache to clear..
+        /// </summary>
+        public static string GOENoCache {
+            get {
+                return ResourceManager.GetString("GOENoCache", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObject Explorer.
         /// </summary>
         public static string GOETitle {
@@ -1033,6 +1089,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string OpenMenu {
+            get {
+                return ResourceManager.GetString("OpenMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OOME: Failed to index {0}.
         /// </summary>
         public static string OutOfMemFailedToIndex {
@@ -1141,7 +1206,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Careful!
+        ///   Looks up a localized string similar to Careful! This is irreversable!
         ///
         ///Clicking &quot;OK&quot; will wipe your current index and rebuild it from scratch; this could take some time. Are you sure you wish you continue?.
         /// </summary>
@@ -1256,6 +1321,15 @@ namespace bg3_modders_multitool.Properties {
         public static string SelectLocation {
             get {
                 return ResourceManager.GetString("SelectLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shortcuts.
+        /// </summary>
+        public static string ShortcutsMenu {
+            get {
+                return ResourceManager.GetString("ShortcutsMenu", resourceCulture);
             }
         }
         

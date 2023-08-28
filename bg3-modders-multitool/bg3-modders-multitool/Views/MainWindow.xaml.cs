@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
     using System.Globalization;
+    using System.IO;
     using System.Windows;
 
     /// <summary>
@@ -161,6 +162,11 @@ namespace bg3_modders_multitool.Views
         private void OpenProfilesFolderButton_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
+        }
+
+        private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            RootTemplateHelper.ClearGameObjectCache();
         }
     }
 }

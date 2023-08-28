@@ -328,6 +328,26 @@
   <data name="GOEButtonTooltip" xml:space="preserve">
     <value>Allows you to graphically navigate unpacked gameobjects including characters, items, and more</value>
   </data>
+  <data name="GOECacheCleared" xml:space="preserve">
+    <value>GameObject cache successfully cleared.</value>
+  </data>
+  <data name="GOECacheClearFailed" xml:space="preserve">
+    <value>Failed to delete GameObject cache. Ensure that it is not in use.</value>
+  </data>
+  <data name="GOEClearCacheButton" xml:space="preserve">
+    <value>Clear cache</value>
+  </data>
+  <data name="GOEClearCacheToolTip" xml:space="preserve">
+    <value>Clears the GOE cache, if it exists</value>
+  </data>
+  <data name="GOEDeleteQuestion" xml:space="preserve">
+    <value>Careful! This is irreversable!
+
+Are you sure you want to delete the GameObject cache?</value>
+  </data>
+  <data name="GOENoCache" xml:space="preserve">
+    <value>No GameObject cache to clear.</value>
+  </data>
   <data name="GOETitle" xml:space="preserve">
     <value>GameObject Explorer</value>
   </data>
@@ -469,6 +489,9 @@
   <data name="OpeningGOE" xml:space="preserve">
     <value>Opening GameObject Explorer. This could take a while.</value>
   </data>
+  <data name="OpenMenu" xml:space="preserve">
+    <value>Open</value>
+  </data>
   <data name="OutOfMemFailedToIndex" xml:space="preserve">
     <value>OOME: Failed to index {0}</value>
     <comment>file path</comment>
@@ -508,7 +531,7 @@
     <value>Ready to index again?</value>
   </data>
   <data name="ReindexQuestion" xml:space="preserve">
-    <value>Careful!
+    <value>Careful! This is irreversable!
 
 Clicking "OK" will wipe your current index and rebuild it from scratch; this could take some time. Are you sure you wish you continue?</value>
   </data>
@@ -547,6 +570,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="SelectLocation" xml:space="preserve">
     <value>Select</value>
+  </data>
+  <data name="ShortcutsMenu" xml:space="preserve">
+    <value>Shortcuts</value>
   </data>
   <data name="SortingBanksFiles" xml:space="preserve">
     <value>Sorting bank files...</value>
