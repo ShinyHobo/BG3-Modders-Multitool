@@ -607,7 +607,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -671,10 +670,27 @@
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Import Project="..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y "$(ProjectDir)manifest.json" "$(ProjectDir)$(OutDir)app.publish"
-xcopy /y "$(ProjectDir)Images\icon.png" "$(ProjectDir)$(OutDir)app.publish"
-xcopy /y "$(ProjectDir)\..\..\README.md" "$(ProjectDir)$(OutDir)app.publish"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(ProjectDir)Images\icon.png" "$(ProjectDir)$(OutDir)app.publish"
+xcopy /y "$(SolutionDir)\..\README.md" "$(ProjectDir)$(OutDir)app.publish"
+
+@echo off
+for /f tokens^=4^delims^=^"^/ %25%25A in (
+'findstr /rc:"\"version\" value=\"" $(ProjectDir)App.config'
+) do set version=%25%25~A
+
+@echo on
+echo { &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "name": "BG3_Modders_Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "version_number": "%25version%25",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "website_url": "https:/github.com/ShinyHobo/BG3-Modders-Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "description": "Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace, among other useful features.",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "dependencies": [] &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo }   &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Fody.6.8.0\build\Fody.targets" Condition="Exists('..\packages\Fody.6.8.0\build\Fody.targets')" />
   <Import Project="..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>

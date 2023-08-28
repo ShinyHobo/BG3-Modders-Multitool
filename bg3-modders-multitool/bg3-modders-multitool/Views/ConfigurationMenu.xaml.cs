@@ -14,6 +14,9 @@ namespace bg3_modders_multitool.Views
         public ConfigurationMenu(ViewModels.MainWindow mainWindow)
         {
             InitializeComponent();
+
+            Title = $"{Properties.Resources.ConfigurationTitle} - {System.Configuration.ConfigurationManager.AppSettings["version"]}";
+
             DataContext = mainWindow;
             ((ViewModels.MainWindow)DataContext).ConfigOpen = true;
 
