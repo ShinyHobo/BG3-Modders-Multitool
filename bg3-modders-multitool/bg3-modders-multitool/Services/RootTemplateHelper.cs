@@ -675,6 +675,37 @@ namespace bg3_modders_multitool.Services
             }).Wait();
             return rtList;
         }
+
+        /// <summary>
+        /// Deletes the GameObject cache, if it exists
+        /// </summary>
+        public static void ClearGameObjectCache()
+        {
+            var cacheDirectory = "Cache2";
+            try
+            {
+                if (Directory.Exists(cacheDirectory))
+                {
+                    // check if cache exists
+                    var result = System.Windows.Forms.MessageBox.Show(Properties.Resources.GOEDeleteQuestion, 
+                        Properties.Resources.GOEClearCacheButton, System.Windows.Forms.MessageBoxButtons.OKCancel);
+
+                    if (result.Equals(System.Windows.Forms.DialogResult.OK))
+                    {
+                        Directory.Delete(cacheDirectory);
+                        GeneralHelper.WriteToConsole(Properties.Resources.GOECacheCleared);
+                    }
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.GOENoCache);
+                }
+            }
+            catch
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.GOECacheClearFailed);
+            }
+        }
         #endregion
     }
 }

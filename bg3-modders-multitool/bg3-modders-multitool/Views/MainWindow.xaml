@@ -20,6 +20,8 @@
                 <MenuItem Header="{x:Static p:Resources.GOEButton}">
                     <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
                         ToolTip="{x:Static p:Resources.GOEButtonTooltip}"/>
+                    <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                        ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}"/>
                 </MenuItem>
                 <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}">
                     <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
