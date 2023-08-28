@@ -10,8 +10,8 @@
         Title="{x:Static p:Resources.AppTitle}" Height="485" Width="800">
         <!-- Developed by ShinyHobo -->
         <!-- Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd. -->
-    <StackPanel VerticalAlignment="Top">
-        <Border BorderBrush="Gray" Background="LightGray" BorderThickness="0,0,0,3" DockPanel.Dock="Top">
+    <StackPanel>
+        <Border BorderBrush="Gray" Background="LightGray" BorderThickness="0,0,0,3">
             <Menu Background="Transparent">
                 <MenuItem Header="Index">
                     <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click" 
@@ -20,12 +20,6 @@
                 <MenuItem Header="{x:Static p:Resources.GOEButton}">
                     <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
                         ToolTip="{x:Static p:Resources.GOEButtonTooltip}"/>
-                    <MenuItem Header="MenuItem1"/>
-                    <MenuItem Header="MenuItem2"/>
-                    <MenuItem Header="Nested Menu">
-                        <MenuItem Header="MenuItem1"/>
-                        <MenuItem Header="MenuItem2"/>
-                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}">
                     <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
@@ -45,8 +39,8 @@
                 <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
                 <CheckBox x:Name="typeSwitch" Content="{x:Static p:Resources.HandleLabel}" HorizontalAlignment="Left" Margin="390,33,0,0" VerticalAlignment="Top" Cursor="Hand"/>
             </Grid>
-            <ScrollViewer x:Name="ConsoleScroller" Margin="10,265,6,5" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged">
-                <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
+            <ScrollViewer x:Name="ConsoleScroller" Margin="10,265,6,5" Height="150" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged">
+                <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,-12" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
                  IsReadOnly="True" Background="Black" Foreground="White"/>
             </ScrollViewer>
             <Button x:Name="launchGameButton" HorizontalAlignment="Left" Margin="620,81,0,0" VerticalAlignment="Top" Width="100" Height="100" Click="LaunchGameButton_Click" Cursor="Hand" Panel.ZIndex="10"
