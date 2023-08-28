@@ -381,6 +381,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="IndexingInProgress" xml:space="preserve">
     <value>Indexing in progress...</value>
   </data>
+  <data name="IndexMenu" xml:space="preserve">
+    <value>Index</value>
+  </data>
   <data name="IndexNotFound" xml:space="preserve">
     <value>No index available! Please unpack game assets and generate an index.</value>
   </data>
