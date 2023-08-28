@@ -1033,6 +1033,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string OpenMenu {
+            get {
+                return ResourceManager.GetString("OpenMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OOME: Failed to index {0}.
         /// </summary>
         public static string OutOfMemFailedToIndex {
@@ -1256,6 +1265,15 @@ namespace bg3_modders_multitool.Properties {
         public static string SelectLocation {
             get {
                 return ResourceManager.GetString("SelectLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shortcuts.
+        /// </summary>
+        public static string ShortcutsMenu {
+            get {
+                return ResourceManager.GetString("ShortcutsMenu", resourceCulture);
             }
         }
         

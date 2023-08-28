@@ -469,6 +469,9 @@
   <data name="OpeningGOE" xml:space="preserve">
     <value>Opening GameObject Explorer. This could take a while.</value>
   </data>
+  <data name="OpenMenu" xml:space="preserve">
+    <value>Open</value>
+  </data>
   <data name="OutOfMemFailedToIndex" xml:space="preserve">
     <value>OOME: Failed to index {0}</value>
     <comment>file path</comment>
@@ -547,6 +550,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="SelectLocation" xml:space="preserve">
     <value>Select</value>
+  </data>
+  <data name="ShortcutsMenu" xml:space="preserve">
+    <value>Shortcuts</value>
   </data>
   <data name="SortingBanksFiles" xml:space="preserve">
     <value>Sorting bank files...</value>
