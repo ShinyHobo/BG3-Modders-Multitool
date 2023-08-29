@@ -291,6 +291,9 @@
   <data name="FileNotFound" xml:space="preserve">
     <value>File not found.</value>
   </data>
+  <data name="FinalizingIndex" xml:space="preserve">
+    <value>Finalizing index...</value>
+  </data>
   <data name="FixingVerticies" xml:space="preserve">
     <value>Fixing vertices...</value>
   </data>
@@ -605,7 +608,7 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <comment>Use as many cpu threads as possible</comment>
   </data>
   <data name="UnlockThreadsToolTip" xml:space="preserve">
-    <value>Use as many CPU threads as possible; will lag your computer during intensive operations.</value>
+    <value>Use as many CPU threads as possible; will lag your computer during intensive operations. May not provide performance benefits.</value>
   </data>
   <data name="UnpackButtonTooltip" xml:space="preserve">
     <value>Allows you to select the game paks to unpack</value>

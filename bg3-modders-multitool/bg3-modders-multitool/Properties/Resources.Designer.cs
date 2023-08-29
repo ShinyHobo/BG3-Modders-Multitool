@@ -529,6 +529,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Finalizing index....
+        /// </summary>
+        public static string FinalizingIndex {
+            get {
+                return ResourceManager.GetString("FinalizingIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fixing vertices....
         /// </summary>
         public static string FixingVerticies {
@@ -1415,7 +1424,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use as many CPU threads as possible; will lag your computer during intensive operations..
+        ///   Looks up a localized string similar to Use as many CPU threads as possible; will lag your computer during intensive operations. May not provide performance benefits..
         /// </summary>
         public static string UnlockThreadsToolTip {
             get {

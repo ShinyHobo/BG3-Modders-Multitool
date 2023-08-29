@@ -107,6 +107,7 @@ namespace bg3_modders_multitool.Services
                             GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
                         }
                     });
+                    GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
                     writer.Commit();
                     a.Dispose();
                     writer.Dispose();
