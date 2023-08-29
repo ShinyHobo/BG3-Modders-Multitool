@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
@@ -234,6 +235,19 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Toggles the thread unlock setting
+        /// </summary>
+        /// <param name="setting">Whether or not threads should be unlocked for parallel processing</param>
+        public static void ToggleUnlockThreads(bool setting)
+        {
+            if (Properties.Settings.Default.unlockThreads != setting)
+            {
+                Properties.Settings.Default.unlockThreads = setting;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        /// <summary>
         /// Converts a DDS texture into a usable stream for displaying on models.
         /// </summary>
         /// <param name="texturePath">The filepath to the texture file.</param>
@@ -315,6 +329,6 @@ namespace bg3_modders_multitool.Services
             return theProc;
         }
 
-        public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
+        public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Settings.Default.unlockThreads ? -1 : Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
     }
 }

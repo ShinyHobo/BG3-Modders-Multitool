@@ -21,6 +21,7 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Analysis.Util;
     using J2N;
     using Alphaleonis.Win32.Filesystem;
+    using Lucene.Net.Index.Extensions;
 
     public class IndexHelper
     {
@@ -79,7 +80,7 @@ namespace bg3_modders_multitool.Services
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, new CustomAnalyzer());
+                IndexFiles(filelist);
             });
         }
 
@@ -87,13 +88,13 @@ namespace bg3_modders_multitool.Services
         /// Indexes the given files using an analyzer.
         /// </summary>
         /// <param name="files">The file list to index.</param>
-        /// <param name="analyzer">The analyzer to use when indexing.</param>
-        private void IndexFiles(List<string> files, Analyzer analyzer)
+        private void IndexFiles(List<string> files)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
-            using (Analyzer a = analyzer)
+            using (Analyzer a = new CustomAnalyzer())
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                config.SetUseCompoundFile(false);
                 using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                 {
                     Parallel.ForEach(files, GeneralHelper.ParallelOptions, file => {
@@ -107,7 +108,7 @@ namespace bg3_modders_multitool.Services
                         }
                     });
                     writer.Commit();
-                    analyzer.Dispose();
+                    a.Dispose();
                     writer.Dispose();
                 }
             }
@@ -361,12 +362,12 @@ namespace bg3_modders_multitool.Services
     /// </summary>
     public sealed class CustomTokenizer : CharTokenizer
     {
-        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':','‘'};
+        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':','‘','\''};
 
         public CustomTokenizer(LuceneVersion matchVersion, System.IO.TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':','‘')
+        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':','‘',''')
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>

@@ -20,6 +20,7 @@ namespace bg3_modders_multitool.ViewModels
             Unpacker = new PakUnpackHelper();
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
+            ThreadsUnlocked = Properties.Settings.Default.unlockThreads;
         }
 
         #region File Selection Methods
@@ -252,6 +253,18 @@ namespace bg3_modders_multitool.ViewModels
             get { return _quickLaunch; }
             set {
                 _quickLaunch = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _threadsUnlocked;
+
+        public bool ThreadsUnlocked
+        {
+            get { return _threadsUnlocked; }
+            set
+            {
+                _threadsUnlocked = value;
                 OnNotifyPropertyChanged();
             }
         }

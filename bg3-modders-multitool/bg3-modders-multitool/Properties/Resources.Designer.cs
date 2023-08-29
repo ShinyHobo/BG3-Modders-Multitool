@@ -1406,6 +1406,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unlock threads.
+        /// </summary>
+        public static string UnlockThreadsLabel {
+            get {
+                return ResourceManager.GetString("UnlockThreadsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use as many CPU threads as possible; will lag your computer during intensive operations..
+        /// </summary>
+        public static string UnlockThreadsToolTip {
+            get {
+                return ResourceManager.GetString("UnlockThreadsToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allows you to select the game paks to unpack.
         /// </summary>
         public static string UnpackButtonTooltip {

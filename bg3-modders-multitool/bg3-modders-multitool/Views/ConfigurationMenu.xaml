@@ -28,8 +28,11 @@
         </Grid>
         <Grid Margin="10,173,0,10">
             <Label x:Name="quickLaunchToggle" Content="{x:Static p:Resources.QuickLaunchLabel}" HorizontalAlignment="Left" Margin="0,-2,0,0" VerticalAlignment="Top"/>
-            <CheckBox Margin="81,4,300,15" ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"
+            <CheckBox Margin="81,4,300,0" ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"
                           IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" RenderTransformOrigin="0.841,0.773" />
+            <Label x:Name="unlockThreadsToggle" Content="{x:Static p:Resources.UnlockThreadsLabel}" HorizontalAlignment="Left" Margin="0,14,0,0" VerticalAlignment="Top"/>
+            <CheckBox Margin="86,20,290,0" ToolTip="{x:Static p:Resources.UnlockThreadsToolTip}" Cursor="Hand"
+              IsChecked="{Binding ThreadsUnlocked}" Checked="UnlockThreads_Checked" Unchecked="UnlockThreads_Unchecked" RenderTransformOrigin="0.841,0.773" />
             <Label Content="{x:Static p:Resources.LanguageSelectionLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="195,-3,0,-15"/>
             <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Margin="200,20,13,-5" Cursor="Hand" 
                       SelectionChanged="Language_SelectionChanged">

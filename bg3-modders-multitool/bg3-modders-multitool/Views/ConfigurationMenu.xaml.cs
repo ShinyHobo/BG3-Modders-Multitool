@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
+    using bg3_modders_multitool.Services;
     using System.Linq;
     using System.Windows;
 
@@ -97,6 +98,16 @@ namespace bg3_modders_multitool.Views
             var selectedLanguage = (ViewModels.MainWindow.Language)languageSelection.SelectedItem;
             var vm = DataContext as ViewModels.MainWindow;
             vm.ReloadLanguage(selectedLanguage.Code);
+        }
+
+        private void UnlockThreads_Checked(object sender, RoutedEventArgs e)
+        {
+            GeneralHelper.ToggleUnlockThreads(true);
+        }
+
+        private void UnlockThreads_Unchecked(object sender, RoutedEventArgs e)
+        {
+            GeneralHelper.ToggleUnlockThreads(false);
         }
     }
 }

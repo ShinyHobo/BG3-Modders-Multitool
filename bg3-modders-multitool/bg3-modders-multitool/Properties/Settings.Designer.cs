@@ -94,5 +94,17 @@ namespace bg3_modders_multitool.Properties {
                 this["selectedLanguage"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool unlockThreads {
+            get {
+                return ((bool)(this["unlockThreads"]));
+            }
+            set {
+                this["unlockThreads"] = value;
+            }
+        }
     }
 }
