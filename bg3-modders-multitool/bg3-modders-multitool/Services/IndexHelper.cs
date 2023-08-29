@@ -263,7 +263,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
                 }
 
-                return (Matches: matches.OrderBy(m => m).ToList(), FilteredMatches: matches);
+                return (Matches: matches, FilteredMatches: filteredMatches);
             });
         }
         #endregion
@@ -361,7 +361,7 @@ namespace bg3_modders_multitool.Services
     /// </summary>
     public sealed class CustomTokenizer : CharTokenizer
     {
-        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':'};
+        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':','‘' };
 
         public CustomTokenizer(LuceneVersion matchVersion, System.IO.TextReader input) : base(matchVersion, input) { }
 
