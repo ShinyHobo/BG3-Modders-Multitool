@@ -13,7 +13,7 @@
     <StackPanel>
         <Border BorderBrush="Gray" Background="LightGray" BorderThickness="0,0,0,3">
             <Menu Background="Transparent">
-                <MenuItem Header="Index">
+                <MenuItem Header="{x:Static p:Resources.IndexMenu}">
                     <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click" 
                         ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
                 </MenuItem>
