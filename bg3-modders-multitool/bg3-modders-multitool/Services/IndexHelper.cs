@@ -150,10 +150,8 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, file, ex.Message);
             }
-            Application.Current.Dispatcher.Invoke(() =>
-            {
+            lock(DataContext)
                 DataContext.IndexFileCount++;
-            });
         }
         #endregion
 

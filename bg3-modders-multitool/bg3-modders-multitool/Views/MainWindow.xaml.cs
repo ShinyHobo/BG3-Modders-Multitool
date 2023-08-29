@@ -92,7 +92,7 @@ namespace bg3_modders_multitool.Views
             new IndexingWindow().Show();
         }
 
-        private async void IndexFiles_Click(object sender, RoutedEventArgs e)
+        private void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
             var result = System.Windows.Forms.DialogResult.OK;
             if(IndexHelper.IndexDirectoryExists())
@@ -103,7 +103,7 @@ namespace bg3_modders_multitool.Views
             if(result.Equals(System.Windows.Forms.DialogResult.OK))
             {
                 var vm = DataContext as ViewModels.MainWindow;
-                await vm.SearchResults.IndexHelper.Index();
+                vm.SearchResults.IndexHelper.Index();
             }
         }
         #endregion
