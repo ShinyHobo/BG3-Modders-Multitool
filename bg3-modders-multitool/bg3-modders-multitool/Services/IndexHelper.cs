@@ -361,12 +361,12 @@ namespace bg3_modders_multitool.Services
     /// </summary>
     public sealed class CustomTokenizer : CharTokenizer
     {
-        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':','‘' };
+        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':','‘'};
 
         public CustomTokenizer(LuceneVersion matchVersion, System.IO.TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':')
+        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':','‘')
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>
