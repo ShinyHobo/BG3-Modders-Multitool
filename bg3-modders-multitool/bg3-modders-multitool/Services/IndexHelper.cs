@@ -109,8 +109,6 @@ namespace bg3_modders_multitool.Services
                     });
                     GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
                     writer.Commit();
-                    a.Dispose();
-                    writer.Dispose();
                 }
             }
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
@@ -130,16 +128,22 @@ namespace bg3_modders_multitool.Services
             {
                 var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
-                // if file type is excluded, only track file name and path so it can be searched for by name
-                var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file);
-                file = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{System.IO.Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+                
+                var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{System.IO.Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
-                    new TextField("path", file, Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES),
-                    new TextField("body", contents, Field.Store.NO)
+                    new TextField("path", path, Field.Store.YES),
+                    new TextField("title", fileName, Field.Store.YES)
                 };
+
+                // if file type is excluded, only track file name and path so it can be searched for by name
+                if (!extensionsToExclude.Contains(extension))
+                {
+                    var contents = File.ReadAllText(file);
+                    doc.Add(new TextField("body", contents, Field.Store.NO));
+                }
+                
                 writer.AddDocument(doc);
             }
             catch(Exception ex)

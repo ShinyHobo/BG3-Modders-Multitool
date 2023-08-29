@@ -69,9 +69,8 @@ namespace bg3_modders_multitool.ViewModels
             get { return _resultCount; }
             set {
                 _resultCount = value;
-                var filesRemaining = IndexFileTotal - IndexFileCount;
                 var timeTaken = GetTimeTaken();
-                var timeRemaining = (timeTaken.TotalMinutes / value) * filesRemaining;
+                var timeRemaining = ((timeTaken.TotalMinutes / IndexFileCount) * IndexFileTotal) - timeTaken.TotalMinutes;
                 if(timeRemaining < TimeSpan.MaxValue.TotalMinutes)
                 {
                     IndexTimeRemaining = TimeSpan.FromMinutes(timeRemaining);
