@@ -257,10 +257,10 @@ namespace bg3_modders_multitool.Services
                         }
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
                     // Checking if the index is corrupt is slower than just letting it fail
-                    GeneralHelper.WriteToConsole(Properties.Resources.IndexCorrupt);
+                    GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
                 }
 
                 return (Matches: matches.OrderBy(m => m).ToList(), FilteredMatches: matches);

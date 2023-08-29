@@ -14,10 +14,8 @@ namespace bg3_modders_multitool.Services
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
-    using System.Runtime.InteropServices.ComTypes;
     using System.Text;
     using System.Threading.Tasks;
-    using System.Windows.Forms;
 
     public static class FileHelper
     {
@@ -29,7 +27,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public static string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bshd",".clc",".clm",".cln",".dae",
             ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
-            ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsj",".lsx",".ogg",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
+            ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsfx",".lsj",".lsx",".ogg",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
             ".txt",".wem",".xaml",".xml", Properties.Resources.Extensionless
         };
 
