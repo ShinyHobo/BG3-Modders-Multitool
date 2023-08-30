@@ -24,6 +24,7 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Index.Extensions;
     using System.Collections.Concurrent;
     using Lucene.Net.Analysis.Standard;
+    using Lucene.Net.Search.Spans;
 
     public class IndexHelper
     {
@@ -199,17 +200,24 @@ namespace bg3_modders_multitool.Services
                         IndexSearcher searcher = new IndexSearcher(reader);
                         MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
                         {
-                            AllowLeadingWildcard = true
+                            AllowLeadingWildcard = true,
+                            DefaultOperator = Operator.AND
                         };
-                        Query searchTermQuery = queryParser.Parse('*' + QueryParserBase.Escape(search.Trim().Replace(" ", "\\ ")) + '*');
-                        //var queryString = QueryParser.Escape(search.Trim().Replace(" ", "\\\\ "));
+                        //Query searchTermQuery = queryParser.Parse('*' + QueryParserBase.Escape(search.Trim().Replace(" ", "\\ ")) + '*');
+                        //var queryString = QueryParser.Escape(search.Trim().Replace(" ", "\\ "));
                         //var queryString2 = "value\\\" \\\: \\\"Astarion";
-                        BooleanQuery aggregateQuery = new BooleanQuery
-                        {
-                            { searchTermQuery, Occur.MUST }
-                        };
+                        //BooleanQuery aggregateQuery = new BooleanQuery
+                        //{
+                        //    { searchTermQuery, Occur.MUST }
+                        //};
 
-                        //var aggregateQuery = queryParser.CreatePhraseQuery("body", queryString);
+
+                        //QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "body", analyzer);
+                        //Query aggregateQuery = parser.Parse("\"" + QueryParserBase.Escape(search.Trim().Replace(" ", "\\ ")) + "\"");
+
+                        //var aggregateQuery = queryParser.CreatePhraseQuery("body", '"'+queryString+'"');
+
+                        // Query aggregateQuery = queryParser.Parse('*' + search.Trim() + "*");
 
                         //PhraseQuery query = new PhraseQuery();
                         //var words = "new entry \"Teleportation".Trim().Split(' ');
@@ -222,11 +230,21 @@ namespace bg3_modders_multitool.Services
                         //Query query = parser.Parse('*' + queryString + "*");
 
 
-                        //var aggregateQuery = new QueryParser(
-                        //        LuceneVersion.LUCENE_48,
-                        //        "",
-                        //        analyzer
-                        //).Parse($"body:\"{search.Trim().Replace(" ", "\\ ")}\"");
+                        var query = queryParser.Parse($"body:*{QueryParserBase.Escape(search.Trim())}*");
+
+                        //var aggregateQuery = queryParser.CreatePhraseQuery("body", '*' + QueryParserBase.Escape(search.Trim()) + '*');
+
+                        //var searchTermQuery = queryParser.Parse(search);
+                        //BooleanQuery aggregateQuery = new BooleanQuery
+                        //{
+                        //    { searchTermQuery, Occur.MUST}
+                        //};
+
+                        //SpanQuery firstwordQuery = new SpanTermQuery(new Term("body", "new"));
+                        //SpanQuery secondwordQuery = new SpanTermQuery(new Term("body", "entry"));
+                        //SpanQuery thirdwordQuery = new Muti(new Term("body", "\"tel*"));
+                        //SpanQuery[] spanClauses = new SpanQuery[] { firstwordQuery, secondwordQuery, thirdwordQuery };
+                        //Query query = new SpanNearQuery(spanClauses, 0, true);
 
                         //var aggregateQuery = queryParser.CreatePhraseQuery("body", queryString);
                         //var aggregateQuery = new PhraseQuery() {
@@ -240,7 +258,7 @@ namespace bg3_modders_multitool.Services
                                 GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchStarted);
 
                             // perform search
-                            TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
+                            TopDocs topDocs = searcher.Search(query, reader.MaxDoc);
 
                             var filteredSomeResults = 0;
                             var missingExtensions = new List<string>();
