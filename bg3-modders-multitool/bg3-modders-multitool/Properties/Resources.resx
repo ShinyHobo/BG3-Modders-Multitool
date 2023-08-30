@@ -126,8 +126,23 @@
   <data name="BadTranslation" xml:space="preserve">
     <value>Bad translation</value>
   </data>
+  <data name="BG3CommunityLibrary" xml:space="preserve">
+    <value>BG3 Community Library</value>
+  </data>
   <data name="BG3ExeLabel" xml:space="preserve">
     <value>bg3.exe location</value>
+  </data>
+  <data name="BG3ModdingWiki" xml:space="preserve">
+    <value>BG3 Modding Wiki</value>
+  </data>
+  <data name="BG3ScriptExtender" xml:space="preserve">
+    <value>BG3 Script Extender</value>
+  </data>
+  <data name="BG3ScriptExtenderAPI" xml:space="preserve">
+    <value>BG3 Script Extender API</value>
+  </data>
+  <data name="BG3ScriptExtenderSampleMod" xml:space="preserve">
+    <value>BG3 Script Extender Sample Mod</value>
   </data>
   <data name="CachingFile" xml:space="preserve">
     <value>Caching {0}...</value>
@@ -322,6 +337,9 @@
     <value>GameObject attribute type [{0}] not covered.</value>
     <comment>type</comment>
   </data>
+  <data name="GamePaksInstructions" xml:space="preserve">
+    <value>Select game .paks you want to unpack:</value>
+  </data>
   <data name="GenerateTitle" xml:space="preserve">
     <value>Generate</value>
   </data>
@@ -364,6 +382,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="HandleLabel" xml:space="preserve">
     <value>Handle</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
   </data>
   <data name="IconLabel" xml:space="preserve">
     <value>Icon</value>
@@ -447,6 +468,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="LSLibLocation" xml:space="preserve">
     <value>LSLib divine.exe location (latest version is required)</value>
   </data>
+  <data name="LuaSetup" xml:space="preserve">
+    <value>Lua Setup</value>
+  </data>
   <data name="MapKeyLabel" xml:space="preserve">
     <value>MapKey</value>
   </data>
@@ -464,6 +488,12 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="MissingFileTypes" xml:space="preserve">
     <value>File type(s) [{0}] missing from list; please inform ShinyHobo</value>
     <comment>file extension(s)</comment>
+  </data>
+  <data name="ModdingResources" xml:space="preserve">
+    <value>Modding Resources</value>
+  </data>
+  <data name="ModdingTutorial" xml:space="preserve">
+    <value>Modding Tutorial</value>
   </data>
   <data name="ModelConversionComplete" xml:space="preserve">
     <value>Model conversion complete!</value>
@@ -540,6 +570,9 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Careful! This is irreversable!
 
 Clicking "OK" will wipe your current index and rebuild it from scratch; this could take some time. Are you sure you wish you continue?</value>
+  </data>
+  <data name="ReportABug" xml:space="preserve">
+    <value>Report a bug</value>
   </data>
   <data name="ResultsHaveBeenFiltered" xml:space="preserve">
     <value>{0} results have been filtered out.</value>

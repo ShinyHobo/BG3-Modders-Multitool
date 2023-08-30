@@ -88,11 +88,56 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to BG3 Community Library.
+        /// </summary>
+        public static string BG3CommunityLibrary {
+            get {
+                return ResourceManager.GetString("BG3CommunityLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to bg3.exe location.
         /// </summary>
         public static string BG3ExeLabel {
             get {
                 return ResourceManager.GetString("BG3ExeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BG3 Modding Wiki.
+        /// </summary>
+        public static string BG3ModdingWiki {
+            get {
+                return ResourceManager.GetString("BG3ModdingWiki", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BG3 Script Extender.
+        /// </summary>
+        public static string BG3ScriptExtender {
+            get {
+                return ResourceManager.GetString("BG3ScriptExtender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BG3 Script Extender API.
+        /// </summary>
+        public static string BG3ScriptExtenderAPI {
+            get {
+                return ResourceManager.GetString("BG3ScriptExtenderAPI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BG3 Script Extender Sample Mod.
+        /// </summary>
+        public static string BG3ScriptExtenderSampleMod {
+            get {
+                return ResourceManager.GetString("BG3ScriptExtenderSampleMod", resourceCulture);
             }
         }
         
@@ -619,6 +664,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select game .paks you want to unpack:.
+        /// </summary>
+        public static string GamePaksInstructions {
+            get {
+                return ResourceManager.GetString("GamePaksInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generate.
         /// </summary>
         public static string GenerateTitle {
@@ -734,6 +788,15 @@ namespace bg3_modders_multitool.Properties {
         public static string HandleLabel {
             get {
                 return ResourceManager.GetString("HandleLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        public static string Help {
+            get {
+                return ResourceManager.GetString("Help", resourceCulture);
             }
         }
         
@@ -972,6 +1035,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lua Setup.
+        /// </summary>
+        public static string LuaSetup {
+            get {
+                return ResourceManager.GetString("LuaSetup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MapKey.
         /// </summary>
         public static string MapKeyLabel {
@@ -1013,6 +1085,24 @@ namespace bg3_modders_multitool.Properties {
         public static string MissingFileTypes {
             get {
                 return ResourceManager.GetString("MissingFileTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modding Resources.
+        /// </summary>
+        public static string ModdingResources {
+            get {
+                return ResourceManager.GetString("ModdingResources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modding Tutorial.
+        /// </summary>
+        public static string ModdingTutorial {
+            get {
+                return ResourceManager.GetString("ModdingTutorial", resourceCulture);
             }
         }
         
@@ -1231,6 +1321,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ReindexQuestion {
             get {
                 return ResourceManager.GetString("ReindexQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report a bug.
+        /// </summary>
+        public static string ReportABug {
+            get {
+                return ResourceManager.GetString("ReportABug", resourceCulture);
             }
         }
         

@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:bg3_modders_multitool.Views"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize" 
         Title="{x:Static p:Resources.AppTitle}" Height="485" Width="800">
         <!-- Developed by ShinyHobo -->
         <!-- Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd. -->
@@ -28,6 +28,18 @@
                         ToolTip="{x:Static p:Resources.ModsFolderButtonTooltip}"/>
                     <MenuItem x:Name="profilesFolderButton" Header="{x:Static p:Resources.ProfilesFolderButton}" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
                         ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}"/>
+                </MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Help}">
+                    <MenuItem Header="{x:Static p:Resources.ModdingResources}">
+                        <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3CommunityLibrary}" Click="BG3CommWikiLink_Click"/>
+                        <MenuItem Header="{x:Static p:Resources.ModdingTutorial}" Click="ModTutLink_Click"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtender}" Click="BG3SELink_Click"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderAPI}" Click="BG3SEAPILink_Click"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick"/>
+                        <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click"/>
+                    </MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click"/>
                 </MenuItem>
             </Menu>
         </Border>
