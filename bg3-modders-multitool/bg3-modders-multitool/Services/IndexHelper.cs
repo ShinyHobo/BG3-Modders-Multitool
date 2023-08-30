@@ -17,11 +17,11 @@ namespace bg3_modders_multitool.Services
     using System.Threading.Tasks;
     using bg3_modders_multitool.ViewModels;
     using Lucene.Net.Analysis.Core;
-    using Lucene.Net.Analysis.En;
     using Lucene.Net.Analysis.Util;
-    using J2N;
     using Alphaleonis.Win32.Filesystem;
     using Lucene.Net.Index.Extensions;
+    using System.Collections.Concurrent;
+    using Lucene.Net.Search.Spans;
 
     public class IndexHelper
     {
@@ -133,8 +133,8 @@ namespace bg3_modders_multitool.Services
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
-                    new TextField("path", path, Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES)
+                    new StringField("path", path, Field.Store.YES),
+                    new StringField("title", fileName, Field.Store.YES)
                 };
 
                 // if file type is excluded, only track file name and path so it can be searched for by name
@@ -195,15 +195,42 @@ namespace bg3_modders_multitool.Services
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
-                        MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
-                        {
-                            AllowLeadingWildcard = true
-                        };
-                        Query searchTermQuery = queryParser.Parse('*' + QueryParser.Escape(search.Trim()) + '*');
+                        BooleanQuery query = new BooleanQuery();
 
-                        BooleanQuery aggregateQuery = new BooleanQuery() {
-                            { searchTermQuery, Occur.MUST }
-                        };
+                        var pathQuery = new WildcardQuery(new Term("path", '*' + QueryParserBase.Escape(search.Trim()) + '*'));
+                        query.Add(pathQuery, Occur.SHOULD);
+
+                        var searchTerms = search.Trim().Split(' ');
+                        if(searchTerms.Length > 1)
+                        {
+                            var spanQueries = new List<SpanQuery>();
+                            for (int i = 0; i < searchTerms.Length; i++)
+                            {
+                                var term = searchTerms[i];
+                                if (i == 0)
+                                {
+                                    //SpanQuery one = new SpanTermQuery(new Term("body", "new")); // faster, but no wildcard
+                                    WildcardQuery wildcard = new WildcardQuery(new Term("body", '*' + term));
+                                    SpanQuery spanWildcard = new SpanMultiTermQueryWrapper<WildcardQuery>(wildcard);
+                                    spanQueries.Add(spanWildcard);
+                                }
+                                else if (i == searchTerms.Length - 1)
+                                {
+                                    SpanQuery last = new SpanMultiTermQueryWrapper<PrefixQuery>(new PrefixQuery(new Term("body", term)));
+                                    spanQueries.Add(last);
+                                }
+                                else
+                                {
+                                    SpanQuery mid = new SpanTermQuery(new Term("body", term));
+                                    spanQueries.Add(mid);
+                                }
+                            }
+                            query.Add(new SpanNearQuery(spanQueries.ToArray(), 0, true), Occur.SHOULD);
+                        }
+                        else
+                        {
+                           query.Add(new WildcardQuery(new Term("body", '*' + searchTerms[0] + '*')), Occur.SHOULD);
+                        }
 
                         if (reader.MaxDoc != 0)
                         {
@@ -212,7 +239,7 @@ namespace bg3_modders_multitool.Services
                                 GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchStarted);
 
                             // perform search
-                            TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
+                            TopDocs topDocs = searcher.Search(query, reader.MaxDoc);
 
                             var filteredSomeResults = 0;
                             var missingExtensions = new List<string>();
@@ -277,61 +304,36 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="path">The file path to read from.</param>
         /// <returns>A list of file line and trimmed contents.</returns>
-        public Dictionary<int, string> GetFileContents(string path)
+        public Dictionary<long, string> GetFileContents(string path)
         {
-            var lines = new Dictionary<int, string>();
-            var lineCount = 1;
+            var lines = new ConcurrentDictionary<long, string>();
             if (File.Exists(path))
             {
                 var extension = Path.GetExtension(path);
                 var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    using (var stream = File.OpenText(path))
-                    using (System.IO.StreamReader r = stream)
+                    Parallel.ForEach(File.ReadLines(path), GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
                     {
-                        string line;
-                        var searchArray = SearchText.Split(' ');
-                        while ((line = r.ReadLine()) != null)
+                        var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
+                        if (index >= 0)
                         {
-                            var matched = false;
-                            var escapedLine = line;
-                            foreach(var searchText in searchArray)
-                            {
-                                if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    if(!matched)
-                                    {
-                                        escapedLine = System.Security.SecurityElement.Escape(line);
-                                        matched = true;
-                                    }
-                                    for (int index = 0; ; index += searchText.Length)
-                                    {
-                                        index = line.IndexOf(searchText, index, StringComparison.OrdinalIgnoreCase);
-                                        if (index == -1)
-                                            break;
-                                        var text = System.Security.SecurityElement.Escape(line.Substring(index, searchText.Length));
-                                        escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
-                                    }
-                                }
-                            }
-                            if(matched)
-                            {
-                                lines.Add(lineCount, escapedLine);
-                            }
-                            lineCount++;
+                            var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
+                            var escapedLine = System.Security.SecurityElement.Escape(line);
+                            escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
+                            lines.TryAdd(lineNumber, escapedLine);
                         }
-                    }
+                    });
                 }
                 if (lines.Count == 0)
                 {
                     if(imageExtensions.Contains(extension))
                     {
-                        lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
+                        lines.TryAdd(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
                     }
                     else
                     {
-                        lines.Add(0, Properties.Resources.NoLinesFound);
+                        lines.TryAdd(0, Properties.Resources.NoLinesFound);
                     }
                 }
             }
@@ -339,10 +341,10 @@ namespace bg3_modders_multitool.Services
             {
                 if (lines.Count == 0)
                 {
-                    lines.Add(0, Properties.Resources.FileNoExist);
+                    lines.TryAdd(0, Properties.Resources.FileNoExist);
                 }
             }
-            return lines;
+            return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }
 
@@ -355,7 +357,7 @@ namespace bg3_modders_multitool.Services
         {
             Tokenizer tokenizer = new CustomTokenizer(LuceneVersion.LUCENE_48, reader);
             TokenStream result = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
-            result = new StopFilter(LuceneVersion.LUCENE_48, result, EnglishAnalyzer.DefaultStopSet);
+            //result = new StopFilter(LuceneVersion.LUCENE_48, result, EnglishAnalyzer.DefaultStopSet);
             return new TokenStreamComponents(tokenizer, result);
         }
     }
@@ -376,7 +378,8 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the token should be split.</returns>
         protected override bool IsTokenChar(int c)
         {
-            return Character.IsLetterOrDigit(c) || allowedSpecialCharacters.Contains(c);
+            return c > 32 && c < 127; // skip all command characters, spaces, and extended character codes
+            //return Character.IsLetterOrDigit(c) || allowedSpecialCharacters.Contains(c);
         }
     }
 
