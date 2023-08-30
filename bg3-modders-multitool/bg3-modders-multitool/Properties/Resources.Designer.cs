@@ -1370,6 +1370,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable to get significantly faster, but less robust results..
+        /// </summary>
+        public static string SpeedIndexSearchTooltip {
+            get {
+                return ResourceManager.GetString("SpeedIndexSearchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temp files cleaned..
         /// </summary>
         public static string TempFilesCleaned {

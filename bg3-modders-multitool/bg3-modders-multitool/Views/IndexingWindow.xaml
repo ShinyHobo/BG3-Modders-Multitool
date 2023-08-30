@@ -11,10 +11,25 @@
         MinHeight="250"
         Title="{x:Static p:Resources.IndexSearchTitle}" Height="430" Width="1250" Closing="Window_Closing">
     <Grid>
-        <Button x:Name="searchFilesButton" Content="{x:Static p:Resources.SearchFilesButton}" HorizontalAlignment="Left" Margin="568,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand"/>
-        <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="558" KeyDown="Search_KeyDown"/>
-        <xctk:CheckComboBox x:Name="fileTypeFilter" Height="23" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="668,10,0,0"
+        <Button x:Name="searchFilesButton" Content="{x:Static p:Resources.SearchFilesButton}" HorizontalAlignment="Left" Margin="535,10,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand"/>
+        <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="525" KeyDown="Search_KeyDown"/>
+        <xctk:CheckComboBox x:Name="fileTypeFilter" Height="23" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="635,10,0,0"
                             SelectedItemsOverride="{Binding SelectedFileTypes}" ItemSelectionChanged="fileTypeFilter_ItemSelectionChanged"/>
+
+
+        <CheckBox x:Name="leadingWildcardDisabledCheckbox" IsChecked="{Binding LeadingWildcardDisabled}"  Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="738,15,0,0" FlowDirection="RightToLeft" Width="30" ToolTip="{x:Static p:Resources.SpeedIndexSearchTooltip}" >
+            <TextBlock Text="&#x27A0;" FontSize="23" Margin="-10,-4,0,0" FlowDirection="LeftToRight" >
+                <TextBlock.LayoutTransform>
+                    <RotateTransform Angle="90" />
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+            <CheckBox.Resources>
+                <Style TargetType="{x:Type Path}">
+                    <Setter Property="FlowDirection" Value="LeftToRight"/>
+                </Style>
+            </CheckBox.Resources>
+        </CheckBox>
+
         <ListView x:Name="searchResults" Margin="10,38,0,10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Left" HorizontalAlignment="Left" MinWidth="758" Width="758" ItemsSource="{Binding Results}">
             <ListView.ItemTemplate>
                 <DataTemplate>

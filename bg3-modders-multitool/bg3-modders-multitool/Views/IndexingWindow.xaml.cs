@@ -39,6 +39,8 @@ namespace bg3_modders_multitool.Views
             fileTypeFilter.ItemsSource = FileHelper.FileTypes;
             fileTypeFilter.IsSelectAllActive = true;
             fileTypeFilter.SelectAll();
+
+            ((SearchResults)DataContext).LeadingWildcardDisabled = false;
         }
 
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)
@@ -46,6 +48,7 @@ namespace bg3_modders_multitool.Views
             if(!string.IsNullOrEmpty(search.Text) && fileTypeFilter.SelectedItems.Count > 0)
             {
                 searchFilesButton.IsEnabled = false;
+                leadingWildcardDisabledCheckbox.IsEnabled = false;
                 fileTypeFilter.IsEnabled = false;
                 search.IsEnabled = false;
                 convertAndOpenButton.IsEnabled = false;
@@ -53,7 +56,7 @@ namespace bg3_modders_multitool.Views
                 vm.SelectedPath = string.Empty;
                 vm.FileContents = new ObservableCollection<SearchResult>();
                 vm.Results = new ObservableCollection<SearchResult>();
-                var matches = await vm.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems);
+                var matches = await vm.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems, !vm.LeadingWildcardDisabled);
                 vm.FullResultList = matches.Matches;
                 vm.FullResultList.AddRange(matches.FilteredMatches);
                 foreach (string result in matches.Matches)
@@ -64,6 +67,7 @@ namespace bg3_modders_multitool.Views
                 fileTypeFilter.IsEnabled = true;
                 search.IsEnabled = true;
                 convertAndOpenButton.IsEnabled = true;
+                leadingWildcardDisabledCheckbox.IsEnabled = true;
                 search.Focus();
             }
         }

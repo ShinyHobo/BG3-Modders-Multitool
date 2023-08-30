@@ -176,8 +176,9 @@ namespace bg3_modders_multitool.Services
         /// <param name="search">The text to search for. Supports file title and contents.</param>
         /// <param name="writeToConsole">Whether or not to write search status to console (errors still report).</param>
         /// <param name="selectedFileTypes">The selected file types to filter on</param>
+        /// <param name="enableLeadingWildCard">Whether to enable the leading wildcard. Disabling is faster, but will produce fewer and/or unexpected results</param>
         /// <returns>The list of matches and the list of filtered matches</returns>
-        public Task<(List<string> Matches,List<string>FilteredMatches)> SearchFiles(string search, bool writeToConsole = true, System.Collections.IList selectedFileTypes = null)
+        public Task<(List<string> Matches,List<string>FilteredMatches)> SearchFiles(string search, bool writeToConsole = true, System.Collections.IList selectedFileTypes = null, bool enableLeadingWildCard = true)
         {
             SearchText = search;
             return Task.Run(() => { 
@@ -191,13 +192,12 @@ namespace bg3_modders_multitool.Services
 
                 try
                 {
-                    using (Analyzer analyzer = new CustomAnalyzer())
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         BooleanQuery query = new BooleanQuery();
-
-                        var pathQuery = new WildcardQuery(new Term("path", '*' + QueryParserBase.Escape(search.Trim()) + '*'));
+                        var wildCardChar = enableLeadingWildCard ? "*" : string.Empty;
+                        var pathQuery = new WildcardQuery(new Term("path", wildCardChar + QueryParserBase.Escape(search.Trim()) + '*'));
                         query.Add(pathQuery, Occur.SHOULD);
 
                         var searchTerms = search.Trim().ToLower().Split(' ');
@@ -209,8 +209,7 @@ namespace bg3_modders_multitool.Services
                                 var term = searchTerms[i];
                                 if (i == 0)
                                 {
-                                    //SpanQuery one = new SpanTermQuery(new Term("body", "new")); // faster, but no wildcard
-                                    WildcardQuery wildcard = new WildcardQuery(new Term("body", '*' + term));
+                                    WildcardQuery wildcard = new WildcardQuery(new Term("body", wildCardChar + term));
                                     SpanQuery spanWildcard = new SpanMultiTermQueryWrapper<WildcardQuery>(wildcard);
                                     spanQueries.Add(spanWildcard);
                                 }
@@ -229,7 +228,7 @@ namespace bg3_modders_multitool.Services
                         }
                         else
                         {
-                           query.Add(new WildcardQuery(new Term("body", '*' + searchTerms[0] + '*')), Occur.SHOULD);
+                            query.Add(new WildcardQuery(new Term("body", wildCardChar + searchTerms[0] + '*')), Occur.SHOULD);
                         }
 
                         if (reader.MaxDoc != 0)
@@ -288,10 +287,10 @@ namespace bg3_modders_multitool.Services
                         }
                     }
                 }
-                catch(Exception ex)
+                catch
                 {
                     // Checking if the index is corrupt is slower than just letting it fail
-                    GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                    GeneralHelper.WriteToConsole(Properties.Resources.IndexCorrupt);
                 }
 
                 return (Matches: matches, FilteredMatches: filteredMatches);
@@ -356,8 +355,6 @@ namespace bg3_modders_multitool.Services
         protected override TokenStreamComponents CreateComponents(string fieldName, System.IO.TextReader reader)
         {
             Tokenizer tokenizer = new CustomTokenizer(LuceneVersion.LUCENE_48, reader);
-
-            // ngram here
             TokenStream filter = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
             return new TokenStreamComponents(tokenizer, filter);
         }
