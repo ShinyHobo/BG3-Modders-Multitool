@@ -203,53 +203,32 @@ namespace bg3_modders_multitool.Services
                             AllowLeadingWildcard = true,
                             DefaultOperator = Operator.AND
                         };
-                        //Query searchTermQuery = queryParser.Parse('*' + QueryParserBase.Escape(search.Trim().Replace(" ", "\\ ")) + '*');
-                        //var queryString = QueryParser.Escape(search.Trim().Replace(" ", "\\ "));
-                        //var queryString2 = "value\\\" \\\: \\\"Astarion";
-                        //BooleanQuery aggregateQuery = new BooleanQuery
-                        //{
-                        //    { searchTermQuery, Occur.MUST }
-                        //};
 
+                        var searchTerms = search.Trim().Split(' ');
+                        var spanQueries = new List<SpanQuery>();
+                        for(int i = 0; i < searchTerms.Length; i++) 
+                        { 
+                            var term = searchTerms[i];
+                            if(i == 0)
+                            {
+                                //SpanQuery one = new SpanTermQuery(new Term("body", "new")); // faster, but no wildcard
+                                WildcardQuery wildcard = new WildcardQuery(new Term("body", '*'+term));
+                                SpanQuery spanWildcard = new SpanMultiTermQueryWrapper<WildcardQuery>(wildcard);
+                                spanQueries.Add(spanWildcard);
+                            }
+                            else if(i == searchTerms.Length - 1)
+                            {
+                                SpanQuery last = new SpanMultiTermQueryWrapper<PrefixQuery>(new PrefixQuery(new Term("body", term)));
+                                spanQueries.Add(last);
+                            }
+                            else
+                            {
+                                SpanQuery mid = new SpanTermQuery(new Term("body", term));
+                                spanQueries.Add(mid);
+                            }
+                        }
 
-                        //QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "body", analyzer);
-                        //Query aggregateQuery = parser.Parse("\"" + QueryParserBase.Escape(search.Trim().Replace(" ", "\\ ")) + "\"");
-
-                        //var aggregateQuery = queryParser.CreatePhraseQuery("body", '"'+queryString+'"');
-
-                        // Query aggregateQuery = queryParser.Parse('*' + search.Trim() + "*");
-
-                        //PhraseQuery query = new PhraseQuery();
-                        //var words = "new entry \"Teleportation".Trim().Split(' ');
-                        //foreach (var word in words)
-                        //{
-                        //    query.Add(new Term("body", word));
-                        //}
-
-                        //QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "body", analyzer);
-                        //Query query = parser.Parse('*' + queryString + "*");
-
-
-                        var query = queryParser.Parse($"body:*{QueryParserBase.Escape(search.Trim())}*");
-
-                        //var aggregateQuery = queryParser.CreatePhraseQuery("body", '*' + QueryParserBase.Escape(search.Trim()) + '*');
-
-                        //var searchTermQuery = queryParser.Parse(search);
-                        //BooleanQuery aggregateQuery = new BooleanQuery
-                        //{
-                        //    { searchTermQuery, Occur.MUST}
-                        //};
-
-                        //SpanQuery firstwordQuery = new SpanTermQuery(new Term("body", "new"));
-                        //SpanQuery secondwordQuery = new SpanTermQuery(new Term("body", "entry"));
-                        //SpanQuery thirdwordQuery = new Muti(new Term("body", "\"tel*"));
-                        //SpanQuery[] spanClauses = new SpanQuery[] { firstwordQuery, secondwordQuery, thirdwordQuery };
-                        //Query query = new SpanNearQuery(spanClauses, 0, true);
-
-                        //var aggregateQuery = queryParser.CreatePhraseQuery("body", queryString);
-                        //var aggregateQuery = new PhraseQuery() {
-                        //    new Term("body", "+(" + search.Trim() + ")")
-                        //};
+                        SpanQuery query = new SpanNearQuery(spanQueries.ToArray(), 0, true);
 
                         if (reader.MaxDoc != 0)
                         {
