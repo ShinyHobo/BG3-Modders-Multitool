@@ -27,12 +27,7 @@ namespace bg3_modders_multitool.Services
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            var files = Directory.GetFiles(dataDir, "*.pak").Select(file => Path.GetFullPath(file)).ToList();
-            var localizationDir = $"{dataDir}\\Localization";
-            if (Directory.Exists(localizationDir))
-            {
-                files.AddRange(Directory.GetFiles(localizationDir, "*.pak").Select(file => Path.GetFullPath(file)).ToList());
-            }
+            var files = Directory.GetFiles(dataDir, "*.pak", System.IO.SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
             var pakSelection = new Views.PakSelection(files);
             pakSelection.ShowDialog();
             pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
