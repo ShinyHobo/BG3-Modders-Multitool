@@ -200,7 +200,7 @@ namespace bg3_modders_multitool.Services
                         var pathQuery = new WildcardQuery(new Term("path", '*' + QueryParserBase.Escape(search.Trim()) + '*'));
                         query.Add(pathQuery, Occur.SHOULD);
 
-                        var searchTerms = search.Trim().Split(' ');
+                        var searchTerms = search.Trim().ToLower().Split(' ');
                         if(searchTerms.Length > 1)
                         {
                             var spanQueries = new List<SpanQuery>();
