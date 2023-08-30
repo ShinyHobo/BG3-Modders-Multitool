@@ -124,12 +124,12 @@ namespace bg3_modders_multitool.Services
         /// <param name="writer">The index to write to.</param>
         private void IndexLuceneFile(string file, IndexWriter writer)
         {
+            var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{System.IO.Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
             try
             {
                 var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
-                
-                var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{System.IO.Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
@@ -148,7 +148,7 @@ namespace bg3_modders_multitool.Services
             }
             catch(Exception ex)
             {
-                GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, file, ex.Message);
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
             lock(DataContext)
                 DataContext.IndexFileCount++;
