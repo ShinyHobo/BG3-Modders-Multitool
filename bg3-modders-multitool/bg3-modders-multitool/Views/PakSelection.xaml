@@ -14,8 +14,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Padding="5,5,5,5">Select .paks you want to unpack:</TextBlock>
-        <ListView Grid.Row="1" Grid.Column="0" x:Name="pakList"  ItemsSource="{Binding PakList}" Padding="5,5,5,5">
+        <TextBlock Grid.Row="0" Grid.Column="0" Padding="5,5,5,5" Text="{x:Static p:Resources.GamePaksInstructions}"/>
+        <ListView Grid.Row="1" Grid.Column="0" x:Name="pakList"  ItemsSource="{Binding PakList}" Padding="5,5,5,5" MaxHeight="360">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">

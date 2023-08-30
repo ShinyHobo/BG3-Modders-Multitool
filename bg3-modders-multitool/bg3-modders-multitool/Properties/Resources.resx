@@ -337,6 +337,9 @@
     <value>GameObject attribute type [{0}] not covered.</value>
     <comment>type</comment>
   </data>
+  <data name="GamePaksInstructions" xml:space="preserve">
+    <value>Select game .paks you want to unpack:</value>
+  </data>
   <data name="GenerateTitle" xml:space="preserve">
     <value>Generate</value>
   </data>

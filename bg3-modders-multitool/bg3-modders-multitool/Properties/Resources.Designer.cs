@@ -664,6 +664,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select game .paks you want to unpack:.
+        /// </summary>
+        public static string GamePaksInstructions {
+            get {
+                return ResourceManager.GetString("GamePaksInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generate.
         /// </summary>
         public static string GenerateTitle {
