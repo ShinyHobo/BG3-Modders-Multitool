@@ -168,5 +168,47 @@ namespace bg3_modders_multitool.Views
         {
             RootTemplateHelper.ClearGameObjectCache();
         }
+
+        #region Help Tab
+        private void BG3WikiLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://bg3.wiki/wiki/Modding_Resources");
+        }
+
+        private void BG3CommWikiLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/BG3-Community-Library-Team/BG3-Community-Library/wiki");
+        }
+
+        private void ModTutLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.nexusmods.com/baldursgate3/mods/1514");
+        }
+
+        private void BG3SELink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/releases");
+        }
+
+        private void BG3SEAPILink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/blob/main/Docs/API.md");
+        }
+
+        private void BG3SESampleLinkClick(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/tree/main/SampleMod");
+        }
+
+        private void LuaSetupLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/LaughingLeader-DOS2-Mods/LeaderLib/wiki/Lua-Setup");
+        }
+
+        private void ReportABugLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/ShinyHobo/BG3-Modders-Multitool/issues");
+        }
+        #endregion
     }
 }
