@@ -209,6 +209,11 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start("https://github.com/ShinyHobo/BG3-Modders-Multitool/issues");
         }
+
+        private void KofiLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://ko-fi.com/shinyhobo");
+        }
         #endregion
     }
 }

@@ -1478,6 +1478,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buy me a drink?.
+        /// </summary>
+        public static string SupportMe {
+            get {
+                return ResourceManager.GetString("SupportMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temp files cleaned..
         /// </summary>
         public static string TempFilesCleaned {
