@@ -89,6 +89,21 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
+        private bool _leadingWildcardDisabled;
+
+        /// <summary>
+        /// Whether or not to utilize a leading wildcard for searches. Disabling this provides faster, but potentially unexpected results
+        /// </summary>
+        public bool LeadingWildcardDisabled
+        {
+            get { return _leadingWildcardDisabled; }
+            set
+            {
+                _leadingWildcardDisabled = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         private DateTime _indexStartTime;
 
         public DateTime IndexStartTime {
