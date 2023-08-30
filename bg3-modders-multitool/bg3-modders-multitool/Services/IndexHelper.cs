@@ -22,6 +22,8 @@ namespace bg3_modders_multitool.Services
     using J2N;
     using Alphaleonis.Win32.Filesystem;
     using Lucene.Net.Index.Extensions;
+    using System.Collections.Concurrent;
+    using Lucene.Net.Analysis.Standard;
 
     public class IndexHelper
     {
@@ -199,11 +201,37 @@ namespace bg3_modders_multitool.Services
                         {
                             AllowLeadingWildcard = true
                         };
-                        Query searchTermQuery = queryParser.Parse('*' + QueryParser.Escape(search.Trim()) + '*');
-
-                        BooleanQuery aggregateQuery = new BooleanQuery() {
+                        Query searchTermQuery = queryParser.Parse('*' + QueryParserBase.Escape(search.Trim().Replace(" ", "\\ ")) + '*');
+                        //var queryString = QueryParser.Escape(search.Trim().Replace(" ", "\\\\ "));
+                        //var queryString2 = "value\\\" \\\: \\\"Astarion";
+                        BooleanQuery aggregateQuery = new BooleanQuery
+                        {
                             { searchTermQuery, Occur.MUST }
                         };
+
+                        //var aggregateQuery = queryParser.CreatePhraseQuery("body", queryString);
+
+                        //PhraseQuery query = new PhraseQuery();
+                        //var words = "new entry \"Teleportation".Trim().Split(' ');
+                        //foreach (var word in words)
+                        //{
+                        //    query.Add(new Term("body", word));
+                        //}
+
+                        //QueryParser parser = new QueryParser(LuceneVersion.LUCENE_48, "body", analyzer);
+                        //Query query = parser.Parse('*' + queryString + "*");
+
+
+                        //var aggregateQuery = new QueryParser(
+                        //        LuceneVersion.LUCENE_48,
+                        //        "",
+                        //        analyzer
+                        //).Parse($"body:\"{search.Trim().Replace(" ", "\\ ")}\"");
+
+                        //var aggregateQuery = queryParser.CreatePhraseQuery("body", queryString);
+                        //var aggregateQuery = new PhraseQuery() {
+                        //    new Term("body", "+(" + search.Trim() + ")")
+                        //};
 
                         if (reader.MaxDoc != 0)
                         {
@@ -277,9 +305,9 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="path">The file path to read from.</param>
         /// <returns>A list of file line and trimmed contents.</returns>
-        public Dictionary<int, string> GetFileContents(string path)
+        public ConcurrentDictionary<long, string> GetFileContents(string path)
         {
-            var lines = new Dictionary<int, string>();
+            var lines = new ConcurrentDictionary<long, string>();
             var lineCount = 1;
             if (File.Exists(path))
             {
@@ -287,51 +315,55 @@ namespace bg3_modders_multitool.Services
                 var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    using (var stream = File.OpenText(path))
-                    using (System.IO.StreamReader r = stream)
+                    //var searchArray = SearchText.Split(' ');
+                    Parallel.ForEach(File.ReadLines(path), GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
                     {
-                        string line;
-                        var searchArray = SearchText.Split(' ');
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            var matched = false;
-                            var escapedLine = line;
-                            foreach(var searchText in searchArray)
-                            {
-                                if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    if(!matched)
-                                    {
-                                        escapedLine = System.Security.SecurityElement.Escape(line);
-                                        matched = true;
-                                    }
-                                    for (int index = 0; ; index += searchText.Length)
-                                    {
-                                        index = line.IndexOf(searchText, index, StringComparison.OrdinalIgnoreCase);
-                                        if (index == -1)
-                                            break;
-                                        var text = System.Security.SecurityElement.Escape(line.Substring(index, searchText.Length));
-                                        escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
-                                    }
-                                }
-                            }
-                            if(matched)
-                            {
-                                lines.Add(lineCount, escapedLine);
-                            }
-                            lineCount++;
+                        //var matched = false;
+                        //var escapedLine = line;
+                        //foreach (var searchText in searchArray)
+                        //{
+                        //    if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                        //    {
+                        //        if (!matched)
+                        //        {
+                        //            escapedLine = System.Security.SecurityElement.Escape(line);
+                        //            matched = true;
+                        //        }
+                        //        for (int index = 0; ; index += searchText.Length)
+                        //        {
+                        //            index = line.IndexOf(searchText, index, StringComparison.OrdinalIgnoreCase);
+                        //            if (index == -1)
+                        //                break;
+                        //            var text = System.Security.SecurityElement.Escape(line.Substring(index, searchText.Length));
+                        //            escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
+                        //        }
+                        //    }
+                        //}
+                        //if (matched)
+                        //{
+                        //    lines.TryAdd(lineNumber, escapedLine);
+                        //}
+                        //lineCount++;
+                        var bler = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0;
+                        if (line.Contains("BladeWard") && !bler) {
+                            var sner = "";
                         }
-                    }
+                        if (bler)
+                        {
+                            var escapedLine = System.Security.SecurityElement.Escape(line);
+                            lines.TryAdd(lineNumber, escapedLine);
+                        }
+                    });
                 }
                 if (lines.Count == 0)
                 {
                     if(imageExtensions.Contains(extension))
                     {
-                        lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
+                        lines.TryAdd(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
                     }
                     else
                     {
-                        lines.Add(0, Properties.Resources.NoLinesFound);
+                        lines.TryAdd(0, Properties.Resources.NoLinesFound);
                     }
                 }
             }
@@ -339,7 +371,7 @@ namespace bg3_modders_multitool.Services
             {
                 if (lines.Count == 0)
                 {
-                    lines.Add(0, Properties.Resources.FileNoExist);
+                    lines.TryAdd(0, Properties.Resources.FileNoExist);
                 }
             }
             return lines;
@@ -355,7 +387,7 @@ namespace bg3_modders_multitool.Services
         {
             Tokenizer tokenizer = new CustomTokenizer(LuceneVersion.LUCENE_48, reader);
             TokenStream result = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
-            result = new StopFilter(LuceneVersion.LUCENE_48, result, EnglishAnalyzer.DefaultStopSet);
+            //result = new StopFilter(LuceneVersion.LUCENE_48, result, EnglishAnalyzer.DefaultStopSet);
             return new TokenStreamComponents(tokenizer, result);
         }
     }
@@ -376,7 +408,8 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the token should be split.</returns>
         protected override bool IsTokenChar(int c)
         {
-            return Character.IsLetterOrDigit(c) || allowedSpecialCharacters.Contains(c);
+            return c > 32 && c < 127; // skip all command characters, spaces, and extended character codes
+            //return Character.IsLetterOrDigit(c) || allowedSpecialCharacters.Contains(c);
         }
     }
 

@@ -64,6 +64,7 @@ namespace bg3_modders_multitool.Views
                 fileTypeFilter.IsEnabled = true;
                 search.IsEnabled = true;
                 convertAndOpenButton.IsEnabled = true;
+                search.Focus();
             }
         }
 

@@ -273,9 +273,9 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private int _key;
+        private long _key;
 
-        public int Key {
+        public long Key {
             get { return _key; }
             set {
                 _key = value;
