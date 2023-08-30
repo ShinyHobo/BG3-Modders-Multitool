@@ -356,9 +356,10 @@ namespace bg3_modders_multitool.Services
         protected override TokenStreamComponents CreateComponents(string fieldName, System.IO.TextReader reader)
         {
             Tokenizer tokenizer = new CustomTokenizer(LuceneVersion.LUCENE_48, reader);
-            TokenStream result = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
-            //result = new StopFilter(LuceneVersion.LUCENE_48, result, EnglishAnalyzer.DefaultStopSet);
-            return new TokenStreamComponents(tokenizer, result);
+
+            // ngram here
+            TokenStream filter = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
+            return new TokenStreamComponents(tokenizer, filter);
         }
     }
 
@@ -367,20 +368,16 @@ namespace bg3_modders_multitool.Services
     /// </summary>
     public sealed class CustomTokenizer : CharTokenizer
     {
-        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':','‘','\''};
-
         public CustomTokenizer(LuceneVersion matchVersion, System.IO.TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':','‘',''')
+        /// Split tokens on all command characters, spaces, and extended character codes
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>
         protected override bool IsTokenChar(int c)
         {
-            return c > 32 && c < 127; // skip all command characters, spaces, and extended character codes
-            //return Character.IsLetterOrDigit(c) || allowedSpecialCharacters.Contains(c);
+            return c > 32 && c < 127;
         }
     }
-
 }
