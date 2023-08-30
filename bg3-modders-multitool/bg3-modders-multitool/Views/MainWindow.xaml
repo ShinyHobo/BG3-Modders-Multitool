@@ -40,6 +40,7 @@
                         <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click"/>
                     </MenuItem>
                     <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click"/>
+                    <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click"/>
                 </MenuItem>
             </Menu>
         </Border>
