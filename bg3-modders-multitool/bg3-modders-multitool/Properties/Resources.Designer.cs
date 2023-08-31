@@ -1478,16 +1478,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   查找类似 Buy me a drink? 的本地化字符串。
-        /// </summary>
-        public static string SupportMe {
-            get {
-                return ResourceManager.GetString("SupportMe", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Temp files cleaned. 的本地化字符串。
+        ///   Looks up a localized string similar to Temp files cleaned..
         /// </summary>
         public static string TempFilesCleaned {
             get {
