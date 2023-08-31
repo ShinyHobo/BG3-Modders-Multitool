@@ -289,7 +289,7 @@ Mod工作空间
     <value>检索到的文件列表。</value>
   </data>
   <data name="FileNoExist" xml:space="preserve">
-    <value>文件在给定路径上不存在。({0})</value>
+    <value>文件在给定路径上不存在。({0}).</value>
     <comment>file path</comment>
   </data>
   <data name="FileNotFound" xml:space="preserve">
