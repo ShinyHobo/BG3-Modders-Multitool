@@ -61,6 +61,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 3D Model.
+        /// </summary>
+        public static string _3DModelTabLabel {
+            get {
+                return ResourceManager.GetString("3DModelTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Baldur&apos;s Gate 3 Modder&apos;s Multitool.
         /// </summary>
         public static string AppTitle {
@@ -75,6 +84,15 @@ namespace bg3_modders_multitool.Properties {
         public static string AttemptingToPack {
             get {
                 return ResourceManager.GetString("AttemptingToPack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attributes.
+        /// </summary>
+        public static string AttributesTabLabel {
+            get {
+                return ResourceManager.GetString("AttributesTabLabel", resourceCulture);
             }
         }
         
@@ -810,6 +828,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Icon.
+        /// </summary>
+        public static string IconTabLabel {
+            get {
+                return ResourceManager.GetString("IconTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click to begin indexing.
         /// </summary>
         public static string IndexButtonTooltip {
@@ -1112,6 +1139,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ModelConversionComplete {
             get {
                 return ResourceManager.GetString("ModelConversionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model Files.
+        /// </summary>
+        public static string ModelFilesTabLabel {
+            get {
+                return ResourceManager.GetString("ModelFilesTabLabel", resourceCulture);
             }
         }
         
@@ -1474,6 +1510,15 @@ namespace bg3_modders_multitool.Properties {
         public static string SpeedIndexSearchTooltip {
             get {
                 return ResourceManager.GetString("SpeedIndexSearchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stats.
+        /// </summary>
+        public static string StatsTabLabel {
+            get {
+                return ResourceManager.GetString("StatsTabLabel", resourceCulture);
             }
         }
         

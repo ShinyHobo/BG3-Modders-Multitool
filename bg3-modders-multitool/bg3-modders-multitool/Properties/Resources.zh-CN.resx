@@ -684,4 +684,19 @@ divine.exe
   <data name="FailedToFindTranslationPak" xml:space="preserve">
     <value>无法加载 {0}. 请解压 {1}.pak 以生成本地化文件。 跳过...</value>
   </data>
+  <data name="AttributesTabLabel" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="StatsTabLabel" xml:space="preserve">
+    <value>统计数据</value>
+  </data>
+  <data name="3DModelTabLabel" xml:space="preserve">
+    <value>3D模型</value>
+  </data>
+  <data name="IconTabLabel" xml:space="preserve">
+    <value>图标</value>
+  </data>
+  <data name="ModelFilesTabLabel" xml:space="preserve">
+    <value>模型文件</value>
+  </data>
 </root>
