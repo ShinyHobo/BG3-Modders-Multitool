@@ -169,7 +169,7 @@ namespace bg3_modders_multitool.Services
         {
             // save zip next to folder that was dropped
             var parentDir = Directory.GetParent(fullpath);
-            var zip = $"{parentDir.ToString()}\\{name}.zip";
+            var zip = $"{parentDir}\\{name}.zip";
             if (File.Exists(zip))
             {
                 File.Delete(zip);

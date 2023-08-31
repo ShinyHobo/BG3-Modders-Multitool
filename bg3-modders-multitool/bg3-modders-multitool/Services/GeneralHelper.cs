@@ -52,8 +52,7 @@ namespace bg3_modders_multitool.Services
 
             for (int i = 0; i < count; i++)
             {
-                var el = VisualTreeHelper.GetChild(parent, i) as UIElement;
-                if (el == null) continue;
+                if (!(VisualTreeHelper.GetChild(parent, i) is UIElement el)) continue;
 
                 if (el.Uid == uid) return el;
 
@@ -307,8 +306,7 @@ namespace bg3_modders_multitool.Services
 
             if (hwnd != IntPtr.Zero)
             {
-                uint processId;
-                uint threadId = GetWindowThreadProcessId(hwnd, out processId);
+                GetWindowThreadProcessId(hwnd, out uint processId);
 
                 Process[] procs = Process.GetProcesses();
                 foreach (Process proc in procs)
