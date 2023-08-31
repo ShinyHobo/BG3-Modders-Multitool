@@ -61,6 +61,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 3D Model.
+        /// </summary>
+        public static string _3DModelTabLabel {
+            get {
+                return ResourceManager.GetString("3DModelTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Baldur&apos;s Gate 3 Modder&apos;s Multitool.
         /// </summary>
         public static string AppTitle {
@@ -75,6 +84,15 @@ namespace bg3_modders_multitool.Properties {
         public static string AttemptingToPack {
             get {
                 return ResourceManager.GetString("AttemptingToPack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attributes.
+        /// </summary>
+        public static string AttributesTabLabel {
+            get {
+                return ResourceManager.GetString("AttributesTabLabel", resourceCulture);
             }
         }
         
@@ -448,15 +466,6 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to load english.xml. Please unpack English.pak to generate translations. Skipping....
-        /// </summary>
-        public static string FailedToFindEnglishPak {
-            get {
-                return ResourceManager.GetString("FailedToFindEnglishPak", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping....
         /// </summary>
         public static string FailedToFindIconsPak {
@@ -471,6 +480,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FailedToFindModelsPak {
             get {
                 return ResourceManager.GetString("FailedToFindModelsPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load {0}. Please unpack {1}.pak to generate translations. Skipping....
+        /// </summary>
+        public static string FailedToFindTranslationPak {
+            get {
+                return ResourceManager.GetString("FailedToFindTranslationPak", resourceCulture);
             }
         }
         
@@ -810,6 +828,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Icon.
+        /// </summary>
+        public static string IconTabLabel {
+            get {
+                return ResourceManager.GetString("IconTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click to begin indexing.
         /// </summary>
         public static string IndexButtonTooltip {
@@ -1112,6 +1139,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ModelConversionComplete {
             get {
                 return ResourceManager.GetString("ModelConversionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model Files.
+        /// </summary>
+        public static string ModelFilesTabLabel {
+            get {
+                return ResourceManager.GetString("ModelFilesTabLabel", resourceCulture);
             }
         }
         
@@ -1474,6 +1510,15 @@ namespace bg3_modders_multitool.Properties {
         public static string SpeedIndexSearchTooltip {
             get {
                 return ResourceManager.GetString("SpeedIndexSearchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stats.
+        /// </summary>
+        public static string StatsTabLabel {
+            get {
+                return ResourceManager.GetString("StatsTabLabel", resourceCulture);
             }
         }
         

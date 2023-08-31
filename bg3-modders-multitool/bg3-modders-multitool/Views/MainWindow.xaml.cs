@@ -139,8 +139,11 @@ namespace bg3_modders_multitool.Views
             if (!vm.ConfigOpen)
             {
                 var config = new ConfigurationMenu(vm);
-                config.Owner = this;
-                config.Show();
+                try
+                {
+                    config.Owner = this;
+                    config.Show();
+                } catch { }
             }
         }
 

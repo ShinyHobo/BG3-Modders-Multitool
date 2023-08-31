@@ -243,9 +243,6 @@ Mod工作空间
   <data name="FailedToEnableSplashScreen" xml:space="preserve">
     <value>开启启动画面失败...</value>
   </data>
-  <data name="FailedToFindEnglishPak" xml:space="preserve">
-    <value>无法加载 english.xml. 请解压 English.pak 以生成本地化文件。 跳过...</value>
-  </data>
   <data name="FailedToFindIconsPak" xml:space="preserve">
     <value>未找到有效的纹理图集。 解压 Icons.pak 以生成图标。 跳过...</value>
   </data>
@@ -683,5 +680,23 @@ divine.exe
   </data>
   <data name="UnlockThreadsToolTip" xml:space="preserve">
     <value>使用尽可能多的CPU线程； 你的电脑会在密集操作期间卡顿。 也可能无法提供性能优势。</value>
+  </data>
+  <data name="FailedToFindTranslationPak" xml:space="preserve">
+    <value>无法加载 {0}. 请解压 {1}.pak 以生成本地化文件。 跳过...</value>
+  </data>
+  <data name="AttributesTabLabel" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="StatsTabLabel" xml:space="preserve">
+    <value>统计数据</value>
+  </data>
+  <data name="3DModelTabLabel" xml:space="preserve">
+    <value>3D模型</value>
+  </data>
+  <data name="IconTabLabel" xml:space="preserve">
+    <value>图标</value>
+  </data>
+  <data name="ModelFilesTabLabel" xml:space="preserve">
+    <value>模型文件</value>
   </data>
 </root>

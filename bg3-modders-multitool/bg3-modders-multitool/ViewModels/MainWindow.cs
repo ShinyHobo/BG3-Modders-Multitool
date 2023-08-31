@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.ViewModels
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Windows;
 
     public class MainWindow : BaseViewModel
@@ -358,8 +359,8 @@ namespace bg3_modders_multitool.ViewModels
         /// </summary>
         public static List<Language> AvailableLanguages = new List<Language>
             {
-                new Language(Properties.Resources.LangEnglish, "en-US"),
-                new Language(Properties.Resources.LangChinese, "zh-CN")
+                new Language(Properties.Resources.LangEnglish, "en-US", "English\\Localization\\English\\english.loca"),
+                new Language(Properties.Resources.LangChinese, "zh-CN", "Chinese\\Localization\\Chinese\\chinese.loca")
             };
 
         /// <summary>
@@ -368,8 +369,7 @@ namespace bg3_modders_multitool.ViewModels
         /// <param name="language"></param>
         public void ReloadLanguage(string language)
         {
-            var selectedLanguage = Settings.Default.selectedLanguage;
-            selectedLanguage = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
+            var selectedLanguage = GetSelectedLanguage().Code;
             if (selectedLanguage != language)
             {
                 SelectedLanguage = language;
@@ -378,18 +378,37 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         /// <summary>
+        /// Gets the selected language, defaults to English
+        /// </summary>
+        /// <returns>The language</returns>
+        public static Language GetSelectedLanguage()
+        {
+            var selectedLanguage = Settings.Default.selectedLanguage;
+            var languageCode = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
+            return AvailableLanguages.First(l => l.Code == languageCode);
+        }
+
+        /// <summary>
         /// Simple language model
         /// </summary>
         public class Language
         {
-            public Language(string name, string code)
+            /// <summary>
+            /// The language model constructor
+            /// </summary>
+            /// <param name="name">The name of the language</param>
+            /// <param name="code">The I18N code</param>
+            /// <param name="locaPath">The location of the translation file</param>
+            public Language(string name, string code, string locaPath)
             {
                 Name = name;
                 Code = code;
+                LocaPath = locaPath;
             }
 
             public string Name { get; set; }
             public string Code { get; set; }
+            public string LocaPath { get; set; }
         }
 
         #endregion

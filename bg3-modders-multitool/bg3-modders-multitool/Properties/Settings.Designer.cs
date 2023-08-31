@@ -85,7 +85,7 @@ namespace bg3_modders_multitool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
         public string selectedLanguage {
             get {
                 return ((string)(this["selectedLanguage"]));

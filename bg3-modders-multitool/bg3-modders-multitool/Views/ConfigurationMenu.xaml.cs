@@ -21,10 +21,9 @@ namespace bg3_modders_multitool.Views
             DataContext = mainWindow;
             ((ViewModels.MainWindow)DataContext).ConfigOpen = true;
 
-            var selectedLanguage = Properties.Settings.Default.selectedLanguage;
-            selectedLanguage = string.IsNullOrEmpty(selectedLanguage) ? ViewModels.MainWindow.AvailableLanguages.First().Code : selectedLanguage;
+            var selectedLanguage = ViewModels.MainWindow.GetSelectedLanguage();
             languageSelection.ItemsSource = ViewModels.MainWindow.AvailableLanguages;
-            languageSelection.SelectedItem = ViewModels.MainWindow.AvailableLanguages.FirstOrDefault(l => l.Code == selectedLanguage);
+            languageSelection.SelectedItem = ViewModels.MainWindow.AvailableLanguages.FirstOrDefault(l => l.Code == selectedLanguage.Code);
         }
 
         /// <summary>
