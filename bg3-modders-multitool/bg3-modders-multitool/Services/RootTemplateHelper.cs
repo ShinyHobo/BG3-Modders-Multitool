@@ -152,8 +152,13 @@ namespace bg3_modders_multitool.Services
         private bool ReadTranslations()
         {
             TranslationLookup = new Dictionary<string, Translation>();
-            var translationFile = FileHelper.GetPath(@"English\Localization\English\english.loca");
-            var translationFileConverted = FileHelper.GetPath(@"English\Localization\English\english.xml");
+
+            var selectedLanguagePath = ViewModels.MainWindow.AvailableLanguages.First(l => l.Code == Settings.Default.selectedLanguage).LocaPath;
+            var translationFile = FileHelper.GetPath(selectedLanguagePath);
+
+            var xmlPath = Path.ChangeExtension(selectedLanguagePath, ".xml");
+            var translationFileConverted = FileHelper.GetPath(xmlPath);
+
             if (!File.Exists(translationFileConverted) && File.Exists(translationFile))
             {
                 using (var fs = File.Open(translationFile, System.IO.FileMode.Open))
