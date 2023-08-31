@@ -177,6 +177,7 @@
   </data>
   <data name="ConvertingModelDae" xml:space="preserve">
     <value>Converting model to .dae for rendering...</value>
+    
   </data>
   <data name="ConvertOpenButton" xml:space="preserve">
     <value>Convert &amp; Open</value>
