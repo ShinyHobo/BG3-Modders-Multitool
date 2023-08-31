@@ -448,15 +448,6 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to load english.xml. Please unpack English.pak to generate translations. Skipping....
-        /// </summary>
-        public static string FailedToFindEnglishPak {
-            get {
-                return ResourceManager.GetString("FailedToFindEnglishPak", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping....
         /// </summary>
         public static string FailedToFindIconsPak {
@@ -471,6 +462,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FailedToFindModelsPak {
             get {
                 return ResourceManager.GetString("FailedToFindModelsPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load {0}. Please unpack {1}.pak to generate translations. Skipping....
+        /// </summary>
+        public static string FailedToFindTranslationPak {
+            get {
+                return ResourceManager.GetString("FailedToFindTranslationPak", resourceCulture);
             }
         }
         

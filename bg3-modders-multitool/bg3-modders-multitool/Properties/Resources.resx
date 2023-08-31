@@ -177,7 +177,6 @@
   </data>
   <data name="ConvertingModelDae" xml:space="preserve">
     <value>Converting model to .dae for rendering...</value>
-    
   </data>
   <data name="ConvertOpenButton" xml:space="preserve">
     <value>Convert &amp; Open</value>
@@ -257,14 +256,15 @@
   <data name="FailedToEnableSplashScreen" xml:space="preserve">
     <value>Failed to enable splash screen...</value>
   </data>
-  <data name="FailedToFindEnglishPak" xml:space="preserve">
-    <value>Failed to load english.xml. Please unpack English.pak to generate translations. Skipping...</value>
-  </data>
   <data name="FailedToFindIconsPak" xml:space="preserve">
     <value>No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping...</value>
   </data>
   <data name="FailedToFindModelsPak" xml:space="preserve">
     <value>Failed to find Models directory. Please unpack Models.pak to view models.</value>
+  </data>
+  <data name="FailedToFindTranslationPak" xml:space="preserve">
+    <value>Failed to load {0}. Please unpack {1}.pak to generate translations. Skipping...</value>
+    <comment>loca filename, pak name</comment>
   </data>
   <data name="FailedToIndexFile" xml:space="preserve">
     <value>Failed to index file [{0}]:\n{1}</value>

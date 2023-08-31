@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.ViewModels
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Windows;
 
     public class MainWindow : BaseViewModel
@@ -368,13 +369,23 @@ namespace bg3_modders_multitool.ViewModels
         /// <param name="language"></param>
         public void ReloadLanguage(string language)
         {
-            var selectedLanguage = Settings.Default.selectedLanguage;
-            selectedLanguage = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
+            var selectedLanguage = GetSelectedLanguage().Code;
             if (selectedLanguage != language)
             {
                 SelectedLanguage = language;
                 App.Current.MainWindow.Close();
             }
+        }
+
+        /// <summary>
+        /// Gets the selected language, defaults to English
+        /// </summary>
+        /// <returns>The language</returns>
+        public static Language GetSelectedLanguage()
+        {
+            var selectedLanguage = Settings.Default.selectedLanguage;
+            var languageCode = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
+            return AvailableLanguages.First(l => l.Code == languageCode);
         }
 
         /// <summary>

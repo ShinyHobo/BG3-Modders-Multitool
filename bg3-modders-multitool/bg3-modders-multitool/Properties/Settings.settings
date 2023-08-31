@@ -18,7 +18,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="selectedLanguage" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">en-US</Value>
     </Setting>
     <Setting Name="unlockThreads" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

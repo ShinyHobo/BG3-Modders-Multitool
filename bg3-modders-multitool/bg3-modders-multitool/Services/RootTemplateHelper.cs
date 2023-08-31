@@ -153,7 +153,8 @@ namespace bg3_modders_multitool.Services
         {
             TranslationLookup = new Dictionary<string, Translation>();
 
-            var selectedLanguagePath = ViewModels.MainWindow.AvailableLanguages.First(l => l.Code == Settings.Default.selectedLanguage).LocaPath;
+            var selectedLanguage = ViewModels.MainWindow.GetSelectedLanguage();
+            var selectedLanguagePath = selectedLanguage.LocaPath;
             var translationFile = FileHelper.GetPath(selectedLanguagePath);
 
             var xmlPath = Path.ChangeExtension(selectedLanguagePath, ".xml");
@@ -193,7 +194,8 @@ namespace bg3_modders_multitool.Services
                     }
                 }
             }
-            GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindEnglishPak);
+            var locaPathSplit = selectedLanguage.LocaPath.Split('\\');
+            GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindTranslationPak, locaPathSplit.Last().Split('.').First()+".xml", locaPathSplit.First());
             return false;
         }
 
