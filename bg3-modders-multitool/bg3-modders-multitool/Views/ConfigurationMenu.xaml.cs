@@ -16,7 +16,9 @@ namespace bg3_modders_multitool.Views
         {
             InitializeComponent();
 
-            Title = $"{Properties.Resources.ConfigurationTitle} - {System.Configuration.ConfigurationManager.AppSettings["version"]}";
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            Title = $"{Properties.Resources.ConfigurationTitle} - {fvi.FileVersion}";
 
             DataContext = mainWindow;
             ((ViewModels.MainWindow)DataContext).ConfigOpen = true;
