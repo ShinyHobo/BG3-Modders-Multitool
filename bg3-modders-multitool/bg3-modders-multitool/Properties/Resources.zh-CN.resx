@@ -137,7 +137,7 @@
     <value>取消</value>
   </data>
   <data name="CancelledGOE" xml:space="preserve">
-    <value>取消加载游戏对象</value>
+    <value>取消加载游戏对象。</value>
   </data>
   <data name="CancelUnpackButtonTooltip" xml:space="preserve">
     <value>立即停止所有解包任务</value>
@@ -161,7 +161,7 @@
     <value>确定</value>
   </data>
   <data name="ConvertingModelDae" xml:space="preserve">
-    <value>将模型转换为.dae进行渲染…</value>
+    <value>将模型转换为.dae进行渲染...</value>
   </data>
   <data name="ConvertOpenButton" xml:space="preserve">
     <value>转换 &amp; 打开</value>
@@ -241,7 +241,7 @@ Mod工作空间
     <comment>extension, file, error message</comment>
   </data>
   <data name="FailedToEnableSplashScreen" xml:space="preserve">
-    <value>开启启动画面失败…</value>
+    <value>开启启动画面失败...</value>
   </data>
   <data name="FailedToFindEnglishPak" xml:space="preserve">
     <value>无法加载 english.xml. 请解压 English.pak 以生成本地化文件。 跳过...</value>
@@ -289,7 +289,7 @@ Mod工作空间
     <value>检索到的文件列表。</value>
   </data>
   <data name="FileNoExist" xml:space="preserve">
-    <value>文件在给定路径上不存在。({0})</value>
+    <value>文件在给定路径上不存在。({0}).</value>
     <comment>file path</comment>
   </data>
   <data name="FileNotFound" xml:space="preserve">
@@ -317,7 +317,7 @@ Mod工作空间
     <value>请选择游戏对象类型</value>
   </data>
   <data name="GameObjectsLoaded" xml:space="preserve">
-    <value>加载游戏对象....</value>
+    <value>加载游戏对象...</value>
   </data>
   <data name="GameObjectUncovered" xml:space="preserve">
     <value>未涵盖 GameObject 属性类型 [{0}]。</value>
@@ -385,7 +385,7 @@ Mod工作空间
     <comment>formatted time</comment>
   </data>
   <data name="IndexingInProgress" xml:space="preserve">
-    <value>构建索引正在进行中…</value>
+    <value>构建索引正在进行中...</value>
   </data>
   <data name="IndexMenu" xml:space="preserve">
     <value>索引</value>
@@ -635,5 +635,53 @@ divine.exe
   <data name="ZipCreated" xml:space="preserve">
     <value>{0}.zip 已创建。</value>
     <comment>file name</comment>
+  </data>
+  <data name="BG3CommunityLibrary" xml:space="preserve">
+    <value>BG3 社区库(Community Library)</value>
+  </data>
+  <data name="BG3ModdingWiki" xml:space="preserve">
+    <value>BG3 模组制作 维基</value>
+  </data>
+  <data name="BG3ScriptExtender" xml:space="preserve">
+    <value>BG3 脚本拓展器</value>
+  </data>
+  <data name="BG3ScriptExtenderAPI" xml:space="preserve">
+    <value>BG3 脚本拓展器 API</value>
+  </data>
+  <data name="BG3ScriptExtenderSampleMod" xml:space="preserve">
+    <value>BG3 脚本扩展器 样例Mod</value>
+  </data>
+  <data name="FinalizingIndex" xml:space="preserve">
+    <value>正在确定索引...</value>
+  </data>
+  <data name="GamePaksInstructions" xml:space="preserve">
+    <value>选择你想解包的.pak游戏包:</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="LuaSetup" xml:space="preserve">
+    <value>Lua 设置</value>
+  </data>
+  <data name="ModdingResources" xml:space="preserve">
+    <value>Mod制作 帮助资源</value>
+  </data>
+  <data name="ModdingTutorial" xml:space="preserve">
+    <value>Mod制作 教程</value>
+  </data>
+  <data name="ReportABug" xml:space="preserve">
+    <value>报告BUG</value>
+  </data>
+  <data name="SpeedIndexSearchTooltip" xml:space="preserve">
+    <value>能够获得更快但不太稳健的结果。</value>
+  </data>
+  <data name="SupportMe" xml:space="preserve">
+    <value>请我喝一杯？</value>
+  </data>
+  <data name="UnlockThreadsLabel" xml:space="preserve">
+    <value>解锁线程</value>
+  </data>
+  <data name="UnlockThreadsToolTip" xml:space="preserve">
+    <value>使用尽可能多的CPU线程； 你的电脑会在密集操作期间卡顿。 也可能无法提供性能优势。</value>
   </data>
 </root>
