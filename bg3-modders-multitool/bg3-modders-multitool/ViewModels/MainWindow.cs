@@ -5,11 +5,14 @@ namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
+    using bg3_modders_multitool.Views;
+    using MdXaml;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Documents;
 
     public class MainWindow : BaseViewModel
     {
@@ -22,6 +25,7 @@ namespace bg3_modders_multitool.ViewModels
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
             ThreadsUnlocked = Properties.Settings.Default.unlockThreads;
+            AutoUpdater = new AutoUpdaterService(this);
         }
 
         #region File Selection Methods
@@ -133,6 +137,18 @@ namespace bg3_modders_multitool.ViewModels
         public DragAndDropBox DragAndDropBox { get; set; }
 
         public SearchResults SearchResults { get; set; }
+
+        public AutoUpdaterService AutoUpdater { get; set; }
+
+        private Visibility _updatesVisible = Visibility.Hidden;
+        public Visibility UpdateVisible
+        {
+            get { return _updatesVisible; }
+            set { 
+                _updatesVisible = value; 
+                OnNotifyPropertyChanged(); 
+            }
+        }
 
         private string _consoleOutput;
 
@@ -387,6 +403,42 @@ namespace bg3_modders_multitool.ViewModels
             var languageCode = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
             return AvailableLanguages.First(l => l.Code == languageCode);
         }
+
+        #region Applciation Update
+        /// <summary>
+        /// Checks for updates against GitHub
+        /// </summary>
+        internal async void CheckForUpdates()
+        {
+            GeneralHelper.WriteToConsole(Properties.Resources.CheckingForUpdates);
+            await AutoUpdater.CheckForVersionUpdate();
+            if (AutoUpdater.UpdateAvailable)
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound, AutoUpdater.Releases.Count);
+                var notes = string.Empty;
+                foreach (var release in AutoUpdater.Releases)
+                {
+                    notes += $"## {release.Version} - {release.Title} \r\n\r\n=== \r\n> ";
+                    notes += release.Notes.Replace("- ","* ").Replace("\r\n", "\r\n> ");
+                    notes += "\r\n=== \r\n";
+                }
+                var updateView = new Update(notes);
+                var response = updateView.ShowDialog();
+                if(response == true)
+                {
+                    AutoUpdater.Update();
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.UpdateCanceled);
+                }
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.NoUpdatesFound);
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Simple language model

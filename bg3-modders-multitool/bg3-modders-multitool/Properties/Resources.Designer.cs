@@ -205,6 +205,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check for updates.
+        /// </summary>
+        public static string CheckForUpdates {
+            get {
+                return ResourceManager.GetString("CheckForUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checking for updates....
+        /// </summary>
+        public static string CheckingForUpdates {
+            get {
+                return ResourceManager.GetString("CheckingForUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically..
         /// </summary>
         public static string ClickOrDropModPacker {
@@ -462,6 +480,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FailedToEnableSplashScreen {
             get {
                 return ResourceManager.GetString("FailedToEnableSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to fetch updates (status {0}).
+        /// </summary>
+        public static string FailedToFetchUpdates {
+            get {
+                return ResourceManager.GetString("FailedToFetchUpdates", resourceCulture);
             }
         }
         
@@ -1188,6 +1215,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Updates Available!.
+        /// </summary>
+        public static string NewUpdatesAvailable {
+            get {
+                return ResourceManager.GetString("NewUpdatesAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No files found!.
         /// </summary>
         public static string NoFilesFound {
@@ -1211,6 +1247,15 @@ namespace bg3_modders_multitool.Properties {
         public static string NoLinesFound {
             get {
                 return ResourceManager.GetString("NoLinesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are up to date!.
+        /// </summary>
+        public static string NoUpdatesFound {
+            get {
+                return ResourceManager.GetString("NoUpdatesFound", resourceCulture);
             }
         }
         
@@ -1654,6 +1699,51 @@ namespace bg3_modders_multitool.Properties {
         public static string UnpackingProcessStarted {
             get {
                 return ResourceManager.GetString("UnpackingProcessStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string UpdateButton {
+            get {
+                return ResourceManager.GetString("UpdateButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update canceled.
+        /// </summary>
+        public static string UpdateCanceled {
+            get {
+                return ResourceManager.GetString("UpdateCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updates found; you are {0} version(s) behind.
+        /// </summary>
+        public static string UpdatesFound {
+            get {
+                return ResourceManager.GetString("UpdatesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updates available!.
+        /// </summary>
+        public static string UpdatesFoundButton {
+            get {
+                return ResourceManager.GetString("UpdatesFoundButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clicking &apos;Update&apos; will immediately close the application. It will re-open automatically after the update is installed. Make sure to finish what you are doing..
+        /// </summary>
+        public static string UpdateWarningLabel {
+            get {
+                return ResourceManager.GetString("UpdateWarningLabel", resourceCulture);
             }
         }
         

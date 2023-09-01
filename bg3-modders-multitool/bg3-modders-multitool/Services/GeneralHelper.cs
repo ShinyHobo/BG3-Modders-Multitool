@@ -52,8 +52,7 @@ namespace bg3_modders_multitool.Services
 
             for (int i = 0; i < count; i++)
             {
-                var el = VisualTreeHelper.GetChild(parent, i) as UIElement;
-                if (el == null) continue;
+                if (!(VisualTreeHelper.GetChild(parent, i) is UIElement el)) continue;
 
                 if (el.Uid == uid) return el;
 
@@ -307,8 +306,7 @@ namespace bg3_modders_multitool.Services
 
             if (hwnd != IntPtr.Zero)
             {
-                uint processId;
-                uint threadId = GetWindowThreadProcessId(hwnd, out processId);
+                GetWindowThreadProcessId(hwnd, out uint processId);
 
                 Process[] procs = Process.GetProcesses();
                 foreach (Process proc in procs)
@@ -329,6 +327,20 @@ namespace bg3_modders_multitool.Services
             return theProc;
         }
 
+        /// <summary>
+        /// Gets the app file version
+        /// </summary>
+        /// <returns>The app file version represented as #.#.#x</returns>
+        public static string GetAppVersion()
+        {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fvi.FileVersion;
+        }
+
+        /// <summary>
+        /// If threading is not unlocked, this creates a max degree of parallelism equal to 75% of the processor count multiplied by two, rounded up (2 threads per processor)
+        /// </summary>
         public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Settings.Default.unlockThreads ? -1 : Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
     }
 }
