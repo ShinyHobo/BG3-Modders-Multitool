@@ -1730,6 +1730,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clicking &apos;Update&apos; will immediately close the application. It will re-open automatically after the update is installed. Make sure to finish what you are doing..
+        /// </summary>
+        public static string UpdateWarningLabel {
+            get {
+                return ResourceManager.GetString("UpdateWarningLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to v4 UUID/TranslatedString Handle Generator.
         /// </summary>
         public static string UUIDTitle {

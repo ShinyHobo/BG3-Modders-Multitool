@@ -713,6 +713,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Updates found; you are {0} version(s) behind</value>
     <comment>number of updates</comment>
   </data>
+  <data name="UpdateWarningLabel" xml:space="preserve">
+    <value>Clicking 'Update' will immediately close the application. It will re-open automatically after the update is installed. Make sure to finish what you are doing.</value>
+  </data>
   <data name="UUIDTitle" xml:space="preserve">
     <value>v4 UUID/TranslatedString Handle Generator</value>
   </data>
