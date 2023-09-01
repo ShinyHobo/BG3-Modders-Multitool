@@ -90,8 +90,9 @@
                 var downloadUrl = asset["browser_download_url"].ToString();
                 var tempZip = $"{DragAndDropHelper.TempFolder}\\update.zip";
                 var updateDirectory = $"{DragAndDropHelper.TempFolder}\\Update";
-                Directory.CreateDirectory(updateDirectory);
-                File.Delete(tempZip);
+                Directory.CreateDirectory(updateDirectory); // create directory if none exists
+                File.Delete(tempZip); // clean temp zip if it exists
+                File.Delete(Path.Combine(updateDirectory, exeName + ".exe")); // clean temp exe if it exists
                 using (var client = new WebClient())
                 {
                     client.DownloadFile(downloadUrl, tempZip);
