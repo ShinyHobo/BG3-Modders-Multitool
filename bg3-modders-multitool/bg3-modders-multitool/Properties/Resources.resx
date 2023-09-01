@@ -696,6 +696,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="UnpackingProcessStarted" xml:space="preserve">
     <value>Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.</value>
   </data>
+  <data name="UpdateButton" xml:space="preserve">
+    <value>Update</value>
+  </data>
   <data name="UUIDTitle" xml:space="preserve">
     <value>v4 UUID/TranslatedString Handle Generator</value>
   </data>

@@ -1685,6 +1685,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string UpdateButton {
+            get {
+                return ResourceManager.GetString("UpdateButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to v4 UUID/TranslatedString Handle Generator.
         /// </summary>
         public static string UUIDTitle {
