@@ -1197,6 +1197,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Updates Available!.
+        /// </summary>
+        public static string NewUpdatesAvailable {
+            get {
+                return ResourceManager.GetString("NewUpdatesAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No files found!.
         /// </summary>
         public static string NoFilesFound {

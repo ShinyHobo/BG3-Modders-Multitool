@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
+    using bg3_modders_multitool.Views;
     using MdXaml;
     using System;
     using System.Collections.Generic;
@@ -405,13 +406,12 @@ namespace bg3_modders_multitool.ViewModels
                 var notes = string.Empty;
                 foreach (var release in AutoUpdater.Releases)
                 {
-                    notes += $"# {release.Version} # \n";
+                    notes += $"## {release.Version} #\r\n";
                     notes += release.Notes;
-                    notes += "\n\n";
+                    notes += "\r\n\r\n";
                 }
-                FlowDocument document = md.Transform(notes);
-
-                //markdown.Document = document;
+                var updateView = new Update(notes);
+                updateView.Show();
             }
             else
             {

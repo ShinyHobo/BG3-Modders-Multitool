@@ -527,6 +527,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="NameLabel" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="NewUpdatesAvailable" xml:space="preserve">
+    <value>New Updates Available!</value>
+  </data>
   <data name="NoFilesFound" xml:space="preserve">
     <value>No files found!</value>
   </data>
