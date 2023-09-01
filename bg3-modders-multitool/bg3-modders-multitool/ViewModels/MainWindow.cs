@@ -394,14 +394,17 @@ namespace bg3_modders_multitool.ViewModels
             return AvailableLanguages.First(l => l.Code == languageCode);
         }
 
+        #region Applciation Update
         /// <summary>
         /// Checks for updates against GitHub
         /// </summary>
         internal async void CheckForUpdates()
         {
+            GeneralHelper.WriteToConsole(Properties.Resources.CheckingForUpdates);
             await AutoUpdater.CheckForVersionUpdate();
             if (AutoUpdater.UpdateAvailable)
             {
+                GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound);
                 var notes = string.Empty;
                 foreach (var release in AutoUpdater.Releases)
                 {
@@ -410,13 +413,18 @@ namespace bg3_modders_multitool.ViewModels
                     notes += "\r\n=== \r\n";
                 }
                 var updateView = new Update(notes);
-                updateView.Show();
+                var response = updateView.ShowDialog();
+                if(response == true)
+                {
+                    AutoUpdater.Update();
+                }
             }
             else
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.NoUpdatesFound);
             }
         }
+        #endregion
 
         /// <summary>
         /// Simple language model

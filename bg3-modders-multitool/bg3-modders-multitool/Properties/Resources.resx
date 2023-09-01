@@ -169,6 +169,9 @@
   <data name="CheckForUpdates" xml:space="preserve">
     <value>Check for updates</value>
   </data>
+  <data name="CheckingForUpdates" xml:space="preserve">
+    <value>Checking for updates...</value>
+  </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
     <value>Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically.</value>
   </data>
@@ -698,6 +701,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="UpdateButton" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="UpdatesFound" xml:space="preserve">
+    <value>Updates found</value>
   </data>
   <data name="UUIDTitle" xml:space="preserve">
     <value>v4 UUID/TranslatedString Handle Generator</value>

@@ -214,6 +214,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Checking for updates....
+        /// </summary>
+        public static string CheckingForUpdates {
+            get {
+                return ResourceManager.GetString("CheckingForUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically..
         /// </summary>
         public static string ClickOrDropModPacker {
@@ -1690,6 +1699,15 @@ namespace bg3_modders_multitool.Properties {
         public static string UpdateButton {
             get {
                 return ResourceManager.GetString("UpdateButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updates found.
+        /// </summary>
+        public static string UpdatesFound {
+            get {
+                return ResourceManager.GetString("UpdatesFound", resourceCulture);
             }
         }
         

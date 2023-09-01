@@ -1,6 +1,7 @@
 ﻿namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.ViewModels;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -19,7 +20,7 @@
     /// If yes, downloads and replaces the currently installed version, then re-opens it
     /// If no, timer is shut off until the next time the application is started
     /// </summary>
-    public class AutoUpdaterService
+    public class AutoUpdaterService : BaseViewModel
     {
         public AutoUpdaterService() {
             PollGithub();
@@ -28,7 +29,12 @@
         public AutoResetEvent AutoResetEvent { get; set; }
         public Timer Timer { get; set; }
         public HttpClient HttpClient { get; set; }
-        public bool UpdateAvailable { get; set; }
+        private bool _updateAvailable;
+        public bool UpdateAvailable
+        {
+            get { return _updateAvailable; }
+            set { _updateAvailable = value; OnNotifyPropertyChanged(); }
+        }
         public List<Release> Releases { get; set; }
 
         private readonly string _repoUrl = "https://api.github.com/repositories/305852141/releases";
@@ -109,7 +115,7 @@
         /// <summary>
         /// Downloads and unzips the update into a temp directory
         /// </summary>
-        private void Update()
+        public void Update()
         {
             var newestRelease = Releases.First();
 
