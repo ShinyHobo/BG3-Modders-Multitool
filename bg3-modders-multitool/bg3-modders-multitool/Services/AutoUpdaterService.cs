@@ -121,36 +121,45 @@
         /// </summary>
         public void Update()
         {
-            var newestRelease = Releases.First();
-
-            var tempZip = $"{DragAndDropHelper.TempFolder}\\update.zip";
-            var updateDirectory = $"{DragAndDropHelper.TempFolder}\\Update";
-
-            // Create and/or clean temp directory
-            Directory.CreateDirectory(updateDirectory);
-            File.Delete(tempZip);
-            File.Delete(Path.Combine(updateDirectory, _exeName + ".exe"));
-
-            using (var client = new WebClient())
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                client.DownloadFile(newestRelease.DownloadUrl, tempZip);
-                using (ZipArchive archive = ZipFile.OpenRead(tempZip))
+                Timer.Dispose();
+                AutoResetEvent.Dispose();
+                System.Windows.Application.Current.MainWindow.IsEnabled = false;
+                System.Windows.Application.Current.Shutdown();
+
+                var newestRelease = Releases.First();
+
+                var tempZip = $"{DragAndDropHelper.TempFolder}\\update.zip";
+                var updateDirectory = $"{DragAndDropHelper.TempFolder}\\Update";
+
+                // Create and/or clean temp directory
+                Directory.CreateDirectory(updateDirectory);
+                File.Delete(tempZip);
+                File.Delete(Path.Combine(updateDirectory, _exeName + ".exe"));
+
+                using (var client = new WebClient())
                 {
-                    // only grabbing the main exe for now
-                    foreach (ZipArchiveEntry entry in archive.Entries.Where(e => e.FullName.Contains(_exeName)))
+                    client.DownloadFile(newestRelease.DownloadUrl, tempZip);
+                    using (ZipArchive archive = ZipFile.OpenRead(tempZip))
                     {
-                        entry.ExtractToFile(Path.Combine(updateDirectory, entry.FullName));
+                        // only grabbing the main exe for now
+                        foreach (ZipArchiveEntry entry in archive.Entries.Where(e => e.FullName.Contains(_exeName)))
+                        {
+                            entry.ExtractToFile(Path.Combine(updateDirectory, entry.FullName));
+                        }
+                    }
+                    if (File.Exists(Path.Combine(updateDirectory, $"{_exeName}.exe")))
+                    {
+                        ReplaceApplicationWithNewVersion();
+                    }
+                    else
+                    {
+                        // TODO - failed to extract file
                     }
                 }
-                if (File.Exists(Path.Combine(updateDirectory, $"{_exeName}.exe")))
-                {
-                    ReplaceApplicationWithNewVersion();
-                }
-                else
-                {
-                    // TODO - failed to extract file
-                }
-            }
+            });
+            
         }
 
         /// <summary>
@@ -161,18 +170,13 @@
         /// </summary>
         private void ReplaceApplicationWithNewVersion()
         {
-            System.Windows.Application.Current.Dispatcher.Invoke(() => {
-                Timer.Dispose();
-                AutoResetEvent.Dispose();
-                System.Windows.Application.Current.Shutdown();
-                var exeName = "bg3-modders-multitool.exe";
-                var updatePath = $"{DragAndDropHelper.TempFolder}\\Update";
-                var updateExe = Path.Combine(updatePath, exeName);
-                var currentExe = Path.Combine(Directory.GetCurrentDirectory(), exeName);
-                var process = new Process();
-                process.StartInfo = new ProcessStartInfo("cmd.exe", $"/c replace {updateExe} {Directory.GetCurrentDirectory()} & rmdir {updatePath} /s /q & del {DragAndDropHelper.TempFolder}\\update.zip & start \"\" \"{currentExe}\"");
-                process.Start();
-            });
+            var exeName = "bg3-modders-multitool.exe";
+            var updatePath = $"{DragAndDropHelper.TempFolder}\\Update";
+            var updateExe = Path.Combine(updatePath, exeName);
+            var currentExe = Path.Combine(Directory.GetCurrentDirectory(), exeName);
+            var process = new Process();
+            process.StartInfo = new ProcessStartInfo("cmd.exe", $"/c replace {updateExe} {Directory.GetCurrentDirectory()} & rmdir {updatePath} /s /q & del {DragAndDropHelper.TempFolder}\\update.zip & start \"\" \"{currentExe}\"");
+            process.Start();
         }
     }
 
