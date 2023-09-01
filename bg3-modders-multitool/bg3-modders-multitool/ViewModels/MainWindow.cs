@@ -392,6 +392,18 @@ namespace bg3_modders_multitool.ViewModels
         }
 
         /// <summary>
+        /// Checks for updates against GitHub
+        /// </summary>
+        internal async void CheckForUpdates()
+        {
+            await AutoUpdater.CheckForVersionUpdate();
+            if (AutoUpdater.UpdateAvailable)
+            {
+                // TODO - generate popup with update info
+            }
+        }
+
+        /// <summary>
         /// Simple language model
         /// </summary>
         public class Language

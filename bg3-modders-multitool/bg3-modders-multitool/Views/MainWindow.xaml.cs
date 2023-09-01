@@ -173,6 +173,7 @@ namespace bg3_modders_multitool.Views
         }
 
         #region Help Tab
+        #region Links
         private void BG3WikiLink_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://bg3.wiki/wiki/Modding_Resources");
@@ -216,6 +217,13 @@ namespace bg3_modders_multitool.Views
         private void KofiLink_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://ko-fi.com/shinyhobo");
+        }
+        #endregion
+
+        private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.CheckForUpdates();
         }
         #endregion
     }

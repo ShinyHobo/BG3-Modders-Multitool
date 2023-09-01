@@ -2,8 +2,8 @@
 {
     using Alphaleonis.Win32.Filesystem;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO.Compression;
     using System.Linq;
@@ -11,6 +11,7 @@
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Periodically checks GitHub for a new release of the application
@@ -28,14 +29,18 @@
         public Timer Timer { get; set; }
         public HttpClient HttpClient { get; set; }
         public bool UpdateAvailable { get; set; }
+        public List<Release> Releases { get; set; }
 
         private readonly string _repoUrl = "https://api.github.com/repositories/305852141/releases";
+        private readonly string _exeName = "bg3-modders-multitool";
 
         /// <summary>
         /// Creates an HttpClient and timer to periodically check for new versions
         /// </summary>
         private void PollGithub()
         {
+            Releases = new List<Release>();
+
             HttpClient = new HttpClient();
             HttpClient.BaseAddress = new Uri(_repoUrl);
             HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -50,77 +55,89 @@
         /// Downloads a new version if one is found
         /// </summary>
         /// <param name="state">The state</param>
-        private async void CheckForVersionUpdate(object state = null)
+        private async void CheckForVersionUpdate(object state)
         {
-            var releaseHistory = await HttpClient.GetAsync(_repoUrl);
-            if (releaseHistory.StatusCode == HttpStatusCode.OK)
-            {
-                var currentVersion = GeneralHelper.GetAppVersion();
-                string response = await releaseHistory.Content.ReadAsStringAsync();
-                var releases = JsonConvert.DeserializeObject(response) as Newtonsoft.Json.Linq.JArray;
-                if(releases != null)
-                {
-                    var newestRelease = releases.First();
-                    if (newestRelease != null)
-                    {
-                        var matchedVersion = releases.FirstOrDefault(r => r["tag_name"].ToString().Remove(0, 1) == currentVersion);
-                        var versionsBehind = releases.IndexOf(matchedVersion);
-                        if (versionsBehind == -1 || versionsBehind > 0)
-                        {
-                            UpdateAvailable = true;
-                            // release available
-                            var newestTag = newestRelease["tag_name"].ToString().Remove(0, 1); // remove v
+            await CheckForVersionUpdate();
+        }
 
-                            // TODO - display update symbol, popup, wait for answer
-                            if(false)
+        /// <summary>
+        /// Queries the GitHub release API endpoint for new versions
+        /// Downloads a new version if one is found
+        /// </summary>
+        /// <returns>The release check task</returns>
+        public Task CheckForVersionUpdate()
+        {
+            return Task.Run(async () => {
+                var releaseHistory = await HttpClient.GetAsync(_repoUrl);
+                if (releaseHistory.StatusCode == HttpStatusCode.OK)
+                {
+                    var currentVersion = GeneralHelper.GetAppVersion();
+                    string response = await releaseHistory.Content.ReadAsStringAsync();
+                    var releases = JsonConvert.DeserializeObject(response) as Newtonsoft.Json.Linq.JArray;
+                    if (releases != null)
+                    {
+                        var newestRelease = releases.First();
+                        if (newestRelease != null)
+                        {
+                            var matchedVersion = releases.FirstOrDefault(r => r["tag_name"].ToString().Remove(0, 1) == currentVersion);
+                            var versionsBehind = releases.IndexOf(matchedVersion);
+                            versionsBehind = versionsBehind == -1 ? releases.Count : versionsBehind;
+                            if (versionsBehind > 0)
                             {
-                                var assets = newestRelease["assets"];
-                                if (assets != null)
+                                UpdateAvailable = true;
+                                Releases.Clear();
+
+                                for (int i = 0; i < versionsBehind; i++)
                                 {
-                                    DownloadNewVersion(assets);
+                                    var releaseAsset = releases[i];
+                                    var version = releaseAsset["tag_name"].ToString().Remove(0, 1);
+                                    var releaseNotes = releaseAsset["body"].ToString();
+                                    var exeAsset = releaseAsset["assets"].FirstOrDefault(a => a["name"].ToString() == $"{_exeName}.zip");
+                                    var downloadUrl = exeAsset["browser_download_url"].ToString();
+                                    var release = new Release(version, releaseNotes, downloadUrl);
+                                    Releases.Add(release);
                                 }
                             }
                         }
                     }
                 }
-            }
+                return;
+            });
         }
 
         /// <summary>
         /// Downloads and unzips the update into a temp directory
         /// </summary>
-        /// <param name="assets">The asset list pulled from the release query</param>
-        private void DownloadNewVersion(JToken assets)
+        private void Update()
         {
-            var exeName = "bg3-modders-multitool";
-            var asset = assets.FirstOrDefault(a => a["name"].ToString() == $"{exeName}.zip");
-            if (asset != null)
+            var newestRelease = Releases.First();
+
+            var tempZip = $"{DragAndDropHelper.TempFolder}\\update.zip";
+            var updateDirectory = $"{DragAndDropHelper.TempFolder}\\Update";
+
+            // Create and/or clean temp directory
+            Directory.CreateDirectory(updateDirectory);
+            File.Delete(tempZip);
+            File.Delete(Path.Combine(updateDirectory, _exeName + ".exe"));
+
+            using (var client = new WebClient())
             {
-                var downloadUrl = asset["browser_download_url"].ToString();
-                var tempZip = $"{DragAndDropHelper.TempFolder}\\update.zip";
-                var updateDirectory = $"{DragAndDropHelper.TempFolder}\\Update";
-                Directory.CreateDirectory(updateDirectory); // create directory if none exists
-                File.Delete(tempZip); // clean temp zip if it exists
-                File.Delete(Path.Combine(updateDirectory, exeName + ".exe")); // clean temp exe if it exists
-                using (var client = new WebClient())
+                client.DownloadFile(newestRelease.DownloadUrl, tempZip);
+                using (ZipArchive archive = ZipFile.OpenRead(tempZip))
                 {
-                    client.DownloadFile(downloadUrl, tempZip);
-                    using (ZipArchive archive = ZipFile.OpenRead(tempZip))
+                    // only grabbing the main exe for now
+                    foreach (ZipArchiveEntry entry in archive.Entries.Where(e => e.FullName.Contains(_exeName)))
                     {
-                        // only grabbing the main exe for now
-                        foreach (ZipArchiveEntry entry in archive.Entries.Where(e => e.FullName.Contains(exeName)))
-                        {
-                            entry.ExtractToFile(Path.Combine(updateDirectory, entry.FullName));
-                        }
+                        entry.ExtractToFile(Path.Combine(updateDirectory, entry.FullName));
                     }
-                    if(File.Exists(Path.Combine(updateDirectory, $"{exeName}.exe")))
-                    {
-                       ReplaceApplicationWithNewVersion();
-                    } 
-                    else
-                    {
-                        // TODO - failed to extract file
-                    }
+                }
+                if (File.Exists(Path.Combine(updateDirectory, $"{_exeName}.exe")))
+                {
+                    ReplaceApplicationWithNewVersion();
+                }
+                else
+                {
+                    // TODO - failed to extract file
                 }
             }
         }
@@ -146,5 +163,21 @@
                 process.Start();
             });
         }
+    }
+
+    /// <summary>
+    /// GitHub release information
+    /// </summary>
+    public class Release
+    {
+        public Release(string version, string notes, string downloadUrl) { 
+            Version = version;
+            Notes = notes;
+            DownloadUrl = downloadUrl;
+        }
+
+        public string Version { get; private set; }
+        public string Notes { get; private set;}
+        public string DownloadUrl { get; private set;}
     }
 }

@@ -40,6 +40,7 @@
                         <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick" Icon="📗"/>
                         <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click" Icon="📗"/>
                     </MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.CheckForUpdates}" Click="CheckForUpdates_Click" Icon="🔃"/>
                     <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click" Icon="🐞"/>
                     <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click" Icon="☕"/>
                 </MenuItem>
