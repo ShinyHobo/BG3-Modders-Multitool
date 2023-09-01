@@ -574,6 +574,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} is mising a file exenstion! Please correct and try again. Packing cancelled..
+        /// </summary>
+        public static string FileMissingExtensionError {
+            get {
+                return ResourceManager.GetString("FileMissingExtensionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File does not exist on the given path ({0})..
         /// </summary>
         public static string FileNoExist {

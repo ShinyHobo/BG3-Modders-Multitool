@@ -306,6 +306,10 @@
   <data name="FileListRetrieved" xml:space="preserve">
     <value>File list retrieved.</value>
   </data>
+  <data name="FileMissingExtensionError" xml:space="preserve">
+    <value>{0} is mising a file exenstion! Please correct and try again. Packing cancelled.</value>
+    <comment>file path</comment>
+  </data>
   <data name="FileNoExist" xml:space="preserve">
     <value>File does not exist on the given path ({0}).</value>
     <comment>file path</comment>
