@@ -265,27 +265,34 @@ namespace bg3_modders_multitool.Services
                 var fileParent = file.Replace(path, string.Empty).Replace("\\\\?\\",string.Empty);
                 var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(fileName);
-                var conversionFile = fileName.Replace(extension, string.Empty);
-                var secondExtension = Path.GetExtension(conversionFile);
-                // copy to temp dir
-                var mod = $"\\\\?\\{modDir}{fileParent}";
-                var modParent = new DirectoryInfo(mod).Parent.FullName;
-                if (string.IsNullOrEmpty(secondExtension))
+                if (!string.IsNullOrEmpty(extension))
                 {
-                    if(!Directory.Exists(modParent))
+                    var conversionFile = fileName.Replace(extension, string.Empty);
+                    var secondExtension = Path.GetExtension(conversionFile);
+                    // copy to temp dir
+                    var mod = $"\\\\?\\{modDir}{fileParent}";
+                    var modParent = new DirectoryInfo(mod).Parent.FullName;
+                    if (string.IsNullOrEmpty(secondExtension))
                     {
-                        Directory.CreateDirectory(modParent);
+                        if (!Directory.Exists(modParent))
+                        {
+                            Directory.CreateDirectory(modParent);
+                        }
+                        if (File.Exists(mod))
+                        {
+                            File.Delete(mod);
+                        }
+                        File.Copy(file, mod);
                     }
-                    if(File.Exists(mod))
+                    else
                     {
-                        File.Delete(mod);
+                        // convert and save to temp dir
+                        FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
                     }
-                    File.Copy(file, mod);
                 }
                 else
                 {
-                    // convert and save to temp dir
-                    FileHelper.Convert(file, secondExtension.Remove(0,1), $"{modParent}\\{conversionFile}");
+                    throw new Exception(string.Format(Properties.Resources.FileMissingExtensionError, file));
                 }
             }
             
@@ -316,9 +323,13 @@ namespace bg3_modders_multitool.Services
             GeneralHelper.WriteToConsole(Resources.Destination, destination);
             GeneralHelper.WriteToConsole(Resources.AttemptingToPack);
             var buildDir = BuildPack(path);
-            PackMod(buildDir, destination);
-            Directory.Delete(buildDir,true);
-            return GetMetalsxList(Directory.GetDirectories(path + "\\Mods"));
+            if(buildDir != null)
+            {
+                PackMod(buildDir, destination);
+                Directory.Delete(buildDir, true);
+                return GetMetalsxList(Directory.GetDirectories(path + "\\Mods"));
+            }
+            return new List<string>();
         }
     }
 }
