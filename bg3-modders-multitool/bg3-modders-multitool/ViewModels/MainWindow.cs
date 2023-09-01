@@ -5,11 +5,13 @@ namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
+    using MdXaml;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Documents;
 
     public class MainWindow : BaseViewModel
     {
@@ -399,7 +401,21 @@ namespace bg3_modders_multitool.ViewModels
             await AutoUpdater.CheckForVersionUpdate();
             if (AutoUpdater.UpdateAvailable)
             {
-                // TODO - generate popup with update info
+                var md = new Markdown();
+                var notes = string.Empty;
+                foreach (var release in AutoUpdater.Releases)
+                {
+                    notes += $"# {release.Version} # \n";
+                    notes += release.Notes;
+                    notes += "\n\n";
+                }
+                FlowDocument document = md.Transform(notes);
+
+                //markdown.Document = document;
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.NoUpdatesFound);
             }
         }
 

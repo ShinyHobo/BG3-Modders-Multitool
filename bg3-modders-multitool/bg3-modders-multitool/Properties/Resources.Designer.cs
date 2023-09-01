@@ -1224,6 +1224,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No updates found.
+        /// </summary>
+        public static string NoUpdatesFound {
+            get {
+                return ResourceManager.GetString("NoUpdatesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to off.
         /// </summary>
         public static string Off {

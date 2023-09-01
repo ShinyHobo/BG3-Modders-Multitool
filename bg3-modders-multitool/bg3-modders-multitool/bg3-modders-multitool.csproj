@@ -125,6 +125,9 @@
     <Reference Include="HelixToolkit.Wpf.SharpDX.Assimp, Version=2.24.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
       <HintPath>..\packages\HelixToolkit.SharpDX.Assimp.2.24.0\lib\net46\HelixToolkit.Wpf.SharpDX.Assimp.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.6.0.0\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="J2N, Version=2.0.0.0, Culture=neutral, PublicKeyToken=f39447d697a969af, processorArchitecture=MSIL">
       <HintPath>..\packages\J2N.2.0.0\lib\net45\J2N.dll</HintPath>
     </Reference>
@@ -152,6 +155,12 @@
     </Reference>
     <Reference Include="LZ4">
       <HintPath>LSLib\LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="MdXaml, Version=1.21.0.0, Culture=neutral, PublicKeyToken=9f8c7afb435b7edc, processorArchitecture=MSIL">
+      <HintPath>..\packages\MdXaml.1.21.0\lib\net45\MdXaml.dll</HintPath>
+    </Reference>
+    <Reference Include="MdXaml.Plugins, Version=1.21.0.0, Culture=neutral, PublicKeyToken=9f8c7afb435b7edc, processorArchitecture=MSIL">
+      <HintPath>..\packages\MdXaml.Plugins.1.21.0\lib\net45\MdXaml.Plugins.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />

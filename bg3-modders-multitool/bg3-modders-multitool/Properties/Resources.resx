@@ -536,6 +536,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="NoLinesFound" xml:space="preserve">
     <value>No lines found; search returned filename only.</value>
   </data>
+  <data name="NoUpdatesFound" xml:space="preserve">
+    <value>No updates found</value>
+  </data>
   <data name="Off" xml:space="preserve">
     <value>off</value>
   </data>
