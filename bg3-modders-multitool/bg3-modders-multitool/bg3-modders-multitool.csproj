@@ -563,6 +563,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Services\AutoUpdaterService.cs" />
     <Compile Include="Services\DragAndDropHelper.cs" />
     <Compile Include="Services\FileHelper.cs" />
     <Compile Include="Services\GeneralHelper.cs" />

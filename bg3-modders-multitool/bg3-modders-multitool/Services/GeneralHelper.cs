@@ -327,6 +327,20 @@ namespace bg3_modders_multitool.Services
             return theProc;
         }
 
+        /// <summary>
+        /// Gets the app file version
+        /// </summary>
+        /// <returns>The app file version represented as #.#.#x</returns>
+        public static string GetAppVersion()
+        {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fvi.FileVersion;
+        }
+
+        /// <summary>
+        /// If threading is not unlocked, this creates a max degree of parallelism equal to 75% of the processor count multiplied by two, rounded up (2 threads per processor)
+        /// </summary>
         public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Settings.Default.unlockThreads ? -1 : Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
     }
 }
