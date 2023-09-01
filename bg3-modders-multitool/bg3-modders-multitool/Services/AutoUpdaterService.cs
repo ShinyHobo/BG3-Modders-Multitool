@@ -18,7 +18,7 @@
     /// If yes, downloads and replaces the currently installed version, then re-opens it
     /// If no, timer is shut off until the next time the application is started
     /// </summary>
-    internal class AutoUpdaterService
+    public class AutoUpdaterService
     {
         public AutoUpdaterService() {
             PollGithub();
@@ -27,6 +27,8 @@
         public AutoResetEvent AutoResetEvent { get; set; }
         public Timer Timer { get; set; }
         public HttpClient HttpClient { get; set; }
+        public bool UpdateAvailable { get; set; }
+
         private readonly string _repoUrl = "https://api.github.com/repositories/305852141/releases";
 
         /// <summary>
@@ -65,12 +67,18 @@
                         var versionsBehind = releases.IndexOf(matchedVersion);
                         if (versionsBehind == -1 || versionsBehind > 0)
                         {
+                            UpdateAvailable = true;
                             // release available
                             var newestTag = newestRelease["tag_name"].ToString().Remove(0, 1); // remove v
-                            var assets = newestRelease["assets"];
-                            if(assets != null)
+
+                            // TODO - display update symbol, popup, wait for answer
+                            if(false)
                             {
-                                DownloadNewVersion(assets);
+                                var assets = newestRelease["assets"];
+                                if (assets != null)
+                                {
+                                    DownloadNewVersion(assets);
+                                }
                             }
                         }
                     }
@@ -126,6 +134,8 @@
         private void ReplaceApplicationWithNewVersion()
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                Timer.Dispose();
+                AutoResetEvent.Dispose();
                 System.Windows.Application.Current.Shutdown();
                 var exeName = "bg3-modders-multitool.exe";
                 var updatePath = $"{DragAndDropHelper.TempFolder}\\Update";

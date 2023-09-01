@@ -14,33 +14,34 @@
         <Border BorderBrush="Gray" Background="LightGray" BorderThickness="0,0,0,3">
             <Menu Background="Transparent">
                 <MenuItem Header="{x:Static p:Resources.IndexMenu}">
-                    <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click" 
-                        ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
+                    <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
+                        ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" >
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="{x:Static p:Resources.GOEButton}">
                     <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
-                        ToolTip="{x:Static p:Resources.GOEButtonTooltip}"/>
+                        ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
                     <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding UnpackAllowed}"
-                        ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}"/>
+                        ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
                 </MenuItem>
                 <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}">
                     <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
-                        ToolTip="{x:Static p:Resources.ModsFolderButtonTooltip}"/>
+                        ToolTip="{x:Static p:Resources.ModsFolderButtonTooltip}" Icon="📂"/>
                     <MenuItem x:Name="profilesFolderButton" Header="{x:Static p:Resources.ProfilesFolderButton}" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
-                        ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}"/>
+                        ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}" Icon="📂"/>
                 </MenuItem>
                 <MenuItem Header="{x:Static p:Resources.Help}">
-                    <MenuItem Header="{x:Static p:Resources.ModdingResources}">
-                        <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click"/>
-                        <MenuItem Header="{x:Static p:Resources.BG3CommunityLibrary}" Click="BG3CommWikiLink_Click"/>
-                        <MenuItem Header="{x:Static p:Resources.ModdingTutorial}" Click="ModTutLink_Click"/>
-                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtender}" Click="BG3SELink_Click"/>
-                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderAPI}" Click="BG3SEAPILink_Click"/>
-                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick"/>
-                        <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click"/>
+                    <MenuItem Header="{x:Static p:Resources.ModdingResources}" Icon="📚">
+                        <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3CommunityLibrary}" Click="BG3CommWikiLink_Click" Icon="📗"/>
+                        <MenuItem Header="{x:Static p:Resources.ModdingTutorial}" Click="ModTutLink_Click" Icon="📗"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtender}" Click="BG3SELink_Click" Icon="📗"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderAPI}" Click="BG3SEAPILink_Click" Icon="📗"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick" Icon="📗"/>
+                        <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click" Icon="📗"/>
                     </MenuItem>
-                    <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click"/>
-                    <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click"/>
+                    <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click" Icon="🐞"/>
+                    <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click" Icon="☕"/>
                 </MenuItem>
             </Menu>
         </Border>
