@@ -62,7 +62,7 @@ namespace bg3_modders_multitool.Views
             var folderDialog = new System.Windows.Forms.FolderBrowserDialog
             {
                 Description = Properties.Resources.SelectGameModDirectory,
-                SelectedPath = lastDirectory
+                SelectedPath = string.IsNullOrEmpty(lastDirectory) ? Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory() : lastDirectory
             };
 
             if(folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
