@@ -186,10 +186,9 @@ namespace bg3_modders_multitool.Services
             // cleanup temp folder
             DirectoryInfo di = new DirectoryInfo(TempFolder);
 
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete();
-            }
+            foreach (FileInfo file in di.GetFiles()) file.Delete();
+            foreach (DirectoryInfo subDirectory in di.GetDirectories()) subDirectory.Delete(true);
+
             GeneralHelper.WriteToConsole(Properties.Resources.TempFilesCleaned);
         }
 
