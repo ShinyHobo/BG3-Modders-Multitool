@@ -93,8 +93,9 @@
                                     var version = releaseAsset["tag_name"].ToString().Remove(0, 1);
                                     var releaseNotes = releaseAsset["body"].ToString();
                                     var exeAsset = releaseAsset["assets"].FirstOrDefault(a => a["name"].ToString() == $"{_exeName}.zip");
+                                    var title = releaseAsset["name"].ToString();
                                     var downloadUrl = exeAsset["browser_download_url"].ToString();
-                                    var release = new Release(version, releaseNotes, downloadUrl);
+                                    var release = new Release(version, title, releaseNotes, downloadUrl);
                                     Releases.Add(release);
                                 }
                             }
@@ -170,13 +171,15 @@
     /// </summary>
     public class Release
     {
-        public Release(string version, string notes, string downloadUrl) { 
+        public Release(string version, string title, string notes, string downloadUrl) { 
             Version = version;
+            Title = title;
             Notes = notes;
             DownloadUrl = downloadUrl;
         }
 
         public string Version { get; private set; }
+        public string Title { get; private set; }
         public string Notes { get; private set;}
         public string DownloadUrl { get; private set;}
     }

@@ -402,13 +402,12 @@ namespace bg3_modders_multitool.ViewModels
             await AutoUpdater.CheckForVersionUpdate();
             if (AutoUpdater.UpdateAvailable)
             {
-                var md = new Markdown();
                 var notes = string.Empty;
                 foreach (var release in AutoUpdater.Releases)
                 {
-                    notes += $"## {release.Version} #\r\n";
-                    notes += release.Notes;
-                    notes += "\r\n\r\n";
+                    notes += $"## {release.Version} - {release.Title} \r\n\r\n=== \r\n> ";
+                    notes += release.Notes.Replace("- ","* ").Replace("\r\n", "\r\n> ");
+                    notes += "\r\n=== \r\n";
                 }
                 var updateView = new Update(notes);
                 updateView.Show();
