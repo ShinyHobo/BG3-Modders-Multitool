@@ -108,6 +108,10 @@
                         }
                     }
                 }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFetchUpdates, (int)releaseHistory.StatusCode);
+                }
                 return;
             });
         }

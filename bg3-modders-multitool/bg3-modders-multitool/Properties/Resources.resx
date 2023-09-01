@@ -268,6 +268,10 @@
   <data name="FailedToEnableSplashScreen" xml:space="preserve">
     <value>Failed to enable splash screen...</value>
   </data>
+  <data name="FailedToFetchUpdates" xml:space="preserve">
+    <value>Failed to fetch updates (status {0})</value>
+    <comment>status code int</comment>
+  </data>
   <data name="FailedToFindIconsPak" xml:space="preserve">
     <value>No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping...</value>
   </data>
@@ -702,8 +706,12 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="UpdateButton" xml:space="preserve">
     <value>Update</value>
   </data>
+  <data name="UpdateCanceled" xml:space="preserve">
+    <value>Update canceled</value>
+  </data>
   <data name="UpdatesFound" xml:space="preserve">
-    <value>Updates found</value>
+    <value>Updates found; you are {0} version(s) behind</value>
+    <comment>number of updates</comment>
   </data>
   <data name="UUIDTitle" xml:space="preserve">
     <value>v4 UUID/TranslatedString Handle Generator</value>

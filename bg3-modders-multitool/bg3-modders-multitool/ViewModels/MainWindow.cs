@@ -404,7 +404,7 @@ namespace bg3_modders_multitool.ViewModels
             await AutoUpdater.CheckForVersionUpdate();
             if (AutoUpdater.UpdateAvailable)
             {
-                GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound);
+                GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound, AutoUpdater.Releases.Count);
                 var notes = string.Empty;
                 foreach (var release in AutoUpdater.Releases)
                 {
@@ -417,6 +417,10 @@ namespace bg3_modders_multitool.ViewModels
                 if(response == true)
                 {
                     AutoUpdater.Update();
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.UpdateCanceled);
                 }
             }
             else

@@ -484,6 +484,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to fetch updates (status {0}).
+        /// </summary>
+        public static string FailedToFetchUpdates {
+            get {
+                return ResourceManager.GetString("FailedToFetchUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping....
         /// </summary>
         public static string FailedToFindIconsPak {
@@ -1703,7 +1712,16 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updates found.
+        ///   Looks up a localized string similar to Update canceled.
+        /// </summary>
+        public static string UpdateCanceled {
+            get {
+                return ResourceManager.GetString("UpdateCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updates found; you are {0} version(s) behind.
         /// </summary>
         public static string UpdatesFound {
             get {
