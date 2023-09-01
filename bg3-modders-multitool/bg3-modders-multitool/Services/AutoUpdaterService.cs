@@ -22,18 +22,18 @@
     /// </summary>
     public class AutoUpdaterService : BaseViewModel
     {
-        public AutoUpdaterService() {
+        public AutoUpdaterService(MainWindow mainWindow) {
+            _mainWindow = mainWindow;
             PollGithub();
         }
 
+        private MainWindow _mainWindow { get; set; }
         public AutoResetEvent AutoResetEvent { get; set; }
         public Timer Timer { get; set; }
         public HttpClient HttpClient { get; set; }
         private bool _updateAvailable;
-        public bool UpdateAvailable
-        {
-            get { return _updateAvailable; }
-            set { _updateAvailable = value; OnNotifyPropertyChanged(); }
+        public bool UpdateAvailable { get { return _updateAvailable; } 
+            set { _updateAvailable = value; _mainWindow.UpdateVisible = value ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden; } 
         }
         public List<Release> Releases { get; set; }
 
@@ -100,7 +100,7 @@
                                     var releaseNotes = releaseAsset["body"].ToString();
                                     var exeAsset = releaseAsset["assets"].FirstOrDefault(a => a["name"].ToString() == $"{_exeName}.zip");
                                     var title = releaseAsset["name"].ToString();
-                                    var downloadUrl = exeAsset["browser_download_url"].ToString();
+                                    var downloadUrl = exeAsset?["browser_download_url"].ToString();
                                     var release = new Release(version, title, releaseNotes, downloadUrl);
                                     Releases.Add(release);
                                 }

@@ -47,6 +47,8 @@
             </Menu>
         </Border>
         <Grid VerticalAlignment="Top" Margin="-4,0,0,0">
+            <Button Content="🔃" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="30" Width="30" Background="Transparent" Visibility="{Binding UpdateVisible}" Click="CheckForUpdates_Click"
+                    BorderThickness="0" Cursor="Hand" FontSize="20" Foreground="Blue" ToolTip="{x:Static p:Resources.UpdatesFoundButton}"/>
             <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,0,526,159">
                 <views:DragAndDropBox x:Name="dragAndDropBox"/>
             </Viewbox>

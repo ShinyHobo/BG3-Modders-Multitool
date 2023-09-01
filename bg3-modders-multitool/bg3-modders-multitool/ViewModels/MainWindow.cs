@@ -25,7 +25,7 @@ namespace bg3_modders_multitool.ViewModels
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
             ThreadsUnlocked = Properties.Settings.Default.unlockThreads;
-            AutoUpdater = new AutoUpdaterService();
+            AutoUpdater = new AutoUpdaterService(this);
         }
 
         #region File Selection Methods
@@ -139,6 +139,16 @@ namespace bg3_modders_multitool.ViewModels
         public SearchResults SearchResults { get; set; }
 
         public AutoUpdaterService AutoUpdater { get; set; }
+
+        private Visibility _updatesVisible = Visibility.Hidden;
+        public Visibility UpdateVisible
+        {
+            get { return _updatesVisible; }
+            set { 
+                _updatesVisible = value; 
+                OnNotifyPropertyChanged(); 
+            }
+        }
 
         private string _consoleOutput;
 

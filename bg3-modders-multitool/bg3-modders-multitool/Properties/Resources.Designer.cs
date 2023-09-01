@@ -1251,7 +1251,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No updates found.
+        ///   Looks up a localized string similar to You are up to date!.
         /// </summary>
         public static string NoUpdatesFound {
             get {
@@ -1726,6 +1726,15 @@ namespace bg3_modders_multitool.Properties {
         public static string UpdatesFound {
             get {
                 return ResourceManager.GetString("UpdatesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updates available!.
+        /// </summary>
+        public static string UpdatesFoundButton {
+            get {
+                return ResourceManager.GetString("UpdatesFoundButton", resourceCulture);
             }
         }
         
