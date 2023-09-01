@@ -1,7 +1,10 @@
 ﻿namespace bg3_modders_multitool.Services
 {
+    using Alphaleonis.Win32.Filesystem;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System;
+    using System.IO.Compression;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -25,6 +28,9 @@
         public HttpClient HttpClient { get; set; }
         private readonly string _repoUrl = "https://api.github.com/repositories/305852141/releases";
 
+        /// <summary>
+        /// Creates an HttpClient and timer to periodically check for new versions
+        /// </summary>
         private void PollGithub()
         {
             HttpClient = new HttpClient();
@@ -33,9 +39,14 @@
             HttpClient.DefaultRequestHeaders.UserAgent.TryParseAdd("BG3-Modders-Multitool");//Set the User Agent
 
             AutoResetEvent = new AutoResetEvent(true);
-            Timer = new Timer(CheckForVersionUpdate, AutoResetEvent, 0, ((int)TimeSpan.FromSeconds(5).TotalMilliseconds));
+            Timer = new Timer(CheckForVersionUpdate, AutoResetEvent, 0, ((int)TimeSpan.FromSeconds(120).TotalMilliseconds));
         }
 
+        /// <summary>
+        /// Queries the GitHub release API endpoint for new versions
+        /// Downloads a new version if one is found
+        /// </summary>
+        /// <param name="state">The state</param>
         private async void CheckForVersionUpdate(object state = null)
         {
             var releaseHistory = await HttpClient.GetAsync(_repoUrl);
@@ -55,17 +66,50 @@
                         {
                             // release available
                             var newestTag = newestRelease["tag_name"].ToString().Remove(0, 1); // remove v
-                            GeneralHelper.WriteToConsole($"{newestTag} is available");
                             var assets = matchedVersion["assets"];
                             if(assets != null)
                             {
-                                var asset = assets.FirstOrDefault(a => a["name"].ToString() == "bg3-modders-multitool.zip");
-                                if (asset != null)
-                                {
-                                    var downloadUrl = asset["browser_download_url"].ToString();
-                                }
+                                DownloadNewVersion(assets);
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Downloads and unzips the update into a temp directory
+        /// </summary>
+        /// <param name="assets">The asset list pulled from the release query</param>
+        private void DownloadNewVersion(JToken assets)
+        {
+            var exeName = "bg3-modders-multitool";
+            var asset = assets.FirstOrDefault(a => a["name"].ToString() == $"{exeName}.zip");
+            if (asset != null)
+            {
+                var downloadUrl = asset["browser_download_url"].ToString();
+                var tempZip = $"{DragAndDropHelper.TempFolder}\\update.zip";
+                var updateDirectory = $"{DragAndDropHelper.TempFolder}\\Update";
+                Directory.CreateDirectory(updateDirectory);
+                File.Delete(tempZip);
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(downloadUrl, tempZip);
+                    using (ZipArchive archive = ZipFile.OpenRead(tempZip))
+                    {
+                        // only grabbing the main exe for now
+                        foreach (ZipArchiveEntry entry in archive.Entries.Where(e => e.FullName.Contains(exeName)))
+                        {
+                            entry.ExtractToFile(Path.Combine(updateDirectory, entry.FullName));
+                        }
+                    }
+                    if(File.Exists(Path.Combine(updateDirectory, $"{exeName}.exe")))
+                    {
+                        // TODO - spin up process to close and replace currently running exe
+                    } 
+                    else
+                    {
+                        // TODO - failed to extract file
                     }
                 }
             }
