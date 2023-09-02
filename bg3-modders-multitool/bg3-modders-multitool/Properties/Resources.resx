@@ -320,6 +320,9 @@ Do you wish to continue?</value>
     <value>Failed to pack mod: {0}</value>
     <comment>error message</comment>
   </data>
+  <data name="FailedToProcessWorkspace" xml:space="preserve">
+    <value>Could not open file/folder.</value>
+  </data>
   <data name="FailedToReadDirectory" xml:space="preserve">
     <value>Could not read from directory: {0}</value>
     <comment>directory</comment>
@@ -548,6 +551,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="ModsFolderButtonTooltip" xml:space="preserve">
     <value>Shortcut to open the Mods folder</value>
   </data>
+  <data name="MultitoolTools" xml:space="preserve">
+    <value>Tools for the multitool</value>
+  </data>
   <data name="NameLabel" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -587,6 +593,14 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="PakSelectionTitle" xml:space="preserve">
     <value>.pak Selection</value>
+  </data>
+  <data name="PakUnpacked" xml:space="preserve">
+    <value>{0} unpacked!</value>
+    <comment>pak name</comment>
+  </data>
+  <data name="PakUnpacking" xml:space="preserve">
+    <value>Unpacking {0} to UnpackedMods</value>
+    <comment>pak name</comment>
   </data>
   <data name="ParentTemplateIdLabel" xml:space="preserve">
     <value>ParentTemplateId</value>
@@ -730,6 +744,12 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="UnpackingProcessStarted" xml:space="preserve">
     <value>Unpacking processes starting; this could take a while.</value>
   </data>
+  <data name="UnpackModPak" xml:space="preserve">
+    <value>Unpack .pak</value>
+  </data>
+  <data name="UnpackModPakTooltip" xml:space="preserve">
+    <value>Unpacks the selected .pak file into a workspace near the application.</value>
+  </data>
   <data name="UpdateButton" xml:space="preserve">
     <value>Update</value>
   </data>
@@ -745,6 +765,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="UpdateWarningLabel" xml:space="preserve">
     <value>Clicking 'Update' will immediately close the application. It will re-open automatically after the update is installed. Make sure to finish what you are doing.</value>
+  </data>
+  <data name="UtilitiesMenuLabel" xml:space="preserve">
+    <value>Utilities</value>
   </data>
   <data name="UUIDTitle" xml:space="preserve">
     <value>v4 UUID/TranslatedString Handle Generator</value>

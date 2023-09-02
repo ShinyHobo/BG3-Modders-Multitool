@@ -233,10 +233,15 @@ namespace bg3_modders_multitool.Services
                                     GenerateZip(fullPath, dirName);
                                     CleanTempDirectory();
                                 }
+                                else if(File.Exists(fullPath))
+                                {
+                                    GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacking, Path.GetFileNameWithoutExtension(fullPath));
+                                    PakUnpackHelper.UnpackModToWorkspace(fullPath);
+                                    GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacked, Path.GetFileNameWithoutExtension(fullPath));
+                                }
                                 else
                                 {
-                                    // File dropping unsupported
-                                    GeneralHelper.WriteToConsole(Properties.Resources.FileDroppingNotSupported);
+                                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToProcessWorkspace);
                                 }
                             }
                         }

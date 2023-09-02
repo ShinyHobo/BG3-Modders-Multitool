@@ -604,6 +604,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not open file/folder..
+        /// </summary>
+        public static string FailedToProcessWorkspace {
+            get {
+                return ResourceManager.GetString("FailedToProcessWorkspace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not read from directory: {0}.
         /// </summary>
         public static string FailedToReadDirectory {
@@ -1245,6 +1254,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tools for the multitool.
+        /// </summary>
+        public static string MultitoolTools {
+            get {
+                return ResourceManager.GetString("MultitoolTools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string NameLabel {
@@ -1358,6 +1376,24 @@ namespace bg3_modders_multitool.Properties {
         public static string PakSelectionTitle {
             get {
                 return ResourceManager.GetString("PakSelectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} unpacked!.
+        /// </summary>
+        public static string PakUnpacked {
+            get {
+                return ResourceManager.GetString("PakUnpacked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacking {0} to UnpackedMods.
+        /// </summary>
+        public static string PakUnpacking {
+            get {
+                return ResourceManager.GetString("PakUnpacking", resourceCulture);
             }
         }
         
@@ -1769,6 +1805,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unpack .pak.
+        /// </summary>
+        public static string UnpackModPak {
+            get {
+                return ResourceManager.GetString("UnpackModPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacks the selected .pak file into a workspace near the application..
+        /// </summary>
+        public static string UnpackModPakTooltip {
+            get {
+                return ResourceManager.GetString("UnpackModPakTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update.
         /// </summary>
         public static string UpdateButton {
@@ -1810,6 +1864,15 @@ namespace bg3_modders_multitool.Properties {
         public static string UpdateWarningLabel {
             get {
                 return ResourceManager.GetString("UpdateWarningLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Utilities.
+        /// </summary>
+        public static string UtilitiesMenuLabel {
+            get {
+                return ResourceManager.GetString("UtilitiesMenuLabel", resourceCulture);
             }
         }
         

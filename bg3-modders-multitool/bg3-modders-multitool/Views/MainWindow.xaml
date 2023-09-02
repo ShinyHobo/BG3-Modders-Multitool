@@ -13,16 +13,19 @@
     <StackPanel>
         <Border BorderBrush="Gray" Background="LightGray" BorderThickness="0,0,0,3">
             <Menu Background="Transparent">
-                <MenuItem Header="{x:Static p:Resources.IndexMenu}">
-                    <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
-                        ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" >
+                <MenuItem Header="{x:Static p:Resources.UtilitiesMenuLabel}" ToolTip="{x:Static p:Resources.MultitoolTools}">
+                    <MenuItem Header="{x:Static p:Resources.UnpackModPak}" ToolTip="{x:Static p:Resources.UnpackModPakTooltip}"/>
+                    <MenuItem Header="{x:Static p:Resources.IndexMenu}">
+                        <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
+                            ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" >
+                        </MenuItem>
                     </MenuItem>
-                </MenuItem>
-                <MenuItem Header="{x:Static p:Resources.GOEButton}">
-                    <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
-                        ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
-                    <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding UnpackAllowed}"
-                        ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
+                    <MenuItem Header="{x:Static p:Resources.GOEButton}">
+                        <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                            ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
+                        <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                            ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}">
                     <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"

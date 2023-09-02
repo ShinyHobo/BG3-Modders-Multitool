@@ -174,6 +174,19 @@ namespace bg3_modders_multitool.Services
             });
         }
 
+        /// <summary>
+        /// Unpacks the given mod pak path to the unpacked mods directory
+        /// </summary>
+        /// <param name="pak">The file path pointing to the pak</param>
+        public static void UnpackModToWorkspace(string pak)
+        {
+            var packager = new Packager();
+            var pakName = Path.GetFileNameWithoutExtension(pak);
+            var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+            Directory.CreateDirectory(unpackPath);
+            packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
+        }
+
         public class PakProgress : BaseViewModel
         {
             public PakProgress(string pakName)
