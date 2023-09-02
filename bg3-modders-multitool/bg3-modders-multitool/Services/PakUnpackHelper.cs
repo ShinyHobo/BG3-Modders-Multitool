@@ -15,16 +15,15 @@ namespace bg3_modders_multitool.Services
 
     public class PakUnpackHelper
     {
-        private List<int> Processes;
-
         public bool Cancelled;
+
+        public List<(string Pak, int Percent)> PakProgress { get; set; } 
 
         /// <summary>
         /// Unpacks all the .pak files in the game data directory and places them in a folder next to the exe
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
@@ -34,6 +33,7 @@ namespace bg3_modders_multitool.Services
             pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
             var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
             Cancelled = false;
+            PakProgress = new List<(string Pak, int Percent)>();
             return Task.Run(() =>
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
@@ -44,13 +44,19 @@ namespace bg3_modders_multitool.Services
                     try
                     {
                         var packager = new Packager();
+                        PakProgress.Add((Pak: pakName, Percent: 0));
                         packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
                         {
-                            var percent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
-                            GeneralHelper.WriteToConsole(percent.ToString());
                             if (Cancelled)
                             {
                                 throw new Exception(cancelError);
+                            }
+                            var newPercent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
+                            var pakProgress = PakProgress.First(p => p.Pak == pakName);
+                            if(newPercent != pakProgress.Percent)
+                            {
+                                pakProgress.Percent = newPercent;
+                                //GeneralHelper.WriteToConsole($"{pakName}: {pakProgress.Percent}%");
                             }
                         };
                         packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
