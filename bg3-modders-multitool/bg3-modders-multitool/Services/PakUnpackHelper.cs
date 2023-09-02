@@ -180,11 +180,16 @@ namespace bg3_modders_multitool.Services
         /// <param name="pak">The file path pointing to the pak</param>
         public static void UnpackModToWorkspace(string pak)
         {
-            var packager = new Packager();
-            var pakName = Path.GetFileNameWithoutExtension(pak);
-            var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
-            Directory.CreateDirectory(unpackPath);
-            packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
+            if(File.Exists(pak))
+            {
+                var pakName = Path.GetFileNameWithoutExtension(pak);
+                GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacking, Path.GetFileNameWithoutExtension(pakName));
+                var packager = new Packager();
+                var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+                Directory.CreateDirectory(unpackPath);
+                packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
+                GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacked, Path.GetFileNameWithoutExtension(pakName));
+            }
         }
 
         public class PakProgress : BaseViewModel

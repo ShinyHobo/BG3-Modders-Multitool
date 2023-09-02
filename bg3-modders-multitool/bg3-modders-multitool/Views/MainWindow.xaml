@@ -14,7 +14,7 @@
         <Border BorderBrush="Gray" Background="LightGray" BorderThickness="0,0,0,3">
             <Menu Background="Transparent">
                 <MenuItem Header="{x:Static p:Resources.UtilitiesMenuLabel}" ToolTip="{x:Static p:Resources.MultitoolTools}">
-                    <MenuItem Header="{x:Static p:Resources.UnpackModPak}" ToolTip="{x:Static p:Resources.UnpackModPakTooltip}"/>
+                    <MenuItem Header="{x:Static p:Resources.UnpackModPak}" ToolTip="{x:Static p:Resources.UnpackModPakTooltip}" Click="UnpackMod_Click"/>
                     <MenuItem Header="{x:Static p:Resources.IndexMenu}">
                         <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
                             ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" >

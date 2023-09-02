@@ -584,9 +584,15 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="OpenMenu" xml:space="preserve">
     <value>Open</value>
   </data>
+  <data name="OpenPak" xml:space="preserve">
+    <value>Unpack .pak(s)</value>
+  </data>
   <data name="OutOfMemFailedToIndex" xml:space="preserve">
     <value>OOME: Failed to index {0}</value>
     <comment>file path</comment>
+  </data>
+  <data name="PakFileDescription" xml:space="preserve">
+    <value>Mod Pak</value>
   </data>
   <data name="PakLabel" xml:space="preserve">
     <value>Pak</value>
@@ -748,7 +754,7 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Unpack .pak</value>
   </data>
   <data name="UnpackModPakTooltip" xml:space="preserve">
-    <value>Unpacks the selected .pak file into a workspace near the application.</value>
+    <value>Unpacks the selected .pak file(s) into the UnpackedMods folder, near the application.</value>
   </data>
   <data name="UpdateButton" xml:space="preserve">
     <value>Update</value>

@@ -235,9 +235,7 @@ namespace bg3_modders_multitool.Services
                                 }
                                 else if(File.Exists(fullPath))
                                 {
-                                    GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacking, Path.GetFileNameWithoutExtension(fullPath));
                                     PakUnpackHelper.UnpackModToWorkspace(fullPath);
-                                    GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacked, Path.GetFileNameWithoutExtension(fullPath));
                                 }
                                 else
                                 {

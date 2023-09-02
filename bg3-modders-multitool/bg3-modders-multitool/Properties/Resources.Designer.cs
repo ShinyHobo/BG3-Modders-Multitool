@@ -1353,11 +1353,29 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unpack .pak(s).
+        /// </summary>
+        public static string OpenPak {
+            get {
+                return ResourceManager.GetString("OpenPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OOME: Failed to index {0}.
         /// </summary>
         public static string OutOfMemFailedToIndex {
             get {
                 return ResourceManager.GetString("OutOfMemFailedToIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Pak.
+        /// </summary>
+        public static string PakFileDescription {
+            get {
+                return ResourceManager.GetString("PakFileDescription", resourceCulture);
             }
         }
         
@@ -1814,7 +1832,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unpacks the selected .pak file into a workspace near the application..
+        ///   Looks up a localized string similar to Unpacks the selected .pak file(s) into the UnpackedMods folder, near the application..
         /// </summary>
         public static string UnpackModPakTooltip {
             get {
