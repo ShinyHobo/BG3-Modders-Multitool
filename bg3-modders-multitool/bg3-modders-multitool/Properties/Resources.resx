@@ -711,6 +711,10 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="UnpackingComplete" xml:space="preserve">
     <value>Unpacking complete!</value>
   </data>
+  <data name="UnpackingPakComplete" xml:space="preserve">
+    <value>{0} unpacking complete</value>
+    <comment>pak name</comment>
+  </data>
   <data name="UnpackingProcessComplete" xml:space="preserve">
     <value>All unpacking processes finished.</value>
   </data>

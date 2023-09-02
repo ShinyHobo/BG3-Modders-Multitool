@@ -14,9 +14,9 @@
         <ListView x:Name="searchResults" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"  ItemsSource="{Binding PakProgressCollection}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Margin="10,0,10,0">
-                        <TextBlock Text="{Binding PakName}"></TextBlock>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Margin="10,0,10,3">
                         <ProgressBar Value="{Binding Percent}" HorizontalAlignment="Stretch" Height="20" Margin="0,5,0,0"/>
+                        <TextBlock Text="{Binding PakName}" Margin="5,-18,0,0"></TextBlock>
                         <TextBlock Text="{Binding Percent, StringFormat={}{0}%}" HorizontalAlignment="Center" Margin="0,-18,0,0"/>
                     </StackPanel>
                 </DataTemplate>
@@ -33,7 +33,6 @@
                     </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
-
         </ListView>
     </Grid>
 </Window>

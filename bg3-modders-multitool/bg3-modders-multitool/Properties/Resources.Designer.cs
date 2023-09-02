@@ -1721,6 +1721,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} unpacking complete.
+        /// </summary>
+        public static string UnpackingPakComplete {
+            get {
+                return ResourceManager.GetString("UnpackingPakComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All unpacking processes finished..
         /// </summary>
         public static string UnpackingProcessComplete {

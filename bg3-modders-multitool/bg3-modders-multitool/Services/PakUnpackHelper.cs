@@ -8,10 +8,8 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
@@ -87,7 +85,7 @@ namespace bg3_modders_multitool.Services
                                 PakProgressCollection.Remove(pakProgress);
                             }
                         });
-                        GeneralHelper.WriteToConsole(pakName + " complete");
+                        GeneralHelper.WriteToConsole(Properties.Resources.UnpackingPakComplete, pakName);
                     }
                     catch (Exception ex) {
                         if(ex.Message ==  cancelError)
