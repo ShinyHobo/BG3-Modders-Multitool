@@ -24,11 +24,6 @@ namespace bg3_modders_multitool.Views
             DataContext = new ViewModels.DragAndDropBox();
         }
 
-        public DragAndDropBox(DragAndDropBox c)
-        {
-            InitializeComponent();
-        }
-
         /// <summary>
         /// Process a drop.
         /// </summary>

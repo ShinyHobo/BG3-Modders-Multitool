@@ -500,9 +500,6 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="LoadingLabel" xml:space="preserve">
     <value>Loading...</value>
   </data>
-  <data name="LSLibLocation" xml:space="preserve">
-    <value>LSLib divine.exe location (latest version is required)</value>
-  </data>
   <data name="LuaSetup" xml:space="preserve">
     <value>Lua Setup</value>
   </data>

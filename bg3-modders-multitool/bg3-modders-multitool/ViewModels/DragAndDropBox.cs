@@ -10,7 +10,7 @@ namespace bg3_modders_multitool.ViewModels
     {
         public DragAndDropBox()
         {
-            PackAllowed = !string.IsNullOrEmpty(Properties.Settings.Default.divineExe);
+            PackAllowed = true;
             _packAllowedDrop = PackAllowed;
         }
 

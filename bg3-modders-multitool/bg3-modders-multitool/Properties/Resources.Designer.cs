@@ -1116,15 +1116,6 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to LSLib divine.exe location (latest version is required).
-        /// </summary>
-        public static string LSLibLocation {
-            get {
-                return ResourceManager.GetString("LSLibLocation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Lua Setup.
         /// </summary>
         public static string LuaSetup {
