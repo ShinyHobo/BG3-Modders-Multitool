@@ -1750,7 +1750,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unpacking processes starting. This could take a while; please wait for all console processes to close on their own..
+        ///   Looks up a localized string similar to Unpacking processes starting; this could take a while..
         /// </summary>
         public static string UnpackingProcessStarted {
             get {

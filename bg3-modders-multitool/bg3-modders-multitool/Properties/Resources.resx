@@ -724,7 +724,7 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>All unpacking processes finished.</value>
   </data>
   <data name="UnpackingProcessStarted" xml:space="preserve">
-    <value>Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.</value>
+    <value>Unpacking processes starting; this could take a while.</value>
   </data>
   <data name="UpdateButton" xml:space="preserve">
     <value>Update</value>
