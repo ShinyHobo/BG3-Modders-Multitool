@@ -192,13 +192,7 @@ namespace bg3_modders_multitool.ViewModels
                 _gameDocumentsLocation = value;
                 // Validate the mods folder path.
                 ModsFolderLoaded = Directory.Exists(PathHelper.ModsFolderPath);
-                if (!ModsFolderLoaded)
-                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindModsFolder, PathHelper.ModsFolderPath ?? string.Empty);
-
-                // Validate the player profiles folder path.
                 ProfilesFolderLoaded = Directory.Exists(PathHelper.PlayerProfilesFolderPath);
-                if (!ProfilesFolderLoaded)
-                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindPlayerProfilesFolder, PathHelper.PlayerProfilesFolderPath ?? string.Empty);
 
                 ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();
@@ -342,7 +336,7 @@ namespace bg3_modders_multitool.ViewModels
         /// <returns></returns>
         private Visibility ValidateConfigNeeded()
         {
-            return UnpackAllowed && LaunchGameAllowed && Directory.Exists(PathHelper.ModsFolderPath) && Directory.Exists(PathHelper.PlayerProfilesFolderPath) 
+            return UnpackAllowed && LaunchGameAllowed
                 ? Visibility.Hidden 
                 : Visibility.Visible;
         }

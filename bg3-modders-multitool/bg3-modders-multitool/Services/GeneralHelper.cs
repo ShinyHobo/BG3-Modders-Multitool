@@ -36,7 +36,10 @@ namespace bg3_modders_multitool.Services
                     }
                     catch
                     {
-                        ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
+                        try
+                        {
+                            ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
+                        } catch { }
                     }
                 });
             }
