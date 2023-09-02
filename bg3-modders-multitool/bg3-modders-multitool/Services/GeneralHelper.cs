@@ -4,13 +4,16 @@
 namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.ViewModels;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
@@ -19,11 +22,20 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Writes text to the main window console.
         /// </summary>
-        /// <param name="text">The text to output.</param>
-        public static void WriteToConsole(string text)
+        /// <param name="resource">The text to output.</param>
+        /// <param name="args">The arguments to pass into the text</param>
+        public static void WriteToConsole(string resource, params object[] args)
         {
             Application.Current.Dispatcher.Invoke(() => {
-                ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(text);
+                try
+                {
+                    var message = string.Format(resource, args);
+                    ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
+                }
+                catch
+                {
+                    ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
+                }
             });
         }
 
@@ -40,8 +52,7 @@ namespace bg3_modders_multitool.Services
 
             for (int i = 0; i < count; i++)
             {
-                var el = VisualTreeHelper.GetChild(parent, i) as UIElement;
-                if (el == null) continue;
+                if (!(VisualTreeHelper.GetChild(parent, i) is UIElement el)) continue;
 
                 if (el.Uid == uid) return el;
 
@@ -217,8 +228,21 @@ namespace bg3_modders_multitool.Services
                 Properties.Settings.Default.quickLaunch = setting;
                 FileHelper.CreateDestroyQuickLaunchMod(setting);
                 Properties.Settings.Default.Save();
-                var toggleText = setting ? "on" : "off";
-                GeneralHelper.WriteToConsole($"Quick launch settings toggled {toggleText}!\n");
+                var toggleText = setting ? Properties.Resources.On : Properties.Resources.Off;
+                WriteToConsole(Properties.Resources.QuickLaunchEnabled, toggleText);
+            }
+        }
+
+        /// <summary>
+        /// Toggles the thread unlock setting
+        /// </summary>
+        /// <param name="setting">Whether or not threads should be unlocked for parallel processing</param>
+        public static void ToggleUnlockThreads(bool setting)
+        {
+            if (Properties.Settings.Default.unlockThreads != setting)
+            {
+                Properties.Settings.Default.unlockThreads = setting;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -234,15 +258,12 @@ namespace bg3_modders_multitool.Services
             {
                 try
                 {
-                    using (System.IO.FileStream fs = File.Open(texturePath, System.IO.FileMode.Open))
+                    using (var image = Pfim.Pfimage.FromFile(texturePath))
                     {
-                        BitmapImage img = new BitmapImage();
-                        img.BeginInit();
-                        img.CacheOption = BitmapCacheOption.OnLoad;
-                        img.StreamSource = fs;
-                        img.EndInit();
-                        img.Freeze();
-                        texture = BitmapSourceToStream(img);
+                        var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                        var bitmap = new System.Drawing.Bitmap(image.Width, image.Height, image.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
+                        var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        texture = BitmapSourceToStream(bitmapImage);
                     }
                 }
                 catch { }
@@ -285,8 +306,7 @@ namespace bg3_modders_multitool.Services
 
             if (hwnd != IntPtr.Zero)
             {
-                uint processId;
-                uint threadId = GetWindowThreadProcessId(hwnd, out processId);
+                GetWindowThreadProcessId(hwnd, out uint processId);
 
                 Process[] procs = Process.GetProcesses();
                 foreach (Process proc in procs)
@@ -307,5 +327,20 @@ namespace bg3_modders_multitool.Services
             return theProc;
         }
 
+        /// <summary>
+        /// Gets the app file version
+        /// </summary>
+        /// <returns>The app file version represented as #.#.#x</returns>
+        public static string GetAppVersion()
+        {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fvi.FileVersion;
+        }
+
+        /// <summary>
+        /// If threading is not unlocked, this creates a max degree of parallelism equal to 75% of the processor count multiplied by two, rounded up (2 threads per processor)
+        /// </summary>
+        public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Settings.Default.unlockThreads ? -1 : Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
     }
 }

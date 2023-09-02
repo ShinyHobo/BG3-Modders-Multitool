@@ -17,10 +17,11 @@ namespace bg3_modders_multitool.Services
     using System.Threading.Tasks;
     using bg3_modders_multitool.ViewModels;
     using Lucene.Net.Analysis.Core;
-    using Lucene.Net.Analysis.En;
     using Lucene.Net.Analysis.Util;
-    using J2N;
     using Alphaleonis.Win32.Filesystem;
+    using Lucene.Net.Index.Extensions;
+    using System.Collections.Concurrent;
+    using Lucene.Net.Search.Spans;
 
     public class IndexHelper
     {
@@ -29,7 +30,7 @@ namespace bg3_modders_multitool.Services
         // audio: .wem
         // video: .bk2
         // shaders: .bshd, .shd
-        private static readonly string[] extensionsToExclude = { ".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd" };
+        private static readonly string[] extensionsToExclude = { ".bin",".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".fbx", ".dae", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd", ".jpg",".gts",".data",".patch" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga", ".jpg" };
         public static readonly string[] BinaryExtensions = { ".lsf", ".bin", ".loca", ".data", ".patch" };
         private static readonly string luceneIndex = "lucene/index";
@@ -64,12 +65,12 @@ namespace bg3_modders_multitool.Services
                 });
                 if (filelist==null)
                 {
-                    GeneralHelper.WriteToConsole($"Retrieving file list.\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileList);
                     filelist = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
                 }
 
                 // Display total file count being indexed
-                GeneralHelper.WriteToConsole($"File list retrieved.\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.FileListRetrieved);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     DataContext.IndexFileTotal = filelist.Count;
@@ -79,7 +80,7 @@ namespace bg3_modders_multitool.Services
 
                 if (System.IO.Directory.Exists(luceneIndex))
                     System.IO.Directory.Delete(luceneIndex, true);
-                IndexFiles(filelist, new CustomAnalyzer());
+                IndexFiles(filelist);
             });
         }
 
@@ -87,31 +88,30 @@ namespace bg3_modders_multitool.Services
         /// Indexes the given files using an analyzer.
         /// </summary>
         /// <param name="files">The file list to index.</param>
-        /// <param name="analyzer">The analyzer to use when indexing.</param>
-        private void IndexFiles(List<string> files, Analyzer analyzer)
+        private void IndexFiles(List<string> files)
         {
-            GeneralHelper.WriteToConsole($"Starting index process.\n");
-            using (Analyzer a = analyzer)
+            GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
+            using (Analyzer a = new CustomAnalyzer())
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                config.SetUseCompoundFile(false);
                 using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                 {
-                    Parallel.ForEach(files, file => {
+                    Parallel.ForEach(files, GeneralHelper.ParallelOptions, file => {
                         try
                         {
                             IndexLuceneFile(file, writer);
                         }
                         catch (OutOfMemoryException)
                         {
-                            GeneralHelper.WriteToConsole($"OOME: Failed to index {file}\n");
+                            GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
                         }
                     });
+                    GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
                     writer.Commit();
-                    analyzer.Dispose();
-                    writer.Dispose();
                 }
             }
-            GeneralHelper.WriteToConsole($"Indexing process finished in {DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss")}.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
             Application.Current.Dispatcher.Invoke(() => {
                 DataContext.IsIndexing = false;
             });
@@ -124,29 +124,34 @@ namespace bg3_modders_multitool.Services
         /// <param name="writer">The index to write to.</param>
         private void IndexLuceneFile(string file, IndexWriter writer)
         {
+            var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{System.IO.Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
             try
             {
                 var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
-                // if file type is excluded, only track file name and path so it can be searched for by name
-                var contents = extensionsToExclude.Contains(extension) ? string.Empty : File.ReadAllText(file);
+
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
-                    new TextField("path", file, Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES),
-                    new TextField("body", contents, Field.Store.NO)
+                    new StringField("path", path, Field.Store.YES),
+                    new StringField("title", fileName, Field.Store.YES)
                 };
+
+                // if file type is excluded, only track file name and path so it can be searched for by name
+                if (!extensionsToExclude.Contains(extension))
+                {
+                    var contents = File.ReadAllText(file);
+                    doc.Add(new TextField("body", contents, Field.Store.NO));
+                }
+                
                 writer.AddDocument(doc);
             }
             catch(Exception ex)
             {
-                GeneralHelper.WriteToConsole($"Failed to index file [{file}]:\n{ex.Message}");
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            Application.Current.Dispatcher.Invoke(() =>
-            {
+            lock(DataContext)
                 DataContext.IndexFileCount++;
-            });
         }
         #endregion
 
@@ -170,44 +175,73 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="search">The text to search for. Supports file title and contents.</param>
         /// <param name="writeToConsole">Whether or not to write search status to console (errors still report).</param>
-        public Task<List<string>> SearchFiles(string search, bool writeToConsole = true)
+        /// <param name="selectedFileTypes">The selected file types to filter on</param>
+        /// <param name="enableLeadingWildCard">Whether to enable the leading wildcard. Disabling is faster, but will produce fewer and/or unexpected results</param>
+        /// <returns>The list of matches and the list of filtered matches</returns>
+        public Task<(List<string> Matches,List<string>FilteredMatches)> SearchFiles(string search, bool writeToConsole = true, System.Collections.IList selectedFileTypes = null, bool enableLeadingWildCard = true)
         {
             SearchText = search;
             return Task.Run(() => { 
                 var matches = new List<string>();
-                if(!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
+                var filteredMatches = new List<string>();
+                if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
                 {
-                    GeneralHelper.WriteToConsole($"No index available! Please unpack game assets and generate an index.\n");
-                    return matches;
+                    GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFound);
+                    return (Matches: matches, FilteredMatches: filteredMatches);
                 }
 
                 try
                 {
-                    using (Analyzer analyzer = new CustomAnalyzer())
                     using (IndexReader reader = DirectoryReader.Open(fSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
-                        MultiFieldQueryParser queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "title", "body" }, analyzer)
-                        {
-                            AllowLeadingWildcard = true
-                        };
-                        Query searchTermQuery = queryParser.Parse('*' + QueryParser.Escape(search.Trim()) + '*');
+                        BooleanQuery query = new BooleanQuery();
+                        var wildCardChar = enableLeadingWildCard ? "*" : string.Empty;
+                        var pathQuery = new WildcardQuery(new Term("path", wildCardChar + QueryParserBase.Escape(search.Trim()) + '*'));
+                        query.Add(pathQuery, Occur.SHOULD);
 
-                        BooleanQuery aggregateQuery = new BooleanQuery() {
-                            { searchTermQuery, Occur.MUST }
-                        };
+                        var searchTerms = search.Trim().ToLower().Split(' ');
+                        if(searchTerms.Length > 1)
+                        {
+                            var spanQueries = new List<SpanQuery>();
+                            for (int i = 0; i < searchTerms.Length; i++)
+                            {
+                                var term = searchTerms[i];
+                                if (i == 0)
+                                {
+                                    WildcardQuery wildcard = new WildcardQuery(new Term("body", wildCardChar + term));
+                                    SpanQuery spanWildcard = new SpanMultiTermQueryWrapper<WildcardQuery>(wildcard);
+                                    spanQueries.Add(spanWildcard);
+                                }
+                                else if (i == searchTerms.Length - 1)
+                                {
+                                    SpanQuery last = new SpanMultiTermQueryWrapper<PrefixQuery>(new PrefixQuery(new Term("body", term)));
+                                    spanQueries.Add(last);
+                                }
+                                else
+                                {
+                                    SpanQuery mid = new SpanTermQuery(new Term("body", term));
+                                    spanQueries.Add(mid);
+                                }
+                            }
+                            query.Add(new SpanNearQuery(spanQueries.ToArray(), 0, true), Occur.SHOULD);
+                        }
+                        else
+                        {
+                            query.Add(new WildcardQuery(new Term("body", wildCardChar + searchTerms[0] + '*')), Occur.SHOULD);
+                        }
 
                         if (reader.MaxDoc != 0)
                         {
                             var start = DateTime.Now;
                             if(writeToConsole)
-                                GeneralHelper.WriteToConsole("Search started.\n");
+                                GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchStarted);
 
                             // perform search
-                            TopDocs topDocs = searcher.Search(aggregateQuery, reader.MaxDoc);
+                            TopDocs topDocs = searcher.Search(query, reader.MaxDoc);
 
-                            if(writeToConsole)
-                                GeneralHelper.WriteToConsole($"Search returned {topDocs.ScoreDocs.Length} results in {TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds} ms\n");
+                            var filteredSomeResults = 0;
+                            var missingExtensions = new List<string>();
 
                             // display results
                             foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
@@ -216,23 +250,50 @@ namespace bg3_modders_multitool.Services
                                 int docId = scoreDoc.Doc;
 
                                 Document doc = searcher.Doc(docId);
+                                var path = doc.Get("path");
+                                var ext = Path.GetExtension(path).ToLower();
+                                ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
+                                if (selectedFileTypes != null && !selectedFileTypes.Contains(ext)) // TODO - add option to turn this off in config
+                                {
+                                    filteredSomeResults++;
+                                    if(!FileHelper.FileTypes.Contains(ext))
+                                    {
+                                        missingExtensions.Add(ext);
+                                    }
+                                    filteredMatches.Add(path);
+                                    continue;
+                                }
 
-                                matches.Add(doc.Get("path"));
+                                matches.Add(path);
+                            }
+
+                            if(missingExtensions.Count > 0)
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.MissingFileTypes, string.Join(",", missingExtensions.Distinct()));
+                            }
+
+                            if (writeToConsole)
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchReturned, matches.Count, TimeSpan.FromTicks(DateTime.Now.Subtract(start).Ticks).TotalMilliseconds);
+                                if(filteredSomeResults > 0)
+                                {
+                                    GeneralHelper.WriteToConsole(Properties.Resources.ResultsHaveBeenFiltered, filteredSomeResults);
+                                }
                             }
                         }
                         else
                         {
-                            GeneralHelper.WriteToConsole("No documents available. Please generate the index again.\n");
+                            GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchNoDocuments);
                         }
                     }
                 }
                 catch
                 {
                     // Checking if the index is corrupt is slower than just letting it fail
-                    GeneralHelper.WriteToConsole($"Available index is corrupt. Please rerun the indexer to create a new one.\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.IndexCorrupt);
                 }
 
-                return matches.OrderBy(m => m).ToList();
+                return (Matches: matches, FilteredMatches: filteredMatches);
             });
         }
         #endregion
@@ -242,61 +303,36 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="path">The file path to read from.</param>
         /// <returns>A list of file line and trimmed contents.</returns>
-        public Dictionary<int, string> GetFileContents(string path)
+        public Dictionary<long, string> GetFileContents(string path)
         {
-            var lines = new Dictionary<int, string>();
-            var lineCount = 1;
+            var lines = new ConcurrentDictionary<long, string>();
             if (File.Exists(path))
             {
                 var extension = Path.GetExtension(path);
                 var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    using (var stream = File.OpenText(path))
-                    using (System.IO.StreamReader r = stream)
+                    Parallel.ForEach(File.ReadLines(path), GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
                     {
-                        string line;
-                        var searchArray = SearchText.Split(' ');
-                        while ((line = r.ReadLine()) != null)
+                        var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
+                        if (index >= 0)
                         {
-                            var matched = false;
-                            var escapedLine = line;
-                            foreach(var searchText in searchArray)
-                            {
-                                if (line.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    if(!matched)
-                                    {
-                                        escapedLine = System.Security.SecurityElement.Escape(line);
-                                        matched = true;
-                                    }
-                                    for (int index = 0; ; index += searchText.Length)
-                                    {
-                                        index = line.IndexOf(searchText, index, StringComparison.OrdinalIgnoreCase);
-                                        if (index == -1)
-                                            break;
-                                        var text = System.Security.SecurityElement.Escape(line.Substring(index, searchText.Length));
-                                        escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
-                                    }
-                                }
-                            }
-                            if(matched)
-                            {
-                                lines.Add(lineCount, escapedLine);
-                            }
-                            lineCount++;
+                            var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
+                            var escapedLine = System.Security.SecurityElement.Escape(line);
+                            escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
+                            lines.TryAdd(lineNumber, escapedLine);
                         }
-                    }
+                    });
                 }
                 if (lines.Count == 0)
                 {
                     if(imageExtensions.Contains(extension))
                     {
-                        lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
+                        lines.TryAdd(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
                     }
                     else
                     {
-                        lines.Add(0, "No lines found; search returned filename only.");
+                        lines.TryAdd(0, Properties.Resources.NoLinesFound);
                     }
                 }
             }
@@ -304,10 +340,10 @@ namespace bg3_modders_multitool.Services
             {
                 if (lines.Count == 0)
                 {
-                    lines.Add(0, "File not found.");
+                    lines.TryAdd(0, Properties.Resources.FileNoExist);
                 }
             }
-            return lines;
+            return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }
 
@@ -319,9 +355,8 @@ namespace bg3_modders_multitool.Services
         protected override TokenStreamComponents CreateComponents(string fieldName, System.IO.TextReader reader)
         {
             Tokenizer tokenizer = new CustomTokenizer(LuceneVersion.LUCENE_48, reader);
-            TokenStream result = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
-            result = new StopFilter(LuceneVersion.LUCENE_48, result, EnglishAnalyzer.DefaultStopSet);
-            return new TokenStreamComponents(tokenizer, result);
+            TokenStream filter = new LowerCaseFilter(LuceneVersion.LUCENE_48, tokenizer);
+            return new TokenStreamComponents(tokenizer, filter);
         }
     }
 
@@ -330,19 +365,16 @@ namespace bg3_modders_multitool.Services
     /// </summary>
     public sealed class CustomTokenizer : CharTokenizer
     {
-        private readonly int[] allowedSpecialCharacters = {'-','(',')','"','_','&',';','=','.',':'};
-
         public CustomTokenizer(LuceneVersion matchVersion, System.IO.TextReader input) : base(matchVersion, input) { }
 
         /// <summary>
-        /// Split tokens on non alphanumeric characters (excluding '-','(',')','"','_','&',';','=','.',':')
+        /// Split tokens on all command characters, spaces, and extended character codes
         /// </summary>
         /// <param name="c">The character to compare</param>
         /// <returns>Whether the token should be split.</returns>
         protected override bool IsTokenChar(int c)
         {
-            return Character.IsLetterOrDigit(c) || allowedSpecialCharacters.Contains(c);
+            return c > 32 && c < 127;
         }
     }
-
 }

@@ -4,7 +4,9 @@
 namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.ViewModels;
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -14,40 +16,36 @@ namespace bg3_modders_multitool.Services
     {
         private List<int> Processes;
 
-        public bool Cancelled = true;
+        public bool Cancelled;
 
         /// <summary>
         /// Unpacks all the .pak files in the game data directory and places them in a folder next to divine.exe
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            GeneralHelper.WriteToConsole("Unpacking processes starting. This could take a while; please wait for all console processes to close on their own.\n");
             Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            var files = Directory.GetFiles(dataDir, "*.pak").Select(file => Path.GetFullPath(file)).ToList();
-            var localizationDir = $"{dataDir}\\Localization";
-            if (Directory.Exists(localizationDir))
-            {
-                files.AddRange(Directory.GetFiles(localizationDir, "*.pak").Select(file => Path.GetFullPath(file)).ToList());
-            }
+            var files = Directory.GetFiles(dataDir, "*.pak", System.IO.SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
             var pakSelection = new Views.PakSelection(files);
             pakSelection.ShowDialog();
             pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
             var paks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+            Cancelled = false;
             return Task.Run(() =>
             {
+                GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
                 return Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file =>
                 {
                     await RunProcessAsync(file, unpackPath);
                 }));
             }).ContinueWith(delegate
             {
-                GeneralHelper.WriteToConsole("All unpacking processes finished.\n");
                 if (!Cancelled)
                 {
-                    GeneralHelper.WriteToConsole("Unpacking complete!\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
             });
         }
@@ -107,7 +105,7 @@ namespace bg3_modders_multitool.Services
                         catch { }// only exception should be "Process with ID #### not found", safe to ignore
                     }
                 }
-                GeneralHelper.WriteToConsole("Unpacking processes cancelled successfully!\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.UnpackingCancelled);
             }
         }
 
@@ -119,36 +117,53 @@ namespace bg3_modders_multitool.Services
         {
             return Task.Run(() =>
             {
-                GeneralHelper.WriteToConsole($"Retrieving file list for decompression.\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
                 var fileList = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
-                GeneralHelper.WriteToConsole($"Retrived file list. Starting decompression; this could take awhile.\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
                 var convertFiles = new List<string>();
-                Parallel.ForEach(fileList, file => {
-                    var extension = Path.GetExtension(file);
-                    if (!string.IsNullOrEmpty(extension))
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+                Parallel.ForEach(fileList, GeneralHelper.ParallelOptions, file => {
+                    lock(file)
                     {
-                        if(extension == ".loca")
+                        var extension = Path.GetExtension(file);
+                        if (!string.IsNullOrEmpty(extension))
                         {
-                            var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
-                            if (Path.GetExtension(convertedFile) == ".xml")
+                            switch (extension)
                             {
-                                convertFiles.Add(convertedFile);
+                                case ".loca":
+                                    {
+                                        var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
+                                        if (Path.GetExtension(convertedFile) == ".xml")
+                                        {
+                                            convertFiles.Add(convertedFile);
+                                        }
+                                    }
+                                    break;
+                                case ".xml":
+                                    // no conversion necessary
+                                    break;
+                                default:
+                                    {
+                                        var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
+                                        if (Path.GetExtension(convertedFile) == ".lsx")
+                                        {
+                                            convertFiles.Add(convertedFile);
+                                        }
+                                    }
+                                    break;
                             }
-                        } 
-                        else
-                        {
-                            var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
-                            if (Path.GetExtension(convertedFile) == ".lsx")
-                            {
-                                convertFiles.Add(convertedFile);
-                            }
+
                         }
-                        
                     }
                 });
+                stopWatch.Stop();
+                TimeSpan ts = stopWatch.Elapsed;
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+
                 fileList.Clear();
-                GeneralHelper.WriteToConsole($"Decompression complete.\n");
+                GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
                 return convertFiles;
             });
         }

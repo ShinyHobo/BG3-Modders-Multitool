@@ -56,7 +56,13 @@ namespace bg3_modders_multitool.Models
         /// <returns>A new texture atlas.</returns>
         public static TextureAtlas Read(string path, string pak)
         {
-            var newTextureAtlas = new TextureAtlas { Path = path, Icons = new List<IconUV>()};
+            if (!FileHelper.TryParseXml(path))
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, path);
+                return null;
+            }
+
+            var newTextureAtlas = new TextureAtlas { Path = path, Icons = new List<IconUV>() };
             XmlDocument doc = new XmlDocument();
             doc.Load(path);
             var textureAtlasInfo = doc.SelectSingleNode("//region[@id='TextureAtlasInfo']");
@@ -65,7 +71,7 @@ namespace bg3_modders_multitool.Models
 
             var textureAtlasPath = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasPath']");
             newTextureAtlas.UUID = textureAtlasPath.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText;
-            newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}".Replace("/","\\");
+            newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}".Replace("/", "\\");
 
             var textureAtlasIconSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasIconSize']");
             newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
@@ -79,9 +85,10 @@ namespace bg3_modders_multitool.Models
             iconUVList = iconUVList.SelectSingleNode("node[@id='root']");
             iconUVList = iconUVList.SelectSingleNode("children");
 
-            foreach(XmlElement iconNode in iconUVList.SelectNodes("node[@id='IconUV']"))
+            foreach (XmlElement iconNode in iconUVList.SelectNodes("node[@id='IconUV']"))
             {
-                var icon = new IconUV {
+                var icon = new IconUV
+                {
                     MapKey = iconNode.SelectSingleNode("attribute[@id='MapKey']").Attributes["value"].InnerText,
                     U1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U1']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
                     U2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U2']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),

@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.Models
 {
     using bg3_modders_multitool.Enums;
     using bg3_modders_multitool.Models.GameObjectTypes;
+    using bg3_modders_multitool.Properties;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -181,7 +182,7 @@ namespace bg3_modders_multitool.Models
                         {
                             // This can usually be fixed by adding properties to the given property type
                             #if DEBUG
-                            Services.GeneralHelper.WriteToConsole($"Error parsing \"{value}\" for \"{property.PropertyType.Name}\"\n");
+                            Services.GeneralHelper.WriteToConsole(Resources.ErrorParsingProperty, value, property.PropertyType.Name);
                             #endif
                         }
                     }
@@ -256,7 +257,7 @@ namespace bg3_modders_multitool.Models
                     propertyValue = double.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 default:
-                    Services.GeneralHelper.WriteToConsole($"GameObject attribute type [{type}] not covered.\n");
+                    Services.GeneralHelper.WriteToConsole(Resources.GameObjectUncovered, type);
                     break;
             }
             return propertyValue;

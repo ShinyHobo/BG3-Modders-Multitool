@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Enums;
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
+    using bg3_modders_multitool.Properties;
     using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
@@ -43,31 +44,41 @@ namespace bg3_modders_multitool.Services
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
-            GeneralHelper.WriteToConsole($"Loading GameObjects...\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.OpeningGOE);
             var start = DateTime.Now;
             var rootTemplateTask = LoadRootTemplates();
 
             rootTemplateTask.ContinueWith(t => {
                 var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
-                GeneralHelper.WriteToConsole($"GameObjects failed to load. {timePassed} seconds passed.\n");
-                GeneralHelper.WriteToConsole($"{t.Exception.Message}\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedGOE, timePassed);
+                GeneralHelper.WriteToConsole(t.Exception.Message);
                 foreach(var ex in t.Exception.InnerExceptions)
                 {
-                    GeneralHelper.WriteToConsole($"{ex.Message}\n");
-                    GeneralHelper.WriteToConsole($"{ex.StackTrace}\n");
+                    GeneralHelper.WriteToConsole(ex.Message);
+                    GeneralHelper.WriteToConsole(ex.StackTrace);
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
 
             rootTemplateTask.ContinueWith(delegate {
                 if(Loaded)
                 {
-                    var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
-                    GeneralHelper.WriteToConsole($"GameObjects loaded in {timePassed} seconds.\n");
-                    gameObjectViewModel.Loaded = true;
+                    if(GameObjects.Count == 0)
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.NoGameObjectsFound);
+                        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                            gameObjectViewModel.View.Close();
+                        });
+                    }
+                    else
+                    {
+                        var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
+                        GeneralHelper.WriteToConsole(Properties.Resources.LoadedGOE, timePassed);
+                        gameObjectViewModel.Loaded = true;
+                    }
                 }
                 else
                 {
-                    GeneralHelper.WriteToConsole($"GameObjects loading cancelled.\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.CancelledGOE);
                 }
             }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
@@ -96,7 +107,7 @@ namespace bg3_modders_multitool.Services
                 // check if Models directory exists
                 if(!Directory.Exists($"{Directory.GetCurrentDirectory()}\\UnpackedData\\Models"))
                 {
-                    GeneralHelper.WriteToConsole($"Failed to find Models directory. Please unpack Models.pak to view models.\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
                 }
 
                 ReadTranslations();
@@ -110,7 +121,7 @@ namespace bg3_modders_multitool.Services
                 }
                 if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
                 {
-                    GeneralHelper.WriteToConsole($"No valid texture atlases found. Unpack Icons.pak to generate icons. Skipping...\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindIconsPak);
                 }
                 SortRootTemplate();
                 Loaded = true;
@@ -141,8 +152,14 @@ namespace bg3_modders_multitool.Services
         private bool ReadTranslations()
         {
             TranslationLookup = new Dictionary<string, Translation>();
-            var translationFile = FileHelper.GetPath(@"English\Localization\English\english.loca");
-            var translationFileConverted = FileHelper.GetPath(@"English\Localization\English\english.xml");
+
+            var selectedLanguage = ViewModels.MainWindow.GetSelectedLanguage();
+            var selectedLanguagePath = selectedLanguage.LocaPath;
+            var translationFile = FileHelper.GetPath(selectedLanguagePath);
+
+            var xmlPath = Path.ChangeExtension(selectedLanguagePath, ".xml");
+            var translationFileConverted = FileHelper.GetPath(xmlPath);
+
             if (!File.Exists(translationFileConverted) && File.Exists(translationFile))
             {
                 using (var fs = File.Open(translationFile, System.IO.FileMode.Open))
@@ -154,22 +171,31 @@ namespace bg3_modders_multitool.Services
 
             if (File.Exists(translationFileConverted))
             {
-                using (XmlReader reader = XmlReader.Create(translationFileConverted))
+                if (!FileHelper.TryParseXml(translationFileConverted))
                 {
-                    while (reader.Read())
+                    GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, translationFileConverted);
+                }
+                else
+                {
+                    using (XmlReader reader = XmlReader.Create(translationFileConverted))
                     {
-                        if (reader.Name == "content")
+                        while (reader.Read())
                         {
-                            var id = reader.GetAttribute("contentuid");
-                            var text = reader.ReadInnerXml();
-                            Translations.Add(new Translation { ContentUid = id, Value = text });
+                            if (reader.Name == "content")
+                            {
+                                var id = reader.GetAttribute("contentuid");
+                                var text = reader.ReadInnerXml();
+                                Translations.Add(new Translation { ContentUid = id, Value = text });
+                            }
                         }
+                        TranslationLookup = Translations.ToDictionary(go => go.ContentUid);
+                        GeneralHelper.WriteToConsole(Properties.Resources.TranslationsLoaded);
+                        return true;
                     }
-                    TranslationLookup = Translations.ToDictionary(go => go.ContentUid);
-                    return true;
                 }
             }
-            GeneralHelper.WriteToConsole($"Failed to load english.xml. Please unpack English.pak to generate translations. Skipping...\n");
+            var locaPathSplit = selectedLanguage.LocaPath.Split('\\');
+            GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindTranslationPak, locaPathSplit.Last().Split('.').First()+".xml", locaPathSplit.First());
             return false;
         }
 
@@ -187,22 +213,31 @@ namespace bg3_modders_multitool.Services
                 return true;
             }
 
-            GeneralHelper.WriteToConsole($"Reading GameObjects from root templates; this will take a while...\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.ReadingGameObjects);
             var rootTemplates = GetFileList("GameObjects");
             var typeBag = new ConcurrentBag<string>();
             #if DEBUG
             var idBag = new ConcurrentBag<string>();
             var classBag = new ConcurrentBag<Tuple<string, string>>();
             #endif
-            Parallel.ForEach(rootTemplates, rootTemplate =>
+            Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
             {
+                rootTemplate = FileHelper.GetPath(rootTemplate);
                 if (File.Exists(rootTemplate))
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
                     if(File.Exists(rootTemplatePath))
                     {
+                        var fileLocation = rootTemplatePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+                        if (!FileHelper.TryParseXml(rootTemplatePath))
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, fileLocation);
+                            return;
+                        }
+
                         var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
                         var stream = File.OpenText(rootTemplatePath);
+
                         using (var fileStream = stream)
                         using (var reader = new XmlTextReader(fileStream))
                         {
@@ -212,7 +247,7 @@ namespace bg3_modders_multitool.Services
                                 if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.GetAttribute("id") == "GameObjects")
                                 {
                                     var xml = (XElement)XNode.ReadFrom(reader);
-                                    var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty) };
+                                    var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileLocation };
                                     var attributes = xml.Elements("attribute");
 
                                     foreach (XElement attribute in attributes)
@@ -224,11 +259,11 @@ namespace bg3_modders_multitool.Services
                                         if (int.TryParse(type, out int typeInt))
                                             type = GeneralHelper.LarianTypeEnumConvert(type);
 
-#if DEBUG
+                                        #if DEBUG
                                         typeBag.Add(type);
                                         idBag.Add(id);
                                         classBag.Add(new Tuple<string, string>(id, type));
-#endif
+                                        #endif
                                         if (string.IsNullOrEmpty(handle))
                                         {
                                             gameObject.LoadProperty(id, type, value);
@@ -236,8 +271,11 @@ namespace bg3_modders_multitool.Services
                                         else
                                         {
                                             gameObject.LoadProperty($"{id}Handle", type, value);
-                                            var translationText = TranslationLookup.FirstOrDefault(tl => tl.Key.Equals(value)).Value?.Value;
-                                            gameObject.LoadProperty(id, type, translationText);
+                                            if(value != null && TranslationLookup.ContainsKey(value))
+                                            {
+                                                var translationText = TranslationLookup[value].Value;
+                                                gameObject.LoadProperty(id, type, translationText);
+                                            }
                                         }
                                     }
 
@@ -266,6 +304,13 @@ namespace bg3_modders_multitool.Services
             FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
             GeneralHelper.ClassBuilder(classBag.ToList().Distinct().ToList());
             #endif
+
+            if(GameObjectBag.Count == 0)
+            {
+                return false;
+            }
+
+            GeneralHelper.WriteToConsole(Properties.Resources.GameObjectsLoaded);
             return true;
         }
 
@@ -277,17 +322,23 @@ namespace bg3_modders_multitool.Services
         {
             if (GameObjectsCached)
                 return true;
-            GeneralHelper.WriteToConsole($"Sorting GameObjects...\n");
+            if (GameObjectBag.Count == 0)
+                return false;
+            GeneralHelper.WriteToConsole(Properties.Resources.SortingGameObjects);
             GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name).ToList();
             var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
+            var orderedChildren = children.AsParallel().WithDegreeOfParallelism(GeneralHelper.ParallelOptions.MaxDegreeOfParallelism).OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name);
             var lookup = GameObjects.Where(go => !string.IsNullOrEmpty(go.MapKey)).GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
-            Parallel.ForEach(children.AsParallel().OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name), gameObject =>
+            Parallel.ForEach(orderedChildren, GeneralHelper.ParallelOptions, gameObject =>
             {
-                var goChildren = lookup.FirstOrDefault(l => l.Key == gameObject.ParentTemplateId).Value?.Children;
-                if(goChildren != null)
+                if(lookup.ContainsKey(gameObject.ParentTemplateId))
                 {
-                    lock (goChildren)
-                        goChildren.Add(gameObject);
+                    var goChildren = lookup[gameObject.ParentTemplateId].Children;
+                    if (goChildren != null)
+                    {
+                        lock (goChildren)
+                            goChildren.Add(gameObject);
+                    }
                 }
             });
             GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
@@ -310,6 +361,12 @@ namespace bg3_modders_multitool.Services
             var raceFile = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Races\\Races.lsx");
             if (File.Exists(raceFile))
             {
+                if (!FileHelper.TryParseXml(raceFile))
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, raceFile);
+                    return false;
+                }
+
                 using (XmlReader reader = XmlReader.Create(raceFile))
                 {
                     Race race = null;
@@ -370,7 +427,7 @@ namespace bg3_modders_multitool.Services
                 }
                 return true;
             }
-            GeneralHelper.WriteToConsole($"Failed to load Races.lsx for {pak}.pak.\n");
+            GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadRaces, pak);
             return false;
         }
 
@@ -428,23 +485,30 @@ namespace bg3_modders_multitool.Services
             var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
             if (File.Exists(@"\\?\" + metaLoc))
             {
-                var meta = DragAndDropHelper.ReadMeta(metaLoc);
-                var characterIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
-                if (File.Exists(@"\\?\" + characterIconAtlas))
+                try
                 {
-                    TextureAtlases.Add(TextureAtlas.Read(characterIconAtlas, pak));
+                    var meta = DragAndDropHelper.ReadMeta(metaLoc);
+                    var characterIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
+                    if (File.Exists(@"\\?\" + characterIconAtlas))
+                    {
+                        TextureAtlases.Add(TextureAtlas.Read(characterIconAtlas, pak));
+                    }
+                    var objectIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items.lsx");
+                    if (File.Exists(@"\\?\" + objectIconAtlas))
+                    {
+                        TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas, pak));
+                    }
+                    var objectIconAtlas2 = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items_2.lsx");
+                    if (File.Exists(@"\\?\" + objectIconAtlas2))
+                    {
+                        TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas2, pak));
+                    }
+                    return true;
                 }
-                var objectIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items.lsx");
-                if (File.Exists(@"\\?\" + objectIconAtlas))
+                catch
                 {
-                    TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas, pak));
+                    GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, metaLoc);
                 }
-                var objectIconAtlas2 = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items_2.lsx");
-                if (File.Exists(@"\\?\" + objectIconAtlas2))
-                {
-                    TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas2, pak));
-                }
-                return true;
             }
             return false;
         }
@@ -471,6 +535,8 @@ namespace bg3_modders_multitool.Services
                 return true;
             }
 
+            GeneralHelper.WriteToConsole(Resources.LoadingBankFiles);
+
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
             var characterVisualBanks = new ConcurrentDictionary<string, string>();
             var visualBanks = new ConcurrentDictionary<string, string>();
@@ -478,16 +544,33 @@ namespace bg3_modders_multitool.Services
             var materialBanks = new ConcurrentDictionary<string, string>();
             var textureBanks = new ConcurrentDictionary<string, string>();
             var visualBankFiles = GetFileList("VisualBank");
+            if(visualBankFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.FoundVisualBanks);
             var materialBankFiles = GetFileList("MaterialBank");
+            if(materialBankFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.FoundMaterialBanks);
             var textureBankFiles = GetFileList("TextureBank");
+            if(textureBankFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.FoundTextureBanks);
             visualBankFiles.AddRange(materialBankFiles);
             visualBankFiles.AddRange(textureBankFiles);
             visualBankFiles = visualBankFiles.Distinct().ToList();
-            Parallel.ForEach(visualBankFiles, visualBankFile => {
+            if(visualBankFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
+            Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile => {
+                visualBankFile = FileHelper.GetPath(visualBankFile);
                 if (File.Exists(visualBankFile))
                 {
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
                     var filePath = visualBankFilePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
+
+                    if (!FileHelper.TryParseXml(filePath))
+                    {
+                        var filePath2 = visualBankFilePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+                        GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, filePath2);
+                        return;
+                    }
+
                     var stream = File.OpenText(visualBankFilePath);
                     using (var fileStream = stream)
                     using (var reader = new XmlTextReader(fileStream))
@@ -563,7 +646,7 @@ namespace bg3_modders_multitool.Services
                             }
                             catch(Exception ex)
                             {
-                                GeneralHelper.WriteToConsole($"Failed to load {filePath}.\n");
+                                GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, filePath, ex.Message);
                                 break;
                             }
                         }
@@ -595,9 +678,40 @@ namespace bg3_modders_multitool.Services
         {
             var rtList = new List<string>();
             IndexHelper.SearchFiles(searchTerm, false).ContinueWith(results => {
-                rtList.AddRange(results.Result.Where(r => r.EndsWith(".lsf")));
+                rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsf")));
             }).Wait();
             return rtList;
+        }
+
+        /// <summary>
+        /// Deletes the GameObject cache, if it exists
+        /// </summary>
+        public static void ClearGameObjectCache()
+        {
+            var cacheDirectory = "Cache";
+            try
+            {
+                if (Directory.Exists(cacheDirectory))
+                {
+                    // check if cache exists
+                    var result = System.Windows.Forms.MessageBox.Show(Properties.Resources.GOEDeleteQuestion, 
+                        Properties.Resources.GOEClearCacheButton, System.Windows.Forms.MessageBoxButtons.OKCancel);
+
+                    if (result.Equals(System.Windows.Forms.DialogResult.OK))
+                    {
+                        Directory.Delete(cacheDirectory);
+                        GeneralHelper.WriteToConsole(Properties.Resources.GOECacheCleared);
+                    }
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.GOENoCache);
+                }
+            }
+            catch
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.GOECacheClearFailed);
+            }
         }
         #endregion
     }

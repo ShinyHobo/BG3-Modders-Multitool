@@ -3,35 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:bg3_modders_multitool.Views"
+        xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
-        Title="Configuration v0.9.2" Height="260" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner">
+        Height="260" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Grid>
         <Grid Margin="10,10,10,0">
-            <Label x:Name="divineLabel" Content="LSLib divine.exe location (1.18.1+ Required)" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="divineLabel" Content="{x:Static p:Resources.LSLibLocation}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="divineLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding DivineLocation, Mode=TwoWay}" IsReadOnly="True"/>
-            <Button x:Name="divineSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23" Cursor="Hand"/>
+            <Button x:Name="divineSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Click="DivineSelect_Click" Height="23" Cursor="Hand"/>
         </Grid>
         <Grid Margin="10,63,10,0">
-            <Label x:Name="bg3exeLabel" Content="bg3.exe location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="bg3exeLabel" Content="{x:Static p:Resources.BG3ExeLabel}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding Bg3ExeLocation, Mode=TwoWay}" IsReadOnly="True"/>
-            <Button x:Name="bg3exeSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click" Cursor="Hand"/>
+            <Button x:Name="bg3exeSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click" Cursor="Hand"/>
         </Grid>
         <Grid Margin="10,116,10,0">
-            <Label x:Name="gameDocumentPathLabel" Content="Game's Documents folder location" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="gameDocumentPathLabel" Content="{x:Static p:Resources.GameDocsLocationLabel}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="gameDocumentPath" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding GameDocumentsLocation, Mode=TwoWay}" IsReadOnly="True" />
-            <Button x:Name="gameDocumentPathSelect" Content="Select" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GameDocumentsLocationSelect_Click" Cursor="Hand">
+            <Button x:Name="gameDocumentPathSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GameDocumentsLocationSelect_Click" Cursor="Hand">
                 <Button.ToolTip>
-                    <ToolTip>
-                        Please select you game's Documents folder. (e.g: ...\AppData\Local\Larian Studios\Baldur's Gate 3)
-                    </ToolTip>
+                    <ToolTip Content="{x:Static p:Resources.GameDocsLocationTooltip}"/>
                 </Button.ToolTip>
             </Button>
         </Grid>
-        <Grid Margin="10,173,275,10">
-            <Label x:Name="quickLaunchToggle" Content="Quick Launch" HorizontalAlignment="Left" Margin="0,-2,0,0" VerticalAlignment="Top"/>
-            <CheckBox Margin="81,3,28,-15" ToolTip="Loads game directly into last save. Skips splashscreen at loadup." Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"
+        <Grid Margin="10,173,0,10">
+            <Label x:Name="quickLaunchToggle" Content="{x:Static p:Resources.QuickLaunchLabel}" HorizontalAlignment="Left" Margin="0,-2,0,0" VerticalAlignment="Top"/>
+            <CheckBox Margin="81,4,300,0" ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}"
                           IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" RenderTransformOrigin="0.841,0.773" />
+            <Label x:Name="unlockThreadsToggle" Content="{x:Static p:Resources.UnlockThreadsLabel}" HorizontalAlignment="Left" Margin="0,14,0,0" VerticalAlignment="Top"/>
+            <CheckBox Margin="86,20,290,0" ToolTip="{x:Static p:Resources.UnlockThreadsToolTip}" Cursor="Hand"
+              IsChecked="{Binding ThreadsUnlocked}" Checked="UnlockThreads_Checked" Unchecked="UnlockThreads_Unchecked" RenderTransformOrigin="0.841,0.773" />
+            <Label Content="{x:Static p:Resources.LanguageSelectionLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="195,-3,0,-15"/>
+            <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Margin="200,20,13,-5" Cursor="Hand" 
+                      SelectionChanged="Language_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
     </Grid>
 </Window>

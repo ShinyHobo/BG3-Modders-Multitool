@@ -5,10 +5,14 @@ namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
+    using bg3_modders_multitool.Views;
+    using MdXaml;
     using System;
+    using System.Collections.Generic;
     using System.IO;
-    using System.Runtime.InteropServices;
+    using System.Linq;
     using System.Windows;
+    using System.Windows.Documents;
 
     public class MainWindow : BaseViewModel
     {
@@ -20,6 +24,8 @@ namespace bg3_modders_multitool.ViewModels
             Unpacker = new PakUnpackHelper();
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
+            ThreadsUnlocked = Properties.Settings.Default.unlockThreads;
+            AutoUpdater = new AutoUpdaterService(this);
         }
 
         #region File Selection Methods
@@ -96,7 +102,7 @@ namespace bg3_modders_multitool.ViewModels
         /// <param name="isHandle">Whether the guid is a TranslatedString handle.</param>
         public void CopyGuid(bool isHandle)
         {
-            var type = isHandle ? "TranslatedString handle" : "v4 UUID";
+            var type = isHandle ? Properties.Resources.TranslatedStringHandleLabel : Properties.Resources.v4UUIDLabel;
             if (GuidText != null)
             {
                 // https://stackoverflow.com/questions/12769264/openclipboard-failed-when-copy-pasting-data-from-wpf-datagrid/17678542#17678542
@@ -104,11 +110,11 @@ namespace bg3_modders_multitool.ViewModels
                 try
                 {
                     System.Windows.Forms.Clipboard.SetDataObject(GuidText, false, 10, 10);
-                    WriteToConsole($"{type} [{GuidText}] copied to clipboard!");
+                    GeneralHelper.WriteToConsole(Properties.Resources.GUIDCopied, type, GuidText);
                 } 
                 catch (Exception ex)
                 {
-                    WriteToConsole($"Failed to copy to clipboard ({GeneralHelper.ProcessHoldingClipboard().ProcessName} blocking):\n{ex.Message}\n{ex.StackTrace}");
+                    GeneralHelper.WriteToConsole(Properties.Resources.GUIDCopyFailed, GeneralHelper.ProcessHoldingClipboard().ProcessName, ex.Message, ex.StackTrace);
                 }
             }
         }
@@ -131,6 +137,18 @@ namespace bg3_modders_multitool.ViewModels
         public DragAndDropBox DragAndDropBox { get; set; }
 
         public SearchResults SearchResults { get; set; }
+
+        public AutoUpdaterService AutoUpdater { get; set; }
+
+        private Visibility _updatesVisible = Visibility.Hidden;
+        public Visibility UpdateVisible
+        {
+            get { return _updatesVisible; }
+            set { 
+                _updatesVisible = value; 
+                OnNotifyPropertyChanged(); 
+            }
+        }
 
         private string _consoleOutput;
 
@@ -194,12 +212,12 @@ namespace bg3_modders_multitool.ViewModels
                 // Validate the mods folder path.
                 ModsFolderLoaded = Directory.Exists(PathHelper.ModsFolderPath);
                 if(!ModsFolderLoaded)
-                    WriteToConsole($"Error: Unable to find the Mods folder at {PathHelper.ModsFolderPath}. Please check your settings.");
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindModsFolder, PathHelper.ModsFolderPath);
 
                 // Validate the player profiles folder path.
                 ProfilesFolderLoaded = Directory.Exists(PathHelper.PlayerProfilesFolderPath);
                 if (!ProfilesFolderLoaded)
-                    WriteToConsole($"Error: Unable to find the PlayerProfiles folder at {PathHelper.PlayerProfilesFolderPath}. Please check your settings.");
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindPlayerProfilesFolder, PathHelper.PlayerProfilesFolderPath);
 
                 ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();
@@ -252,6 +270,18 @@ namespace bg3_modders_multitool.ViewModels
             get { return _quickLaunch; }
             set {
                 _quickLaunch = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _threadsUnlocked;
+
+        public bool ThreadsUnlocked
+        {
+            get { return _threadsUnlocked; }
+            set
+            {
+                _threadsUnlocked = value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -334,6 +364,103 @@ namespace bg3_modders_multitool.ViewModels
             return UnpackAllowed && LaunchGameAllowed && Directory.Exists(PathHelper.ModsFolderPath) && Directory.Exists(PathHelper.PlayerProfilesFolderPath) 
                 ? Visibility.Hidden 
                 : Visibility.Visible;
+        }
+        #endregion
+
+        #region Language Selection
+        public string SelectedLanguage { get; set; }
+
+        /// <summary>
+        /// The list of available languages and their I18N designations
+        /// </summary>
+        public static List<Language> AvailableLanguages = new List<Language>
+            {
+                new Language(Properties.Resources.LangEnglish, "en-US", "English\\Localization\\English\\english.loca"),
+                new Language(Properties.Resources.LangChinese, "zh-CN", "Chinese\\Localization\\Chinese\\chinese.loca")
+            };
+
+        /// <summary>
+        /// Reloads the application with the selected language code
+        /// </summary>
+        /// <param name="language"></param>
+        public void ReloadLanguage(string language)
+        {
+            var selectedLanguage = GetSelectedLanguage().Code;
+            if (selectedLanguage != language)
+            {
+                SelectedLanguage = language;
+                App.Current.MainWindow.Close();
+            }
+        }
+
+        /// <summary>
+        /// Gets the selected language, defaults to English
+        /// </summary>
+        /// <returns>The language</returns>
+        public static Language GetSelectedLanguage()
+        {
+            var selectedLanguage = Settings.Default.selectedLanguage;
+            var languageCode = string.IsNullOrEmpty(selectedLanguage) ? "en-US" : selectedLanguage;
+            return AvailableLanguages.First(l => l.Code == languageCode);
+        }
+
+        #region Applciation Update
+        /// <summary>
+        /// Checks for updates against GitHub
+        /// </summary>
+        internal async void CheckForUpdates()
+        {
+            GeneralHelper.WriteToConsole(Properties.Resources.CheckingForUpdates);
+            await AutoUpdater.CheckForVersionUpdate();
+            if (AutoUpdater.UpdateAvailable)
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound, AutoUpdater.Releases.Count);
+                var notes = string.Empty;
+                foreach (var release in AutoUpdater.Releases)
+                {
+                    notes += $"## {release.Version} - {release.Title} \r\n\r\n=== \r\n> ";
+                    notes += release.Notes.Replace("- ","* ").Replace("\r\n", "\r\n> ");
+                    notes += "\r\n=== \r\n";
+                }
+                var updateView = new Update(notes);
+                var response = updateView.ShowDialog();
+                if(response == true)
+                {
+                    AutoUpdater.Update();
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.UpdateCanceled);
+                }
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.NoUpdatesFound);
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Simple language model
+        /// </summary>
+        public class Language
+        {
+            /// <summary>
+            /// The language model constructor
+            /// </summary>
+            /// <param name="name">The name of the language</param>
+            /// <param name="code">The I18N code</param>
+            /// <param name="locaPath">The location of the translation file</param>
+            public Language(string name, string code, string locaPath)
+            {
+                Name = name;
+                Code = code;
+                LocaPath = locaPath;
+            }
+
+            public string Name { get; set; }
+            public string Code { get; set; }
+            public string LocaPath { get; set; }
         }
 
         #endregion

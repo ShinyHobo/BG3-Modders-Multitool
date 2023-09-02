@@ -10,6 +10,7 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Models.StatStructures;
     using bg3_modders_multitool.Services;
     using HelixToolkit.Wpf.SharpDX;
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -19,8 +20,9 @@ namespace bg3_modders_multitool.ViewModels
 
     public class GameObjectViewModel : BaseViewModel
     {
-        public GameObjectViewModel()
+        public GameObjectViewModel(Views.GameObjectWindow gameObjectWindow)
         {
+            View = gameObjectWindow;
             RootTemplateHelper = new RootTemplateHelper(this);
 
             EffectsManager = new DefaultEffectsManager();
@@ -172,71 +174,112 @@ namespace bg3_modders_multitool.ViewModels
             get { return _info; }
             set {
                 _info = value;
-                var autoGenGameObject = new AutoGenGameObject(value.FileLocation, value.MapKey).Data;
+                var autoGenGameObject = new AutoGenGameObject(FileHelper.GetPath(value.FileLocation), value.MapKey).Data;
                 GameObjectAttributes = autoGenGameObject?.Attributes;
                 GameObjectChildren = autoGenGameObject?.Children;
                 var hasModel = GameObjectAttributes?.Any(goa => goa.Name == "CharacterVisualResourceID" || goa.Name == "VisualTemplate");
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
                 Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                LoadModels();
+                OnNotifyPropertyChanged();
+            }
+        }
 
-                // reset viewport items
-                var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
-                foreach (var model in modelsToRemove)
+        /// <summary>
+        /// Loads the models for the given GameObject info and displays them in the viewport
+        /// </summary>
+        private void LoadModels()
+        {
+            // reset viewport items, doesn't delete lights
+            var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
+            foreach (var model in modelsToRemove)
+            {
+                ViewPort.Items.Remove(model);
+            }
+
+            Task.Run(() => {
+                try
                 {
-                    ViewPort.Items.Remove(model);
-                }
-
-                Task.Run(() => {
                     var type = (FixedString)GameObjectAttributes?.Single(goa => goa.Name == "Type").Value;
-                    var characterVisualResourceId = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value ?? value.CharacterVisualResourceID;
-                    var visualTemplate = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value ?? value.VisualTemplate;
+                    var characterVisualResourceId = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "CharacterVisualResourceID")?.Value ?? Info.CharacterVisualResourceID;
+                    var visualTemplate = (FixedString)GameObjectAttributes?.SingleOrDefault(goa => goa.Name == "VisualTemplate")?.Value ?? Info.VisualTemplate;
                     // this should dynamically create meshes based on the number of objects, assemble them based on transforms
+
                     var slots = RenderedModelHelper.GetMeshes(type, characterVisualResourceId ?? visualTemplate, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals,
                         RootTemplateHelper.MaterialBanks, RootTemplateHelper.TextureBanks);
                     MeshFiles = slots.OrderBy(slot => slot.File).ToList();
-
-                    Parallel.ForEach(slots, lodLevels =>
+                    try
                     {
-                        // TODO - need lod slider, selecting highest lod first (mesh-node, then Lod-#) TODO - Order lod levels
-                        var lod = lodLevels.MeshList.First(m => m.Key == "Mesh-node").Value;
-                        Parallel.ForEach(lod, model =>
+                        Parallel.ForEach(slots, GeneralHelper.ParallelOptions, lodLevels =>
                         {
-                            Application.Current.Dispatcher.Invoke(() =>
+                            try
                             {
-                                // items are traditional PBR
-                                // albedo from BM
-                                // MRAO from PM
-                                // normals from NM
-                                // for characters
-                                // for skinned parts, the BM is unused for characters
-                                // non - skin albedo from BM, hemoglobin / melanin / veins / yellowing HMVY, cavity / lips / eyes / ambient occlusion from CLEA
-                                // skin removal, melanin removal, detail normal removal from CancelMSK
-                                // blood mask, dirt mask, bruises mask from SkinSharedMSK
-                                // lips makeup roughness, head occlusion from RoughnessMSK
-                                var isSkin = (model.SlotType == null || model.SlotType == "Head") && type == "character";
-                                var MRAOMap = GeneralHelper.DDSToTextureStream(model.MRAOMap);
-                                var map = new PBRMaterial
+                                if (lodLevels.MeshList.ContainsKey("Mesh-node"))
                                 {
-                                    AlbedoMap = GeneralHelper.DDSToTextureStream(model.BaseMap),
-                                    //RenderAlbedoMap = !isSkin, //// non-skin
-                                    NormalMap = GeneralHelper.DDSToTextureStream(model.NormalMap),
-                                    RenderNormalMap = !isSkin,
-                                    RoughnessMetallicMap = MRAOMap,
-                                    //AmbientOcculsionMap = MRAOMap,
-                                    //GeneralHelper.DDSToTextureStream(model.HMVYMap),
-                                    //GeneralHelper.DDSToTextureStream(model.CLEAMap)
-                                };
-                                var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform, FrontCounterClockwise = false };
-                                ViewPort.Items.Add(mesh);
-                            });
+                                    // TODO - need lod slider, selecting highest lod first (mesh-node, then Lod-#) TODO - Order lod levels
+                                    var lod = lodLevels.MeshList["Mesh-node"];
+                                    Parallel.ForEach(lod, GeneralHelper.ParallelOptions, model =>
+                                    {
+                                        Application.Current.Dispatcher.Invoke(() =>
+                                        {
+                                            try
+                                            {
+                                                // items are traditional PBR
+                                                // albedo from BM
+                                                // MRAO from PM
+                                                // normals from NM
+                                                // for characters
+                                                // for skinned parts, the BM is unused for characters
+                                                // non - skin albedo from BM, hemoglobin / melanin / veins / yellowing HMVY, cavity / lips / eyes / ambient occlusion from CLEA
+                                                // skin removal, melanin removal, detail normal removal from CancelMSK
+                                                // blood mask, dirt mask, bruises mask from SkinSharedMSK
+                                                // lips makeup roughness, head occlusion from RoughnessMSK
+                                                var isSkin = (model.SlotType == null || model.SlotType == "Head") && type == "character";
+                                                var MRAOMap = GeneralHelper.DDSToTextureStream(model.MRAOMap);
+                                                var map = new PBRMaterial
+                                                {
+                                                    AlbedoMap = GeneralHelper.DDSToTextureStream(model.BaseMap),
+                                                    //RenderAlbedoMap = !isSkin, //// non-skin
+                                                    NormalMap = GeneralHelper.DDSToTextureStream(model.NormalMap),
+                                                    RenderNormalMap = !isSkin,
+                                                    RoughnessMetallicMap = MRAOMap,
+                                                    //AmbientOcculsionMap = MRAOMap,
+                                                    //GeneralHelper.DDSToTextureStream(model.HMVYMap),
+                                                    //GeneralHelper.DDSToTextureStream(model.CLEAMap)
+                                                };
+                                                var mesh = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform, FrontCounterClockwise = false };
+                                                ViewPort.Items.Add(mesh);
+                                            }
+                                            catch (System.Exception ex)
+                                            {
+                                                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                            catch (System.Exception ex)
+                            {
+                                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                            }
                         });
-                    });
+                    }
+                    catch (System.Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                    }
+                } 
+                catch (Exception ex)
+                {
+                    GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                }
 
-                    ModelLoading = Visibility.Hidden; 
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ViewPort.Items.Add(new MeshGeometryModel3D());
+                    ModelLoading = Visibility.Hidden;
                 });
-
-                OnNotifyPropertyChanged();
-            }
+            });
         }
 
         private List<GameObjectAttribute> _gameObjectAttributes;
@@ -300,6 +343,7 @@ namespace bg3_modders_multitool.ViewModels
 
         public string SelectedKey { get; set; }
         public System.Windows.Controls.Button SelectedButton { get; set; }
+        public Views.GameObjectWindow View { get; internal set; }
         #endregion
     }
 }

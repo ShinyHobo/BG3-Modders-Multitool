@@ -6,17 +6,30 @@ namespace bg3_modders_multitool.Services
     using Alphaleonis.Win32.Filesystem;
     using BrendanGrant.Helpers.FileAssociation;
     using LSLib.LS;
+    using LSLib.LS.Enums;
     using Newtonsoft.Json;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Text;
     using System.Threading.Tasks;
 
     public static class FileHelper
     {
         public static string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
         public static string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
+
+        /// <summary>
+        /// List of all known file types used
+        /// </summary>
+        public static string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".dae",".dat",
+            ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
+            ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsfx",".lsj",".lsx",".metal",".ogg",".osi",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
+            ".txt",".wav",".wem",".xaml",".xml", Properties.Resources.Extensionless
+        };
 
         /// <summary>
         /// Converts the given file to .lsx type resource in-place
@@ -32,15 +45,15 @@ namespace bg3_modders_multitool.Services
             }
 
             var originalExtension = Path.GetExtension(file);
-            var newFile = file.Replace(originalExtension, $".{extension}");
-            var isConvertableToLsx = true;
-            var isConvertableToXml = originalExtension == ".loca";
+            var newFile = string.IsNullOrEmpty(originalExtension) ? $"{file}.{extension}" : file.Replace(originalExtension, $".{extension}");
+            var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
+            var isConvertableToXml = originalExtension.Contains("loca");
+            var isConvertableToLoca = originalExtension.Contains("xml");
             string path;
             if (string.IsNullOrEmpty(newPath))
             {
                 path = GetPath(file);
                 newPath = GetPath(newFile);
-                isConvertableToLsx = CanConvertToLsx(file);
             }
             else
             {
@@ -54,32 +67,20 @@ namespace bg3_modders_multitool.Services
                     File.Move(path, renamedPath);
                     path = renamedPath;
                 }
-                var divine = $" -g \"bg3\" --action \"convert-resource\" --output-format \"{extension}\" --source \"{path}\" --destination \"{newPath}\" -l \"all\"";
-                var process = new Process();
-                var startInfo = new ProcessStartInfo
+                var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                try
                 {
-                    FileName = Properties.Settings.Default.divineExe,
-                    Arguments = divine,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
-                var output = process.StandardOutput.ReadToEnd();
-                var error = process.StandardError.ReadToEnd();
-                if (string.IsNullOrEmpty(newPath))
-                {
-                    GeneralHelper.WriteToConsole(output);
-                    GeneralHelper.WriteToConsole(error);
+                    LSLib.LS.Resource resource = ResourceUtils.LoadResource(path);
+                    ResourceUtils.SaveResource(resource, newPath, conversionParams);
                 }
-
-                if(output.Contains("Failed to convert resource"))
+                catch (Exception ex)
                 {
-                    GeneralHelper.WriteToConsole($"Failed to convert {file} to .{extension}!\n");
+                    // Larian decided to rename the .lsx to .lsbs instead of properly LSF encoding them
+                    // These are invalid .lsbs/.lsbc files if this error pops up
+                    if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                    }
                 }
 
                 if (MustRenameLsxResources.Contains(originalExtension))
@@ -91,12 +92,35 @@ namespace bg3_modders_multitool.Services
             {
                 using (var fs = File.Open(file, System.IO.FileMode.Open))
                 {
-                    var resource = LocaUtils.Load(fs, LocaFormat.Loca);
-                    LocaUtils.Save(resource, newPath, LocaFormat.Xml);
+
+                    try
+                    {
+                        var resource = LocaUtils.Load(fs, LocaFormat.Loca);
+                        LocaUtils.Save(resource, newPath, LocaFormat.Xml);
+                    } 
+                    catch(Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                    }
+                }
+            }
+            else if(!File.Exists(newPath) && isConvertableToLoca)
+            {
+                using (var fs = File.Open(file, System.IO.FileMode.Open))
+                {
+                    try
+                    {
+                        var resource = LocaUtils.Load(fs, LocaFormat.Xml);
+                        LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                    }
+                    catch (Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                    }
                 }
             }
 
-            return isConvertableToLsx || isConvertableToXml  ? newFile : file;
+            return isConvertableToLsx || isConvertableToXml || isConvertableToLoca ? newFile : file;
         }
 
         /// <summary>
@@ -106,6 +130,10 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether or not the file is convertable.</returns>
         public static bool CanConvertToLsx(string file)
         {
+            if(string.IsNullOrEmpty(file))
+            {
+                return false;
+            }
             var extension = Path.GetExtension(file);
             return ConvertableLsxResources.Contains(extension);
         }
@@ -146,7 +174,7 @@ namespace bg3_modders_multitool.Services
             }
             catch
             {
-                GeneralHelper.WriteToConsole($"Problem converting input file to .ogg!\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertOgg);
             }
             return file;
         }
@@ -184,7 +212,7 @@ namespace bg3_modders_multitool.Services
             }
             catch
             {
-                GeneralHelper.WriteToConsole($"Problem playing audio file!!\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.ProblemPlayingAudio);
             }
         }
 
@@ -202,7 +230,7 @@ namespace bg3_modders_multitool.Services
             var fileList = RecursiveFileSearch(directory);
             if (fileList.Count == 0)
             {
-                GeneralHelper.WriteToConsole($"No files found!\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.NoFilesFound);
             }
             return fileList;
         }
@@ -227,7 +255,7 @@ namespace bg3_modders_multitool.Services
                 }
                 catch
                 {
-                    GeneralHelper.WriteToConsole($"Could not read from directory: {directory}\n");
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToReadDirectory, directory);
                 }
             }
             return fileList;
@@ -259,7 +287,7 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether or not the file is a .GR2 file.</returns>
         public static bool IsGR2(string path)
         {
-            return Path.GetExtension(path).Contains(".GR2") || Path.GetExtension(path).Contains(".gr2");
+            return Path.GetExtension(path).ToLower().Contains(".gr2");
         }
 
         /// <summary>
@@ -278,29 +306,52 @@ namespace bg3_modders_multitool.Services
         /// Opens the given file path in the default program.
         /// </summary>
         /// <param name="file">The file to open.</param>
-        public static void OpenFile(string file)
+        /// <param name="line">The matching file line</param>
+        public static void OpenFile(string file, int? line = null)
         {
             var path = GetPath(file);
             if (File.Exists(@"\\?\" + path))
             {
-                if(IsGR2(path))
+                try
                 {
-                    var dae = Path.ChangeExtension(path,".dae");
-                    // determine if you can determine if there is a default program
-                    var fileAssociation = new FileAssociationInfo(".dae");
-                    if(fileAssociation.Exists)
-                        Process.Start(dae);
-                    // open folder
-                    Process.Start("explorer.exe", $"/select,{dae}");
+                    if (IsGR2(path))
+                    {
+                        var dae = Path.ChangeExtension(path, ".dae");
+                        // determine if you can determine if there is a default program
+                        var fileAssociation = new FileAssociationInfo(".dae");
+                        if (fileAssociation.Exists)
+                            Process.Start(dae);
+                        // open folder
+                        Process.Start("explorer.exe", $"/select,{dae}");
+                    }
+                    else
+                    {
+                        var exe = FindExecutable(path);
+                        if(exe.Contains("notepad++") && line.HasValue)
+                        {
+                            var npp = new Process
+                            {
+                                StartInfo = {
+                                    FileName = exe,
+                                    Arguments = $"{file} -n{line}"
+                                }
+                            };
+                            npp.Start();
+                        }
+                        else
+                        {
+                            Process.Start(path);
+                        }
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    Process.Start(path);
+                    GeneralHelper.WriteToConsole(ex.Message);
                 }
             }
             else
             {
-                GeneralHelper.WriteToConsole($"File does not exist on the given path ({path}).\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.FileNoExist, path);
             }
         }
 
@@ -314,7 +365,18 @@ namespace bg3_modders_multitool.Services
             var file = $"Cache/{filename}.json";
             if (!File.Exists(file))
             {
-                GeneralHelper.WriteToConsole($"Caching {filename}...\n");
+                var listObject = serialObject as IList;
+                if (listObject != null && listObject.Count == 0)
+                {
+                    return;
+                }
+                var dictObject = serialObject as IDictionary;
+                if(dictObject != null && dictObject.Count == 0)
+                {
+                    return;
+                }
+
+                GeneralHelper.WriteToConsole(Properties.Resources.CachingFile, filename);
                 System.IO.TextWriter writer = null;
                 try
                 {
@@ -344,7 +406,7 @@ namespace bg3_modders_multitool.Services
             T objectOut = default(T);
             if (File.Exists(file))
             {
-                GeneralHelper.WriteToConsole($"Loading {filename} from cache...\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.LoadingCachedFile, filename);
                 System.IO.TextReader reader = null;
                 try
                 {
@@ -369,11 +431,11 @@ namespace bg3_modders_multitool.Services
         public static void CreateDestroyQuickLaunchMod(bool setting)
         {
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            var modLocation = Path.Combine(dataDir, "Localization\\English\\Video\\");
+            var modLocation = Path.Combine(dataDir, "Video\\");
             var modFilepath = Path.Combine(modLocation,"Splash_Logo_Larian.bk2");
             if (setting)
             {
-                GeneralHelper.WriteToConsole("Disabling splash screen...\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.DisablingSplashScreen);
                 if(!Directory.Exists(modLocation))
                     Directory.CreateDirectory(modLocation);
                 if(!File.Exists(modFilepath))
@@ -384,7 +446,7 @@ namespace bg3_modders_multitool.Services
             }
             else
             {
-                GeneralHelper.WriteToConsole("Enabling splash screen...\n");
+                GeneralHelper.WriteToConsole(Properties.Resources.EnablingSplashScreen);
                 if(File.Exists(modFilepath))
                 {
                     try
@@ -393,10 +455,56 @@ namespace bg3_modders_multitool.Services
                     }
                     catch
                     {
-                        GeneralHelper.WriteToConsole("Failed to enable splash screen...\n");
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToEnableSplashScreen);
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Determines if the file is valid xml
+        /// </summary>
+        /// <param name="filepath">The file path to test</param>
+        /// <returns>Whether the file is valid or not</returns>
+        public static bool TryParseXml(string filepath)
+        {
+            try
+            {
+                System.Xml.Linq.XDocument.Load(filepath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #region Process Finder
+        [DllImport("shell32.dll")]
+        private static extern long FindExecutable(string lpFile, string lpDirectory, [Out] StringBuilder lpResult);
+
+        /// <summary>
+        /// Checks if the file has an associated program that will open it
+        /// </summary>
+        /// <param name="path">The file path</param>
+        /// <returns>Whether or not the file has a default program association</returns>
+        public static bool HasExecutable(string path)
+        {
+            var executable = FindExecutable(path);
+            return !string.IsNullOrEmpty(executable);
+        }
+
+        /// <summary>
+        /// Gets the name of the executable that is associated with the file
+        /// </summary>
+        /// <param name="path">The file path</param>
+        /// <returns>The executable name</returns>
+        public static string FindExecutable(string path)
+        {
+            var executable = new StringBuilder(1024);
+            FindExecutable(path, string.Empty, executable);
+            return executable.ToString();
+        }
+        #endregion
     }
 }

@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
+    using System.Globalization;
     using System.IO;
     using System.Windows;
 
@@ -14,6 +15,10 @@ namespace bg3_modders_multitool.Views
     {
         public MainWindow()
         {
+            // Explicitly set the translation to use
+            var selectedLanguage = Properties.Settings.Default.selectedLanguage;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = string.IsNullOrEmpty(selectedLanguage) ? CultureInfo.InvariantCulture : new CultureInfo(selectedLanguage);
+
             InitializeComponent();
             DataContext = new ViewModels.MainWindow
             {
@@ -87,19 +92,18 @@ namespace bg3_modders_multitool.Views
             new IndexingWindow().Show();
         }
 
-        private async void IndexFiles_Click(object sender, RoutedEventArgs e)
+        private void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
             var result = System.Windows.Forms.DialogResult.OK;
-            if(Services.IndexHelper.IndexDirectoryExists())
+            if(IndexHelper.IndexDirectoryExists())
             {
-                result = System.Windows.Forms.MessageBox.Show("Careful! \n\nClicking \"OK\" will wipe your current index and rebuild it from scratch; " +
-                    "this could take some time. Are you sure you wish you continue?", "Ready to index again?", System.Windows.Forms.MessageBoxButtons.OKCancel);
+                result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
             }
 
             if(result.Equals(System.Windows.Forms.DialogResult.OK))
             {
                 var vm = DataContext as ViewModels.MainWindow;
-                await vm.SearchResults.IndexHelper.Index();
+                vm.SearchResults.IndexHelper.Index();
             }
         }
         #endregion
@@ -115,13 +119,13 @@ namespace bg3_modders_multitool.Views
             new GameObjectWindow().Show();
         }
 
-        private async void Decompress_Click(object sender, RoutedEventArgs e)
+        private void Decompress_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
             if(vm.NotDecompressing)
             {
                 vm.NotDecompressing = false;
-                await PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
+                PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
                     Application.Current.Dispatcher.Invoke(() => {
                         vm.NotDecompressing = true;
                     });
@@ -135,8 +139,11 @@ namespace bg3_modders_multitool.Views
             if (!vm.ConfigOpen)
             {
                 var config = new ConfigurationMenu(vm);
-                config.Owner = this;
-                config.Show();
+                try
+                {
+                    config.Owner = this;
+                    config.Show();
+                } catch { }
             }
         }
 
@@ -159,5 +166,65 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
         }
+
+        private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            RootTemplateHelper.ClearGameObjectCache();
+        }
+
+        #region Help Tab
+        #region Links
+        private void BG3WikiLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://bg3.wiki/wiki/Modding_Resources");
+        }
+
+        private void BG3CommWikiLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/BG3-Community-Library-Team/BG3-Community-Library/wiki");
+        }
+
+        private void ModTutLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.nexusmods.com/baldursgate3/mods/1514");
+        }
+
+        private void BG3SELink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/releases");
+        }
+
+        private void BG3SEAPILink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/blob/main/Docs/API.md");
+        }
+
+        private void BG3SESampleLinkClick(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/tree/main/SampleMod");
+        }
+
+        private void LuaSetupLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/LaughingLeader-DOS2-Mods/LeaderLib/wiki/Lua-Setup");
+        }
+
+        private void ReportABugLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/ShinyHobo/BG3-Modders-Multitool/issues");
+        }
+
+        private void KofiLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://ko-fi.com/shinyhobo");
+        }
+        #endregion
+
+        private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.CheckForUpdates();
+        }
+        #endregion
     }
 }

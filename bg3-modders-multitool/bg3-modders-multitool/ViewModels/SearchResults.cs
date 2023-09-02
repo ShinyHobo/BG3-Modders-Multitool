@@ -7,6 +7,7 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Services;
     using HelixToolkit.Wpf.SharpDX;
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
@@ -68,9 +69,8 @@ namespace bg3_modders_multitool.ViewModels
             get { return _resultCount; }
             set {
                 _resultCount = value;
-                var filesRemaining = IndexFileTotal - IndexFileCount;
                 var timeTaken = GetTimeTaken();
-                var timeRemaining = timeTaken.TotalMinutes / value * filesRemaining;
+                var timeRemaining = ((timeTaken.TotalMinutes / IndexFileCount) * IndexFileTotal) - timeTaken.TotalMinutes;
                 if(timeRemaining < TimeSpan.MaxValue.TotalMinutes)
                 {
                     IndexTimeRemaining = TimeSpan.FromMinutes(timeRemaining);
@@ -85,6 +85,21 @@ namespace bg3_modders_multitool.ViewModels
             get { return _results; }
             set {
                 _results = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _leadingWildcardDisabled;
+
+        /// <summary>
+        /// Whether or not to utilize a leading wildcard for searches. Disabling this provides faster, but potentially unexpected results
+        /// </summary>
+        public bool LeadingWildcardDisabled
+        {
+            get { return _leadingWildcardDisabled; }
+            set
+            {
+                _leadingWildcardDisabled = value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -251,6 +266,8 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        public List<string> FullResultList { get; internal set; }
         #endregion
 
         #endregion
@@ -271,9 +288,9 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private int _key;
+        private long _key;
 
-        public int Key {
+        public long Key {
             get { return _key; }
             set {
                 _key = value;
