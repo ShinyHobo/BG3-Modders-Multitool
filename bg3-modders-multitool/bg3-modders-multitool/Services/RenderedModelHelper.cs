@@ -10,11 +10,11 @@ namespace bg3_modders_multitool.Services
     using HelixToolkit.Wpf.SharpDX.Model.Scene;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Linq;
+    using LSLib.Granny.Model;
 
     public static class RenderedModelHelper
     {
@@ -205,28 +205,22 @@ namespace bg3_modders_multitool.Services
         private static HelixToolkitScene LoadFile(string filename)
         {
             var dae = $"{filename}.dae";
+            var gr2 = $"{filename}.GR2";
 
-            if (!File.Exists(dae) && File.Exists($"{filename}.GR2"))
+            if (!File.Exists(dae) && File.Exists(gr2))
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.ConvertingModelDae);
-                // TODO - replace divine
-                var divine = $" -g \"bg3\" --action \"convert-model\" --output-format \"dae\" --source \"\\\\?\\{filename}.GR2\" --destination \"\\\\?\\{dae}\" -l \"all\"";
-                var process = new Process();
-                var startInfo = new ProcessStartInfo
+                try
                 {
-                    FileName = Properties.Settings.Default.divineExe,
-                    Arguments = divine,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
-                GeneralHelper.WriteToConsole(process.StandardOutput.ReadToEnd());
-                GeneralHelper.WriteToConsole(process.StandardError.ReadToEnd());
+                    var exporter = new LSLib.Granny.Model.Exporter();
+                    exporter.Options = new ExporterOptions { InputFormat = ExportFormat.GR2, OutputFormat = ExportFormat.DAE };
+                    var original = LSLib.Granny.GR2Utils.LoadModel(gr2, exporter.Options);
+                    LSLib.Granny.GR2Utils.SaveModel(original, dae, exporter);
+                }
+                catch (Exception ex)
+                {
+                    GeneralHelper.WriteToConsole(ex.Message);
+                }
             }
             try
             {
