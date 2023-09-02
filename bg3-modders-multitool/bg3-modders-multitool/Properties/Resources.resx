@@ -182,9 +182,6 @@
   <data name="ConfigButtonTooltip" xml:space="preserve">
     <value>Essential configuration options</value>
   </data>
-  <data name="ConfigNeededLabel" xml:space="preserve">
-    <value>Configuration needed</value>
-  </data>
   <data name="ConfigurationTitle" xml:space="preserve">
     <value>Configuration</value>
   </data>

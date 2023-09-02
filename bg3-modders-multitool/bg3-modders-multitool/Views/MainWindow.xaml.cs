@@ -133,7 +133,7 @@ namespace bg3_modders_multitool.Views
             }
         }
 
-        private void configMenu_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void configMenu_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
             if (!vm.ConfigOpen)

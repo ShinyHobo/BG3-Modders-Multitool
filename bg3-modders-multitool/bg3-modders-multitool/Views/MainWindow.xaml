@@ -30,6 +30,7 @@
                     <MenuItem x:Name="profilesFolderButton" Header="{x:Static p:Resources.ProfilesFolderButton}" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
                         ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}" Icon="📂"/>
                 </MenuItem>
+                <MenuItem Header="{x:Static p:Resources.ConfigurationTitle}" Click="configMenu_Click"/>
                 <MenuItem Header="{x:Static p:Resources.Help}">
                     <MenuItem Header="{x:Static p:Resources.ModdingResources}" Icon="📚">
                         <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗"/>
@@ -90,21 +91,6 @@
                 <Button x:Name="searchButton" Content="{x:Static p:Resources.IndexSearchButton}" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
                 ToolTip="{x:Static p:Resources.IndexSearchButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
             </Grid>
-
-            <TextBlock x:Name="configMenu" Text="*" FontSize="44" LineStackingStrategy="BlockLineHeight"  LineHeight="44" Cursor="Hand" Margin="757,240,10,140"
-               ToolTip="{x:Static p:Resources.ConfigButtonTooltip}" MouseLeftButtonUp="configMenu_MouseLeftButtonUp">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property= "Foreground" Value="Black"/>
-                        <Style.Triggers>
-                            <Trigger Property ="IsMouseOver" Value="True">
-                                <Setter Property= "Foreground" Value="CadetBlue"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            <TextBlock x:Name="configNeeded" Text="{Binding Source={x:Static p:Resources.ConfigNeededLabel}, StringFormat='{}{0} =&gt; '}" Margin="620,244,30,150" Visibility="{Binding ConfigNeeded}"/>
         </Grid>
     </StackPanel>
 </Window>

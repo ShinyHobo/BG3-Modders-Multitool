@@ -250,15 +250,6 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configuration needed.
-        /// </summary>
-        public static string ConfigNeededLabel {
-            get {
-                return ResourceManager.GetString("ConfigNeededLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Configuration.
         /// </summary>
         public static string ConfigurationTitle {
