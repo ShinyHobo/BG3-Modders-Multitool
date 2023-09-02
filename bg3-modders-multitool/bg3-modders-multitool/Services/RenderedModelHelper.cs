@@ -207,29 +207,37 @@ namespace bg3_modders_multitool.Services
             var dae = $"{filename}.dae";
             var gr2 = $"{filename}.GR2";
 
-            if (!File.Exists(dae) && File.Exists(gr2))
+            if (!File.Exists(dae) && File.Exists("\\\\?\\" + gr2))
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.ConvertingModelDae);
                 try
                 {
                     var exporter = new LSLib.Granny.Model.Exporter();
                     exporter.Options = new ExporterOptions { InputFormat = ExportFormat.GR2, OutputFormat = ExportFormat.DAE };
-                    var original = LSLib.Granny.GR2Utils.LoadModel(gr2, exporter.Options);
-                    LSLib.Granny.GR2Utils.SaveModel(original, dae, exporter);
+                    var original = LSLib.Granny.GR2Utils.LoadModel("\\\\?\\" + gr2, exporter.Options);
+                    LSLib.Granny.GR2Utils.SaveModel(original, "\\\\?\\"+dae, exporter);
                 }
                 catch (Exception ex)
                 {
-                    GeneralHelper.WriteToConsole(ex.Message);
+                    if(ex.Message.Contains("Granny2.dll"))
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.Granny2Error);
+                    }
+                    else
+                    {
+                        GeneralHelper.WriteToConsole(ex.Message);
+                    }
+                    return null;
                 }
             }
             try
             {
                 var importer = new Importer();
                 // Update material here?
-                if(File.Exists(dae))
+                if(File.Exists("\\\\?\\" + dae))
                 {
-                    var file = importer.Load(dae);
-                    if (file == null && File.Exists(dae))
+                    var file = importer.Load("\\\\?\\" + dae);
+                    if (file == null && File.Exists("\\\\?\\" + dae))
                     {
                         GeneralHelper.WriteToConsole(Properties.Resources.FixingVerticies);
                         try

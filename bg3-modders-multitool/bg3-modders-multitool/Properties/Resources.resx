@@ -393,6 +393,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="GOETitle" xml:space="preserve">
     <value>GameObject Explorer</value>
   </data>
+  <data name="Granny2Error" xml:space="preserve">
+    <value>granny2.dll is required to convert GR2 files to dae. Please obtain a copy and place it in the same directory as this application.</value>
+  </data>
   <data name="GUIDCopied" xml:space="preserve">
     <value>{0} [{1}] copied to clipboard!</value>
     <comment>uuid/guid type, guid/uuid text</comment>

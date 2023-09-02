@@ -819,6 +819,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to granny2.dll is required to convert GR2 files to dae. Please obtain a copy and place it in the same directory as this application..
+        /// </summary>
+        public static string Granny2Error {
+            get {
+                return ResourceManager.GetString("Granny2Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} [{1}] copied to clipboard!.
         /// </summary>
         public static string GUIDCopied {
