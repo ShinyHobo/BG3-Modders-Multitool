@@ -53,7 +53,7 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
-        /// Packs the mod into a .pak using Norbyte's LSLib divine.exe
+        /// Packs the mod into a .pak
         /// </summary>
         /// <param name="fullpath">The full path for the source folder.</param>
         /// <param name="destination">The destination path and mod name.</param>

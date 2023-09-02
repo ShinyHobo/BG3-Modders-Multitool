@@ -53,7 +53,7 @@ namespace bg3_modders_multitool.Views
         private void Unpack_Cancel_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            vm.Unpacker.CancelUpacking();
+            vm.Unpacker.Cancelled = true;
             unpack.Visibility = Visibility.Visible;
             unpack_Cancel.Visibility = Visibility.Hidden;
         }
@@ -111,7 +111,7 @@ namespace bg3_modders_multitool.Views
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            System.Diagnostics.Process.Start(vm.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame" : string.Empty);
+            System.Diagnostics.Process.Start(vm.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
         }
 
         private void GameObjectButton_Click(object sender, RoutedEventArgs e)
@@ -124,16 +124,20 @@ namespace bg3_modders_multitool.Views
             var vm = DataContext as ViewModels.MainWindow;
             if(vm.NotDecompressing)
             {
-                vm.NotDecompressing = false;
-                PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        vm.NotDecompressing = true;
+                var result = System.Windows.Forms.MessageBox.Show(Properties.Resources.DecompressQuestion, Properties.Resources.DecompressQuestionTitle, System.Windows.Forms.MessageBoxButtons.YesNo);
+                if(result == System.Windows.Forms.DialogResult.Yes)
+                {
+                    vm.NotDecompressing = false;
+                    PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            vm.NotDecompressing = true;
+                        });
                     });
-                });
+                }
             }
         }
 
-        private void configMenu_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void configMenu_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
             if (!vm.ConfigOpen)

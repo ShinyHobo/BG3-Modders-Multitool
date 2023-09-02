@@ -178,6 +178,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} unpacking cancelled..
+        /// </summary>
+        public static string CanceledUnpackingPak {
+            get {
+                return ResourceManager.GetString("CanceledUnpackingPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects loading cancelled..
         /// </summary>
         public static string CancelledGOE {
@@ -237,15 +246,6 @@ namespace bg3_modders_multitool.Properties {
         public static string ConfigButtonTooltip {
             get {
                 return ResourceManager.GetString("ConfigButtonTooltip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Configuration needed.
-        /// </summary>
-        public static string ConfigNeededLabel {
-            get {
-                return ResourceManager.GetString("ConfigNeededLabel", resourceCulture);
             }
         }
         
@@ -318,6 +318,26 @@ namespace bg3_modders_multitool.Properties {
         public static string DecompressionComplete {
             get {
                 return ResourceManager.GetString("DecompressionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This process converts all unpacked files to their human readable state (ie lsf to lsx and loca to xml). It may take a significant amount of time.
+        ///
+        ///Do you wish to continue?.
+        /// </summary>
+        public static string DecompressQuestion {
+            get {
+                return ResourceManager.GetString("DecompressQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready to decompress your files?.
+        /// </summary>
+        public static string DecompressQuestionTitle {
+            get {
+                return ResourceManager.GetString("DecompressQuestionTitle", resourceCulture);
             }
         }
         
@@ -426,6 +446,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ErrorParsingStructure {
             get {
                 return ResourceManager.GetString("ErrorParsingStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error unpacking {0}: {1}.
+        /// </summary>
+        public static string ErrorUnpacking {
+            get {
+                return ResourceManager.GetString("ErrorUnpacking", resourceCulture);
             }
         }
         
@@ -691,6 +720,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the location of your BG3 game executable..
+        /// </summary>
+        public static string GameExeLocationTooltip {
+            get {
+                return ResourceManager.GetString("GameExeLocationTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please Select GameObject Type.
         /// </summary>
         public static string GameObjectSelectionLabel {
@@ -815,6 +853,15 @@ namespace bg3_modders_multitool.Properties {
         public static string GOETitle {
             get {
                 return ResourceManager.GetString("GOETitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to granny2.dll is required to convert GR2 files to dae. Please obtain a copy and place it in the same directory as this application..
+        /// </summary>
+        public static string Granny2Error {
+            get {
+                return ResourceManager.GetString("Granny2Error", resourceCulture);
             }
         }
         
@@ -1085,15 +1132,6 @@ namespace bg3_modders_multitool.Properties {
         public static string LoadingLabel {
             get {
                 return ResourceManager.GetString("LoadingLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to LSLib divine.exe location (latest version is required).
-        /// </summary>
-        public static string LSLibLocation {
-            get {
-                return ResourceManager.GetString("LSLibLocation", resourceCulture);
             }
         }
         
@@ -1658,6 +1696,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pak Unpacking Progress.
+        /// </summary>
+        public static string UnpackerProgressTitle {
+            get {
+                return ResourceManager.GetString("UnpackerProgressTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unpack .pak Files.
         /// </summary>
         public static string UnpackFilesButton {
@@ -1681,6 +1728,15 @@ namespace bg3_modders_multitool.Properties {
         public static string UnpackingComplete {
             get {
                 return ResourceManager.GetString("UnpackingComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} unpacking complete.
+        /// </summary>
+        public static string UnpackingPakComplete {
+            get {
+                return ResourceManager.GetString("UnpackingPakComplete", resourceCulture);
             }
         }
         

@@ -157,6 +157,10 @@
   <data name="CancelButton" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CanceledUnpackingPak" xml:space="preserve">
+    <value>{0} unpacking cancelled.</value>
+    <comment>pak name</comment>
+  </data>
   <data name="CancelledGOE" xml:space="preserve">
     <value>GameObjects loading cancelled.</value>
   </data>
@@ -177,9 +181,6 @@
   </data>
   <data name="ConfigButtonTooltip" xml:space="preserve">
     <value>Essential configuration options</value>
-  </data>
-  <data name="ConfigNeededLabel" xml:space="preserve">
-    <value>Configuration needed</value>
   </data>
   <data name="ConfigurationTitle" xml:space="preserve">
     <value>Configuration</value>
@@ -206,6 +207,14 @@
   <data name="DecompressionComplete" xml:space="preserve">
     <value>Decompression completed in {0}.</value>
     <comment>elapsed time</comment>
+  </data>
+  <data name="DecompressQuestion" xml:space="preserve">
+    <value>This process converts all unpacked files to their human readable state (ie lsf to lsx and loca to xml). It may take a significant amount of time.
+
+Do you wish to continue?</value>
+  </data>
+  <data name="DecompressQuestionTitle" xml:space="preserve">
+    <value>Ready to decompress your files?</value>
   </data>
   <data name="DescriptionHandleLabel" xml:space="preserve">
     <value>DescriptionHandle</value>
@@ -246,6 +255,10 @@
   <data name="ErrorParsingStructure" xml:space="preserve">
     <value>Error parsing line [{0}] for structure type \"{1}\": {2}</value>
     <comment>line number, type, error message</comment>
+  </data>
+  <data name="ErrorUnpacking" xml:space="preserve">
+    <value>Error unpacking {0}: {1}</value>
+    <comment>pak name, error message</comment>
   </data>
   <data name="EstimateLabel" xml:space="preserve">
     <value>Estimate</value>
@@ -348,6 +361,9 @@
   <data name="GameDocsLocationTooltip" xml:space="preserve">
     <value>Please select you game's Documents folder. (e.g: ...\AppData\Local\Larian Studios\Baldur's Gate 3)</value>
   </data>
+  <data name="GameExeLocationTooltip" xml:space="preserve">
+    <value>Select the location of your BG3 game executable.</value>
+  </data>
   <data name="GameObjectSelectionLabel" xml:space="preserve">
     <value>Please Select GameObject Type</value>
   </data>
@@ -392,6 +408,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="GOETitle" xml:space="preserve">
     <value>GameObject Explorer</value>
+  </data>
+  <data name="Granny2Error" xml:space="preserve">
+    <value>granny2.dll is required to convert GR2 files to dae. Please obtain a copy and place it in the same directory as this application.</value>
   </data>
   <data name="GUIDCopied" xml:space="preserve">
     <value>{0} [{1}] copied to clipboard!</value>
@@ -488,9 +507,6 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="LoadingLabel" xml:space="preserve">
     <value>Loading...</value>
-  </data>
-  <data name="LSLibLocation" xml:space="preserve">
-    <value>LSLib divine.exe location (latest version is required)</value>
   </data>
   <data name="LuaSetup" xml:space="preserve">
     <value>Lua Setup</value>
@@ -688,6 +704,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="UnpackButtonTooltip" xml:space="preserve">
     <value>Allows you to select the game paks to unpack</value>
   </data>
+  <data name="UnpackerProgressTitle" xml:space="preserve">
+    <value>Pak Unpacking Progress</value>
+  </data>
   <data name="UnpackFilesButton" xml:space="preserve">
     <value>Unpack .pak Files</value>
   </data>
@@ -696,6 +715,10 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="UnpackingComplete" xml:space="preserve">
     <value>Unpacking complete!</value>
+  </data>
+  <data name="UnpackingPakComplete" xml:space="preserve">
+    <value>{0} unpacking complete</value>
+    <comment>pak name</comment>
   </data>
   <data name="UnpackingProcessComplete" xml:space="preserve">
     <value>All unpacking processes finished.</value>

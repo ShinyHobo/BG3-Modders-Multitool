@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="bg3_modders_multitool.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="divineExe" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="bg3Exe" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

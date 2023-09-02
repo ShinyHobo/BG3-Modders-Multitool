@@ -6,19 +6,17 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.Views;
-    using MdXaml;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Documents;
 
     public class MainWindow : BaseViewModel
     {
         public MainWindow()
         {
-            DivineLocation = Properties.Settings.Default.divineExe;
             Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
             GameDocumentsLocation = Settings.Default.gameDocumentsPath;
             Unpacker = new PakUnpackHelper();
@@ -172,28 +170,13 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private string _divineLocation;
-
-        public string DivineLocation {
-            get { return _divineLocation; }
-            set {
-                _divineLocation = value;
-                UnpackAllowed = !string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(Bg3ExeLocation);
-                if (DragAndDropBox != null)
-                {
-                    DragAndDropBox.PackAllowed = !string.IsNullOrEmpty(value);
-                }
-                OnNotifyPropertyChanged();
-            }
-        }
-
         private string _bg3exeLocation;
 
         public string Bg3ExeLocation {
             get { return _bg3exeLocation; }
             set {
                 _bg3exeLocation = value;
-                UnpackAllowed = !string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(DivineLocation);
+                UnpackAllowed = !string.IsNullOrEmpty(value);
                 LaunchGameAllowed = !string.IsNullOrEmpty(value);
                 ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();

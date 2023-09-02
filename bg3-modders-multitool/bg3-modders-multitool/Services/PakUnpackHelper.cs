@@ -6,24 +6,31 @@ namespace bg3_modders_multitool.Services
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.ViewModels;
+    using LSLib.LS;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Windows;
 
-    public class PakUnpackHelper
+    public class PakUnpackHelper : BaseViewModel
     {
-        private List<int> Processes;
-
         public bool Cancelled;
 
+        private ObservableCollection<PakProgress> _pakProgress;
+        public ObservableCollection<PakProgress> PakProgressCollection
+        {
+            get { return _pakProgress; }
+            set { _pakProgress = value; OnNotifyPropertyChanged(); }
+        }
+
         /// <summary>
-        /// Unpacks all the .pak files in the game data directory and places them in a folder next to divine.exe
+        /// Unpacks all the .pak files in the game data directory and places them in a folder next to the exe
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            Processes = new List<int>();
             var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
             Directory.CreateDirectory(unpackPath);
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
@@ -31,82 +38,81 @@ namespace bg3_modders_multitool.Services
             var pakSelection = new Views.PakSelection(files);
             pakSelection.ShowDialog();
             pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
-            var paks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+            var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+
+            var unpackerProgressWindow = new Views.UnpackerProgress();
+            unpackerProgressWindow.DataContext = this;
+            unpackerProgressWindow.Show();
+            unpackerProgressWindow.Closing += (o, i) => { Cancelled = true; };
+
             Cancelled = false;
+            
+
             return Task.Run(() =>
             {
+                PakProgressCollection = new ObservableCollection<PakProgress>();
                 GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
-                return Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file =>
+                var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file)));
+
+                foreach (var pak in paks)
                 {
-                    await RunProcessAsync(file, unpackPath);
-                }));
+                    PakProgressCollection.Add(new PakProgress(Path.GetFileNameWithoutExtension(pak)));
+                }
+
+                var cancelError = "Pak unpacking cancelled";
+                Parallel.ForEach(paks, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, (pak, loopstate) => {
+                    var pakName = Path.GetFileNameWithoutExtension(pak);
+                    try
+                    {
+                        var packager = new Packager();
+                        packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
+                        {
+                            if (Cancelled)
+                            {
+                                throw new Exception(cancelError);
+                            }
+                            var newPercent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
+                            var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
+                            lock (pakProgress)
+                                pakProgress.Percent = newPercent;
+                        };
+                        packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
+
+                        Application.Current.Dispatcher.Invoke(() => {
+                            lock (PakProgressCollection)
+                            {
+                                var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
+                                PakProgressCollection.Remove(pakProgress);
+                            }
+                        });
+                        GeneralHelper.WriteToConsole(Properties.Resources.UnpackingPakComplete, pakName);
+                    }
+                    catch (Exception ex) {
+                        if(ex.Message ==  cancelError)
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.CanceledUnpackingPak, pakName);
+                        }
+                        else
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.ErrorUnpacking, pakName, ex.Message);
+                        }
+                    }
+                });
             }).ContinueWith(delegate
             {
-                if (!Cancelled)
+                if (Cancelled)
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnpackingCancelled);
+                }
+                else
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
+                Application.Current.Dispatcher.Invoke(() => {
+                    unpackerProgressWindow.Close();
+                });
             });
-        }
-
-        /// <summary>
-        /// Creates and runs a process window. Adds the process to a list for cancellation.
-        /// </summary>
-        /// <param name="file">The file to unpack.</param>
-        /// <param name="unpackpath">The folder path to unpack the file to.</param>
-        /// <returns></returns>
-        private Task<int> RunProcessAsync(string file, string unpackpath)
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = Properties.Settings.Default.divineExe,
-                Arguments = $" -g \"bg3\" --action \"extract-package\" --source \"{file}\" --destination \"{unpackpath}\" -l \"all\" --use-package-name"
-            };
-
-            var tcs = new TaskCompletionSource<int>();
-            var process = new Process {
-                StartInfo = startInfo,
-                EnableRaisingEvents = true
-            };
-
-            process.Exited += (sender, args) => {
-                tcs.SetResult(process.ExitCode);
-                process.Dispose();
-            };
-
-            process.Start();
-            Processes.Add(process.Id);
-
-            return tcs.Task;
-        }
-
-        /// <summary>
-        /// Force closes all tracked divine.exe unpacking processes.
-        /// </summary>
-        public void CancelUpacking()
-        {
-            Cancelled = true;
-            if(Processes != null && Processes.Count>0)
-            {
-                foreach (int process in Processes)
-                {
-                    if(Process.GetProcesses().Any(x => x.Id == process))
-                    {
-                        try
-                        {
-                            var proc = Process.GetProcessById(process);
-                            if (!proc.HasExited)
-                            {
-                                proc.Kill();
-                                proc.WaitForExit();
-                            }
-                        }
-                        catch { }// only exception should be "Process with ID #### not found", safe to ignore
-                    }
-                }
-                GeneralHelper.WriteToConsole(Properties.Resources.UnpackingCancelled);
-            }
         }
 
         /// <summary>
@@ -166,6 +172,26 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
                 return convertFiles;
             });
+        }
+
+        public class PakProgress : BaseViewModel
+        {
+            public PakProgress(string pakName)
+            {
+                PakName = pakName;
+                Percent = 0;
+            }
+            public string PakName { get; set; }
+            private int _percent;
+            public int Percent
+            {
+                get { return _percent; }
+                set
+                {
+                    _percent = value;
+                    OnNotifyPropertyChanged();
+                }
+            }
         }
     }
 }

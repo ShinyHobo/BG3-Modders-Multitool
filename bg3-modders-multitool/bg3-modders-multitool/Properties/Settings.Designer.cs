@@ -26,18 +26,6 @@ namespace bg3_modders_multitool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string divineExe {
-            get {
-                return ((string)(this["divineExe"]));
-            }
-            set {
-                this["divineExe"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string bg3Exe {
             get {
                 return ((string)(this["bg3Exe"]));

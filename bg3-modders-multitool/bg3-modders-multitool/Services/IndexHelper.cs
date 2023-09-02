@@ -133,8 +133,8 @@ namespace bg3_modders_multitool.Services
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
-                    new StringField("path", path, Field.Store.YES),
-                    new StringField("title", fileName, Field.Store.YES)
+                    new TextField("path", path, Field.Store.YES),
+                    new TextField("title", fileName, Field.Store.YES)
                 };
 
                 // if file type is excluded, only track file name and path so it can be searched for by name
@@ -197,7 +197,7 @@ namespace bg3_modders_multitool.Services
                         IndexSearcher searcher = new IndexSearcher(reader);
                         BooleanQuery query = new BooleanQuery();
                         var wildCardChar = enableLeadingWildCard ? "*" : string.Empty;
-                        var pathQuery = new WildcardQuery(new Term("path", wildCardChar + QueryParserBase.Escape(search.Trim()) + '*'));
+                        var pathQuery = new WildcardQuery(new Term("path", wildCardChar + QueryParserBase.Escape(search.ToLower().Trim()) + '*'));
                         query.Add(pathQuery, Occur.SHOULD);
 
                         var searchTerms = search.Trim().ToLower().Split(' ');
