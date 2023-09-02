@@ -46,13 +46,15 @@ namespace bg3_modders_multitool.Services
                         var packager = new Packager();
                         packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
                         {
-                            //GeneralHelper.WriteToConsole($"{5 + (int)(numerator * 15 / denominator)}");
+                            var percent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
+                            GeneralHelper.WriteToConsole(percent.ToString());
                             if (Cancelled)
                             {
                                 throw new Exception(cancelError);
                             }
                         };
                         packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
+                        GeneralHelper.WriteToConsole(pakName);
                     }
                     catch (Exception ex) {
                         if(ex.Message ==  cancelError)
@@ -67,40 +69,16 @@ namespace bg3_modders_multitool.Services
                 });
             }).ContinueWith(delegate
             {
-                if (!Cancelled)
+                if (Cancelled)
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnpackingCancelled);
+                }
+                else
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
             });
-        }
-
-        /// <summary>
-        /// Force closes all tracked divine.exe unpacking processes.
-        /// </summary>
-        public void CancelUpacking()
-        {
-            Cancelled = true;
-            if(Processes != null && Processes.Count>0)
-            {
-                foreach (int process in Processes)
-                {
-                    if(Process.GetProcesses().Any(x => x.Id == process))
-                    {
-                        try
-                        {
-                            var proc = Process.GetProcessById(process);
-                            if (!proc.HasExited)
-                            {
-                                proc.Kill();
-                                proc.WaitForExit();
-                            }
-                        }
-                        catch { }// only exception should be "Process with ID #### not found", safe to ignore
-                    }
-                }
-                GeneralHelper.WriteToConsole(Properties.Resources.UnpackingCancelled);
-            }
         }
 
         /// <summary>

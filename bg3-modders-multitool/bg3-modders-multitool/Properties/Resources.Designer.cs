@@ -178,7 +178,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unpacking process cancelled for {0}.
+        ///   Looks up a localized string similar to {0} unpacking cancelled..
         /// </summary>
         public static string CanceledUnpackingPak {
             get {

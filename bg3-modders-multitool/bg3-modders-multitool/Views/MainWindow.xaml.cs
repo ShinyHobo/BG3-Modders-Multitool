@@ -53,7 +53,7 @@ namespace bg3_modders_multitool.Views
         private void Unpack_Cancel_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            vm.Unpacker.CancelUpacking();
+            vm.Unpacker.Cancelled = true;
             unpack.Visibility = Visibility.Visible;
             unpack_Cancel.Visibility = Visibility.Hidden;
         }

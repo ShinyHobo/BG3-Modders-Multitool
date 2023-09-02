@@ -158,7 +158,7 @@
     <value>Cancel</value>
   </data>
   <data name="CanceledUnpackingPak" xml:space="preserve">
-    <value>Unpacking process cancelled for {0}</value>
+    <value>{0} unpacking cancelled.</value>
     <comment>pak name</comment>
   </data>
   <data name="CancelledGOE" xml:space="preserve">
