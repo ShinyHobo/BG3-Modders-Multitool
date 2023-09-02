@@ -8,7 +8,6 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Views;
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Windows;

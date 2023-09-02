@@ -182,7 +182,7 @@
             var updateExe = Path.Combine(updatePath, exeName);
             var currentExe = Path.Combine(Directory.GetCurrentDirectory(), exeName);
             var process = new Process();
-            process.StartInfo = new ProcessStartInfo("cmd.exe", $"/c replace {updateExe} {Directory.GetCurrentDirectory()} & rmdir {updatePath} /s /q & del {DragAndDropHelper.TempFolder}\\update.zip & start \"\" \"{currentExe}\"");
+            process.StartInfo = new ProcessStartInfo("cmd.exe", $"/c replace /R \"{updateExe}\" \"{Directory.GetCurrentDirectory()}\" & rmdir \"{updatePath}\" /s /q & del \"{DragAndDropHelper.TempFolder}\\update.zip\" & start \"\" \"{currentExe}\"");
             process.Start();
         }
     }
