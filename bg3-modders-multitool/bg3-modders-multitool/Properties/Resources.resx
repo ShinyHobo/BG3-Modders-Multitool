@@ -177,7 +177,8 @@
     <value>Checking for updates...</value>
   </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
-    <value>Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically. Alternatively unpacks .paks</value>
+    <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
+Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
   <data name="ConfigButtonTooltip" xml:space="preserve">
     <value>Essential configuration options</value>
@@ -243,7 +244,7 @@ Do you wish to continue?</value>
     <value>DisplayName</value>
   </data>
   <data name="DropModMessage" xml:space="preserve">
-    <value>Drop mod workspace folder or mod .pak here</value>
+    <value>Drop mod workspace folder or a mod .pak here</value>
   </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>

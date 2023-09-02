@@ -232,7 +232,8 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically. Alternatively unpacks .paks.
+        ///   Looks up a localized string similar to Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
+        ///Dropping a .pak will unpack it into a nearby directory. .
         /// </summary>
         public static string ClickOrDropModPacker {
             get {
@@ -414,7 +415,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Drop mod workspace folder or mod .pak here.
+        ///   Looks up a localized string similar to Drop mod workspace folder or a mod .pak here.
         /// </summary>
         public static string DropModMessage {
             get {
