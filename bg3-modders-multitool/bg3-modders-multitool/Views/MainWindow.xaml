@@ -13,37 +13,40 @@
     <StackPanel>
         <Border BorderBrush="Gray" Background="LightGray" BorderThickness="0,0,0,3">
             <Menu Background="Transparent">
-                <MenuItem Header="{x:Static p:Resources.IndexMenu}">
-                    <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
-                        ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" >
+                <MenuItem Header="{x:Static p:Resources.UtilitiesMenuLabel}" ToolTip="{x:Static p:Resources.MultitoolTools}">
+                    <MenuItem Header="{x:Static p:Resources.UnpackModPaks}" ToolTip="{x:Static p:Resources.UnpackModPakTooltip}" Click="UnpackMod_Click" Icon="📦"/>
+                    <MenuItem Header="{x:Static p:Resources.IndexMenu}" ToolTip="{x:Static p:Resources.IndexMenuTooltip}" Icon="📇">
+                        <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
+                            ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" >
+                        </MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.GOEButton}" ToolTip="{x:Static p:Resources.GOEMenuTooltip}" Icon="📚">
+                        <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                            ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
+                        <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                            ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="{x:Static p:Resources.GOEButton}">
-                    <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
-                        ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
-                    <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding UnpackAllowed}"
-                        ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
-                </MenuItem>
-                <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}">
+                <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}" ToolTip="{x:Static p:Resources.ShortcutsMenuTooltip}">
                     <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
                         ToolTip="{x:Static p:Resources.ModsFolderButtonTooltip}" Icon="📂"/>
                     <MenuItem x:Name="profilesFolderButton" Header="{x:Static p:Resources.ProfilesFolderButton}" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
                         ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}" Icon="📂"/>
                 </MenuItem>
-                <MenuItem Header="{x:Static p:Resources.ConfigurationTitle}" Click="configMenu_Click"/>
-                <MenuItem Header="{x:Static p:Resources.Help}">
+                <MenuItem Header="{x:Static p:Resources.ConfigurationTitle}" Click="configMenu_Click" ToolTip="{x:Static p:Resources.ConfigureMenuTooltip}"/>
+                <MenuItem Header="{x:Static p:Resources.Help}" ToolTip="{x:Static p:Resources.HelpMenuTooltip}">
                     <MenuItem Header="{x:Static p:Resources.ModdingResources}" Icon="📚">
-                        <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗"/>
-                        <MenuItem Header="{x:Static p:Resources.BG3CommunityLibrary}" Click="BG3CommWikiLink_Click" Icon="📗"/>
-                        <MenuItem Header="{x:Static p:Resources.ModdingTutorial}" Click="ModTutLink_Click" Icon="📗"/>
-                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtender}" Click="BG3SELink_Click" Icon="📗"/>
-                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderAPI}" Click="BG3SEAPILink_Click" Icon="📗"/>
-                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick" Icon="📗"/>
-                        <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click" Icon="📗"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3WikiTooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3CommunityLibrary}" Click="BG3CommWikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3CommWikiTooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.ModdingTutorial}" Click="ModTutLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.ModTutTooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtender}" Click="BG3SELink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3SETooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderAPI}" Click="BG3SEAPILink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3SEAPITooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick" Icon="📗" ToolTip="{x:Static p:Resources.BG3SESampleTooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.LuaSetupTooltip}"/>
                     </MenuItem>
-                    <MenuItem Header="{x:Static p:Resources.CheckForUpdates}" Click="CheckForUpdates_Click" Icon="🔃"/>
-                    <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click" Icon="🐞"/>
-                    <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click" Icon="☕"/>
+                    <MenuItem Header="{x:Static p:Resources.CheckForUpdates}" Click="CheckForUpdates_Click" Icon="🔃" ToolTip="{x:Static p:Resources.CheckForUpdatesTooltip}"/>
+                    <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click" Icon="🐞" ToolTip="{x:Static p:Resources.ReportABugTooltip}"/>
+                    <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click" Icon="☕" ToolTip="{x:Static p:Resources.KofiTooltip}"/>
                 </MenuItem>
             </Menu>
         </Border>

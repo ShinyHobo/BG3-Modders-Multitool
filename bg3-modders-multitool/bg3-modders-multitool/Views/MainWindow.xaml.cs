@@ -151,6 +151,7 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        #region Shortcuts Tab
         /// <summary>
         /// Opens the mods folder in the file explorer. 
         /// </summary>
@@ -170,6 +171,7 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
         }
+        #endregion
 
         private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)
         {
@@ -230,5 +232,30 @@ namespace bg3_modders_multitool.Views
             vm.CheckForUpdates();
         }
         #endregion
+
+        /// <summary>
+        /// Opens dialog to select paks to unpack
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UnpackMod_Click(object sender, RoutedEventArgs e)
+        {
+            var unpackPakDialog = new System.Windows.Forms.OpenFileDialog() {
+                Filter = $"{Properties.Resources.PakFileDescription}|*.pak",
+                Title = Properties.Resources.UnpackModPaks,
+                DefaultExt = ".pak",
+                Multiselect = true,
+                CheckFileExists = true
+            };
+            var result = unpackPakDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                var sner = unpackPakDialog.FileNames;
+                foreach(var file in unpackPakDialog.FileNames)
+                {
+                    PakUnpackHelper.UnpackModToWorkspace(file);
+                }
+            }
+        }
     }
 }

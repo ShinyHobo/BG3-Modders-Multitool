@@ -26,17 +26,23 @@ namespace bg3_modders_multitool.Services
         /// <param name="args">The arguments to pass into the text</param>
         public static void WriteToConsole(string resource, params object[] args)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                try
-                {
-                    var message = string.Format(resource, args);
-                    ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
-                }
-                catch
-                {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
-                }
-            });
+            if(resource != null)
+            {
+                Application.Current.Dispatcher.Invoke(() => {
+                    try
+                    {
+                        var message = string.Format(resource, args);
+                        ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
+                        } catch { }
+                    }
+                });
+            }
         }
 
         /// <summary>
