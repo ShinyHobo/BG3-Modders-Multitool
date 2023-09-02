@@ -709,6 +709,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the location of your BG3 game executable..
+        /// </summary>
+        public static string GameExeLocationTooltip {
+            get {
+                return ResourceManager.GetString("GameExeLocationTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please Select GameObject Type.
         /// </summary>
         public static string GameObjectSelectionLabel {

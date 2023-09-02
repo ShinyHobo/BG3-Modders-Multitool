@@ -356,6 +356,9 @@
   <data name="GameDocsLocationTooltip" xml:space="preserve">
     <value>Please select you game's Documents folder. (e.g: ...\AppData\Local\Larian Studios\Baldur's Gate 3)</value>
   </data>
+  <data name="GameExeLocationTooltip" xml:space="preserve">
+    <value>Select the location of your BG3 game executable.</value>
+  </data>
   <data name="GameObjectSelectionLabel" xml:space="preserve">
     <value>Please Select GameObject Type</value>
   </data>
