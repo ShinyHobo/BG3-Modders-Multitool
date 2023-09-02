@@ -178,6 +178,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unpacking process cancelled for {0}.
+        /// </summary>
+        public static string CanceledUnpackingPak {
+            get {
+                return ResourceManager.GetString("CanceledUnpackingPak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects loading cancelled..
         /// </summary>
         public static string CancelledGOE {
@@ -426,6 +435,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ErrorParsingStructure {
             get {
                 return ResourceManager.GetString("ErrorParsingStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error unpacking {0}: {1}.
+        /// </summary>
+        public static string ErrorUnpacking {
+            get {
+                return ResourceManager.GetString("ErrorUnpacking", resourceCulture);
             }
         }
         

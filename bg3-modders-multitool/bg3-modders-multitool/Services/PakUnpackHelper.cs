@@ -32,20 +32,39 @@ namespace bg3_modders_multitool.Services
             var pakSelection = new Views.PakSelection(files);
             pakSelection.ShowDialog();
             pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
-            var paks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+            var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
             Cancelled = false;
             return Task.Run(() =>
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
-                return Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file =>
-                {
-                    var packager = new Packager();
-                    packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
+                var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file)));
+                var cancelError = "Pak unpacking cancelled";
+                Parallel.ForEach(paks, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, (pak, loopstate) => {
+                    var pakName = Path.GetFileNameWithoutExtension(pak);
+                    try
                     {
-                        //GeneralHelper.WriteToConsole($"{5 + (int)(numerator * 15 / denominator)}");
-                    };
-                    packager.UncompressPackage(file, unpackPath);
-                }));
+                        var packager = new Packager();
+                        packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
+                        {
+                            //GeneralHelper.WriteToConsole($"{5 + (int)(numerator * 15 / denominator)}");
+                            if (Cancelled)
+                            {
+                                throw new Exception(cancelError);
+                            }
+                        };
+                        packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
+                    }
+                    catch (Exception ex) {
+                        if(ex.Message ==  cancelError)
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.CanceledUnpackingPak, pakName);
+                        }
+                        else
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.ErrorUnpacking, pakName, ex.Message);
+                        }
+                    }
+                });
             }).ContinueWith(delegate
             {
                 if (!Cancelled)

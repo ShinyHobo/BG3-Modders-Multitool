@@ -157,6 +157,10 @@
   <data name="CancelButton" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CanceledUnpackingPak" xml:space="preserve">
+    <value>Unpacking process cancelled for {0}</value>
+    <comment>pak name</comment>
+  </data>
   <data name="CancelledGOE" xml:space="preserve">
     <value>GameObjects loading cancelled.</value>
   </data>
@@ -246,6 +250,10 @@
   <data name="ErrorParsingStructure" xml:space="preserve">
     <value>Error parsing line [{0}] for structure type \"{1}\": {2}</value>
     <comment>line number, type, error message</comment>
+  </data>
+  <data name="ErrorUnpacking" xml:space="preserve">
+    <value>Error unpacking {0}: {1}</value>
+    <comment>pak name, error message</comment>
   </data>
   <data name="EstimateLabel" xml:space="preserve">
     <value>Estimate</value>
