@@ -322,6 +322,26 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This process converts all unpacked files to their human readable state (ie lsf to lsx and loca to xml). It may take a significant amount of time.
+        ///
+        ///Do you wish to continue?.
+        /// </summary>
+        public static string DecompressQuestion {
+            get {
+                return ResourceManager.GetString("DecompressQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready to decompress your files?.
+        /// </summary>
+        public static string DecompressQuestionTitle {
+            get {
+                return ResourceManager.GetString("DecompressQuestionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DescriptionHandle.
         /// </summary>
         public static string DescriptionHandleLabel {
