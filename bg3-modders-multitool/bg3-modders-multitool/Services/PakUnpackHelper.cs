@@ -8,16 +8,25 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Windows;
 
-    public class PakUnpackHelper
+    public class PakUnpackHelper : BaseViewModel
     {
         public bool Cancelled;
 
-        public List<(string Pak, int Percent)> PakProgress { get; set; } 
+        private ConcurrentBag<PakProgress> _pakProgress;
+        public ConcurrentBag<PakProgress> PakProgressCollection
+        {
+            get { return _pakProgress; }
+            set { _pakProgress = value; OnNotifyPropertyChanged(); }
+        }
 
         /// <summary>
         /// Unpacks all the .pak files in the game data directory and places them in a folder next to the exe
@@ -32,10 +41,18 @@ namespace bg3_modders_multitool.Services
             pakSelection.ShowDialog();
             pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
             var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+
+            var unpackerProgressWindow = new Views.UnpackerProgress();
+            unpackerProgressWindow.DataContext = this;
+            unpackerProgressWindow.Show();
+            unpackerProgressWindow.Closing += (o, i) => { Cancelled = true; };
+
             Cancelled = false;
-            PakProgress = new List<(string Pak, int Percent)>();
+            
+
             return Task.Run(() =>
             {
+                PakProgressCollection = new ConcurrentBag<PakProgress>();
                 GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
                 var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file)));
                 var cancelError = "Pak unpacking cancelled";
@@ -44,7 +61,7 @@ namespace bg3_modders_multitool.Services
                     try
                     {
                         var packager = new Packager();
-                        PakProgress.Add((Pak: pakName, Percent: 0));
+                        PakProgressCollection.Add(new PakProgress(pakName));
                         packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
                         {
                             if (Cancelled)
@@ -52,15 +69,13 @@ namespace bg3_modders_multitool.Services
                                 throw new Exception(cancelError);
                             }
                             var newPercent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
-                            var pakProgress = PakProgress.First(p => p.Pak == pakName);
-                            if(newPercent != pakProgress.Percent)
-                            {
-                                pakProgress.Percent = newPercent;
-                                //GeneralHelper.WriteToConsole($"{pakName}: {pakProgress.Percent}%");
-                            }
+                            var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
+                            PakProgressCollection = PakProgressCollection;
+                            pakProgress.Percent = newPercent;
                         };
                         packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
-                        GeneralHelper.WriteToConsole(pakName);
+                        PakProgressCollection.First(p => p.PakName == pakName).Percent = 100;
+                        GeneralHelper.WriteToConsole(pakName + " complete");
                     }
                     catch (Exception ex) {
                         if(ex.Message ==  cancelError)
@@ -84,6 +99,9 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
+                Application.Current.Dispatcher.Invoke(() => {
+                    unpackerProgressWindow.Close();
+                });
             });
         }
 
@@ -144,6 +162,26 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
                 return convertFiles;
             });
+        }
+
+        public class PakProgress : BaseViewModel
+        {
+            public PakProgress(string pakName)
+            {
+                PakName = pakName;
+                Percent = 0;
+            }
+            public string PakName { get; set; }
+            private int _percent;
+            public int Percent
+            {
+                get { return _percent; }
+                set
+                {
+                    _percent = value;
+                    OnNotifyPropertyChanged();
+                }
+            }
         }
     }
 }

@@ -1685,6 +1685,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pak Unpacking Progress.
+        /// </summary>
+        public static string UnpackerProgressTitle {
+            get {
+                return ResourceManager.GetString("UnpackerProgressTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unpack .pak Files.
         /// </summary>
         public static string UnpackFilesButton {

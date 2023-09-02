@@ -6,13 +6,12 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.Views;
-    using MdXaml;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Documents;
 
     public class MainWindow : BaseViewModel
     {
@@ -307,6 +306,15 @@ namespace bg3_modders_multitool.ViewModels
             {
                 _profilesFolderLoaded = value;
                 OnNotifyPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<(string Pak, int Percent)> _pakProgress;
+        public ObservableCollection<(string Pak, int Percent)> PakProgress { 
+            get { return _pakProgress; }
+            set {
+                _pakProgress = value; 
+                OnNotifyPropertyChanged(); 
             }
         }
 

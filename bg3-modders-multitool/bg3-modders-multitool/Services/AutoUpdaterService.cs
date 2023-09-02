@@ -74,45 +74,52 @@
         public Task CheckForVersionUpdate()
         {
             return Task.Run(async () => {
-                var releaseHistory = await HttpClient.GetAsync(_repoUrl);
-                if (releaseHistory.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    var currentVersion = GeneralHelper.GetAppVersion();
-                    string response = await releaseHistory.Content.ReadAsStringAsync();
-                    var releases = JsonConvert.DeserializeObject(response) as Newtonsoft.Json.Linq.JArray;
-                    if (releases != null)
+                    var releaseHistory = await HttpClient.GetAsync(_repoUrl);
+                    if (releaseHistory.StatusCode == HttpStatusCode.OK)
                     {
-                        var newestRelease = releases.First();
-                        if (newestRelease != null)
+                        var currentVersion = GeneralHelper.GetAppVersion();
+                        string response = await releaseHistory.Content.ReadAsStringAsync();
+                        var releases = JsonConvert.DeserializeObject(response) as Newtonsoft.Json.Linq.JArray;
+                        if (releases != null)
                         {
-                            var matchedVersion = releases.FirstOrDefault(r => r["tag_name"].ToString().Remove(0, 1) == currentVersion);
-                            var versionsBehind = releases.IndexOf(matchedVersion);
-                            versionsBehind = versionsBehind == -1 ? releases.Count : versionsBehind;
-                            if (versionsBehind > 0)
+                            var newestRelease = releases.First();
+                            if (newestRelease != null)
                             {
-                                UpdateAvailable = true;
-                                Releases.Clear();
-
-                                for (int i = 0; i < versionsBehind; i++)
+                                var matchedVersion = releases.FirstOrDefault(r => r["tag_name"].ToString().Remove(0, 1) == currentVersion);
+                                var versionsBehind = releases.IndexOf(matchedVersion);
+                                versionsBehind = versionsBehind == -1 ? releases.Count : versionsBehind;
+                                if (versionsBehind > 0)
                                 {
-                                    var releaseAsset = releases[i];
-                                    var version = releaseAsset["tag_name"].ToString().Remove(0, 1);
-                                    var releaseNotes = releaseAsset["body"].ToString();
-                                    var exeAsset = releaseAsset["assets"].FirstOrDefault(a => a["name"].ToString() == $"{_exeName}.zip");
-                                    var title = releaseAsset["name"].ToString();
-                                    var downloadUrl = exeAsset?["browser_download_url"].ToString();
-                                    var release = new Release(version, title, releaseNotes, downloadUrl);
-                                    Releases.Add(release);
+                                    UpdateAvailable = true;
+                                    Releases.Clear();
+
+                                    for (int i = 0; i < versionsBehind; i++)
+                                    {
+                                        var releaseAsset = releases[i];
+                                        var version = releaseAsset["tag_name"].ToString().Remove(0, 1);
+                                        var releaseNotes = releaseAsset["body"].ToString();
+                                        var exeAsset = releaseAsset["assets"].FirstOrDefault(a => a["name"].ToString() == $"{_exeName}.zip");
+                                        var title = releaseAsset["name"].ToString();
+                                        var downloadUrl = exeAsset?["browser_download_url"].ToString();
+                                        var release = new Release(version, title, releaseNotes, downloadUrl);
+                                        Releases.Add(release);
+                                    }
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToFetchUpdates, (int)releaseHistory.StatusCode);
+                    }
+                    return;
                 }
-                else
+                catch (Exception e)
                 {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFetchUpdates, (int)releaseHistory.StatusCode);
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFetchUpdates, e.Message);
                 }
-                return;
             });
         }
 

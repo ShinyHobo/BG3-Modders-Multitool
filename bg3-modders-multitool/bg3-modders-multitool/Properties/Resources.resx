@@ -699,6 +699,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="UnpackButtonTooltip" xml:space="preserve">
     <value>Allows you to select the game paks to unpack</value>
   </data>
+  <data name="UnpackerProgressTitle" xml:space="preserve">
+    <value>Pak Unpacking Progress</value>
+  </data>
   <data name="UnpackFilesButton" xml:space="preserve">
     <value>Unpack .pak Files</value>
   </data>
