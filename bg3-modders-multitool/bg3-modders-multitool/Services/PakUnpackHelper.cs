@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Services
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.ViewModels;
+    using LSLib.LS;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -19,7 +20,7 @@ namespace bg3_modders_multitool.Services
         public bool Cancelled;
 
         /// <summary>
-        /// Unpacks all the .pak files in the game data directory and places them in a folder next to divine.exe
+        /// Unpacks all the .pak files in the game data directory and places them in a folder next to the exe
         /// </summary>
         public Task UnpackAllPakFiles()
         {
@@ -38,7 +39,12 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
                 return Task.WhenAll(files.Where(file => paks.Contains(Path.GetFileName(file))).Select(async file =>
                 {
-                    await RunProcessAsync(file, unpackPath);
+                    var packager = new Packager();
+                    packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
+                    {
+                        //GeneralHelper.WriteToConsole($"{5 + (int)(numerator * 15 / denominator)}");
+                    };
+                    packager.UncompressPackage(file, unpackPath);
                 }));
             }).ContinueWith(delegate
             {
@@ -48,37 +54,6 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
             });
-        }
-
-        /// <summary>
-        /// Creates and runs a process window. Adds the process to a list for cancellation.
-        /// </summary>
-        /// <param name="file">The file to unpack.</param>
-        /// <param name="unpackpath">The folder path to unpack the file to.</param>
-        /// <returns></returns>
-        private Task<int> RunProcessAsync(string file, string unpackpath)
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = Properties.Settings.Default.divineExe,
-                Arguments = $" -g \"bg3\" --action \"extract-package\" --source \"{file}\" --destination \"{unpackpath}\" -l \"all\" --use-package-name"
-            };
-
-            var tcs = new TaskCompletionSource<int>();
-            var process = new Process {
-                StartInfo = startInfo,
-                EnableRaisingEvents = true
-            };
-
-            process.Exited += (sender, args) => {
-                tcs.SetResult(process.ExitCode);
-                process.Dispose();
-            };
-
-            process.Start();
-            Processes.Add(process.Id);
-
-            return tcs.Task;
         }
 
         /// <summary>

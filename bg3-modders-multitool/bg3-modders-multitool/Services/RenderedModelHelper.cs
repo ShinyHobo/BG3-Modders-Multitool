@@ -261,7 +261,7 @@ namespace bg3_modders_multitool.Services
                         }
                     }
 
-                    if (!File.Exists($"{filename}.fbx"))
+                    if (!File.Exists($"\\\\?\\{filename}.fbx"))
                     {
                         var converter = new Assimp.AssimpContext();
                         var exportFormats = converter.GetSupportedExportFormats().Select(e => e.FormatId);
