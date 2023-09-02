@@ -309,15 +309,6 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private ObservableCollection<(string Pak, int Percent)> _pakProgress;
-        public ObservableCollection<(string Pak, int Percent)> PakProgress { 
-            get { return _pakProgress; }
-            set {
-                _pakProgress = value; 
-                OnNotifyPropertyChanged(); 
-            }
-        }
-
         #endregion
 
         #region UUID Generation Properties

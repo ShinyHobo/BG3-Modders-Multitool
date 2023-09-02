@@ -21,8 +21,8 @@ namespace bg3_modders_multitool.Services
     {
         public bool Cancelled;
 
-        private ConcurrentBag<PakProgress> _pakProgress;
-        public ConcurrentBag<PakProgress> PakProgressCollection
+        private ObservableCollection<PakProgress> _pakProgress;
+        public ObservableCollection<PakProgress> PakProgressCollection
         {
             get { return _pakProgress; }
             set { _pakProgress = value; OnNotifyPropertyChanged(); }
@@ -52,16 +52,21 @@ namespace bg3_modders_multitool.Services
 
             return Task.Run(() =>
             {
-                PakProgressCollection = new ConcurrentBag<PakProgress>();
+                PakProgressCollection = new ObservableCollection<PakProgress>();
                 GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
                 var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file)));
+
+                foreach (var pak in paks)
+                {
+                    PakProgressCollection.Add(new PakProgress(Path.GetFileNameWithoutExtension(pak)));
+                }
+
                 var cancelError = "Pak unpacking cancelled";
                 Parallel.ForEach(paks, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, (pak, loopstate) => {
                     var pakName = Path.GetFileNameWithoutExtension(pak);
                     try
                     {
                         var packager = new Packager();
-                        PakProgressCollection.Add(new PakProgress(pakName));
                         packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
                         {
                             if (Cancelled)
@@ -70,11 +75,18 @@ namespace bg3_modders_multitool.Services
                             }
                             var newPercent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
                             var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
-                            PakProgressCollection = PakProgressCollection;
-                            pakProgress.Percent = newPercent;
+                            lock (pakProgress)
+                                pakProgress.Percent = newPercent;
                         };
                         packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
-                        PakProgressCollection.First(p => p.PakName == pakName).Percent = 100;
+
+                        Application.Current.Dispatcher.Invoke(() => {
+                            lock (PakProgressCollection)
+                            {
+                                var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
+                                PakProgressCollection.Remove(pakProgress);
+                            }
+                        });
                         GeneralHelper.WriteToConsole(pakName + " complete");
                     }
                     catch (Exception ex) {
