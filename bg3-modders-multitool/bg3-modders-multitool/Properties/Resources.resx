@@ -135,6 +135,9 @@
   <data name="BG3CommunityLibrary" xml:space="preserve">
     <value>BG3 Community Library</value>
   </data>
+  <data name="BG3CommWikiTooltip" xml:space="preserve">
+    <value>A collaborative community resource with guides and example mods</value>
+  </data>
   <data name="BG3ExeLabel" xml:space="preserve">
     <value>bg3.exe location</value>
   </data>
@@ -149,6 +152,18 @@
   </data>
   <data name="BG3ScriptExtenderSampleMod" xml:space="preserve">
     <value>BG3 Script Extender Sample Mod</value>
+  </data>
+  <data name="BG3SEAPITooltip" xml:space="preserve">
+    <value>Script Extender lua API documentation</value>
+  </data>
+  <data name="BG3SESampleTooltip" xml:space="preserve">
+    <value>Script Extender example mod</value>
+  </data>
+  <data name="BG3SETooltip" xml:space="preserve">
+    <value>The most recent release of the Script Extender</value>
+  </data>
+  <data name="BG3WikiTooltip" xml:space="preserve">
+    <value>The BG3 Wiki modding resources page</value>
   </data>
   <data name="CachingFile" xml:space="preserve">
     <value>Caching {0}...</value>
@@ -173,6 +188,9 @@
   <data name="CheckForUpdates" xml:space="preserve">
     <value>Check for updates</value>
   </data>
+  <data name="CheckForUpdatesTooltip" xml:space="preserve">
+    <value>Check for and apply available updates</value>
+  </data>
   <data name="CheckingForUpdates" xml:space="preserve">
     <value>Checking for updates...</value>
   </data>
@@ -180,11 +198,11 @@
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
 Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
-  <data name="ConfigButtonTooltip" xml:space="preserve">
-    <value>Essential configuration options</value>
-  </data>
   <data name="ConfigurationTitle" xml:space="preserve">
     <value>Configuration</value>
+  </data>
+  <data name="ConfigureMenuTooltip" xml:space="preserve">
+    <value>Configure the application</value>
   </data>
   <data name="ConfirmButton" xml:space="preserve">
     <value>Confirm</value>
@@ -407,6 +425,9 @@ Do you wish to continue?</value>
 
 Are you sure you want to delete the GameObject cache?</value>
   </data>
+  <data name="GOEMenuTooltip" xml:space="preserve">
+    <value>For searching through GameObjects quickly and looking up their properties. Includes a model viewer.</value>
+  </data>
   <data name="GOENoCache" xml:space="preserve">
     <value>No GameObject cache to clear.</value>
   </data>
@@ -429,6 +450,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>Help</value>
+  </data>
+  <data name="HelpMenuTooltip" xml:space="preserve">
+    <value>A collection of modding resources and support links</value>
   </data>
   <data name="IconLabel" xml:space="preserve">
     <value>Icon</value>
@@ -455,6 +479,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="IndexMenu" xml:space="preserve">
     <value>Index</value>
   </data>
+  <data name="IndexMenuTooltip" xml:space="preserve">
+    <value>For creating and searching through an index of the unpacked game files quickly</value>
+  </data>
   <data name="IndexNotFound" xml:space="preserve">
     <value>No index available! Please unpack game assets and generate an index.</value>
   </data>
@@ -479,6 +506,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="InfoGenerated" xml:space="preserve">
     <value>info.json generated.</value>
+  </data>
+  <data name="KofiTooltip" xml:space="preserve">
+    <value>Support ShinyHobo on KoFi</value>
   </data>
   <data name="LangChinese" xml:space="preserve">
     <value>中文</value>
@@ -514,6 +544,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="LuaSetup" xml:space="preserve">
     <value>Lua Setup</value>
+  </data>
+  <data name="LuaSetupTooltip" xml:space="preserve">
+    <value>A tutorial on how to use lua to make mods utilizing the Script Extender</value>
   </data>
   <data name="MapKeyLabel" xml:space="preserve">
     <value>MapKey</value>
@@ -551,6 +584,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="ModsFolderButtonTooltip" xml:space="preserve">
     <value>Shortcut to open the Mods folder</value>
   </data>
+  <data name="ModTutTooltip" xml:space="preserve">
+    <value>An extensive how to guide on the creation of a modded weapon</value>
+  </data>
   <data name="MultitoolTools" xml:space="preserve">
     <value>Tools for the multitool</value>
   </data>
@@ -583,9 +619,6 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="OpenMenu" xml:space="preserve">
     <value>Open</value>
-  </data>
-  <data name="OpenPak" xml:space="preserve">
-    <value>Unpack .pak(s)</value>
   </data>
   <data name="OutOfMemFailedToIndex" xml:space="preserve">
     <value>OOME: Failed to index {0}</value>
@@ -647,6 +680,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="ReportABug" xml:space="preserve">
     <value>Report a bug</value>
   </data>
+  <data name="ReportABugTooltip" xml:space="preserve">
+    <value>Report a bug or problem to the GitHub issues page</value>
+  </data>
   <data name="ResultsHaveBeenFiltered" xml:space="preserve">
     <value>{0} results have been filtered out.</value>
   </data>
@@ -685,6 +721,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="ShortcutsMenu" xml:space="preserve">
     <value>Shortcuts</value>
+  </data>
+  <data name="ShortcutsMenuTooltip" xml:space="preserve">
+    <value>Shortcuts to important folder locations</value>
   </data>
   <data name="SortingBanksFiles" xml:space="preserve">
     <value>Sorting bank files...</value>
@@ -750,8 +789,8 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="UnpackingProcessStarted" xml:space="preserve">
     <value>Unpacking processes starting; this could take a while.</value>
   </data>
-  <data name="UnpackModPak" xml:space="preserve">
-    <value>Unpack .pak</value>
+  <data name="UnpackModPaks" xml:space="preserve">
+    <value>Unpack .pak(s)</value>
   </data>
   <data name="UnpackModPakTooltip" xml:space="preserve">
     <value>Unpacks the selected .pak file(s) into the UnpackedMods folder, near the application.</value>

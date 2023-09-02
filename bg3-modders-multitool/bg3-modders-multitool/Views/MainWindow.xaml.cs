@@ -242,8 +242,9 @@ namespace bg3_modders_multitool.Views
         {
             var unpackPakDialog = new System.Windows.Forms.OpenFileDialog() {
                 Filter = $"{Properties.Resources.PakFileDescription}|*.pak",
-                Title = Properties.Resources.PakFileDescription,
+                Title = Properties.Resources.UnpackModPaks,
                 DefaultExt = ".pak",
+                Multiselect = true,
                 CheckFileExists = true
             };
             var result = unpackPakDialog.ShowDialog();
