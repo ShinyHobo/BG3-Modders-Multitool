@@ -56,7 +56,7 @@ namespace bg3_modders_multitool.Views
             var vm = DataContext as ViewModels.DragAndDropBox;
             var folderDialog = new System.Windows.Forms.FolderBrowserDialog
             {
-                Description = Properties.Resources.SelectGameModDirectory,
+                Description = Properties.Resources.PleaseSelectWorkspace,
                 SelectedPath = string.IsNullOrEmpty(lastDirectory) ? Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory() : lastDirectory
             };
 

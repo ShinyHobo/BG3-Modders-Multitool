@@ -232,7 +232,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically..
+        ///   Looks up a localized string similar to Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically. Alternatively unpacks .paks.
         /// </summary>
         public static string ClickOrDropModPacker {
             get {
@@ -414,7 +414,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Drop mod workspace folder here.
+        ///   Looks up a localized string similar to Drop mod workspace folder or mod .pak here.
         /// </summary>
         public static string DropModMessage {
             get {
@@ -1366,6 +1366,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ParentTemplateIdLabel {
             get {
                 return ResourceManager.GetString("ParentTemplateIdLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select your mod workspace directory.
+        /// </summary>
+        public static string PleaseSelectWorkspace {
+            get {
+                return ResourceManager.GetString("PleaseSelectWorkspace", resourceCulture);
             }
         }
         

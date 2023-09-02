@@ -177,7 +177,7 @@
     <value>Checking for updates...</value>
   </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
-    <value>Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically.</value>
+    <value>Drop your workspace here click to select your workspace directory. This will process and pack your mod automatically. Alternatively unpacks .paks</value>
   </data>
   <data name="ConfigButtonTooltip" xml:space="preserve">
     <value>Essential configuration options</value>
@@ -243,7 +243,7 @@ Do you wish to continue?</value>
     <value>DisplayName</value>
   </data>
   <data name="DropModMessage" xml:space="preserve">
-    <value>Drop mod workspace folder here</value>
+    <value>Drop mod workspace folder or mod .pak here</value>
   </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>
@@ -589,6 +589,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="ParentTemplateIdLabel" xml:space="preserve">
     <value>ParentTemplateId</value>
+  </data>
+  <data name="PleaseSelectWorkspace" xml:space="preserve">
+    <value>Please select your mod workspace directory</value>
   </data>
   <data name="ProblemPlayingAudio" xml:space="preserve">
     <value>Problem playing audio file!!</value>

@@ -17,7 +17,7 @@ namespace bg3_modders_multitool.ViewModels
         public MainWindow()
         {
             Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
-            GameDocumentsLocation = Settings.Default.gameDocumentsPath;
+            GameDocumentsLocation = Settings.Default.gameDocumentsPath ?? string.Empty;
             Unpacker = new PakUnpackHelper();
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
@@ -190,16 +190,15 @@ namespace bg3_modders_multitool.ViewModels
             set
             {
                 _gameDocumentsLocation = value;
-
                 // Validate the mods folder path.
                 ModsFolderLoaded = Directory.Exists(PathHelper.ModsFolderPath);
-                if(!ModsFolderLoaded)
-                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindModsFolder, PathHelper.ModsFolderPath);
+                if (!ModsFolderLoaded)
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindModsFolder, PathHelper.ModsFolderPath ?? string.Empty);
 
                 // Validate the player profiles folder path.
                 ProfilesFolderLoaded = Directory.Exists(PathHelper.PlayerProfilesFolderPath);
                 if (!ProfilesFolderLoaded)
-                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindPlayerProfilesFolder, PathHelper.PlayerProfilesFolderPath);
+                    GeneralHelper.WriteToConsole(Properties.Resources.UnableToFindPlayerProfilesFolder, PathHelper.PlayerProfilesFolderPath ?? string.Empty);
 
                 ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();
