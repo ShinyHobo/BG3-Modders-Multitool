@@ -17,7 +17,8 @@ Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked worksp
 - Colada model conversion  
 - .wem => .ogg file conversion and playback
 
-![Main window](https://i.imgur.com/ZkNE25B.png)
+![Main Window](https://github.com/ShinyHobo/BG3-Modders-Multitool/assets/6206737/7616e2e1-cb4e-4d0c-8097-3995cca9e30d)
+
 
 #### Indexing/Searching
 By clicking on the "Index" button, you will be able to create an index of all unpacked .pak files you have in your UnpackedData directory. Double-click the Index button to begin indexing. After indexing, open an Index Search window, type your keywords into the search bar, and hit Enter (or "Search Files") to get results within a matter of seconds. Double click a listing to open it; hover for a file preview (matching lines only).
