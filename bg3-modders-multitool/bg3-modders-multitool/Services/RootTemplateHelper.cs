@@ -225,7 +225,7 @@ namespace bg3_modders_multitool.Services
                 rootTemplate = FileHelper.GetPath(rootTemplate);
                 if (File.Exists(rootTemplate))
                 {
-                    var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
+                    var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", Path.ChangeExtension(rootTemplate, "lsx"));
                     if(File.Exists(rootTemplatePath))
                     {
                         var fileLocation = rootTemplatePath.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
@@ -561,7 +561,7 @@ namespace bg3_modders_multitool.Services
                 visualBankFile = FileHelper.GetPath(visualBankFile);
                 if (File.Exists(visualBankFile))
                 {
-                    var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
+                    var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", Path.ChangeExtension(visualBankFile, "lsx"));
                     var filePath = visualBankFilePath.Replace($"\\\\?\\{FileHelper.UnpackedDataPath}", string.Empty);
 
                     if (!FileHelper.TryParseXml(filePath))
