@@ -128,7 +128,7 @@ namespace bg3_modders_multitool.Views
                 if(result == System.Windows.Forms.DialogResult.Yes)
                 {
                     vm.NotDecompressing = false;
-                    PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
+                    vm.SearchResults.PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
                         Application.Current.Dispatcher.Invoke(() => {
                             vm.NotDecompressing = true;
                         });

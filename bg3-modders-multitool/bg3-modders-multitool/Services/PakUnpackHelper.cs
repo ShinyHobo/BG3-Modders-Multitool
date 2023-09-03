@@ -18,6 +18,7 @@ namespace bg3_modders_multitool.Services
     public class PakUnpackHelper : BaseViewModel
     {
         public bool Cancelled;
+        public SearchResults DataContext;
 
         private ObservableCollection<PakProgress> _pakProgress;
         public ObservableCollection<PakProgress> PakProgressCollection
@@ -45,7 +46,6 @@ namespace bg3_modders_multitool.Services
             unpackerProgressWindow.Closing += (o, i) => { Cancelled = true; };
 
             Cancelled = false;
-            
 
             return Task.Run(() =>
             {
@@ -105,7 +105,6 @@ namespace bg3_modders_multitool.Services
                 }
                 else
                 {
-                    GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessComplete);
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
                 Application.Current.Dispatcher.Invoke(() => {
@@ -118,13 +117,21 @@ namespace bg3_modders_multitool.Services
         /// Decompresses all decompressable files recursively.
         /// </summary>
         /// <returns>The task with the list of all files, with decompressed versions replacing the originals.</returns>
-        public static Task<List<string>> DecompressAllConvertableFiles(string path = null, bool appendOriginalExtension = false)
+        public Task<List<string>> DecompressAllConvertableFiles(string path = null, bool appendOriginalExtension = false)
         {
             return Task.Run(() =>
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
                 path = string.IsNullOrEmpty(path) ? @"\\?\" + FileHelper.UnpackedDataPath : path;
                 var fileList = FileHelper.DirectorySearch(path);
+
+                Application.Current.Dispatcher.Invoke(() => {
+                    DataContext.IsIndexing = true;
+                    DataContext.IndexFileTotal = fileList.Count;
+                    DataContext.IndexStartTime = DateTime.Now;
+                    DataContext.IndexFileCount = 0;
+                });
+
                 GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
                 var convertFiles = new List<string>();
@@ -169,11 +176,17 @@ namespace bg3_modders_multitool.Services
                                 convertFiles.Add(convertedFile);
                             }
                         }
+                        lock (DataContext)
+                            DataContext.IndexFileCount++;
                     }
                 });
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+
+                Application.Current.Dispatcher.Invoke(() => {
+                    DataContext.IsIndexing = false;
+                });
 
                 fileList.Clear();
                 GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
@@ -200,7 +213,7 @@ namespace bg3_modders_multitool.Services
                 if(ext == ".pak")
                 {
                     packager.UncompressPackage(pak, tempPath);
-                    var decompressedFileList = await DecompressAllConvertableFiles(tempPath, true);
+                    var decompressedFileList = await new PakUnpackHelper().DecompressAllConvertableFiles(tempPath, true);
                     foreach(var file in decompressedFileList)
                     {
                         var newPath = file.Replace(DragAndDropHelper.TempFolder, FileHelper.UnpackedModsPath);

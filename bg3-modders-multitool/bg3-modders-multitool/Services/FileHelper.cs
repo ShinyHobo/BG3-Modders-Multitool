@@ -82,7 +82,7 @@ namespace bg3_modders_multitool.Services
                     // These are invalid .lsbs/.lsbc files if this error pops up
                     if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                     }
                 }
 
@@ -103,7 +103,7 @@ namespace bg3_modders_multitool.Services
                     } 
                     catch(Exception ex)
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                     }
                 }
             }
@@ -118,7 +118,7 @@ namespace bg3_modders_multitool.Services
                     }
                     catch (Exception ex)
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                     }
                 }
             }

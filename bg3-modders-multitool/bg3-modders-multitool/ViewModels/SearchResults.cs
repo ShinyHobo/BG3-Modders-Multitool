@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.ViewModels
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Services;
     using HelixToolkit.Wpf.SharpDX;
+    using Lucene.Net.Codecs.Compressing;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -20,10 +21,8 @@ namespace bg3_modders_multitool.ViewModels
     {
         public SearchResults()
         {
-            IndexHelper = new IndexHelper
-            {
-                DataContext = this
-            };
+            IndexHelper = new IndexHelper { DataContext = this };
+            PakUnpackHelper = new PakUnpackHelper { DataContext = this };
             IsIndexing = false;
             EffectsManager = new DefaultEffectsManager();
             Camera = new PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
@@ -52,6 +51,7 @@ namespace bg3_modders_multitool.ViewModels
 
         #region Indexing
         public IndexHelper IndexHelper { get; set; }
+        public PakUnpackHelper PakUnpackHelper { get; set; }
 
         private int _resultTotal;
 
