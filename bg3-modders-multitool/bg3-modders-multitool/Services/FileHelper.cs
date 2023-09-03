@@ -297,7 +297,7 @@ namespace bg3_modders_multitool.Services
         /// <returns>The full file path.</returns>
         public static string GetPath(string file)
         {
-            if(!string.IsNullOrEmpty(file) && file.Contains($"{Directory.GetCurrentDirectory()}\\UnpackedData\\"))
+            if(!string.IsNullOrEmpty(file) && (file.Contains($"{Directory.GetCurrentDirectory()}\\UnpackedData\\") || file.Contains(Path.GetTempPath())))
                     return file;
             return $"{Directory.GetCurrentDirectory()}\\UnpackedData\\{file}";
         }

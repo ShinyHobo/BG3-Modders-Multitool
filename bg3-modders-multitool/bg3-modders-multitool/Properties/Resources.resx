@@ -362,6 +362,10 @@ Do you wish to continue?</value>
   <data name="FileNotFound" xml:space="preserve">
     <value>File not found.</value>
   </data>
+  <data name="FileTypeNotSupported" xml:space="preserve">
+    <value>File type  {0} not supported!</value>
+    <comment>file extension</comment>
+  </data>
   <data name="FinalizingIndex" xml:space="preserve">
     <value>Finalizing index...</value>
   </data>

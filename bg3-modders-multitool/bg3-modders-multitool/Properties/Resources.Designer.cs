@@ -721,6 +721,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File type  {0} not supported!.
+        /// </summary>
+        public static string FileTypeNotSupported {
+            get {
+                return ResourceManager.GetString("FileTypeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Finalizing index....
         /// </summary>
         public static string FinalizingIndex {

@@ -118,13 +118,14 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Decompresses all decompressable files recursively.
         /// </summary>
-        /// <returns>The task with the list of all decompressable files.</returns>
-        public static Task<List<string>> DecompressAllConvertableFiles()
+        /// <returns>The task with the list of all files, with decompressed versions replacing the originals.</returns>
+        public static Task<List<string>> DecompressAllConvertableFiles(string path = null, bool appendOriginalExtension = false)
         {
             return Task.Run(() =>
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
-                var fileList = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
+                path = string.IsNullOrEmpty(path) ? @"\\?\" + Path.GetFullPath("UnpackedData") : path;
+                var fileList = FileHelper.DirectorySearch(path);
                 GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
                 var convertFiles = new List<string>();
@@ -134,17 +135,14 @@ namespace bg3_modders_multitool.Services
                     lock(file)
                     {
                         var extension = Path.GetExtension(file);
+                        var convertedFile = string.Empty;
                         if (!string.IsNullOrEmpty(extension))
                         {
                             switch (extension)
                             {
                                 case ".loca":
                                     {
-                                        var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
-                                        if (Path.GetExtension(convertedFile) == ".xml")
-                                        {
-                                            convertFiles.Add(convertedFile);
-                                        }
+                                        convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
                                     }
                                     break;
                                 case ".xml":
@@ -152,15 +150,25 @@ namespace bg3_modders_multitool.Services
                                     break;
                                 default:
                                     {
-                                        var convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
-                                        if (Path.GetExtension(convertedFile) == ".lsx")
-                                        {
-                                            convertFiles.Add(convertedFile);
-                                        }
+                                        convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
                                     }
                                     break;
                             }
-
+                            if(File.Exists(convertedFile))
+                            {
+                                if(appendOriginalExtension)
+                                {
+                                    var newExtension = Path.GetExtension(convertedFile);
+                                    if(newExtension != extension)
+                                    {
+                                        var convertedFileNewExtension = Path.ChangeExtension(convertedFile, $"{extension}{newExtension}");
+                                        File.Move(convertedFile, convertedFileNewExtension, MoveOptions.ReplaceExisting);
+                                        convertedFile = convertedFileNewExtension;
+                                    }
+                                }
+                                
+                                convertFiles.Add(convertedFile);
+                            }
                         }
                     }
                 });
@@ -178,17 +186,36 @@ namespace bg3_modders_multitool.Services
         /// Unpacks the given mod pak path to the unpacked mods directory
         /// </summary>
         /// <param name="pak">The file path pointing to the pak</param>
-        public static void UnpackModToWorkspace(string pak)
+        public static async void UnpackModToWorkspace(string pak)
         {
             if(File.Exists(pak))
             {
                 var pakName = Path.GetFileNameWithoutExtension(pak);
                 GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacking, Path.GetFileNameWithoutExtension(pakName));
                 var packager = new Packager();
-                var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+                var unpackedModsPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+                var unpackPath = $"{unpackedModsPath}\\{pakName}";
+                var tempPath = $"{DragAndDropHelper.TempFolder}\\{pakName}";
+                Directory.CreateDirectory(DragAndDropHelper.TempFolder);
                 Directory.CreateDirectory(unpackPath);
-                packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
-                GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacked, Path.GetFileNameWithoutExtension(pakName));
+                var ext = Path.GetExtension(pak);
+                if(ext == ".pak")
+                {
+                    packager.UncompressPackage(pak, tempPath);
+                    var decompressedFileList = await DecompressAllConvertableFiles(tempPath, true);
+                    foreach(var file in decompressedFileList)
+                    {
+                        var newPath = file.Replace(DragAndDropHelper.TempFolder, unpackedModsPath);
+                        new System.IO.FileInfo(newPath).Directory.Create();
+                        File.Copy(file, newPath, true);
+                    }
+                    DragAndDropHelper.CleanTempDirectory();
+                    GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacked, pakName);
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.FileTypeNotSupported, ext);
+                }
             }
         }
 
