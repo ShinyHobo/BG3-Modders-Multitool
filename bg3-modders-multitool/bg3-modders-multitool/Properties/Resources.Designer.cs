@@ -2003,7 +2003,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unpack .pak(s).
+        ///   Looks up a localized string similar to Unpack mod .pak(s).
         /// </summary>
         public static string UnpackModPaks {
             get {
