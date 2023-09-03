@@ -116,8 +116,9 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Decompresses all decompressable files recursively.
         /// </summary>
+        /// <param name="path">The file path to decompress</param>
         /// <returns>The task with the list of all files, with decompressed versions replacing the originals.</returns>
-        public Task<List<string>> DecompressAllConvertableFiles(string path = null, bool appendOriginalExtension = false)
+        public Task<List<string>> DecompressAllConvertableFiles(string path = null)
         {
             return Task.Run(() =>
             {
@@ -163,21 +164,7 @@ namespace bg3_modders_multitool.Services
                                     }
                                     break;
                             }
-                            if(File.Exists(convertedFile))
-                            {
-                                if(appendOriginalExtension)
-                                {
-                                    var newExtension = Path.GetExtension(convertedFile);
-                                    if(newExtension != extension)
-                                    {
-                                        var convertedFileNewExtension = Path.ChangeExtension(convertedFile, newExtension);
-                                        File.Move(convertedFile, convertedFileNewExtension, MoveOptions.ReplaceExisting);
-                                        convertedFile = convertedFileNewExtension;
-                                    }
-                                }
-                                
-                                convertFiles.Add(convertedFile);
-                            }
+                            convertFiles.Add(convertedFile);
                         }
                         if (DataContext != null)
                         {
@@ -219,12 +206,11 @@ namespace bg3_modders_multitool.Services
                 var tempPath = $"{DragAndDropHelper.TempFolder}\\{pakName}";
                 Directory.CreateDirectory(DragAndDropHelper.TempFolder);
                 Directory.CreateDirectory(unpackPath);
-                DragAndDropHelper.CleanTempDirectory();
                 var ext = Path.GetExtension(pak);
                 if(ext == ".pak")
                 {
                     packager.UncompressPackage(pak, tempPath);
-                    var decompressedFileList = await new PakUnpackHelper().DecompressAllConvertableFiles(tempPath, true);
+                    var decompressedFileList = await new PakUnpackHelper().DecompressAllConvertableFiles(tempPath);
                     foreach(var file in decompressedFileList)
                     {
                         var newPath = file.Replace(DragAndDropHelper.TempFolder, FileHelper.UnpackedModsPath);
