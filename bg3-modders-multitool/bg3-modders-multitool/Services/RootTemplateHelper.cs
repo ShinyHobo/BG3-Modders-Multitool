@@ -112,7 +112,7 @@ namespace bg3_modders_multitool.Services
 
                 ReadTranslations();
                 ReadVisualBanks();
-                // ReadTextureBanks();
+                //ReadTextureBanks();
                 ReadRootTemplate();
                 foreach (var pak in Paks)
                 {
@@ -598,7 +598,7 @@ namespace bg3_modders_multitool.Services
                                                 characterVisualBanks.TryAdd(id, filePath);
                                                 var bodySetVisual = node.Elements("attribute").Single(a => a.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
                                                 if (bodySetVisual != null)
-                                                    bodySetVisuals.TryAdd(bodySetVisual, filePath);
+                                                    bodySetVisuals.TryAdd(bodySetVisual, filePath.Replace(Directory.GetCurrentDirectory(), ""));
                                             }
                                             else
                                             {
@@ -619,7 +619,7 @@ namespace bg3_modders_multitool.Services
                                         foreach (XElement node in nodes)
                                         {
                                             var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                            materialBanks.TryAdd(id, filePath);
+                                            materialBanks.TryAdd(id, filePath.Replace(Directory.GetCurrentDirectory(), ""));
                                         }
                                     }
                                     reader.Skip();
@@ -634,7 +634,7 @@ namespace bg3_modders_multitool.Services
                                         foreach (XElement node in nodes)
                                         {
                                             var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                            textureBanks.TryAdd(id, filePath);
+                                            textureBanks.TryAdd(id, filePath.Replace(Directory.GetCurrentDirectory(), ""));
                                         }
                                     }
                                     reader.Skip();
@@ -677,9 +677,19 @@ namespace bg3_modders_multitool.Services
         private List<string> GetFileList(string searchTerm)
         {
             var rtList = new List<string>();
-            IndexHelper.SearchFiles(searchTerm, false).ContinueWith(results => {
-                rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsf")));
+
+            // Use fast query first in case user has decompressed all files
+            IndexHelper.SearchFiles($"id=\"{searchTerm}\"", false, null, false).ContinueWith(results => {
+                rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsx")));
             }).Wait();
+
+            // Use slow query to double check that files exist in index
+            if(rtList.Count == 0)
+            {
+                IndexHelper.SearchFiles(searchTerm).ContinueWith(results => {
+                    rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsf")));
+                }).Wait();
+            }
             return rtList;
         }
 
