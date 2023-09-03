@@ -87,7 +87,7 @@ namespace bg3_modders_multitool.Services
                         if (geometry != null)
                         {
                             lock (geometryGroup)
-                                geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty).Replace('/', '\\'), geometry));
+                                geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty).Replace('/', '\\'), geometry));
                         }
                     }
                     catch (Exception ex)
@@ -371,7 +371,7 @@ namespace bg3_modders_multitool.Services
 
                 if (!FileHelper.TryParseXml(visualResourceFile))
                 {
-                    var filePath = visualResourceFile.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+                    var filePath = visualResourceFile.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                     GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, filePath);
                     return null;
                 }

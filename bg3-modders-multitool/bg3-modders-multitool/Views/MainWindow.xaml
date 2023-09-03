@@ -34,6 +34,10 @@
                         ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}" Icon="📂"/>
                     <MenuItem x:Name="tempFolderButton" Header="{x:Static p:Resources.TempFolderMenu}" Click="TempFolderButton_Click"
                         ToolTip="{x:Static p:Resources.TempFolderMenuTooltip}" Icon="📂"/>
+                    <MenuItem x:Name="unpackedDataFolderButton" Header="{x:Static p:Resources.UnpackedDataMenu}" Click="unpackedDataFolderButton_Click"
+                        ToolTip="{x:Static p:Resources.UnpackedDataMenuTooltip}" Icon="📂"/>
+                    <MenuItem x:Name="unpackedModsFolderButton" Header="{x:Static p:Resources.UnpackedModsMenu}" Click="unpackedModsFolderButton_Click"
+                        ToolTip="{x:Static p:Resources.UnpackedModsMenuTooltip}" Icon="📂"/>
                 </MenuItem>
                 <MenuItem Header="{x:Static p:Resources.ConfigurationTitle}" Click="configMenu_Click" ToolTip="{x:Static p:Resources.ConfigureMenuTooltip}"/>
                 <MenuItem Header="{x:Static p:Resources.Help}" ToolTip="{x:Static p:Resources.HelpMenuTooltip}">

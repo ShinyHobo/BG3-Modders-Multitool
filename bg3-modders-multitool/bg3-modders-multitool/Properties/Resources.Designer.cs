@@ -1904,6 +1904,42 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unpacked Data.
+        /// </summary>
+        public static string UnpackedDataMenu {
+            get {
+                return ResourceManager.GetString("UnpackedDataMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacked BG3 data is stored here.
+        /// </summary>
+        public static string UnpackedDataMenuTooltip {
+            get {
+                return ResourceManager.GetString("UnpackedDataMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpacked Mods.
+        /// </summary>
+        public static string UnpackedModsMenu {
+            get {
+                return ResourceManager.GetString("UnpackedModsMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manually unpacked .paks are converted and stored here.
+        /// </summary>
+        public static string UnpackedModsMenuTooltip {
+            get {
+                return ResourceManager.GetString("UnpackedModsMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pak Unpacking Progress.
         /// </summary>
         public static string UnpackerProgressTitle {

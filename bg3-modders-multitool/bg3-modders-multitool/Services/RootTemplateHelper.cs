@@ -105,7 +105,7 @@ namespace bg3_modders_multitool.Services
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
 
                 // check if Models directory exists
-                if(!Directory.Exists($"{Directory.GetCurrentDirectory()}\\UnpackedData\\Models"))
+                if(!Directory.Exists($"{FileHelper.UnpackedDataPath}\\Models"))
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
                 }
@@ -228,7 +228,7 @@ namespace bg3_modders_multitool.Services
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
                     if(File.Exists(rootTemplatePath))
                     {
-                        var fileLocation = rootTemplatePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+                        var fileLocation = rootTemplatePath.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                         if (!FileHelper.TryParseXml(rootTemplatePath))
                         {
                             GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, fileLocation);
@@ -562,11 +562,11 @@ namespace bg3_modders_multitool.Services
                 if (File.Exists(visualBankFile))
                 {
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
-                    var filePath = visualBankFilePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
+                    var filePath = visualBankFilePath.Replace($"\\\\?\\{FileHelper.UnpackedDataPath}", string.Empty);
 
                     if (!FileHelper.TryParseXml(filePath))
                     {
-                        var filePath2 = visualBankFilePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+                        var filePath2 = visualBankFilePath.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                         GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, filePath2);
                         return;
                     }

@@ -19,13 +19,16 @@ namespace bg3_modders_multitool.Services
 
     public static class FileHelper
     {
-        public static string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
-        public static string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
+        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
+        public static readonly string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
+
+        public static readonly string UnpackedDataPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
+        public static readonly string UnpackedModsPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
 
         /// <summary>
         /// List of all known file types used
         /// </summary>
-        public static string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".dae",".dat",
+        public static readonly string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".dae",".dat",
             ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
             ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsfx",".lsj",".lsx",".metal",".ogg",".osi",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
             ".txt",".wav",".wem",".xaml",".xml", Properties.Resources.Extensionless
@@ -297,9 +300,9 @@ namespace bg3_modders_multitool.Services
         /// <returns>The full file path.</returns>
         public static string GetPath(string file)
         {
-            if(!string.IsNullOrEmpty(file) && (file.Contains($"{Directory.GetCurrentDirectory()}\\UnpackedData\\") || file.Contains(Path.GetTempPath())))
+            if(!string.IsNullOrEmpty(file) && (file.Contains(UnpackedDataPath) || file.Contains(Path.GetTempPath())))
                     return file;
-            return $"{Directory.GetCurrentDirectory()}\\UnpackedData\\{file}";
+            return $"{UnpackedDataPath}\\{file}";
         }
 
         /// <summary>

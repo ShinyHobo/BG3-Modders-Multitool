@@ -31,8 +31,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public Task UnpackAllPakFiles()
         {
-            var unpackPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
-            Directory.CreateDirectory(unpackPath);
+            Directory.CreateDirectory(FileHelper.UnpackedDataPath);
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
             var files = Directory.GetFiles(dataDir, "*.pak", System.IO.SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
             var pakSelection = new Views.PakSelection(files);
@@ -76,7 +75,7 @@ namespace bg3_modders_multitool.Services
                             lock (pakProgress)
                                 pakProgress.Percent = newPercent;
                         };
-                        packager.UncompressPackage(pak, $"{unpackPath}\\{pakName}");
+                        packager.UncompressPackage(pak, $"{FileHelper.UnpackedDataPath}\\{pakName}");
 
                         Application.Current.Dispatcher.Invoke(() => {
                             lock (PakProgressCollection)
@@ -124,7 +123,7 @@ namespace bg3_modders_multitool.Services
             return Task.Run(() =>
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
-                path = string.IsNullOrEmpty(path) ? @"\\?\" + Path.GetFullPath("UnpackedData") : path;
+                path = string.IsNullOrEmpty(path) ? @"\\?\" + FileHelper.UnpackedDataPath : path;
                 var fileList = FileHelper.DirectorySearch(path);
                 GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
@@ -193,8 +192,7 @@ namespace bg3_modders_multitool.Services
                 var pakName = Path.GetFileNameWithoutExtension(pak);
                 GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacking, Path.GetFileNameWithoutExtension(pakName));
                 var packager = new Packager();
-                var unpackedModsPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
-                var unpackPath = $"{unpackedModsPath}\\{pakName}";
+                var unpackPath = $"{FileHelper.UnpackedModsPath}\\{pakName}";
                 var tempPath = $"{DragAndDropHelper.TempFolder}\\{pakName}";
                 Directory.CreateDirectory(DragAndDropHelper.TempFolder);
                 Directory.CreateDirectory(unpackPath);
@@ -205,7 +203,7 @@ namespace bg3_modders_multitool.Services
                     var decompressedFileList = await DecompressAllConvertableFiles(tempPath, true);
                     foreach(var file in decompressedFileList)
                     {
-                        var newPath = file.Replace(DragAndDropHelper.TempFolder, unpackedModsPath);
+                        var newPath = file.Replace(DragAndDropHelper.TempFolder, FileHelper.UnpackedModsPath);
                         new System.IO.FileInfo(newPath).Directory.Create();
                         File.Copy(file, newPath, true);
                     }

@@ -182,6 +182,28 @@ namespace bg3_modders_multitool.Views
             Directory.CreateDirectory(DragAndDropHelper.TempFolder);
             System.Diagnostics.Process.Start(DragAndDropHelper.TempFolder);
         }
+
+        /// <summary>
+        /// Creates and opens the UnpackedData folder
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void unpackedModsFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            Directory.CreateDirectory(FileHelper.UnpackedModsPath);
+            System.Diagnostics.Process.Start(FileHelper.UnpackedModsPath);
+        }
+
+        /// <summary>
+        /// Creates and opens the UnpackedMods folder
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void unpackedDataFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            Directory.CreateDirectory(FileHelper.UnpackedDataPath);
+            System.Diagnostics.Process.Start(FileHelper.UnpackedDataPath);
+        }
         #endregion
 
         private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)
