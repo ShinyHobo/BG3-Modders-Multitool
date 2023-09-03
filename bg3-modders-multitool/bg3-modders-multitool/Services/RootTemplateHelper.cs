@@ -9,6 +9,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Properties;
+    using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
@@ -109,6 +110,10 @@ namespace bg3_modders_multitool.Services
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
                 }
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    return (App.Current.MainWindow.DataContext as MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles();
+                }).Wait();
 
                 ReadTranslations();
                 ReadVisualBanks();
