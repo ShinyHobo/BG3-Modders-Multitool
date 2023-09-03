@@ -171,6 +171,17 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
         }
+
+        /// <summary>
+        /// Creates and opens the temp folder
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void TempFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            Directory.CreateDirectory(DragAndDropHelper.TempFolder);
+            System.Diagnostics.Process.Start(DragAndDropHelper.TempFolder);
+        }
         #endregion
 
         private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)

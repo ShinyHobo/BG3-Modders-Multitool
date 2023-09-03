@@ -1823,6 +1823,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Temp Folder.
+        /// </summary>
+        public static string TempFolderMenu {
+            get {
+                return ResourceManager.GetString("TempFolderMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temp files are stored here.
+        /// </summary>
+        public static string TempFolderMenuTooltip {
+            get {
+                return ResourceManager.GetString("TempFolderMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TranslatedString handle.
         /// </summary>
         public static string TranslatedStringHandleLabel {

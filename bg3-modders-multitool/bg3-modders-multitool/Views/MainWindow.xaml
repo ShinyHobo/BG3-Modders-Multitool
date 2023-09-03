@@ -32,6 +32,8 @@
                         ToolTip="{x:Static p:Resources.ModsFolderButtonTooltip}" Icon="📂"/>
                     <MenuItem x:Name="profilesFolderButton" Header="{x:Static p:Resources.ProfilesFolderButton}" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
                         ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}" Icon="📂"/>
+                    <MenuItem x:Name="tempFolderButton" Header="{x:Static p:Resources.TempFolderMenu}" Click="TempFolderButton_Click"
+                        ToolTip="{x:Static p:Resources.TempFolderMenuTooltip}" Icon="📂"/>
                 </MenuItem>
                 <MenuItem Header="{x:Static p:Resources.ConfigurationTitle}" Click="configMenu_Click" ToolTip="{x:Static p:Resources.ConfigureMenuTooltip}"/>
                 <MenuItem Header="{x:Static p:Resources.Help}" ToolTip="{x:Static p:Resources.HelpMenuTooltip}">
