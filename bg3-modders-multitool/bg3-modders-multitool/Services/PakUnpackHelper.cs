@@ -125,12 +125,15 @@ namespace bg3_modders_multitool.Services
                 path = string.IsNullOrEmpty(path) ? @"\\?\" + FileHelper.UnpackedDataPath : path;
                 var fileList = FileHelper.DirectorySearch(path);
 
-                Application.Current.Dispatcher.Invoke(() => {
-                    DataContext.IsIndexing = true;
-                    DataContext.IndexFileTotal = fileList.Count;
-                    DataContext.IndexStartTime = DateTime.Now;
-                    DataContext.IndexFileCount = 0;
-                });
+                if(DataContext != null)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.IsIndexing = true;
+                        DataContext.IndexFileTotal = fileList.Count;
+                        DataContext.IndexStartTime = DateTime.Now;
+                        DataContext.IndexFileCount = 0;
+                    });
+                }
 
                 GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
@@ -167,7 +170,7 @@ namespace bg3_modders_multitool.Services
                                     var newExtension = Path.GetExtension(convertedFile);
                                     if(newExtension != extension)
                                     {
-                                        var convertedFileNewExtension = Path.ChangeExtension(convertedFile, $"{extension}{newExtension}");
+                                        var convertedFileNewExtension = Path.ChangeExtension(convertedFile, newExtension);
                                         File.Move(convertedFile, convertedFileNewExtension, MoveOptions.ReplaceExisting);
                                         convertedFile = convertedFileNewExtension;
                                     }
@@ -176,17 +179,24 @@ namespace bg3_modders_multitool.Services
                                 convertFiles.Add(convertedFile);
                             }
                         }
-                        lock (DataContext)
-                            DataContext.IndexFileCount++;
+                        if (DataContext != null)
+                        {
+                            lock (DataContext)
+                                DataContext.IndexFileCount++;
+                        }
                     }
                 });
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
-                Application.Current.Dispatcher.Invoke(() => {
-                    DataContext.IsIndexing = false;
-                });
+                if (DataContext != null)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        DataContext.IsIndexing = false;
+                    });
+                }
 
                 fileList.Clear();
                 GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
@@ -209,6 +219,7 @@ namespace bg3_modders_multitool.Services
                 var tempPath = $"{DragAndDropHelper.TempFolder}\\{pakName}";
                 Directory.CreateDirectory(DragAndDropHelper.TempFolder);
                 Directory.CreateDirectory(unpackPath);
+                DragAndDropHelper.CleanTempDirectory();
                 var ext = Path.GetExtension(pak);
                 if(ext == ".pak")
                 {
