@@ -120,6 +120,9 @@
   <data name="3DModelTabLabel" xml:space="preserve">
     <value>3D Model</value>
   </data>
+  <data name="AboutMenu" xml:space="preserve">
+    <value>About</value>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Baldur's Gate 3 Modder's Multitool</value>
   </data>
@@ -185,6 +188,12 @@
   <data name="CancelUnpackingButton" xml:space="preserve">
     <value>Cancel Unpacking</value>
   </data>
+  <data name="ChangeLogMenu" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
+  <data name="ChangeLogMenuTooltip" xml:space="preserve">
+    <value>The list of changes from each update</value>
+  </data>
   <data name="CheckForUpdates" xml:space="preserve">
     <value>Check for updates</value>
   </data>
@@ -215,6 +224,9 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
   <data name="ConvertOpenButtonTooltip" xml:space="preserve">
     <value>Converts all convertable, unpacked files to .lsx</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>Copyright © ShinyHobo 2020-2023</value>
   </data>
   <data name="CorruptXmlFile" xml:space="preserve">
     <value>{0} appears to be corrupt or missing. Delete file and Decompress, then try again. Skipping file...</value>
@@ -534,6 +546,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="LaunchGameButtonTooltip" xml:space="preserve">
     <value>Launches the game</value>
+  </data>
+  <data name="LegalMenu" xml:space="preserve">
+    <value>Legal</value>
   </data>
   <data name="LoadedGOE" xml:space="preserve">
     <value>GameObjects loaded in {0} seconds.</value>

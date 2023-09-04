@@ -290,5 +290,18 @@ namespace bg3_modders_multitool.Views
                 }
             }
         }
+
+        #region About menu
+        private void LegalMenu_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.MessageBox.Show(Properties.Resources.Copyright, Properties.Resources.LegalMenu, System.Windows.Forms.MessageBoxButtons.OK);
+        }
+
+        private void CheckForUpdateMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.CheckForUpdates(true);
+        }
+        #endregion
     }
 }

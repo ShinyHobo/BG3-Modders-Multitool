@@ -39,7 +39,6 @@
                     <MenuItem x:Name="unpackedModsFolderButton" Header="{x:Static p:Resources.UnpackedModsMenu}" Click="unpackedModsFolderButton_Click"
                         ToolTip="{x:Static p:Resources.UnpackedModsMenuTooltip}" Icon="📂"/>
                 </MenuItem>
-                <MenuItem Header="{x:Static p:Resources.ConfigurationTitle}" Click="configMenu_Click" ToolTip="{x:Static p:Resources.ConfigureMenuTooltip}"/>
                 <MenuItem Header="{x:Static p:Resources.Help}" ToolTip="{x:Static p:Resources.HelpMenuTooltip}">
                     <MenuItem Header="{x:Static p:Resources.ModdingResources}" Icon="📚">
                         <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3WikiTooltip}"/>
@@ -50,10 +49,15 @@
                         <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick" Icon="📗" ToolTip="{x:Static p:Resources.BG3SESampleTooltip}"/>
                         <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.LuaSetupTooltip}"/>
                     </MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.AboutMenu}" Icon="ℹ️">
+                        <MenuItem Header="{x:Static p:Resources.ChangeLogMenu}" ToolTip="{x:Static p:Resources.ChangeLogMenuTooltip}" Icon="✔️" Click="CheckForUpdateMenu_Click"/>
+                        <MenuItem Header="{x:Static p:Resources.LegalMenu}" Icon="⚖️" Click="LegalMenu_Click"/>
+                    </MenuItem>
                     <MenuItem Header="{x:Static p:Resources.CheckForUpdates}" Click="CheckForUpdates_Click" Icon="🔃" ToolTip="{x:Static p:Resources.CheckForUpdatesTooltip}"/>
                     <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click" Icon="🐞" ToolTip="{x:Static p:Resources.ReportABugTooltip}"/>
                     <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click" Icon="☕" ToolTip="{x:Static p:Resources.KofiTooltip}"/>
                 </MenuItem>
+                <MenuItem Header="{x:Static p:Resources.ConfigurationTitle}" Click="configMenu_Click" ToolTip="{x:Static p:Resources.ConfigureMenuTooltip}"/>
             </Menu>
         </Border>
         <Grid VerticalAlignment="Top" Margin="-4,0,0,0">

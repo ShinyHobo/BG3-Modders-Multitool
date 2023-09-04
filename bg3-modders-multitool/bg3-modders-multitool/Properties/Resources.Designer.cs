@@ -70,6 +70,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string AboutMenu {
+            get {
+                return ResourceManager.GetString("AboutMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Baldur&apos;s Gate 3 Modder&apos;s Multitool.
         /// </summary>
         public static string AppTitle {
@@ -259,6 +268,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changelog.
+        /// </summary>
+        public static string ChangeLogMenu {
+            get {
+                return ResourceManager.GetString("ChangeLogMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The list of changes from each update.
+        /// </summary>
+        public static string ChangeLogMenuTooltip {
+            get {
+                return ResourceManager.GetString("ChangeLogMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check for updates.
         /// </summary>
         public static string CheckForUpdates {
@@ -346,6 +373,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ConvertOpenButtonTooltip {
             get {
                 return ResourceManager.GetString("ConvertOpenButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copyright © ShinyHobo 2020-2023.
+        /// </summary>
+        public static string Copyright {
+            get {
+                return ResourceManager.GetString("Copyright", resourceCulture);
             }
         }
         
@@ -1214,6 +1250,15 @@ namespace bg3_modders_multitool.Properties {
         public static string LaunchGameButtonTooltip {
             get {
                 return ResourceManager.GetString("LaunchGameButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Legal.
+        /// </summary>
+        public static string LegalMenu {
+            get {
+                return ResourceManager.GetString("LegalMenu", resourceCulture);
             }
         }
         

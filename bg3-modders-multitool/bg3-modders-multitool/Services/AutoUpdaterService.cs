@@ -71,7 +71,7 @@
         /// Downloads a new version if one is found
         /// </summary>
         /// <returns>The release check task</returns>
-        public Task CheckForVersionUpdate()
+        public Task CheckForVersionUpdate(bool changelog = false)
         {
             return Task.Run(async () => {
                 try
@@ -84,16 +84,19 @@
                         var releases = JsonConvert.DeserializeObject(response) as Newtonsoft.Json.Linq.JArray;
                         if (releases != null)
                         {
-                            var newestRelease = releases.First();
-                            if (newestRelease != null)
+                            var newestRelease = releases.FirstOrDefault();
+                            if (newestRelease != null || changelog)
                             {
                                 var matchedVersion = releases.FirstOrDefault(r => r["tag_name"].ToString().Remove(0, 1) == currentVersion);
                                 var versionsBehind = releases.IndexOf(matchedVersion);
                                 versionsBehind = versionsBehind == -1 ? releases.Count : versionsBehind;
-                                if (versionsBehind > 0)
+                                if (versionsBehind > 0 || changelog)
                                 {
-                                    UpdateAvailable = true;
+                                    if(!changelog)
+                                        UpdateAvailable = true;
                                     Releases.Clear();
+
+                                    versionsBehind = changelog ? releases.Count : releases.Count;
 
                                     for (int i = 0; i < versionsBehind; i++)
                                     {
