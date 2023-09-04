@@ -32,10 +32,12 @@
                         ToolTip="{x:Static p:Resources.ModsFolderButtonTooltip}" Icon="📂"/>
                     <MenuItem x:Name="profilesFolderButton" Header="{x:Static p:Resources.ProfilesFolderButton}" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
                         ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}" Icon="📂"/>
+                    <Separator />
                     <MenuItem x:Name="tempFolderButton" Header="{x:Static p:Resources.TempFolderMenu}" Click="TempFolderButton_Click"
                         ToolTip="{x:Static p:Resources.TempFolderMenuTooltip}" Icon="📂"/>
                     <MenuItem x:Name="gameDataFolderButton" Header="{x:Static p:Resources.GameDataMenu}" Click="gameDataFolderButton_Click" Icon="📂" IsEnabled="{Binding LaunchGameAllowed}"
                         ToolTip="{x:Static p:Resources.GameDataMenuTooltip}"/>
+                    <Separator />
                     <MenuItem x:Name="unpackedDataFolderButton" Header="{x:Static p:Resources.UnpackedDataMenu}" Click="unpackedDataFolderButton_Click"
                         ToolTip="{x:Static p:Resources.UnpackedDataMenuTooltip}" Icon="📂"/>
                     <MenuItem x:Name="unpackedModsFolderButton" Header="{x:Static p:Resources.UnpackedModsMenu}" Click="unpackedModsFolderButton_Click"
