@@ -53,7 +53,7 @@
             HttpClient.DefaultRequestHeaders.UserAgent.TryParseAdd("BG3-Modders-Multitool");//Set the User Agent
 
             AutoResetEvent = new AutoResetEvent(true);
-            Timer = new Timer(CheckForVersionUpdate, AutoResetEvent, 0, ((int)TimeSpan.FromMinutes(30).TotalMilliseconds));
+            Timer = new Timer(CheckForVersionUpdate, AutoResetEvent, 0, ((int)TimeSpan.FromMinutes(15).TotalMilliseconds));
         }
 
         /// <summary>
