@@ -25,6 +25,7 @@ namespace bg3_modders_multitool.Views
 
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
+            DialogResult = true;
             Close();
         }
 
@@ -32,6 +33,7 @@ namespace bg3_modders_multitool.Views
         {
             var vm = DataContext as ViewModels.PakSelection;
             vm.PakList.Clear();
+            DialogResult = false;
             Close();
         }
 

@@ -28,9 +28,9 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
-        /// Unpacks all the .pak files in the game data directory and places them in a folder next to the exe
+        /// Unpacks the selected .pak files in the game data directory and places them in a folder next to the exe
         /// </summary>
-        public Task UnpackAllPakFiles()
+        public Task UnpackSelectedPakFiles()
         {
             Directory.CreateDirectory(FileHelper.UnpackedDataPath);
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
@@ -39,7 +39,18 @@ namespace bg3_modders_multitool.Services
             pakSelection.ShowDialog();
             pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
             var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+            var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file))).ToList();
+            return UnpackPakFiles(paks);
+        }
 
+        /// <summary>
+        /// Unpacks the pak list and displays a progress window
+        /// </summary>
+        /// <param name="paks">The paks to unpack</param>
+        /// <param name="dataFiles">Whether or not the paks are to go into UnpackedData (true) or UnpackedMods (false)</param>
+        /// <returns>The task</returns>
+        public Task UnpackPakFiles(List<string> paks, bool dataFiles = true)
+        {
             var unpackerProgressWindow = new Views.UnpackerProgress();
             unpackerProgressWindow.DataContext = this;
             unpackerProgressWindow.Show();
@@ -51,7 +62,7 @@ namespace bg3_modders_multitool.Services
             {
                 PakProgressCollection = new ObservableCollection<PakProgress>();
                 GeneralHelper.WriteToConsole(Properties.Resources.UnpackingProcessStarted);
-                var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file)));
+                
 
                 foreach (var pak in paks)
                 {
@@ -59,7 +70,7 @@ namespace bg3_modders_multitool.Services
                 }
 
                 var cancelError = "Pak unpacking cancelled";
-                Parallel.ForEach(paks, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, (pak, loopstate) => {
+                Parallel.ForEach(paks, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, async (pak, loopstate) => {
                     var pakName = Path.GetFileNameWithoutExtension(pak);
                     try
                     {
@@ -75,7 +86,19 @@ namespace bg3_modders_multitool.Services
                             lock (pakProgress)
                                 pakProgress.Percent = newPercent;
                         };
-                        packager.UncompressPackage(pak, $"{FileHelper.UnpackedDataPath}\\{pakName}");
+
+                        if(dataFiles)
+                        {
+                            packager.UncompressPackage(pak, $"{FileHelper.UnpackedDataPath}\\{pakName}");
+                        }
+                        else
+                        {
+                            var tempPath = $"{DragAndDropHelper.TempFolder}\\{pakName}";
+                            packager.UncompressPackage(pak, tempPath);
+                            var decompressedFileList = DecompressAllConvertableFiles(tempPath);
+                            decompressedFileList.Wait();
+                            ConvertDecompressedFiles(decompressedFileList.Result, pakName);
+                        }
 
                         Application.Current.Dispatcher.Invoke(() => {
                             lock (PakProgressCollection)
@@ -86,8 +109,9 @@ namespace bg3_modders_multitool.Services
                         });
                         GeneralHelper.WriteToConsole(Properties.Resources.UnpackingPakComplete, pakName);
                     }
-                    catch (Exception ex) {
-                        if(ex.Message ==  cancelError)
+                    catch (Exception ex)
+                    {
+                        if (ex.Message == cancelError)
                         {
                             GeneralHelper.WriteToConsole(Properties.Resources.CanceledUnpackingPak, pakName);
                         }
@@ -157,6 +181,7 @@ namespace bg3_modders_multitool.Services
                                     break;
                                 case ".xml":
                                     // no conversion necessary
+                                    convertedFile = file;
                                     break;
                                 default:
                                     {
@@ -164,7 +189,18 @@ namespace bg3_modders_multitool.Services
                                     }
                                     break;
                             }
-                            convertFiles.Add(convertedFile);
+                            if(File.Exists(convertedFile))
+                            {
+                                convertFiles.Add(convertedFile);
+                            }
+                            else
+                            {
+                                convertFiles.Add(file);
+                            }
+                        }
+                        else
+                        {
+                            convertFiles.Add(file);
                         }
                         if (DataContext != null)
                         {
@@ -211,20 +247,30 @@ namespace bg3_modders_multitool.Services
                 {
                     packager.UncompressPackage(pak, tempPath);
                     var decompressedFileList = await new PakUnpackHelper().DecompressAllConvertableFiles(tempPath);
-                    foreach(var file in decompressedFileList)
-                    {
-                        var newPath = file.Replace(DragAndDropHelper.TempFolder, FileHelper.UnpackedModsPath);
-                        new System.IO.FileInfo(newPath).Directory.Create();
-                        File.Copy(file, newPath, true);
-                    }
-                    DragAndDropHelper.CleanTempDirectory();
-                    GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacked, pakName);
+                    ConvertDecompressedFiles(decompressedFileList, pakName);
                 }
                 else
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.FileTypeNotSupported, ext);
                 }
             }
+        }
+
+        /// <summary>
+        /// Converts the and moves the files into UnpackedMods
+        /// </summary>
+        /// <param name="decompressedFileList">The file list to convert</param>
+        /// <param name="pakName">The pak name</param>
+        private static void ConvertDecompressedFiles(List<string> decompressedFileList, string pakName)
+        {
+            foreach (var file in decompressedFileList)
+            {
+                var newPath = file.Replace(DragAndDropHelper.TempFolder, FileHelper.UnpackedModsPath);
+                new System.IO.FileInfo(newPath).Directory.Create();
+                File.Copy(file, newPath, true);
+            }
+            DragAndDropHelper.CleanTempDirectory();
+            GeneralHelper.WriteToConsole(Properties.Resources.PakUnpacked, pakName);
         }
 
         public class PakProgress : BaseViewModel

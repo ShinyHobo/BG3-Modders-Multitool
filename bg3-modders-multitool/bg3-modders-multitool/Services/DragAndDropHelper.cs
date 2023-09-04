@@ -236,7 +236,11 @@ namespace bg3_modders_multitool.Services
                                 }
                                 else if(File.Exists(fullPath))
                                 {
-                                    PakUnpackHelper.UnpackModToWorkspace(fullPath);
+                                    var task = Application.Current.Dispatcher.Invoke(() => {
+                                        var vm = App.Current.MainWindow.DataContext as ViewModels.MainWindow;
+                                        return vm.Unpacker.UnpackPakFiles(new List<string> { fullPath }, false);
+                                    });
+                                    task.Wait();
                                 }
                                 else
                                 {

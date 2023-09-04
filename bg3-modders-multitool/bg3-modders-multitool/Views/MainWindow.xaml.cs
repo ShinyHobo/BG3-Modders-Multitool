@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Windows;
 
     /// <summary>
@@ -38,7 +39,7 @@ namespace bg3_modders_multitool.Views
             unpack.Visibility = Visibility.Hidden;
             unpack_Cancel.Visibility = Visibility.Visible;
             var vm = DataContext as ViewModels.MainWindow;
-            await vm.Unpacker.UnpackAllPakFiles().ContinueWith(delegate {
+            await vm.Unpacker.UnpackSelectedPakFiles().ContinueWith(delegate {
                 Application.Current.Dispatcher.Invoke(() => {
                     unpack.Visibility = Visibility.Visible;
                     unpack_Cancel.Visibility = Visibility.Hidden;
@@ -271,7 +272,7 @@ namespace bg3_modders_multitool.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UnpackMod_Click(object sender, RoutedEventArgs e)
+        private async void UnpackMod_Click(object sender, RoutedEventArgs e)
         {
             var unpackPakDialog = new System.Windows.Forms.OpenFileDialog() {
                 Filter = $"{Properties.Resources.PakFileDescription}|*.pak",
@@ -283,11 +284,15 @@ namespace bg3_modders_multitool.Views
             var result = unpackPakDialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                var sner = unpackPakDialog.FileNames;
-                foreach(var file in unpackPakDialog.FileNames)
-                {
-                    PakUnpackHelper.UnpackModToWorkspace(file);
-                }
+                DragAndDropHelper.CleanTempDirectory();
+
+                var vm = DataContext as ViewModels.MainWindow;
+                await vm.Unpacker.UnpackPakFiles(unpackPakDialog.FileNames.ToList(), false).ContinueWith(delegate {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        unpack.Visibility = Visibility.Visible;
+                        unpack_Cancel.Visibility = Visibility.Hidden;
+                    });
+                });
             }
         }
 
