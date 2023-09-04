@@ -79,22 +79,21 @@ namespace bg3_modders_multitool.Services
 
             try
             {
-                Parallel.ForEach(gr2Files, GeneralHelper.ParallelOptions, gr2File =>
+                foreach(var gr2File in gr2Files)
                 {
                     try
                     {
                         var geometry = GetMesh(gr2File, materials, slotTypes, materialBanks, textureBanks);
                         if (geometry != null)
                         {
-                            lock (geometryGroup)
-                                geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty).Replace('/', '\\'), geometry));
+                            geometryGroup.Add(new MeshGeometry(gr2File.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty).Replace('/', '\\'), geometry));
                         }
                     }
                     catch (Exception ex)
                     {
                         GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
                     }
-                });
+                }
             }
             catch (Exception ex)
             {
@@ -329,7 +328,8 @@ namespace bg3_modders_multitool.Services
                     Parallel.ForEach(slots, GeneralHelper.ParallelOptions, slot => {
                         var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
                         var slotType = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "Slot").Attribute("value").Value;
-                        slotTypes.Add(visualResourceId, slotType);
+                        lock(slotTypes)
+                            slotTypes.Add(visualResourceId, slotType);
                         Parallel.ForEach(LoadMaterials(visualResourceId, visualBanks), GeneralHelper.ParallelOptions, material => {
                             try
                             {
