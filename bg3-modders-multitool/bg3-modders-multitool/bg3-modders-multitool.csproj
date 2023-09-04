@@ -760,7 +760,7 @@ xcopy /y "$(SolutionDir)\..\README.md" "$(ProjectDir)$(OutDir)app.publish"
 echo { &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
 echo "name": "BG3_Modders_Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
 echo "version_number": "%25CURRENT_VERSION%25",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "website_url": "https:/github.com/ShinyHobo/BG3-Modders-Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "website_url": "https://github.com/ShinyHobo/BG3-Modders-Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
 echo "description": "Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace, among other useful features.",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
 echo "dependencies": [] &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
 echo }   &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json</PreBuildEvent>
