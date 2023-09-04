@@ -62,12 +62,12 @@ namespace bg3_modders_multitool.Services
             Directory.CreateDirectory(TempFolder);
             var packageOptions = new PackageCreationOptions() { 
                 Version = Game.BaldursGate3.PAKVersion(),
-                Priority = 21
+                Priority = 21,
+                Compression = CompressionMethod.LZ4
             };
             try
             {
                 new Packager().CreatePackage(destination, fullpath, packageOptions);
-                
             }
             catch (Exception ex)
             {
