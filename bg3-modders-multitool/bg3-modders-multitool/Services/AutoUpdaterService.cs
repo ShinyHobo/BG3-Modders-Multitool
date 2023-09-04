@@ -96,7 +96,7 @@
                                         UpdateAvailable = true;
                                     Releases.Clear();
 
-                                    versionsBehind = changelog ? releases.Count : releases.Count;
+                                    versionsBehind = changelog ? releases.Count : versionsBehind;
 
                                     for (int i = 0; i < versionsBehind; i++)
                                     {
