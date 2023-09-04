@@ -18,7 +18,6 @@ namespace bg3_modders_multitool.Services
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Xml;
-    using System.Xml.Linq;
 
     public class RootTemplateHelper
     {
@@ -109,10 +108,6 @@ namespace bg3_modders_multitool.Services
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
                 }
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    return (App.Current.MainWindow.DataContext as ViewModels.MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles();
-                }).Wait();
 
                 ReadTranslations();
                 ReadVisualBanks();
@@ -539,6 +534,11 @@ namespace bg3_modders_multitool.Services
                 TextureBanks = deserializedTextureBanks;
                 return true;
             }
+
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                return (App.Current.MainWindow.DataContext as ViewModels.MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles();
+            }).Wait();
 
             GeneralHelper.WriteToConsole(Resources.LoadingBankFiles);
 

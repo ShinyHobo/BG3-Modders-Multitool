@@ -245,7 +245,7 @@ namespace bg3_modders_multitool.Views
 
         private void LuaSetupLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/LaughingLeader-DOS2-Mods/LeaderLib/wiki/Lua-Setup");
+            System.Diagnostics.Process.Start("https://github.com/LaughingLeader/BG3ModdingTools/wiki/Script-Extender-Lua-Setup");
         }
 
         private void ReportABugLink_Click(object sender, RoutedEventArgs e)
