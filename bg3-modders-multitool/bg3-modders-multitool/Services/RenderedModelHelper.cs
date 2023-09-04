@@ -368,7 +368,7 @@ namespace bg3_modders_multitool.Services
             if (id != null && visualBanks.ContainsKey(id))
             {
                 var visualResourceFile = visualBanks[id];
-
+                visualResourceFile = FileHelper.GetPath(visualResourceFile);
                 if (!FileHelper.TryParseXml(visualResourceFile))
                 {
                     var filePath = visualResourceFile.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);

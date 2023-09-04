@@ -224,10 +224,9 @@ namespace bg3_modders_multitool.Services
             var idBag = new ConcurrentBag<string>();
             var classBag = new ConcurrentBag<Tuple<string, string>>();
 #endif
-            //Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
-            //{
-            //    rootTemplate = FileHelper.GetPath(rootTemplate);
-            foreach (var rootTemplate in rootTemplates) {
+            Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
+            {
+                rootTemplate = FileHelper.GetPath(rootTemplate);
                 if (File.Exists(FileHelper.GetPath(rootTemplate)))
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", Path.ChangeExtension(rootTemplate, "lsx"));
@@ -253,9 +252,10 @@ namespace bg3_modders_multitool.Services
                                         reader.ReadToDescendant("node");
                                         do
                                         {
-                                            var id = reader.GetAttribute("id");
+                                            reader.ReadToDescendant("attribute");
                                             do
                                             {
+                                                var id = reader.GetAttribute("id");
                                                 var handle = reader.GetAttribute("handle");
                                                 var value = handle ?? reader.GetAttribute("value");
                                                 var type = reader.GetAttribute("type");
@@ -281,50 +281,28 @@ namespace bg3_modders_multitool.Services
                                                     }
                                                 }
                                             } while (reader.ReadToNextSibling("attribute"));
-                                        } while (reader.ReadToDescendant("attribute"));
+                                            if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
+                                                gameObject.ParentTemplateId = gameObject.TemplateName;
+                                            if (string.IsNullOrEmpty(gameObject.Name))
+                                                gameObject.Name = gameObject.DisplayName;
+                                            if (string.IsNullOrEmpty(gameObject.Name))
+                                                gameObject.Name = gameObject.Stats;
 
-                                        if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
-                                            gameObject.ParentTemplateId = gameObject.TemplateName;
-                                        if (string.IsNullOrEmpty(gameObject.Name))
-                                            gameObject.Name = gameObject.DisplayName;
-                                        if (string.IsNullOrEmpty(gameObject.Name))
-                                            gameObject.Name = gameObject.Stats;
-
-                                        GameObjectBag.Add(gameObject);
+                                            GameObjectBag.Add(gameObject);
+                                        } while (reader.ReadToNextSibling("node"));
                                     }
                                     reader.ReadToFollowing("region");
                                 }
                             }
-
-                            //                                        foreach (XElement attribute in attributes)
-                            //                                        {
-                          
-                            
-                            //                                            if (string.IsNullOrEmpty(handle))
-                            //                                            {
-                            //                                                gameObject.LoadProperty(id, type, value);
-                            //                                            }
-                            //                                            else
-                            //                                            {
-                            //                                                gameObject.LoadProperty($"{id}Handle", type, value);
-                            //                                                if (value != null && TranslationLookup.ContainsKey(value))
-                            //                                                {
-                            //                                                    var translationText = TranslationLookup[value].Value;
-                            //                                                    gameObject.LoadProperty(id, type, translationText);
-                            //                                                }
-                            //                                            }
-                            //                                        }
                         }
                         catch
                         {
                             GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, rootTemplate);
-                            continue;
-                            // return;
+                            return;
                         }
                     }
                 }
-         //   });
-            }
+            });
             #if DEBUG
             FileHelper.SerializeObject(typeBag.ToList().Distinct().ToList(), "GameObjectTypes");
             FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
