@@ -340,7 +340,7 @@ namespace bg3_modders_multitool.Services
             {
                 if (lines.Count == 0)
                 {
-                    lines.TryAdd(0, Properties.Resources.FileNoExist);
+                    lines.TryAdd(0, string.Format(Properties.Resources.FileNoExist, path));
                 }
             }
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
