@@ -11,7 +11,7 @@
     <Grid>
         <Border BorderThickness="0,1,0,0"  BorderBrush="Black">
             <StackPanel>
-                <mdxam:MarkdownScrollViewer xml:space="preserve" x:Name="markdownViewer" Height="460"/>
+                <mdxam:MarkdownScrollViewer xml:space="preserve" x:Name="markdownViewer" Height="380"/>
                 <Border x:Name="buttonsBox" BorderThickness="0,1,0,0" BorderBrush="Black" Visibility="{Binding Changelog}">
                     <StackPanel Margin="0,7,0,0">
                         <TextBlock Text="{x:Static p:Resources.UpdateWarningLabel}" Margin="20,0,20,0" TextWrapping="Wrap"/>

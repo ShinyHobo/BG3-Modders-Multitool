@@ -18,7 +18,7 @@
 
             markdownViewer.Markdown = document;
             markdownViewer.Document.PagePadding = new Thickness(10);
-            markdownViewer.Height = changelog ? 460 : 365;
+            markdownViewer.Height = changelog ? 460 : 380;
             Title = changelog ? Properties.Resources.ChangeLogMenu : Properties.Resources.UpdatesFoundButton;
             buttonsBox.Visibility = changelog ? Visibility.Collapsed : Visibility.Visible;
             DataContext = this;
