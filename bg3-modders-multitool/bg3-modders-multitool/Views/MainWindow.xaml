@@ -109,7 +109,7 @@
                 <Button x:Name="searchButton" Content="{x:Static p:Resources.IndexSearchButton}" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
                 ToolTip="{x:Static p:Resources.IndexSearchButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
             </Grid>
-            <TextBlock x:Name="configNeeded" Text="{x:Static p:Resources.ConfigNeeded}" Margin="300,244,30,150" Visibility="{Binding ConfigNeededLabel}"/>
+            <TextBlock x:Name="configNeeded" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="300,244,30,150" Visibility="{Binding ConfigNeeded}"/>
         </Grid>
     </StackPanel>
 </Window>
