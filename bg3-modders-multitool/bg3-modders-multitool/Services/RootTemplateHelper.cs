@@ -210,7 +210,7 @@ namespace bg3_modders_multitool.Services
         private bool ReadRootTemplate()
         {
             var deserializedGameObjects = FileHelper.DeserializeObject<List<GameObject>>("GameObjects");
-            if(deserializedGameObjects != null)
+            if (deserializedGameObjects != null)
             {
                 GameObjects = deserializedGameObjects;
                 GameObjectsCached = true;
@@ -219,90 +219,143 @@ namespace bg3_modders_multitool.Services
 
             GeneralHelper.WriteToConsole(Properties.Resources.ReadingGameObjects);
             var rootTemplates = GetFileList("GameObjects");
+#if DEBUG
             var typeBag = new ConcurrentBag<string>();
-            #if DEBUG
             var idBag = new ConcurrentBag<string>();
             var classBag = new ConcurrentBag<Tuple<string, string>>();
-            #endif
-            Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
-            {
-                rootTemplate = FileHelper.GetPath(rootTemplate);
-                if (File.Exists(rootTemplate))
+#endif
+            //Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
+            //{
+            //    rootTemplate = FileHelper.GetPath(rootTemplate);
+            foreach (var rootTemplate in rootTemplates) {
+                if (File.Exists(FileHelper.GetPath(rootTemplate)))
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", Path.ChangeExtension(rootTemplate, "lsx"));
-                    if(File.Exists(rootTemplatePath))
+                    if (File.Exists(FileHelper.GetPath(rootTemplatePath)))
                     {
-                        var fileLocation = rootTemplatePath.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
-                        if (!FileHelper.TryParseXml(rootTemplatePath))
+                        try
                         {
-                            GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, fileLocation);
-                            return;
-                        }
-
-                        var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
-                        var stream = File.OpenText(rootTemplatePath);
-
-                        using (var fileStream = stream)
-                        using (var reader = new XmlTextReader(fileStream))
-                        {
-                            reader.Read();
-                            while (!reader.EOF)
+                            var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
+                            using (XmlReader reader = XmlReader.Create(FileHelper.GetPath(rootTemplatePath)))
                             {
-                                if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.GetAttribute("id") == "GameObjects")
+                                reader.MoveToContent();
+                                while (!reader.EOF)
                                 {
-                                    var xml = (XElement)XNode.ReadFrom(reader);
-                                    var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileLocation };
-                                    var attributes = xml.Elements("attribute");
-
-                                    foreach (XElement attribute in attributes)
+                                    if (reader.Name == "region")
                                     {
-                                        var id = attribute.Attribute("id").Value;
-                                        var handle = attribute.Attribute("handle")?.Value;
-                                        var value = handle ?? attribute.Attribute("value").Value;
-                                        var type = attribute.Attribute("type").Value;
-                                        if (int.TryParse(type, out int typeInt))
-                                            type = GeneralHelper.LarianTypeEnumConvert(type);
+                                        var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath };
 
-                                        #if DEBUG
-                                        typeBag.Add(type);
-                                        idBag.Add(id);
-                                        classBag.Add(new Tuple<string, string>(id, type));
-                                        #endif
-                                        if (string.IsNullOrEmpty(handle))
+                                        if (!reader.ReadToDescendant("children"))
                                         {
-                                            gameObject.LoadProperty(id, type, value);
+                                            reader.ReadToFollowing("region");
                                         }
-                                        else
+
+                                        while (reader.ReadToDescendant("node"))
                                         {
-                                            gameObject.LoadProperty($"{id}Handle", type, value);
-                                            if(value != null && TranslationLookup.ContainsKey(value))
+                                            reader.ReadToDescendant("attribute");
+
+                                            var id = reader.GetAttribute("id");
+                                            var handle = reader.GetAttribute("handle");
+                                            var value = handle ?? reader.GetAttribute("value");
+                                            var type = reader.GetAttribute("type");
+                                            if (int.TryParse(type, out int typeInt))
+                                                type = GeneralHelper.LarianTypeEnumConvert(type);
+
+#if DEBUG
+                                            typeBag.Add(type);
+                                            idBag.Add(id);
+                                            classBag.Add(new Tuple<string, string>(id, type));
+#endif
+                                            if (string.IsNullOrEmpty(handle))
                                             {
-                                                var translationText = TranslationLookup[value].Value;
-                                                gameObject.LoadProperty(id, type, translationText);
+                                                gameObject.LoadProperty(id, type, value);
                                             }
+                                            else
+                                            {
+                                                gameObject.LoadProperty($"{id}Handle", type, value);
+                                                if (value != null && TranslationLookup.ContainsKey(value))
+                                                {
+                                                    var translationText = TranslationLookup[value].Value;
+                                                    gameObject.LoadProperty(id, type, translationText);
+                                                }
+                                            }
+
+                                            while (reader.ReadToNextSibling("attribute"))
+                                            {
+                                                id = reader.GetAttribute("id");
+                                                handle = reader.GetAttribute("handle");
+                                                value = handle ?? reader.GetAttribute("value");
+                                                type = reader.GetAttribute("type");
+                                                if (int.TryParse(type, out typeInt))
+                                                    type = GeneralHelper.LarianTypeEnumConvert(type);
+
+#if DEBUG
+                                                typeBag.Add(type);
+                                                idBag.Add(id);
+                                                classBag.Add(new Tuple<string, string>(id, type));
+#endif
+                                                if (string.IsNullOrEmpty(handle))
+                                                {
+                                                    gameObject.LoadProperty(id, type, value);
+                                                }
+                                                else
+                                                {
+                                                    gameObject.LoadProperty($"{id}Handle", type, value);
+                                                    if (value != null && TranslationLookup.ContainsKey(value))
+                                                    {
+                                                        var translationText = TranslationLookup[value].Value;
+                                                        gameObject.LoadProperty(id, type, translationText);
+                                                    }
+                                                }
+                                            }
+
                                         }
+                                        if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
+                                            gameObject.ParentTemplateId = gameObject.TemplateName;
+                                        if (string.IsNullOrEmpty(gameObject.Name))
+                                            gameObject.Name = gameObject.DisplayName;
+                                        if (string.IsNullOrEmpty(gameObject.Name))
+                                            gameObject.Name = gameObject.Stats;
+
+                                        GameObjectBag.Add(gameObject);
+                                        reader.Skip();
                                     }
-
-                                    if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
-                                        gameObject.ParentTemplateId = gameObject.TemplateName;
-                                    if (string.IsNullOrEmpty(gameObject.Name))
-                                        gameObject.Name = gameObject.DisplayName;
-                                    if (string.IsNullOrEmpty(gameObject.Name))
-                                        gameObject.Name = gameObject.Stats;
-
-                                    GameObjectBag.Add(gameObject);
-                                    reader.Skip();
-                                }
-                                else
-                                {
-                                    reader.Read();
+                                    else
+                                    {
+                                        reader.ReadToFollowing("region");
+                                    }
                                 }
                             }
-                            reader.Close();
+
+                            //                                        foreach (XElement attribute in attributes)
+                            //                                        {
+                          
+                            
+                            //                                            if (string.IsNullOrEmpty(handle))
+                            //                                            {
+                            //                                                gameObject.LoadProperty(id, type, value);
+                            //                                            }
+                            //                                            else
+                            //                                            {
+                            //                                                gameObject.LoadProperty($"{id}Handle", type, value);
+                            //                                                if (value != null && TranslationLookup.ContainsKey(value))
+                            //                                                {
+                            //                                                    var translationText = TranslationLookup[value].Value;
+                            //                                                    gameObject.LoadProperty(id, type, translationText);
+                            //                                                }
+                            //                                            }
+                            //                                        }
+                        }
+                        catch
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, rootTemplate);
+                            continue;
+                            // return;
                         }
                     }
                 }
-            });
+         //   });
+            }
             #if DEBUG
             FileHelper.SerializeObject(typeBag.ToList().Distinct().ToList(), "GameObjectTypes");
             FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
@@ -523,6 +576,7 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the visual bank lists were created.</returns>
         private bool ReadVisualBanks()
         {
+            #region Setup
             var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("CharacterVisualBanks");
             var deserializedVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("VisualBanks");
             var deserializedBodySetVisuals = FileHelper.DeserializeObject<Dictionary<string, string>>("BodySetVisuals");
@@ -561,8 +615,7 @@ namespace bg3_modders_multitool.Services
             visualBankFiles = visualBankFiles.Distinct().ToList();
             if (visualBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
-            float count = 0;
-            float total = visualBankFiles.Count;
+            #endregion
             Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile =>
             {
                 visualBankFile = FileHelper.GetPath(visualBankFile);
@@ -575,12 +628,10 @@ namespace bg3_modders_multitool.Services
                     {
                         using (XmlReader reader = XmlReader.Create(filePath))
                         {
-                            filePath = filePath.Replace(FileHelper.UnpackedDataPath, string.Empty);
+                            filePath = filePath.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                             reader.MoveToContent();
                             while (!reader.EOF)
                             {
-                                IXmlLineInfo xmlInfo = (IXmlLineInfo)reader;
-                                int lineNumber = xmlInfo.LineNumber;
                                 if (reader.Name == "region")
                                 {
                                     var sectionId = reader.GetAttribute("id");
@@ -637,7 +688,6 @@ namespace bg3_modders_multitool.Services
                                 }
                             }
                         }
-                        count++;
                     }
                     catch
                     {
