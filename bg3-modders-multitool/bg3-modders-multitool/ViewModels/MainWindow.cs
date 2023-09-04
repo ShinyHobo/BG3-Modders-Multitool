@@ -392,7 +392,7 @@ namespace bg3_modders_multitool.ViewModels
             if (AutoUpdater.UpdateAvailable || changelog)
             {
                 if(!changelog)
-                    GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound, AutoUpdater.Releases.Count);
+                    GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound, AutoUpdater.UnknownVersion ? "??" : AutoUpdater.Releases.Count.ToString());
                 var notes = string.Empty;
                 foreach (var release in AutoUpdater.Releases)
                 {

@@ -35,7 +35,8 @@
         public bool UpdateAvailable { get { return _updateAvailable; } 
             set { _updateAvailable = value; _mainWindow.UpdateVisible = value ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden; } 
         }
-        public List<Release> Releases { get; set; }
+        public List<Release> Releases { get; private set; }
+        public bool UnknownVersion { get; private set; }
 
         private readonly string _repoUrl = "https://api.github.com/repositories/305852141/releases";
         private readonly string _exeName = "bg3-modders-multitool";
@@ -88,6 +89,7 @@
                             if (newestRelease != null || changelog)
                             {
                                 var matchedVersion = releases.FirstOrDefault(r => r["tag_name"].ToString().Remove(0, 1) == currentVersion);
+                                UnknownVersion = matchedVersion == null;
                                 var versionsBehind = releases.IndexOf(matchedVersion);
                                 versionsBehind = versionsBehind == -1 ? releases.Count : versionsBehind;
                                 if (versionsBehind > 0 || changelog)
