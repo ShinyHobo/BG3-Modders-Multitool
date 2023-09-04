@@ -128,7 +128,7 @@ namespace bg3_modders_multitool.Views
                 if(result == System.Windows.Forms.DialogResult.Yes)
                 {
                     vm.NotDecompressing = false;
-                    PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
+                    vm.SearchResults.PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
                         Application.Current.Dispatcher.Invoke(() => {
                             vm.NotDecompressing = true;
                         });
@@ -171,6 +171,39 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
         }
+
+        /// <summary>
+        /// Creates and opens the temp folder
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void TempFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            Directory.CreateDirectory(DragAndDropHelper.TempFolder);
+            System.Diagnostics.Process.Start(DragAndDropHelper.TempFolder);
+        }
+
+        /// <summary>
+        /// Creates and opens the UnpackedData folder
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void unpackedModsFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            Directory.CreateDirectory(FileHelper.UnpackedModsPath);
+            System.Diagnostics.Process.Start(FileHelper.UnpackedModsPath);
+        }
+
+        /// <summary>
+        /// Creates and opens the UnpackedMods folder
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void unpackedDataFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            Directory.CreateDirectory(FileHelper.UnpackedDataPath);
+            System.Diagnostics.Process.Start(FileHelper.UnpackedDataPath);
+        }
         #endregion
 
         private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)
@@ -212,7 +245,7 @@ namespace bg3_modders_multitool.Views
 
         private void LuaSetupLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/LaughingLeader-DOS2-Mods/LeaderLib/wiki/Lua-Setup");
+            System.Diagnostics.Process.Start("https://github.com/LaughingLeader/BG3ModdingTools/wiki/Script-Extender-Lua-Setup");
         }
 
         private void ReportABugLink_Click(object sender, RoutedEventArgs e)
@@ -257,5 +290,18 @@ namespace bg3_modders_multitool.Views
                 }
             }
         }
+
+        #region About menu
+        private void LegalMenu_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.MessageBox.Show(Properties.Resources.Copyright, Properties.Resources.LegalMenu, System.Windows.Forms.MessageBoxButtons.OK);
+        }
+
+        private void CheckForUpdateMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            vm.CheckForUpdates(true);
+        }
+        #endregion
     }
 }

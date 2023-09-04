@@ -208,6 +208,7 @@ namespace bg3_modders_multitool.Services
                         if (fileDrop is string[] filesOrDirectories && filesOrDirectories.Length > 0)
                         {
                             Directory.CreateDirectory(TempFolder);
+                            CleanTempDirectory();
                             foreach (string fullPath in filesOrDirectories)
                             {
                                 // Only accept directory

@@ -383,13 +383,16 @@ namespace bg3_modders_multitool.ViewModels
         /// <summary>
         /// Checks for updates against GitHub
         /// </summary>
-        internal async void CheckForUpdates()
+        /// <param name="changelog">Whether or not to display as a changelog</param>
+        internal async void CheckForUpdates(bool changelog = false)
         {
-            GeneralHelper.WriteToConsole(Properties.Resources.CheckingForUpdates);
-            await AutoUpdater.CheckForVersionUpdate();
-            if (AutoUpdater.UpdateAvailable)
+            if(!changelog)
+                GeneralHelper.WriteToConsole(Properties.Resources.CheckingForUpdates);
+            await AutoUpdater.CheckForVersionUpdate(changelog);
+            if (AutoUpdater.UpdateAvailable || changelog)
             {
-                GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound, AutoUpdater.Releases.Count);
+                if(!changelog)
+                    GeneralHelper.WriteToConsole(Properties.Resources.UpdatesFound, AutoUpdater.Releases.Count);
                 var notes = string.Empty;
                 foreach (var release in AutoUpdater.Releases)
                 {
@@ -397,15 +400,19 @@ namespace bg3_modders_multitool.ViewModels
                     notes += release.Notes.Replace("- ","* ").Replace("\r\n", "\r\n> ");
                     notes += "\r\n=== \r\n";
                 }
-                var updateView = new Update(notes);
+
+                var updateView = new Update(notes, changelog);
                 var response = updateView.ShowDialog();
-                if(response == true)
+                if(!changelog)
                 {
-                    AutoUpdater.Update();
-                }
-                else
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.UpdateCanceled);
+                    if (response == true)
+                    {
+                        AutoUpdater.Update();
+                    }
+                    else
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.UpdateCanceled);
+                    }
                 }
             }
             else

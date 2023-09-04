@@ -7,12 +7,12 @@
         xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
         ResizeMode="NoResize"
         mc:Ignorable="d"
-        Title="{x:Static p:Resources.NewUpdatesAvailable}" Height="500" Width="600">
+        Title="{x:Static p:Resources.NewUpdatesAvailable}" Height="500" Width="1000">
     <Grid>
         <Border BorderThickness="0,1,0,0"  BorderBrush="Black">
             <StackPanel>
-                <mdxam:MarkdownScrollViewer xml:space="preserve" x:Name="markdownViewer" Height="365"/>
-                <Border BorderThickness="0,1,0,0" BorderBrush="Black">
+                <mdxam:MarkdownScrollViewer xml:space="preserve" x:Name="markdownViewer" Height="380"/>
+                <Border x:Name="buttonsBox" BorderThickness="0,1,0,0" BorderBrush="Black" Visibility="{Binding Changelog}">
                     <StackPanel Margin="0,7,0,0">
                         <TextBlock Text="{x:Static p:Resources.UpdateWarningLabel}" Margin="20,0,20,0" TextWrapping="Wrap"/>
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="50">

@@ -59,6 +59,7 @@ namespace bg3_modders_multitool.Views
                 var matches = await vm.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems, !vm.LeadingWildcardDisabled);
                 vm.FullResultList = matches.Matches;
                 vm.FullResultList.AddRange(matches.FilteredMatches);
+                vm.FullResultList.Sort();
                 foreach (string result in matches.Matches)
                 {
                     vm.Results.Add(new SearchResult { Path = result });
@@ -104,7 +105,7 @@ namespace bg3_modders_multitool.Views
             if (isMouseOver)
             {
                 var vm = DataContext as SearchResults;
-                if (string.IsNullOrEmpty(vm.SelectedPath)||!hoverFile.Contains(vm.SelectedPath))
+                if (string.IsNullOrEmpty(vm.SelectedPath)|| hoverFile != FileHelper.GetPath(vm.SelectedPath))
                 {
                     vm.FileContents = new ObservableCollection<SearchResult>();
                     vm.SelectedPath = ((TextBlock)pathButton.Content).Text;

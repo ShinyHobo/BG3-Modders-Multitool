@@ -66,7 +66,7 @@ namespace bg3_modders_multitool.Services
                 if (filelist==null)
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileList);
-                    filelist = FileHelper.DirectorySearch(@"\\?\" + Path.GetFullPath("UnpackedData"));
+                    filelist = FileHelper.DirectorySearch(@"\\?\" + FileHelper.UnpackedDataPath);
                 }
 
                 // Display total file count being indexed
@@ -124,7 +124,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="writer">The index to write to.</param>
         private void IndexLuceneFile(string file, IndexWriter writer)
         {
-            var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{System.IO.Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
+            var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
             try
             {
                 var fileName = Path.GetFileName(file);

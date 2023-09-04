@@ -19,13 +19,16 @@ namespace bg3_modders_multitool.Services
 
     public static class FileHelper
     {
-        public static string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
-        public static string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
+        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
+        public static readonly string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
+
+        public static readonly string UnpackedDataPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
+        public static readonly string UnpackedModsPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
 
         /// <summary>
         /// List of all known file types used
         /// </summary>
-        public static string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".dae",".dat",
+        public static readonly string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".dae",".dat",
             ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
             ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsfx",".lsj",".lsx",".metal",".ogg",".osi",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
             ".txt",".wav",".wem",".xaml",".xml", Properties.Resources.Extensionless
@@ -45,7 +48,7 @@ namespace bg3_modders_multitool.Services
             }
 
             var originalExtension = Path.GetExtension(file);
-            var newFile = string.IsNullOrEmpty(originalExtension) ? $"{file}.{extension}" : file.Replace(originalExtension, $".{extension}");
+            var newFile = string.IsNullOrEmpty(originalExtension) ? $"{file}.{extension}" : file.Replace(originalExtension, $"{originalExtension}.{extension}");
             var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
             var isConvertableToXml = originalExtension.Contains("loca");
             var isConvertableToLoca = originalExtension.Contains("xml");
@@ -79,7 +82,7 @@ namespace bg3_modders_multitool.Services
                     // These are invalid .lsbs/.lsbc files if this error pops up
                     if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                     }
                 }
 
@@ -100,7 +103,7 @@ namespace bg3_modders_multitool.Services
                     } 
                     catch(Exception ex)
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                     }
                 }
             }
@@ -115,7 +118,7 @@ namespace bg3_modders_multitool.Services
                     }
                     catch (Exception ex)
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                     }
                 }
             }
@@ -297,9 +300,9 @@ namespace bg3_modders_multitool.Services
         /// <returns>The full file path.</returns>
         public static string GetPath(string file)
         {
-            if(!string.IsNullOrEmpty(file) && file.Contains($"{Directory.GetCurrentDirectory()}\\UnpackedData\\"))
+            if(!string.IsNullOrEmpty(file) && (file.Contains(UnpackedDataPath) || file.Contains(Path.GetTempPath())))
                     return file;
-            return $"{Directory.GetCurrentDirectory()}\\UnpackedData\\{file}";
+            return $"{UnpackedDataPath}\\{file}";
         }
 
         /// <summary>

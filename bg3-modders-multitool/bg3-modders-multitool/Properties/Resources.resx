@@ -120,6 +120,9 @@
   <data name="3DModelTabLabel" xml:space="preserve">
     <value>3D Model</value>
   </data>
+  <data name="AboutMenu" xml:space="preserve">
+    <value>About</value>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Baldur's Gate 3 Modder's Multitool</value>
   </data>
@@ -185,6 +188,12 @@
   <data name="CancelUnpackingButton" xml:space="preserve">
     <value>Cancel Unpacking</value>
   </data>
+  <data name="ChangeLogMenu" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
+  <data name="ChangeLogMenuTooltip" xml:space="preserve">
+    <value>The list of changes from each update</value>
+  </data>
   <data name="CheckForUpdates" xml:space="preserve">
     <value>Check for updates</value>
   </data>
@@ -215,6 +224,9 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
   <data name="ConvertOpenButtonTooltip" xml:space="preserve">
     <value>Converts all convertable, unpacked files to .lsx</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>Copyright © ShinyHobo 2020-2023</value>
   </data>
   <data name="CorruptXmlFile" xml:space="preserve">
     <value>{0} appears to be corrupt or missing. Delete file and Decompress, then try again. Skipping file...</value>
@@ -362,11 +374,18 @@ Do you wish to continue?</value>
   <data name="FileNotFound" xml:space="preserve">
     <value>File not found.</value>
   </data>
+  <data name="FileTypeNotSupported" xml:space="preserve">
+    <value>File type  {0} not supported!</value>
+    <comment>file extension</comment>
+  </data>
   <data name="FinalizingIndex" xml:space="preserve">
     <value>Finalizing index...</value>
   </data>
   <data name="FixingVerticies" xml:space="preserve">
     <value>Fixing vertices...</value>
+  </data>
+  <data name="FoundCharacterVisualBanks" xml:space="preserve">
+    <value>CharacterVisualBanks found...</value>
   </data>
   <data name="FoundMaterialBanks" xml:space="preserve">
     <value>MaterialBanks found...</value>
@@ -527,6 +546,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="LaunchGameButtonTooltip" xml:space="preserve">
     <value>Launches the game</value>
+  </data>
+  <data name="LegalMenu" xml:space="preserve">
+    <value>Legal</value>
   </data>
   <data name="LoadedGOE" xml:space="preserve">
     <value>GameObjects loaded in {0} seconds.</value>
@@ -743,6 +765,12 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="TempFilesCleaned" xml:space="preserve">
     <value>Temp files cleaned.</value>
   </data>
+  <data name="TempFolderMenu" xml:space="preserve">
+    <value>Temp Folder</value>
+  </data>
+  <data name="TempFolderMenuTooltip" xml:space="preserve">
+    <value>Temp files are stored here</value>
+  </data>
   <data name="TranslatedStringHandleLabel" xml:space="preserve">
     <value>TranslatedString handle</value>
   </data>
@@ -767,6 +795,18 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="UnpackButtonTooltip" xml:space="preserve">
     <value>Allows you to select the game paks to unpack</value>
   </data>
+  <data name="UnpackedDataMenu" xml:space="preserve">
+    <value>Unpacked Data</value>
+  </data>
+  <data name="UnpackedDataMenuTooltip" xml:space="preserve">
+    <value>Unpacked BG3 data is stored here</value>
+  </data>
+  <data name="UnpackedModsMenu" xml:space="preserve">
+    <value>Unpacked Mods</value>
+  </data>
+  <data name="UnpackedModsMenuTooltip" xml:space="preserve">
+    <value>Manually unpacked .paks are converted and stored here</value>
+  </data>
   <data name="UnpackerProgressTitle" xml:space="preserve">
     <value>Pak Unpacking Progress</value>
   </data>
@@ -790,7 +830,7 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Unpacking processes starting; this could take a while.</value>
   </data>
   <data name="UnpackModPaks" xml:space="preserve">
-    <value>Unpack .pak(s)</value>
+    <value>Unpack mod .pak(s)</value>
   </data>
   <data name="UnpackModPakTooltip" xml:space="preserve">
     <value>Unpacks the selected .pak file(s) into the UnpackedMods folder, near the application.</value>
