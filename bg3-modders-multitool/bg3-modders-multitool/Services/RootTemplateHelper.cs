@@ -250,43 +250,16 @@ namespace bg3_modders_multitool.Services
                                             reader.ReadToFollowing("region");
                                         }
 
-                                        while (reader.ReadToDescendant("node"))
+                                        reader.ReadToDescendant("node");
+                                        do
                                         {
-                                            reader.ReadToDescendant("attribute");
-
                                             var id = reader.GetAttribute("id");
-                                            var handle = reader.GetAttribute("handle");
-                                            var value = handle ?? reader.GetAttribute("value");
-                                            var type = reader.GetAttribute("type");
-                                            if (int.TryParse(type, out int typeInt))
-                                                type = GeneralHelper.LarianTypeEnumConvert(type);
-
-#if DEBUG
-                                            typeBag.Add(type);
-                                            idBag.Add(id);
-                                            classBag.Add(new Tuple<string, string>(id, type));
-#endif
-                                            if (string.IsNullOrEmpty(handle))
+                                            do
                                             {
-                                                gameObject.LoadProperty(id, type, value);
-                                            }
-                                            else
-                                            {
-                                                gameObject.LoadProperty($"{id}Handle", type, value);
-                                                if (value != null && TranslationLookup.ContainsKey(value))
-                                                {
-                                                    var translationText = TranslationLookup[value].Value;
-                                                    gameObject.LoadProperty(id, type, translationText);
-                                                }
-                                            }
-
-                                            while (reader.ReadToNextSibling("attribute"))
-                                            {
-                                                id = reader.GetAttribute("id");
-                                                handle = reader.GetAttribute("handle");
-                                                value = handle ?? reader.GetAttribute("value");
-                                                type = reader.GetAttribute("type");
-                                                if (int.TryParse(type, out typeInt))
+                                                var handle = reader.GetAttribute("handle");
+                                                var value = handle ?? reader.GetAttribute("value");
+                                                var type = reader.GetAttribute("type");
+                                                if (int.TryParse(type, out int typeInt))
                                                     type = GeneralHelper.LarianTypeEnumConvert(type);
 
 #if DEBUG
@@ -307,9 +280,9 @@ namespace bg3_modders_multitool.Services
                                                         gameObject.LoadProperty(id, type, translationText);
                                                     }
                                                 }
-                                            }
+                                            } while (reader.ReadToNextSibling("attribute"));
+                                        } while (reader.ReadToDescendant("attribute"));
 
-                                        }
                                         if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
                                             gameObject.ParentTemplateId = gameObject.TemplateName;
                                         if (string.IsNullOrEmpty(gameObject.Name))
@@ -318,12 +291,8 @@ namespace bg3_modders_multitool.Services
                                             gameObject.Name = gameObject.Stats;
 
                                         GameObjectBag.Add(gameObject);
-                                        reader.Skip();
                                     }
-                                    else
-                                    {
-                                        reader.ReadToFollowing("region");
-                                    }
+                                    reader.ReadToFollowing("region");
                                 }
                             }
 
@@ -648,12 +617,13 @@ namespace bg3_modders_multitool.Services
                                             reader.ReadToFollowing("region");
                                         }
 
-                                        while (reader.ReadToDescendant("node"))
+                                        reader.ReadToDescendant("node");
+                                        do
                                         {
                                             reader.ReadToDescendant("attribute");
                                             var resourceId = string.Empty;
                                             var bodySetVisual = string.Empty;
-                                            while (reader.ReadToNextSibling("attribute"))
+                                            do
                                             {
                                                 var attributeId = reader.GetAttribute("id");
                                                 if (attributeId == "ID")
@@ -666,35 +636,8 @@ namespace bg3_modders_multitool.Services
                                                     if (!string.IsNullOrEmpty(bodySetVisual))
                                                         bodySetVisuals.TryAdd(bodySetVisual, visualBankFile);
                                                 }
-                                            }
-                                            if (isCharacterVisualBank)
-                                                characterVisualBanks.TryAdd(resourceId, visualBankFile);
-                                            else if(isMaterialBank)
-                                                materialBanks.TryAdd(resourceId, visualBankFile);
-                                            else if(isTextureBank)
-                                                textureBanks.TryAdd(resourceId, visualBankFile);
-                                            else if(isVisualBank)
-                                                visualBanks.TryAdd(resourceId, visualBankFile);
-                                        }
-                                        while(reader.ReadToNextSibling("node"))
-                                        {
-                                            reader.ReadToDescendant("attribute");
-                                            var resourceId = string.Empty;
-                                            var bodySetVisual = string.Empty;
-                                            while (reader.ReadToNextSibling("attribute"))
-                                            {
-                                                var attributeId = reader.GetAttribute("id");
-                                                if (attributeId == "ID")
-                                                {
-                                                    resourceId = reader.GetAttribute("value");
-                                                }
-                                                else if (attributeId == "BodySetVisual")
-                                                {
-                                                    bodySetVisual = reader.GetAttribute("value");
-                                                    if (!string.IsNullOrEmpty(bodySetVisual))
-                                                        bodySetVisuals.TryAdd(bodySetVisual, visualBankFile);
-                                                }
-                                            }
+                                            } while (reader.ReadToNextSibling("attribute"));
+
                                             if (isCharacterVisualBank)
                                                 characterVisualBanks.TryAdd(resourceId, visualBankFile);
                                             else if (isMaterialBank)
@@ -703,18 +646,10 @@ namespace bg3_modders_multitool.Services
                                                 textureBanks.TryAdd(resourceId, visualBankFile);
                                             else if (isVisualBank)
                                                 visualBanks.TryAdd(resourceId, visualBankFile);
-                                        }
-                                        reader.ReadToFollowing("region");
-                                    }
-                                    else
-                                    {
-                                        reader.ReadToFollowing("region");
+                                        } while (reader.ReadToNextSibling("node"));
                                     }
                                 }
-                                else
-                                {
-                                    reader.ReadToFollowing("region");
-                                }
+                                reader.ReadToFollowing("region");
                             }
                         }
                     }
