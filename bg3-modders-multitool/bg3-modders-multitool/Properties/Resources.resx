@@ -207,7 +207,7 @@
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
 Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
-  <data name="ConfigNeeded" xml:space="preserve">
+  <data name="ConfigNeededLabel" xml:space="preserve">
     <value>Configuration needed: missing bg3.exe!</value>
   </data>
   <data name="ConfigurationTitle" xml:space="preserve">
