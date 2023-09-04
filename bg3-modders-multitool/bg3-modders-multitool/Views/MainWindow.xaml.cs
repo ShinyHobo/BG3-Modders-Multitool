@@ -205,6 +205,17 @@ namespace bg3_modders_multitool.Views
             Directory.CreateDirectory(FileHelper.UnpackedDataPath);
             System.Diagnostics.Process.Start(FileHelper.UnpackedDataPath);
         }
+
+        /// <summary>
+        /// Opens the Game Data location
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void gameDataFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            System.Diagnostics.Process.Start(dataDir);
+        }
         #endregion
 
         private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)

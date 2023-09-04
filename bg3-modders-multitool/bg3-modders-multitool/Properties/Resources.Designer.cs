@@ -386,7 +386,9 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copyright © ShinyHobo 2020-2023.
+        ///   Looks up a localized string similar to Copyright © ShinyHobo 2020-2023
+        ///
+        ///Baldur&apos;s Gate 3 Modder&apos;s Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd..
         /// </summary>
         public static string Copyright {
             get {
@@ -825,6 +827,24 @@ namespace bg3_modders_multitool.Properties {
         public static string FoundVisualBanks {
             get {
                 return ResourceManager.GetString("FoundVisualBanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game Data.
+        /// </summary>
+        public static string GameDataMenu {
+            get {
+                return ResourceManager.GetString("GameDataMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The location where the game .paks are located.
+        /// </summary>
+        public static string GameDataMenuTooltip {
+            get {
+                return ResourceManager.GetString("GameDataMenuTooltip", resourceCulture);
             }
         }
         

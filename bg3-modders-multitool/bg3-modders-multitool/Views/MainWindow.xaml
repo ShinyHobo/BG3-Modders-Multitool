@@ -7,7 +7,7 @@
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
         ResizeMode="CanMinimize" 
-        Title="{x:Static p:Resources.AppTitle}" Height="485" Width="800">
+        Title="{x:Static p:Resources.AppTitle}" Height="482" Width="800">
         <!-- Developed by ShinyHobo -->
         <!-- Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd. -->
     <StackPanel>
@@ -34,6 +34,8 @@
                         ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}" Icon="📂"/>
                     <MenuItem x:Name="tempFolderButton" Header="{x:Static p:Resources.TempFolderMenu}" Click="TempFolderButton_Click"
                         ToolTip="{x:Static p:Resources.TempFolderMenuTooltip}" Icon="📂"/>
+                    <MenuItem x:Name="gameDataFolderButton" Header="{x:Static p:Resources.GameDataMenu}" Click="gameDataFolderButton_Click" Icon="📂" IsEnabled="{Binding LaunchGameAllowed}"
+                        ToolTip="{x:Static p:Resources.GameDataMenuTooltip}"/>
                     <MenuItem x:Name="unpackedDataFolderButton" Header="{x:Static p:Resources.UnpackedDataMenu}" Click="unpackedDataFolderButton_Click"
                         ToolTip="{x:Static p:Resources.UnpackedDataMenuTooltip}" Icon="📂"/>
                     <MenuItem x:Name="unpackedModsFolderButton" Header="{x:Static p:Resources.UnpackedModsMenu}" Click="unpackedModsFolderButton_Click"
