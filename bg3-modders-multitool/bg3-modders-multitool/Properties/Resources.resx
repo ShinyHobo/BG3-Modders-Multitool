@@ -207,6 +207,9 @@
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
 Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
+  <data name="ConfigNeededLabel" xml:space="preserve">
+    <value>Configuration needed: missing bg3.exe!</value>
+  </data>
   <data name="ConfigurationTitle" xml:space="preserve">
     <value>Configuration</value>
   </data>
@@ -226,7 +229,9 @@ Dropping a .pak will unpack it into a nearby directory. </value>
     <value>Converts all convertable, unpacked files to .lsx</value>
   </data>
   <data name="Copyright" xml:space="preserve">
-    <value>Copyright © ShinyHobo 2020-2023</value>
+    <value>Copyright © ShinyHobo 2020-2023
+
+Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.</value>
   </data>
   <data name="CorruptXmlFile" xml:space="preserve">
     <value>{0} appears to be corrupt or missing. Delete file and Decompress, then try again. Skipping file...</value>
@@ -395,6 +400,12 @@ Do you wish to continue?</value>
   </data>
   <data name="FoundVisualBanks" xml:space="preserve">
     <value>VisualBanks found...</value>
+  </data>
+  <data name="GameDataMenu" xml:space="preserve">
+    <value>Game Data</value>
+  </data>
+  <data name="GameDataMenuTooltip" xml:space="preserve">
+    <value>The location where the game .paks are located</value>
   </data>
   <data name="GameDocsLocationLabel" xml:space="preserve">
     <value>Game's Documents folder location</value>
