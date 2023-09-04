@@ -372,6 +372,9 @@ Do you wish to continue?</value>
   <data name="FixingVerticies" xml:space="preserve">
     <value>Fixing vertices...</value>
   </data>
+  <data name="FoundCharacterVisualBanks" xml:space="preserve">
+    <value>CharacterVisualBanks found...</value>
+  </data>
   <data name="FoundMaterialBanks" xml:space="preserve">
     <value>MaterialBanks found...</value>
   </data>

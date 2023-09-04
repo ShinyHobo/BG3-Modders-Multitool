@@ -748,6 +748,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CharacterVisualBanks found....
+        /// </summary>
+        public static string FoundCharacterVisualBanks {
+            get {
+                return ResourceManager.GetString("FoundCharacterVisualBanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MaterialBanks found....
         /// </summary>
         public static string FoundMaterialBanks {
