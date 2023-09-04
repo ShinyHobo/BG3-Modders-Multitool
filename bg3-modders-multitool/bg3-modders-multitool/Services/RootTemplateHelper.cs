@@ -9,7 +9,6 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Properties;
-    using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
@@ -110,10 +109,10 @@ namespace bg3_modders_multitool.Services
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
                 }
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    return (App.Current.MainWindow.DataContext as MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles();
-                }).Wait();
+                //App.Current.Dispatcher.Invoke(() =>
+                //{
+                //    return (App.Current.MainWindow.DataContext as MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles();
+                //}).Wait();
 
                 ReadTranslations();
                 ReadVisualBanks();
@@ -524,7 +523,7 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the visual bank lists were created.</returns>
         private bool ReadVisualBanks()
         {
-            var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string,string>>("CharacterVisualBanks");
+            var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("CharacterVisualBanks");
             var deserializedVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("VisualBanks");
             var deserializedBodySetVisuals = FileHelper.DeserializeObject<Dictionary<string, string>>("BodySetVisuals");
             var deserializedMaterialBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("MaterialBanks");
@@ -549,113 +548,102 @@ namespace bg3_modders_multitool.Services
             var materialBanks = new ConcurrentDictionary<string, string>();
             var textureBanks = new ConcurrentDictionary<string, string>();
             var visualBankFiles = GetFileList("VisualBank");
-            if(visualBankFiles.Count > 0)
+            if (visualBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundVisualBanks);
             var materialBankFiles = GetFileList("MaterialBank");
-            if(materialBankFiles.Count > 0)
+            if (materialBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundMaterialBanks);
             var textureBankFiles = GetFileList("TextureBank");
-            if(textureBankFiles.Count > 0)
+            if (textureBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundTextureBanks);
             visualBankFiles.AddRange(materialBankFiles);
             visualBankFiles.AddRange(textureBankFiles);
             visualBankFiles = visualBankFiles.Distinct().ToList();
-            if(visualBankFiles.Count > 0)
+            if (visualBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
-            Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile => {
+            float count = 0;
+            float total = visualBankFiles.Count;
+            Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile =>
+            {
                 visualBankFile = FileHelper.GetPath(visualBankFile);
                 if (File.Exists(visualBankFile))
                 {
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", Path.ChangeExtension(visualBankFile, "lsx"));
                     var filePath = visualBankFilePath.Replace($"\\\\?\\{FileHelper.UnpackedDataPath}", string.Empty);
 
-                    if (!FileHelper.TryParseXml(filePath))
+                    try
+                    {
+                        using (XmlReader reader = XmlReader.Create(filePath))
+                        {
+                            filePath = filePath.Replace(FileHelper.UnpackedDataPath, string.Empty);
+                            reader.MoveToContent();
+                            while (!reader.EOF)
+                            {
+                                IXmlLineInfo xmlInfo = (IXmlLineInfo)reader;
+                                int lineNumber = xmlInfo.LineNumber;
+                                if (reader.Name == "region")
+                                {
+                                    var sectionId = reader.GetAttribute("id");
+                                    var isCharacterVisualBank = sectionId == "CharacterVisualBank";
+                                    var isVisualBank = sectionId == "VisualBank";
+                                    var isMaterialBank = sectionId == "MaterialBank";
+                                    var isTextureBank = sectionId == "TextureBank";
+
+                                    if (isCharacterVisualBank || isVisualBank || isMaterialBank || isTextureBank)
+                                    {
+                                        if (!reader.ReadToDescendant("children"))
+                                        {
+                                            reader.ReadToFollowing("region");
+                                        }
+
+                                        while (reader.ReadToDescendant("node"))
+                                        {
+                                            reader.ReadToDescendant("attribute");
+                                            var resourceId = string.Empty;
+                                            var bodySetVisual = string.Empty;
+                                            while (reader.ReadToNextSibling("attribute"))
+                                            {
+                                                var attributeId = reader.GetAttribute("id");
+                                                if (attributeId == "ID")
+                                                {
+                                                    resourceId = reader.GetAttribute("value");
+                                                }
+                                                else if (attributeId == "BodySetVisual")
+                                                {
+                                                    bodySetVisual = reader.GetAttribute("value");
+                                                    if (bodySetVisual != null)
+                                                        bodySetVisuals.TryAdd(bodySetVisual, filePath);
+                                                }
+                                            }
+                                            if (isCharacterVisualBank)
+                                                characterVisualBanks.TryAdd(resourceId, filePath);
+                                            else if(isMaterialBank)
+                                                materialBanks.TryAdd(resourceId, filePath);
+                                            else if(isTextureBank)
+                                                textureBanks.TryAdd(resourceId, filePath);
+                                            else if(isVisualBank)
+                                                visualBanks.TryAdd(resourceId, filePath);
+                                        }
+                                        reader.Skip();
+                                    }
+                                    else
+                                    {
+                                        reader.Skip();
+                                    }
+                                }
+                                else
+                                {
+                                    reader.ReadToFollowing("region");
+                                }
+                            }
+                        }
+                        count++;
+                    }
+                    catch
                     {
                         var filePath2 = visualBankFilePath.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                         GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, filePath2);
                         return;
-                    }
-
-                    var stream = File.OpenText(visualBankFilePath);
-                    using (var fileStream = stream)
-                    using (var reader = new XmlTextReader(fileStream))
-                    {
-                        reader.Read();
-                        while (!reader.EOF)
-                        {
-                            try
-                            {
-                                var sectionId = reader.GetAttribute("id");
-                                var isNode = reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node";
-                                if (isNode && (sectionId == "CharacterVisualBank" || sectionId == "VisualBank"))
-                                {
-                                    // read children for resource nodes
-                                    var xml = (XElement)XNode.ReadFrom(reader);
-                                    var children = xml.Element("children");
-                                    if (children != null)
-                                    {
-                                        var nodes = children.Elements("node");
-                                        foreach (XElement node in nodes)
-                                        {
-                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                            if (sectionId == "CharacterVisualBank")
-                                            {
-                                                characterVisualBanks.TryAdd(id, filePath);
-                                                var bodySetVisual = node.Elements("attribute").Single(a => a.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
-                                                if (bodySetVisual != null)
-                                                    bodySetVisuals.TryAdd(bodySetVisual, filePath.Replace(Directory.GetCurrentDirectory(), ""));
-                                            }
-                                            else
-                                            {
-                                                visualBanks.TryAdd(id, filePath);
-                                            }
-                                        }
-                                    }
-
-                                    reader.Skip();
-                                }
-                                else if(isNode && sectionId == "MaterialBank")
-                                {
-                                    var xml = (XElement)XNode.ReadFrom(reader);
-                                    var children = xml.Element("children");
-                                    if (children != null)
-                                    {
-                                        var nodes = children.Elements("node");
-                                        foreach (XElement node in nodes)
-                                        {
-                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                            materialBanks.TryAdd(id, filePath.Replace(Directory.GetCurrentDirectory(), ""));
-                                        }
-                                    }
-                                    reader.Skip();
-                                }
-                                else if (isNode && sectionId == "TextureBank")
-                                {
-                                    var xml = (XElement)XNode.ReadFrom(reader);
-                                    var children = xml.Element("children");
-                                    if (children != null)
-                                    {
-                                        var nodes = children.Elements("node");
-                                        foreach (XElement node in nodes)
-                                        {
-                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                            textureBanks.TryAdd(id, filePath.Replace(Directory.GetCurrentDirectory(), ""));
-                                        }
-                                    }
-                                    reader.Skip();
-                                }
-                                else
-                                {
-                                    reader.Read();
-                                }
-                            }
-                            catch(Exception ex)
-                            {
-                                GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, filePath, ex.Message);
-                                break;
-                            }
-                        }
-                        reader.Close();
                     }
                 }
             });
@@ -714,7 +702,7 @@ namespace bg3_modders_multitool.Services
 
                     if (result.Equals(System.Windows.Forms.DialogResult.OK))
                     {
-                        Directory.Delete(cacheDirectory);
+                        Directory.Delete(cacheDirectory, true);
                         GeneralHelper.WriteToConsole(Properties.Resources.GOECacheCleared);
                     }
                 }
