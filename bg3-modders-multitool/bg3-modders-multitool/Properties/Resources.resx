@@ -575,6 +575,12 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="LoadingLabel" xml:space="preserve">
     <value>Loading...</value>
   </data>
+  <data name="LSLibMenu" xml:space="preserve">
+    <value>LSLib</value>
+  </data>
+  <data name="LSLibMenuTooltip" xml:space="preserve">
+    <value>Norbyte's LSLib application, for granular control of file conversions</value>
+  </data>
   <data name="LuaSetup" xml:space="preserve">
     <value>Lua Setup</value>
   </data>

@@ -269,6 +269,11 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start("https://ko-fi.com/shinyhobo");
         }
+
+        private void LSLibLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Norbyte/lslib/releases");
+        }
         #endregion
 
         private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
@@ -319,5 +324,6 @@ namespace bg3_modders_multitool.Views
             vm.CheckForUpdates(true);
         }
         #endregion
+
     }
 }

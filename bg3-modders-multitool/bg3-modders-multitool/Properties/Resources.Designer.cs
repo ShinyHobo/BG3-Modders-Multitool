@@ -1328,6 +1328,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LSLib.
+        /// </summary>
+        public static string LSLibMenu {
+            get {
+                return ResourceManager.GetString("LSLibMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Norbyte&apos;s LSLib application, for granular control of file conversions.
+        /// </summary>
+        public static string LSLibMenuTooltip {
+            get {
+                return ResourceManager.GetString("LSLibMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lua Setup.
         /// </summary>
         public static string LuaSetup {

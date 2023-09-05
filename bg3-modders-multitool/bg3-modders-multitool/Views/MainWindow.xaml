@@ -47,11 +47,15 @@
                     <MenuItem Header="{x:Static p:Resources.ModdingResources}" Icon="📚">
                         <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3WikiTooltip}"/>
                         <MenuItem Header="{x:Static p:Resources.BG3CommunityLibrary}" Click="BG3CommWikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3CommWikiTooltip}"/>
+                        <Separator />
                         <MenuItem Header="{x:Static p:Resources.ModdingTutorial}" Click="ModTutLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.ModTutTooltip}"/>
+                        <Separator />
                         <MenuItem Header="{x:Static p:Resources.BG3ScriptExtender}" Click="BG3SELink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3SETooltip}"/>
                         <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderAPI}" Click="BG3SEAPILink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3SEAPITooltip}"/>
                         <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick" Icon="📗" ToolTip="{x:Static p:Resources.BG3SESampleTooltip}"/>
                         <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.LuaSetupTooltip}"/>
+                        <Separator />
+                        <MenuItem Header="{x:Static p:Resources.LSLibMenu}" Click="LSLibLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.LSLibMenuTooltip}"/>
                     </MenuItem>
                     <MenuItem Header="{x:Static p:Resources.AboutMenu}" Icon="ℹ️">
                         <MenuItem Header="{x:Static p:Resources.ChangeLogMenu}" ToolTip="{x:Static p:Resources.ChangeLogMenuTooltip}" Icon="✔️" Click="CheckForUpdateMenu_Click"/>
