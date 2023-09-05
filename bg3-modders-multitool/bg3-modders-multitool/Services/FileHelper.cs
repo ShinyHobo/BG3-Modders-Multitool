@@ -13,6 +13,7 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
@@ -164,7 +165,7 @@ namespace bg3_modders_multitool.Services
                         4096, System.IO.FileOptions.RandomAccess))
                     {
                         WEMSharp.WEMFile wem = new WEMSharp.WEMFile(file, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
-                        var resource = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("bg3_modders_multitool.packed_codebooks_aoTuV_603.bin");
+                        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("bg3_modders_multitool.packed_codebooks_aoTuV_603.bin");
                         for (int i = 0; i < resource.Length; i++)
                             fs.WriteByte((byte)resource.ReadByte());
                         fs.Close();
@@ -479,6 +480,20 @@ namespace bg3_modders_multitool.Services
             catch
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Loads the file template text from the assembly
+        /// </summary>
+        /// <param name="templateName">The file template name</param>
+        /// <returns>The file template file content string</returns>
+        public static string LoadFileTemplate(string templateName)
+        {
+            using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"bg3_modders_multitool.FileTemplates.{templateName}"))
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(stream))
+            {
+                return reader.ReadToEnd();
             }
         }
 

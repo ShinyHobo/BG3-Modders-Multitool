@@ -123,6 +123,10 @@
   <data name="AboutMenu" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="AddMissingMetaLsxTitle" xml:space="preserve">
+    <value>Add Meta File for {0}</value>
+    <comment>mod root folder</comment>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Baldur's Gate 3 Modder's Multitool</value>
   </data>
@@ -590,15 +594,21 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="MapKeyLabel" xml:space="preserve">
     <value>MapKey</value>
   </data>
+  <data name="MetaAuthorLabel" xml:space="preserve">
+    <value>Author</value>
+  </data>
   <data name="MetadataCreated" xml:space="preserve">
     <value>Metadata for {0} created.</value>
     <comment>metadata name</comment>
   </data>
-  <data name="MetaLsxNotFound1" xml:space="preserve">
+  <data name="MetaDescriptionLabel" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="MetaLsxFound" xml:space="preserve">
     <value>meta.lsx file found in {0}.</value>
     <comment>mod name</comment>
   </data>
-  <data name="MetaLsxNotFound2" xml:space="preserve">
+  <data name="MetaLsxNotFound" xml:space="preserve">
     <value>meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.</value>
   </data>
   <data name="MissingFileTypes" xml:space="preserve">
