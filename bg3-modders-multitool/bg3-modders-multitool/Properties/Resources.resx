@@ -594,11 +594,11 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Metadata for {0} created.</value>
     <comment>metadata name</comment>
   </data>
-  <data name="MetaLsxNotFound1" xml:space="preserve">
+  <data name="MetaLsxFound" xml:space="preserve">
     <value>meta.lsx file found in {0}.</value>
     <comment>mod name</comment>
   </data>
-  <data name="MetaLsxNotFound2" xml:space="preserve">
+  <data name="MetaLsxNotFound" xml:space="preserve">
     <value>meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.</value>
   </data>
   <data name="MissingFileTypes" xml:space="preserve">

@@ -1384,18 +1384,18 @@ namespace bg3_modders_multitool.Properties {
         /// <summary>
         ///   Looks up a localized string similar to meta.lsx file found in {0}..
         /// </summary>
-        public static string MetaLsxNotFound1 {
+        public static string MetaLsxFound {
             get {
-                return ResourceManager.GetString("MetaLsxNotFound1", resourceCulture);
+                return ResourceManager.GetString("MetaLsxFound", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process..
         /// </summary>
-        public static string MetaLsxNotFound2 {
+        public static string MetaLsxNotFound {
             get {
-                return ResourceManager.GetString("MetaLsxNotFound2", resourceCulture);
+                return ResourceManager.GetString("MetaLsxNotFound", resourceCulture);
             }
         }
         

@@ -39,7 +39,7 @@ namespace bg3_modders_multitool.Services
                     if (Path.GetFileName(file).Equals("meta.lsx"))
                     {
                         metaList.Add(file);
-                        GeneralHelper.WriteToConsole(Properties.Resources.MetaLsxNotFound1, mod);
+                        GeneralHelper.WriteToConsole(Properties.Resources.MetaLsxFound, mod);
                     }
                 }
             }
@@ -47,7 +47,7 @@ namespace bg3_modders_multitool.Services
             if (metaList.Count == 0)
             {
                 // meta.lsx not found, discontinue
-                throw new Exception(Properties.Resources.MetaLsxNotFound2);
+                throw new Exception(Properties.Resources.MetaLsxNotFound);
             }
             return metaList;
         }
