@@ -168,7 +168,7 @@ namespace bg3_modders_multitool.Services
                     });
                 }
 
-                if(DataContext?.AllowIndexing == false)
+                if(DataContext?.AllowIndexing == true)
                 {
                     GeneralHelper.WriteToConsole(Resources.DecompressionCancelled);
                 }
@@ -179,7 +179,7 @@ namespace bg3_modders_multitool.Services
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
                 Parallel.ForEach(fileList, GeneralHelper.ParallelOptions, (file, loopState) => {
-                    if (DataContext?.AllowIndexing == true)
+                    if (DataContext?.AllowIndexing != true)
                     {
                         lock (file)
                         {
