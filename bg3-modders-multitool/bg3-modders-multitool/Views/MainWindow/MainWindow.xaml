@@ -90,7 +90,7 @@
             <Button x:Name="launchGameButton" HorizontalAlignment="Left" Margin="620,81,0,0" VerticalAlignment="Top" Width="100" Height="100" Click="LaunchGameButton_Click" Cursor="Hand" Panel.ZIndex="10"
             IsEnabled="{Binding LaunchGameAllowed}" ToolTip="{x:Static p:Resources.LaunchGameButtonTooltip}" BorderThickness="0" Background="Transparent">
                 <Grid>
-                    <Image Source="..\Images\bg3_icon.ico" Margin="0,0,0,10"/>
+                    <Image Source="..\..\Images\bg3_icon.ico" Margin="0,0,0,10"/>
                     <TextBlock Text="{x:Static p:Resources.LaunchGameButton}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="DemiBold"/>
                 </Grid>
             </Button>

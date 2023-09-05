@@ -79,6 +79,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Meta File for {0}.
+        /// </summary>
+        public static string AddMissingMetaLsxTitle {
+            get {
+                return ResourceManager.GetString("AddMissingMetaLsxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Baldur&apos;s Gate 3 Modder&apos;s Multitool.
         /// </summary>
         public static string AppTitle {
@@ -1373,11 +1382,29 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Author.
+        /// </summary>
+        public static string MetaAuthorLabel {
+            get {
+                return ResourceManager.GetString("MetaAuthorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Metadata for {0} created..
         /// </summary>
         public static string MetadataCreated {
             get {
                 return ResourceManager.GetString("MetadataCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string MetaDescriptionLabel {
+            get {
+                return ResourceManager.GetString("MetaDescriptionLabel", resourceCulture);
             }
         }
         

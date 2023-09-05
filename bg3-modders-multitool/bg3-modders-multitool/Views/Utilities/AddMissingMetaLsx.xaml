@@ -1,0 +1,26 @@
+﻿<Window x:Class="bg3_modders_multitool.Views.Utilities.AddMissingMetaLsx"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bg3_modders_multitool.Views.Utilities"
+        xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
+        ResizeMode="NoResize"
+        mc:Ignorable="d"
+        Title="{Binding WindowTitle}" Height="185" Width="350">
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Label Content="{x:Static p:Resources.MetaAuthorLabel}"/>
+                <TextBox x:Name="author" Width="260" Height="20" Margin="23,0,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Label Content="{x:Static p:Resources.MetaDescriptionLabel}"/>
+                <TextBox x:Name="description" Width="260" Height="80" TextWrapping="Wrap"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button x:Name="accept" Content="{x:Static p:Resources.ConfirmButton}" Margin="5,5,5,5" Width="100" Height="30" Foreground="White" Background="#FF87C157" Cursor="Hand" Click="accept_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -16,6 +16,7 @@ namespace bg3_modders_multitool.Services
     using System.Windows;
     using System.Xml;
     using bg3_modders_multitool.Properties;
+    using bg3_modders_multitool.Views.Utilities;
 
     public static class DragAndDropHelper
     {
@@ -46,8 +47,25 @@ namespace bg3_modders_multitool.Services
 
             if (metaList.Count == 0)
             {
-                // meta.lsx not found, discontinue
-                throw new Exception(Properties.Resources.MetaLsxNotFound);
+                foreach (string mod in pathlist)
+                {
+                    var invokeResult = Application.Current.Dispatcher.Invoke(() => {
+                        var addMeta = new AddMissingMetaLsx(mod);
+                        var result = addMeta.ShowDialog();
+                        if (result == true)
+                        {
+                            if (!string.IsNullOrEmpty(addMeta.MetaPath))
+                                metaList.Add(addMeta.MetaPath);
+                        }
+                        return result;
+                    });
+                }
+
+                if(metaList.Count == 0)
+                {
+                    // meta.lsx not found, discontinue
+                    throw new Exception(Properties.Resources.MetaLsxNotFound);
+                }
             }
             return metaList;
         }
