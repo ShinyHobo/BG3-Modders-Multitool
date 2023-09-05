@@ -244,6 +244,9 @@ Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endor
   <data name="DecompressFilesButton" xml:space="preserve">
     <value>Decompress Files</value>
   </data>
+  <data name="DecompressionCancelled" xml:space="preserve">
+    <value>Decompression cancelled</value>
+  </data>
   <data name="DecompressionComplete" xml:space="preserve">
     <value>Decompression completed in {0}.</value>
     <comment>elapsed time</comment>

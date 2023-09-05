@@ -33,6 +33,8 @@ namespace bg3_modders_multitool.ViewModels
             Transform = new System.Windows.Media.Media3D.MatrixTransform3D(matrix);
         }
 
+        public bool LoadingCanceled { get; set; }
+
         public void Clear()
         {
             RootTemplateHelper?.Clear();

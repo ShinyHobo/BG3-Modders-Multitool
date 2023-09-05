@@ -424,6 +424,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Decompression cancelled.
+        /// </summary>
+        public static string DecompressionCancelled {
+            get {
+                return ResourceManager.GetString("DecompressionCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decompression completed in {0}..
         /// </summary>
         public static string DecompressionComplete {

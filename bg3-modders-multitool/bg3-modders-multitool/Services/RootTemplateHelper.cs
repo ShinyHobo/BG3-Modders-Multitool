@@ -28,6 +28,7 @@ namespace bg3_modders_multitool.Services
         private bool GameObjectsCached = false;
         private ConcurrentBag<GameObject> GameObjectBag = new ConcurrentBag<GameObject>();
         private IndexHelper IndexHelper = new IndexHelper();
+        private ViewModels.GameObjectViewModel GameObjectViewModel;
         public List<GameObject> GameObjects = new List<GameObject>();
         public List<GameObjectType> GameObjectTypes { get; private set; } = new List<GameObjectType>();
         public Dictionary<string, Translation> TranslationLookup;
@@ -45,6 +46,7 @@ namespace bg3_modders_multitool.Services
         {
             GeneralHelper.WriteToConsole(Properties.Resources.OpeningGOE);
             var start = DateTime.Now;
+            GameObjectViewModel = gameObjectViewModel;
             var rootTemplateTask = LoadRootTemplates();
 
             rootTemplateTask.ContinueWith(t => {
@@ -65,14 +67,14 @@ namespace bg3_modders_multitool.Services
                     {
                         GeneralHelper.WriteToConsole(Properties.Resources.NoGameObjectsFound);
                         System.Windows.Application.Current.Dispatcher.Invoke(() => {
-                            gameObjectViewModel.View.Close();
+                            GameObjectViewModel.View.Close();
                         });
                     }
                     else
                     {
                         var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
                         GeneralHelper.WriteToConsole(Properties.Resources.LoadedGOE, timePassed);
-                        gameObjectViewModel.Loaded = true;
+                        GameObjectViewModel.Loaded = true;
                     }
                 }
                 else
@@ -110,19 +112,25 @@ namespace bg3_modders_multitool.Services
                 }
 
                 ReadTranslations();
+                if (GameObjectViewModel.LoadingCanceled) return null;
                 ReadVisualBanks();
+                if (GameObjectViewModel.LoadingCanceled) return null;
                 //ReadTextureBanks();
                 ReadRootTemplate();
+                if (GameObjectViewModel.LoadingCanceled) return null;
                 foreach (var pak in Paks)
                 {
                     ReadData(pak);
+                    if (GameObjectViewModel.LoadingCanceled) return null;
                     ReadIcons(pak);
+                    if (GameObjectViewModel.LoadingCanceled) return null;
                 }
                 if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindIconsPak);
                 }
                 SortRootTemplate();
+                if (GameObjectViewModel.LoadingCanceled) return null;
                 Loaded = true;
                 return string.Join(",", GameObjectAttributes.Values.GroupBy(g => g).Select(g => g.Last()).ToList());
             });
@@ -219,8 +227,9 @@ namespace bg3_modders_multitool.Services
             var idBag = new ConcurrentBag<string>();
             var classBag = new ConcurrentBag<Tuple<string, string>>();
 #endif
-            Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
+            Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, (rootTemplate, loopState) =>
             {
+                if (GameObjectViewModel.LoadingCanceled) loopState.Break();
                 rootTemplate = FileHelper.GetPath(rootTemplate);
                 if (File.Exists(FileHelper.GetPath(rootTemplate)))
                 {
@@ -235,6 +244,7 @@ namespace bg3_modders_multitool.Services
                                 reader.MoveToContent();
                                 while (!reader.EOF)
                                 {
+                                    if (GameObjectViewModel.LoadingCanceled) loopState.Break();
                                     if (reader.Name == "region")
                                     {
                                         var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath };
@@ -308,7 +318,7 @@ namespace bg3_modders_multitool.Services
             {
                 return false;
             }
-
+            if (GameObjectViewModel.LoadingCanceled) return false;
             GeneralHelper.WriteToConsole(Properties.Resources.GameObjectsLoaded);
             return true;
         }
@@ -328,9 +338,10 @@ namespace bg3_modders_multitool.Services
             var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
             var orderedChildren = children.AsParallel().WithDegreeOfParallelism(GeneralHelper.ParallelOptions.MaxDegreeOfParallelism).OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name);
             var lookup = GameObjects.Where(go => !string.IsNullOrEmpty(go.MapKey)).GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
-            Parallel.ForEach(orderedChildren, GeneralHelper.ParallelOptions, gameObject =>
+            Parallel.ForEach(orderedChildren, GeneralHelper.ParallelOptions, (gameObject, loopState) =>
             {
-                if(lookup.ContainsKey(gameObject.ParentTemplateId))
+                if (GameObjectViewModel.LoadingCanceled) loopState.Break();
+                if (lookup.ContainsKey(gameObject.ParentTemplateId))
                 {
                     var goChildren = lookup[gameObject.ParentTemplateId].Children;
                     if (goChildren != null)
@@ -340,13 +351,16 @@ namespace bg3_modders_multitool.Services
                     }
                 }
             });
+            if (GameObjectViewModel.LoadingCanceled) return false;
             GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
             foreach(var gameObject in GameObjects)
             {
+                if (GameObjectViewModel.LoadingCanceled) return false;
                 gameObject.PassOnStats();
             }
+            if (GameObjectViewModel.LoadingCanceled) return false;
             FileHelper.SerializeObject(GameObjects, "GameObjects");
-                
+
             return true;
         }
 
@@ -444,6 +458,7 @@ namespace bg3_modders_multitool.Services
                 var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
                 foreach (var file in dataFiles)
                 {
+                    if (GameObjectViewModel.LoadingCanceled) return false;
                     var fileType = Models.StatStructures.StatStructure.FileType(file);
                     var line = string.Empty;
                     using(var fileStream = new System.IO.StreamReader(file))
@@ -540,6 +555,8 @@ namespace bg3_modders_multitool.Services
                 return (App.Current.MainWindow.DataContext as ViewModels.MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles();
             }).Wait();
 
+            if (GameObjectViewModel.LoadingCanceled) return false;
+
             GeneralHelper.WriteToConsole(Resources.LoadingBankFiles);
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
@@ -551,13 +568,17 @@ namespace bg3_modders_multitool.Services
             var characterVisualBanksFiles = GetFileList("CharacterVisualBank");
             if (characterVisualBanksFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundCharacterVisualBanks);
+            if (GameObjectViewModel.LoadingCanceled) return false;
             var visualBankFiles = GetFileList("VisualBank");
             if (visualBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundVisualBanks);
+            if (GameObjectViewModel.LoadingCanceled) return false;
             var materialBankFiles = GetFileList("MaterialBank");
+            if (GameObjectViewModel.LoadingCanceled) return false;
             if (materialBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundMaterialBanks);
             var textureBankFiles = GetFileList("TextureBank");
+            if (GameObjectViewModel.LoadingCanceled) return false;
             if (textureBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundTextureBanks);
             visualBankFiles.AddRange(materialBankFiles);
@@ -567,8 +588,9 @@ namespace bg3_modders_multitool.Services
             if (visualBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
             #endregion
-            Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile =>
+            Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, (visualBankFile, loopTask) =>
             {
+                if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
                 if (File.Exists(FileHelper.GetPath(visualBankFile)))
                 {
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", Path.ChangeExtension(visualBankFile, "lsx"));
@@ -580,6 +602,7 @@ namespace bg3_modders_multitool.Services
                             reader.MoveToContent();
                             while (!reader.EOF)
                             {
+                                if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
                                 if (reader.Name == "region")
                                 {
                                     var sectionId = reader.GetAttribute("id");
@@ -639,13 +662,13 @@ namespace bg3_modders_multitool.Services
                     }
                 }
             });
-
+            if (GameObjectViewModel.LoadingCanceled) return false;
             CharacterVisualBanks = characterVisualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             VisualBanks = visualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             BodySetVisuals = bodySetVisuals.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             MaterialBanks = materialBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             TextureBanks = textureBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
+            if (GameObjectViewModel.LoadingCanceled) return false;
             FileHelper.SerializeObject(CharacterVisualBanks, "CharacterVisualBanks");
             FileHelper.SerializeObject(VisualBanks, "VisualBanks");
             FileHelper.SerializeObject(BodySetVisuals, "BodySetVisuals");
