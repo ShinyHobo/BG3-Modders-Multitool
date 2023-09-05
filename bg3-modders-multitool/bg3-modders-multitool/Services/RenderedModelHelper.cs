@@ -338,11 +338,8 @@ namespace bg3_modders_multitool.Services
                                                     if (attributeId == "ID")
                                                     {
                                                         resourceId = reader.GetAttribute("value");
-                                                    }
-                                                    else if (attributeId == "BodySetVisual")
-                                                    {
-                                                        bodySetVisualId = reader.GetAttribute("value");
-                                                        if (!string.IsNullOrEmpty(bodySetVisualId))
+
+                                                        if (!string.IsNullOrEmpty(bodySetVisualId) && resourceId == id)
                                                         {
                                                             var bodySetVisualResource = LoadVisualResource(bodySetVisualId, visualBanks);
 
@@ -354,10 +351,17 @@ namespace bg3_modders_multitool.Services
 
                                                             if (bodySetVisualResource != null)
                                                                 characterVisualResources.Add(bodySetVisualResource);
+
+                                                            return new Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>>(characterVisualResources, materials, slotTypes);
                                                         }
+                                                    }
+                                                    else if (attributeId == "BodySetVisual")
+                                                    {
+                                                        bodySetVisualId = reader.GetAttribute("value");
                                                     }
                                                     else if(attributeId == "Slots")
                                                     {
+                                                        var bler = "";
                                                         //var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
 
                                                         //visualBanks.TryAdd(resourceId, visualBankFile);
@@ -402,7 +406,7 @@ namespace bg3_modders_multitool.Services
                     return null;
                 }
             }
-            return new Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>>(characterVisualResources, materials, slotTypes);
+            return null;
         }
 
         /// <summary>
@@ -413,51 +417,59 @@ namespace bg3_modders_multitool.Services
         /// <returns>The .GR2 sourcefile.</returns>
         private static string LoadVisualResource(string id, Dictionary<string, string> visualBanks)
         {
-            if (id != null && visualBanks.ContainsKey(id) && false)
+            if (id != null && visualBanks.ContainsKey(id))
             {
                 var visualResourceFile = visualBanks[id];
                 visualResourceFile = FileHelper.GetPath(visualResourceFile);
-                if (!FileHelper.TryParseXml(visualResourceFile))
+                if(File.Exists(visualResourceFile))
                 {
-                    var filePath = visualResourceFile.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
-                    GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, filePath);
-                    return null;
-                }
-
-                using (XmlTextReader reader = new XmlTextReader(visualResourceFile))
-                {
-                    reader.Read();
-                    while (!reader.EOF)
+                    try
                     {
-                        try
+                        using (XmlReader reader = XmlReader.Create(visualResourceFile))
                         {
-                            var sectionId = reader.GetAttribute("id");
-                            var isNode = reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node";
-                            if (isNode && sectionId == "Resource")
+                            reader.MoveToContent();
+                            while (!reader.EOF)
                             {
-                                var xml = (XElement)XNode.ReadFrom(reader);
-                                var attributes = xml.Elements("attribute");
-                                var nodeId = attributes.Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                if (nodeId == id)
+                                if (reader.Name == "region")
                                 {
-                                    var gr2File = attributes.SingleOrDefault(a => a.Attribute("id").Value == "SourceFile")?.Attribute("value").Value;
-                                    if (string.IsNullOrEmpty(gr2File))
-                                        return null;
-                                    gr2File = gr2File.Replace(".GR2", string.Empty);
-                                    return FileHelper.GetPath($"Models\\{gr2File}");
+                                    var sectionId = reader.GetAttribute("id");
+                                    if (!reader.ReadToDescendant("children"))
+                                    {
+                                        reader.ReadToFollowing("region");
+                                    }
+
+                                    reader.ReadToDescendant("node");
+                                    do
+                                    {
+                                        reader.ReadToDescendant("attribute");
+                                        var resourceId = string.Empty;
+                                        var gr2File = string.Empty;
+                                        do
+                                        {
+                                            var attributeId = reader.GetAttribute("id");
+                                            if (attributeId == "ID")
+                                            {
+                                                resourceId = reader.GetAttribute("value");
+                                            }
+                                            else if (attributeId == "SourceFile" && resourceId == id)
+                                            {
+                                                    gr2File = reader.GetAttribute("value");
+                                                    if (string.IsNullOrEmpty(gr2File))
+                                                        return null;
+                                                    gr2File = gr2File.Replace(".GR2", string.Empty);
+                                                    return FileHelper.GetPath($"Models\\{gr2File}");
+                                            }
+                                        } while (reader.ReadToNextSibling("attribute"));
+                                    } while (reader.ReadToNextSibling("node"));
                                 }
-                                reader.Skip();
-                            }
-                            else
-                            {
-                                reader.Read();
+                                reader.ReadToFollowing("region");
                             }
                         }
-                        catch(Exception ex)
-                        {
-                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, visualResourceFile, ex.Message);
-                            break;
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, visualResourceFile, ex.Message);
+                        return null;
                     }
                 }
             }
