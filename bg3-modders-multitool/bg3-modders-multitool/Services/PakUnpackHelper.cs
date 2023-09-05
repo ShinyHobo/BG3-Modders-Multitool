@@ -141,12 +141,16 @@ namespace bg3_modders_multitool.Services
         /// Decompresses all decompressable files recursively.
         /// </summary>
         /// <param name="path">The file path to decompress</param>
+        /// <param name="checking">Whether or not to use the alternate "checking" language</param>
         /// <returns>The task with the list of all files, with decompressed versions replacing the originals.</returns>
-        public Task<List<string>> DecompressAllConvertableFiles(string path = null)
+        public Task<List<string>> DecompressAllConvertableFiles(string path = null, bool checking = false)
         {
             return Task.Run(() =>
             {
-                GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
+                if(checking)
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileList);
+                else
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
 
                 if (DataContext != null)
                 {
@@ -173,7 +177,11 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Resources.DecompressionCancelled);
                 }
 
-                GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
+                if(checking)
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompressionAlt);
+                else
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
+                
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
                 var convertFiles = new List<string>();
                 Stopwatch stopWatch = new Stopwatch();

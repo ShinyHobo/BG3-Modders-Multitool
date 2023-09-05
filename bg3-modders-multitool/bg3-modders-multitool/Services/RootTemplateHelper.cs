@@ -89,12 +89,12 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public void Clear()
         {
-            GameObjects.Clear();
-            TranslationLookup.Clear();
-            Translations.Clear();
-            Races.Clear();
-            StatStructures.Clear();
-            TextureAtlases.Clear();
+            GameObjects?.Clear();
+            TranslationLookup?.Clear();
+            Translations?.Clear();
+            Races?.Clear();
+            StatStructures?.Clear();
+            TextureAtlases?.Clear();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -111,9 +111,9 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
                 }
 
-                ReadTranslations();
-                if (GameObjectViewModel.LoadingCanceled) return null;
                 ReadVisualBanks();
+                if (GameObjectViewModel.LoadingCanceled) return null;
+                ReadTranslations();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 //ReadTextureBanks();
                 ReadRootTemplate();
@@ -177,7 +177,8 @@ namespace bg3_modders_multitool.Services
                 using (var fs = File.Open(translationFile, System.IO.FileMode.Open))
                 {
                     var resource = LocaUtils.Load(fs, LocaFormat.Loca);
-                    LocaUtils.Save(resource, translationFileConverted, LocaFormat.Xml);
+                    LocaUtils.Save(resource, pathCheck, LocaFormat.Xml);
+                    translationFileConverted = pathCheck;
                 }
             }
 
@@ -557,7 +558,7 @@ namespace bg3_modders_multitool.Services
 
             App.Current.Dispatcher.Invoke(() =>
             {
-                return (App.Current.MainWindow.DataContext as ViewModels.MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles();
+                return (App.Current.MainWindow.DataContext as ViewModels.MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles(null, true);
             }).Wait();
 
             if (GameObjectViewModel.LoadingCanceled) return false;
