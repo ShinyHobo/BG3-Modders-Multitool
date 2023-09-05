@@ -289,7 +289,8 @@ namespace bg3_modders_multitool.Services
         /// <param name="characterVisualBanks">The character visualbanks lookup.</param>
         /// <param name="visualBanks">The visualbanks lookup.</param>
         /// <returns>The list of character visual resources found.</returns>
-        private static Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>> LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
+        private static Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>>
+            LoadCharacterVisualResources(string id, Dictionary<string, string> characterVisualBanks, Dictionary<string, string> visualBanks)
         {
             if (id == null)
                 return null;
@@ -300,58 +301,105 @@ namespace bg3_modders_multitool.Services
             var characterVisualBanksHasKey = characterVisualBanks.ContainsKey(id);
             if (visualBanksHasKey || characterVisualBanksHasKey)
             {
-                var file = characterVisualBanksHasKey ? characterVisualBanks[id] : visualBanks[id];
-                var xml = new XDocument();
+                var bankFile = characterVisualBanksHasKey ? characterVisualBanks[id] : visualBanks[id];
                 try
                 {
-                    xml = XDocument.Load(FileHelper.GetPath(file));
-                } 
-                catch (Exception ex)
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, file, ex.Message);
-                    return null;
-                }
-                    
-                var characterVisualResource = xml.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Resource" && x.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value == id).First();
-                var bodySetVisualId = characterVisualResource.Elements("attribute").SingleOrDefault(x => x.Attribute("id").Value == "BodySetVisual")?.Attribute("value").Value;
-                var bodySetVisual = LoadVisualResource(bodySetVisualId, visualBanks);
-                foreach (var material in LoadMaterials(bodySetVisualId, visualBanks))
-                {
-                    if(material.Key != null)
-                        materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, id));
-                }
-                if (bodySetVisual != null)
-                    characterVisualResources.Add(bodySetVisual);
-                var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
-                try
-                {
-                    Parallel.ForEach(slots, GeneralHelper.ParallelOptions, slot => {
-                        var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
-                        var slotType = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "Slot").Attribute("value").Value;
-                        lock(slotTypes)
-                            slotTypes.Add(visualResourceId, slotType);
-                        Parallel.ForEach(LoadMaterials(visualResourceId, visualBanks), GeneralHelper.ParallelOptions, material => {
-                            try
+                    if(bankFile != null)
+                    {
+                        var file = FileHelper.GetPath(bankFile);
+                        if(File.Exists(file))
+                        {
+                            using (XmlReader reader = XmlReader.Create(file))
                             {
-                                if (material.Key != null && !materials.ContainsKey(material.Key))
+                                reader.MoveToContent();
+                                while (!reader.EOF)
                                 {
-                                    lock (materials)
-                                        materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, visualResourceId));
+                                    if (reader.Name == "region")
+                                    {
+                                        var sectionId = reader.GetAttribute("id");
+                                        var isCharacterVisualBank = sectionId == "CharacterVisualBank";
+                                        var isVisualBank = sectionId == "VisualBank";
+                                        if(isCharacterVisualBank || isVisualBank)
+                                        {
+                                            if (!reader.ReadToDescendant("children"))
+                                            {
+                                                reader.ReadToFollowing("region");
+                                            }
+
+                                            reader.ReadToDescendant("node");
+                                            do
+                                            {
+                                                reader.ReadToDescendant("attribute");
+                                                var resourceId = string.Empty;
+                                                var bodySetVisualId = string.Empty;
+                                                do
+                                                {
+                                                    var attributeId = reader.GetAttribute("id");
+                                                    if (attributeId == "ID")
+                                                    {
+                                                        resourceId = reader.GetAttribute("value");
+                                                    }
+                                                    else if (attributeId == "BodySetVisual")
+                                                    {
+                                                        bodySetVisualId = reader.GetAttribute("value");
+                                                        if (!string.IsNullOrEmpty(bodySetVisualId))
+                                                        {
+                                                            var bodySetVisualResource = LoadVisualResource(bodySetVisualId, visualBanks);
+
+                                                            foreach (var material in LoadMaterials(bodySetVisualId, visualBanks))
+                                                            {
+                                                                if (material.Key != null)
+                                                                    materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, id));
+                                                            }
+
+                                                            if (bodySetVisualResource != null)
+                                                                characterVisualResources.Add(bodySetVisualResource);
+                                                        }
+                                                    }
+                                                    else if(attributeId == "Slots")
+                                                    {
+                                                        //var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
+
+                                                        //visualBanks.TryAdd(resourceId, visualBankFile);
+
+                                                        //    Parallel.ForEach(slots, GeneralHelper.ParallelOptions, slot => {
+                                                        //        var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
+                                                        //        var slotType = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "Slot").Attribute("value").Value;
+                                                        //        lock(slotTypes)
+                                                        //            slotTypes.Add(visualResourceId, slotType);
+                                                        //        Parallel.ForEach(LoadMaterials(visualResourceId, visualBanks), GeneralHelper.ParallelOptions, material => {
+                                                        //            try
+                                                        //            {
+                                                        //                if (material.Key != null && !materials.ContainsKey(material.Key))
+                                                        //                {
+                                                        //                    lock (materials)
+                                                        //                        materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, visualResourceId));
+                                                        //                }
+                                                        //            }
+                                                        //            catch (Exception ex)
+                                                        //            {
+                                                        //                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                                                        //            }
+                                                        //        });
+                                                        //        var visualResource = LoadVisualResource(visualResourceId, visualBanks);
+                                                        //        if (visualResource != null)
+                                                        //            characterVisualResources.Add(visualResource);
+                                                        //    });
+                                                    }
+                                                } while (reader.ReadToNextSibling("attribute"));
+                                            } while (reader.ReadToNextSibling("node"));
+                                        }
+                                    }
+                                    reader.ReadToFollowing("region");
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
-                            }
-                        });
-                        var visualResource = LoadVisualResource(visualResourceId, visualBanks);
-                        if (visualResource != null)
-                            characterVisualResources.Add(visualResource);
-                    });
+                        }
+                    }
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
-                    GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, bankFile, ex.Message);
+                    return null;
                 }
             }
             return new Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>>(characterVisualResources, materials, slotTypes);
@@ -365,7 +413,7 @@ namespace bg3_modders_multitool.Services
         /// <returns>The .GR2 sourcefile.</returns>
         private static string LoadVisualResource(string id, Dictionary<string, string> visualBanks)
         {
-            if (id != null && visualBanks.ContainsKey(id))
+            if (id != null && visualBanks.ContainsKey(id) && false)
             {
                 var visualResourceFile = visualBanks[id];
                 visualResourceFile = FileHelper.GetPath(visualResourceFile);
