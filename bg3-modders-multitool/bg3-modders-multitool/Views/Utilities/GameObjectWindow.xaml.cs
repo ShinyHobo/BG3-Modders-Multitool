@@ -103,9 +103,11 @@ namespace bg3_modders_multitool.Views
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var mainWindowVm = Application.Current.MainWindow.DataContext as ViewModels.MainWindow;
-                mainWindowVm.SearchResults.IsIndexing = false;
-                mainWindowVm.SearchResults.AllowIndexing = true;
+                if(Application.Current.MainWindow != null) {
+                    var mainWindowVm = Application.Current.MainWindow.DataContext as ViewModels.MainWindow;
+                    mainWindowVm.SearchResults.IsIndexing = false;
+                    mainWindowVm.SearchResults.AllowIndexing = true;
+                }
             });
 
             vm.Clear();
