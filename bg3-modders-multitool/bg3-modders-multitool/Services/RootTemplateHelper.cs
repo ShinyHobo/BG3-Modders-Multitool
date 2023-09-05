@@ -186,6 +186,7 @@ namespace bg3_modders_multitool.Services
             {
                 if (!FileHelper.TryParseXml(translationFileConverted))
                 {
+                    translationFileConverted = translationFileConverted.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                     GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, translationFileConverted);
                 }
                 else
@@ -308,6 +309,7 @@ namespace bg3_modders_multitool.Services
                         }
                         catch
                         {
+                            rootTemplate = rootTemplate.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                             GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, rootTemplate);
                             return;
                         }
@@ -527,6 +529,7 @@ namespace bg3_modders_multitool.Services
                 }
                 catch
                 {
+                    metaLoc = metaLoc.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                     GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, metaLoc);
                 }
             }
