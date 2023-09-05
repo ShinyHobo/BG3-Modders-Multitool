@@ -700,7 +700,7 @@ namespace bg3_modders_multitool.Services
             // Use slow query to double check that files exist in index
             if(rtList.Count == 0)
             {
-                IndexHelper.SearchFiles(searchTerm).ContinueWith(results => {
+                IndexHelper.SearchFiles(searchTerm, false).ContinueWith(results => {
                     rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsf")));
                 }).Wait();
             }
