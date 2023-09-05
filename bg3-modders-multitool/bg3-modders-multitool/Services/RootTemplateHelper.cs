@@ -166,6 +166,11 @@ namespace bg3_modders_multitool.Services
 
             var xmlPath = Path.ChangeExtension(selectedLanguagePath, ".xml");
             var translationFileConverted = FileHelper.GetPath(xmlPath);
+            var pathCheck = translationFileConverted.Replace(".xml", ".loca.xml");
+            if (!File.Exists(translationFileConverted)&&File.Exists(pathCheck))
+            {
+                translationFileConverted = pathCheck;
+            }
 
             if (!File.Exists(translationFileConverted) && File.Exists(translationFile))
             {
