@@ -192,6 +192,10 @@ namespace bg3_modders_multitool.Services
                             if(File.Exists(convertedFile))
                             {
                                 convertFiles.Add(convertedFile);
+                                if(file.Contains(FileHelper.UnpackedDataPath))
+                                {
+                                    File.Delete(file);
+                                }
                             }
                             else
                             {

@@ -424,7 +424,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This process converts all unpacked files to their human readable state (ie lsf to lsx and loca to xml). It may take a significant amount of time.
+        ///   Looks up a localized string similar to This process converts all unpacked files to their human readable state (ie lsf to lsx and loca to xml), removing the original file. It may take a significant amount of time, and you may want to re-index afterward if you already have an index.
         ///
         ///Do you wish to continue?.
         /// </summary>

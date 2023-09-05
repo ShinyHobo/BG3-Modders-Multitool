@@ -245,7 +245,7 @@ Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endor
     <comment>elapsed time</comment>
   </data>
   <data name="DecompressQuestion" xml:space="preserve">
-    <value>This process converts all unpacked files to their human readable state (ie lsf to lsx and loca to xml). It may take a significant amount of time.
+    <value>This process converts all unpacked files to their human readable state (ie lsf to lsx and loca to xml), removing the original file. It may take a significant amount of time, and you may want to re-index afterward if you already have an index.
 
 Do you wish to continue?</value>
   </data>
