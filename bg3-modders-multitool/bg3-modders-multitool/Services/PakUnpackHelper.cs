@@ -147,6 +147,14 @@ namespace bg3_modders_multitool.Services
             return Task.Run(() =>
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
+
+                if (DataContext != null)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.AllowIndexing = false;
+                    });
+                }
+
                 path = string.IsNullOrEmpty(path) ? @"\\?\" + FileHelper.UnpackedDataPath : path;
                 var fileList = FileHelper.DirectorySearch(path);
 
@@ -222,6 +230,7 @@ namespace bg3_modders_multitool.Services
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         DataContext.IsIndexing = false;
+                        DataContext.AllowIndexing = true;
                     });
                 }
 
