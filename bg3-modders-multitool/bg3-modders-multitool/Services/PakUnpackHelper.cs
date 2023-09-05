@@ -194,10 +194,6 @@ namespace bg3_modders_multitool.Services
                                             convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
                                         }
                                         break;
-                                    case ".xml":
-                                        // no conversion necessary
-                                        convertedFile = file;
-                                        break;
                                     default:
                                         {
                                             convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
