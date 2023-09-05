@@ -200,10 +200,11 @@ namespace bg3_modders_multitool.Services
                                         }
                                         break;
                                 }
+                                var wasConverted = extension != Path.GetExtension(convertedFile);
                                 if (File.Exists(convertedFile))
                                 {
                                     convertFiles.Add(convertedFile);
-                                    if (file.Contains(FileHelper.UnpackedDataPath))
+                                    if (file.Contains(FileHelper.UnpackedDataPath) && wasConverted)
                                     {
                                         File.Delete(file);
                                     }
@@ -232,7 +233,7 @@ namespace bg3_modders_multitool.Services
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                var wasDecompressing = DataContext == null ? true : DataContext.AllowIndexing;
+                var wasDecompressing = DataContext == null ? true : !DataContext.AllowIndexing;
                 if (DataContext != null)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
