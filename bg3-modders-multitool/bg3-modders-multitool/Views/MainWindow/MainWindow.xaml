@@ -97,7 +97,7 @@
             <Button x:Name="unpack" Content="{x:Static p:Resources.UnpackFilesButton}" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}" ToolTip="{x:Static p:Resources.UnpackButtonTooltip}"/>
             <Button x:Name="unpack_Cancel" Content="{x:Static p:Resources.CancelUnpackingButton}" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand" ToolTip="{x:Static p:Resources.CancelUnpackButtonTooltip}"/>
             <Button x:Name="decompressButton" Content="{x:Static p:Resources.DecompressFilesButton}" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" 
-            Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding NotDecompressing}" ToolTip="{x:Static p:Resources.ConvertOpenButtonTooltip}"/>
+            Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding SearchResults.AllowIndexing}" ToolTip="{x:Static p:Resources.ConvertOpenButtonTooltip}"/>
             <Grid Margin="273,115,60,260">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="321*"/>
