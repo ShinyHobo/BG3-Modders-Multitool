@@ -1238,6 +1238,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t find Data directory. Ensure that your bg3.exe selection is correct..
+        /// </summary>
+        public static string InvalidBg3Location {
+            get {
+                return ResourceManager.GetString("InvalidBg3Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t access selected game executable. Ensure that your bg3.exe selection is correct..
+        /// </summary>
+        public static string InvalidBg3LocationSelection {
+            get {
+                return ResourceManager.GetString("InvalidBg3LocationSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Support ShinyHobo on KoFi.
         /// </summary>
         public static string KofiTooltip {
@@ -2235,6 +2253,15 @@ namespace bg3_modders_multitool.Properties {
         public static string v4UUIDLabel {
             get {
                 return ResourceManager.GetString("v4UUIDLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BG3 executable set..
+        /// </summary>
+        public static string ValidBg3Selected {
+            get {
+                return ResourceManager.GetString("ValidBg3Selected", resourceCulture);
             }
         }
         
