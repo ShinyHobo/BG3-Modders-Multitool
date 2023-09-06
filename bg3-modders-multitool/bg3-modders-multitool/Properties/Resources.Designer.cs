@@ -424,6 +424,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Decompression cancelled.
+        /// </summary>
+        public static string DecompressionCancelled {
+            get {
+                return ResourceManager.GetString("DecompressionCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decompression completed in {0}..
         /// </summary>
         public static string DecompressionComplete {
@@ -1780,11 +1789,20 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retrived file list. Starting decompression; this could take awhile..
+        ///   Looks up a localized string similar to Retrived file list. Starting decompression....
         /// </summary>
         public static string RetrievedFileListDecompression {
             get {
                 return ResourceManager.GetString("RetrievedFileListDecompression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrived file list. Checking files....
+        /// </summary>
+        public static string RetrievedFileListDecompressionAlt {
+            get {
+                return ResourceManager.GetString("RetrievedFileListDecompressionAlt", resourceCulture);
             }
         }
         

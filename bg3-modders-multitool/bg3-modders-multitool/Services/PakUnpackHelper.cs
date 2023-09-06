@@ -141,12 +141,24 @@ namespace bg3_modders_multitool.Services
         /// Decompresses all decompressable files recursively.
         /// </summary>
         /// <param name="path">The file path to decompress</param>
+        /// <param name="checking">Whether or not to use the alternate "checking" language</param>
         /// <returns>The task with the list of all files, with decompressed versions replacing the originals.</returns>
-        public Task<List<string>> DecompressAllConvertableFiles(string path = null)
+        public Task<List<string>> DecompressAllConvertableFiles(string path = null, bool checking = false)
         {
             return Task.Run(() =>
             {
-                GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
+                if(checking)
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileList);
+                else
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileListDecompression);
+
+                if (DataContext != null)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.AllowIndexing = false;
+                    });
+                }
+
                 path = string.IsNullOrEmpty(path) ? @"\\?\" + FileHelper.UnpackedDataPath : path;
                 var fileList = FileHelper.DirectorySearch(path);
 
@@ -160,73 +172,95 @@ namespace bg3_modders_multitool.Services
                     });
                 }
 
-                GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
+                if(DataContext?.AllowIndexing == true)
+                {
+                    GeneralHelper.WriteToConsole(Resources.DecompressionCancelled);
+                }
+
+                if(checking)
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompressionAlt);
+                else
+                    GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
+                
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
                 var convertFiles = new List<string>();
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
-                Parallel.ForEach(fileList, GeneralHelper.ParallelOptions, file => {
-                    lock(file)
+                Parallel.ForEach(fileList, GeneralHelper.ParallelOptions, (file, loopState) => {
+                    if (DataContext?.AllowIndexing != true)
                     {
-                        var extension = Path.GetExtension(file);
-                        var convertedFile = string.Empty;
-                        if (!string.IsNullOrEmpty(extension))
+                        lock (file)
                         {
-                            switch (extension)
+                            var extension = Path.GetExtension(file);
+                            var convertedFile = string.Empty;
+                            if (!string.IsNullOrEmpty(extension))
                             {
-                                case ".loca":
-                                    {
-                                        convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
-                                    }
-                                    break;
-                                case ".xml":
-                                    // no conversion necessary
-                                    convertedFile = file;
-                                    break;
-                                default:
-                                    {
-                                        convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
-                                    }
-                                    break;
-                            }
-                            if(File.Exists(convertedFile))
-                            {
-                                convertFiles.Add(convertedFile);
-                                if(file.Contains(FileHelper.UnpackedDataPath))
+                                switch (extension)
                                 {
-                                    File.Delete(file);
+                                    case ".loca":
+                                        {
+                                            convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "xml");
+                                        }
+                                        break;
+                                    default:
+                                        {
+                                            convertedFile = FileHelper.Convert(file.Replace(defaultPath, ""), "lsx");
+                                        }
+                                        break;
+                                }
+                                var wasConverted = extension != Path.GetExtension(convertedFile);
+                                if (File.Exists(convertedFile))
+                                {
+                                    convertFiles.Add(convertedFile);
+                                    if (file.Contains(FileHelper.UnpackedDataPath) && wasConverted)
+                                    {
+                                        File.Delete(file);
+                                    }
+                                }
+                                else
+                                {
+                                    convertFiles.Add(file);
                                 }
                             }
                             else
                             {
                                 convertFiles.Add(file);
                             }
+                            if (DataContext != null)
+                            {
+                                lock (DataContext)
+                                    DataContext.IndexFileCount++;
+                            }
                         }
-                        else
-                        {
-                            convertFiles.Add(file);
-                        }
-                        if (DataContext != null)
-                        {
-                            lock (DataContext)
-                                DataContext.IndexFileCount++;
-                        }
+                    }
+                    else
+                    {
+                        loopState.Break();
                     }
                 });
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-
+                var wasDecompressing = DataContext == null ? true : !DataContext.AllowIndexing;
                 if (DataContext != null)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         DataContext.IsIndexing = false;
+                        DataContext.AllowIndexing = true;
                     });
                 }
 
                 fileList.Clear();
-                GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
+                if(wasDecompressing)
+                {
+                    GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Resources.DecompressionCancelled);
+                }
+
                 return convertFiles;
             });
         }

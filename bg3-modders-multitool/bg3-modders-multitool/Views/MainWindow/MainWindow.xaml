@@ -21,9 +21,9 @@
                         </MenuItem>
                     </MenuItem>
                     <MenuItem Header="{x:Static p:Resources.GOEButton}" ToolTip="{x:Static p:Resources.GOEMenuTooltip}" Icon="📚">
-                        <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                        <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
                             ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
-                        <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding UnpackAllowed}"
+                        <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
                             ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
                     </MenuItem>
                 </MenuItem>
@@ -69,9 +69,10 @@
             </Menu>
         </Border>
         <Grid VerticalAlignment="Top" Margin="-4,0,0,0">
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"  Margin="0,5,5,0">
-                <Button Content="🔃" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30" Background="Transparent" Visibility="{Binding UpdateVisible}" Click="CheckForUpdates_Click"
-                    BorderThickness="0" Cursor="Hand" FontSize="20" Foreground="Blue" ToolTip="{x:Static p:Resources.UpdatesFoundButton}"/>
+            <StackPanel HorizontalAlignment="Right"  Margin="0,-25,5,0" Visibility="{Binding UpdateVisible}">
+                <TextBlock Text="Update(s) available" Margin="0,5,5,5"/>
+                <Button Content="🔃" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30" Background="Transparent"  Click="CheckForUpdates_Click"
+                    BorderThickness="0" Cursor="Hand" FontSize="20" Foreground="Green" ToolTip="{x:Static p:Resources.UpdatesFoundButton}"/>
             </StackPanel>
             
             <Viewbox StretchDirection="Both" Stretch="Uniform" Margin="10,0,526,159">
@@ -97,7 +98,7 @@
             <Button x:Name="unpack" Content="{x:Static p:Resources.UnpackFilesButton}" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Click" Cursor="Hand" IsEnabled="{Binding UnpackAllowed}" ToolTip="{x:Static p:Resources.UnpackButtonTooltip}"/>
             <Button x:Name="unpack_Cancel" Content="{x:Static p:Resources.CancelUnpackingButton}" HorizontalAlignment="Left" Margin="273,81,0,0" VerticalAlignment="Top" Width="100" Height="23" Click="Unpack_Cancel_Click" Visibility="Hidden" Cursor="Hand" ToolTip="{x:Static p:Resources.CancelUnpackButtonTooltip}"/>
             <Button x:Name="decompressButton" Content="{x:Static p:Resources.DecompressFilesButton}" HorizontalAlignment="Left" Margin="378,81,0,0" VerticalAlignment="Top" Width="100" Height="23" 
-            Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding NotDecompressing}" ToolTip="{x:Static p:Resources.ConvertOpenButtonTooltip}"/>
+            Click="Decompress_Click" Cursor="Hand" IsEnabled="{Binding SearchResults.AllowIndexing}" ToolTip="{x:Static p:Resources.ConvertOpenButtonTooltip}"/>
             <Grid Margin="273,115,60,260">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="321*"/>

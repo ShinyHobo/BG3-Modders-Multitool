@@ -99,6 +99,17 @@ namespace bg3_modders_multitool.Views
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var vm = DataContext as GameObjectViewModel;
+            vm.LoadingCanceled = true;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if(Application.Current.MainWindow != null) {
+                    var mainWindowVm = Application.Current.MainWindow.DataContext as ViewModels.MainWindow;
+                    mainWindowVm.SearchResults.IsIndexing = false;
+                    mainWindowVm.SearchResults.AllowIndexing = true;
+                }
+            });
+
             vm.Clear();
         }
 

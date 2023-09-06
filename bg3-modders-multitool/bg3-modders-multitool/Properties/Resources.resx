@@ -244,6 +244,9 @@ Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endor
   <data name="DecompressFilesButton" xml:space="preserve">
     <value>Decompress Files</value>
   </data>
+  <data name="DecompressionCancelled" xml:space="preserve">
+    <value>Decompression cancelled</value>
+  </data>
   <data name="DecompressionComplete" xml:space="preserve">
     <value>Decompression completed in {0}.</value>
     <comment>elapsed time</comment>
@@ -736,7 +739,10 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>{0} results have been filtered out.</value>
   </data>
   <data name="RetrievedFileListDecompression" xml:space="preserve">
-    <value>Retrived file list. Starting decompression; this could take awhile.</value>
+    <value>Retrived file list. Starting decompression...</value>
+  </data>
+  <data name="RetrievedFileListDecompressionAlt" xml:space="preserve">
+    <value>Retrived file list. Checking files...</value>
   </data>
   <data name="RetrievingFileList" xml:space="preserve">
     <value>Retrieving file list.</value>
