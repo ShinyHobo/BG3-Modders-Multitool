@@ -347,6 +347,7 @@ namespace bg3_modders_multitool.Services
                     using (System.IO.FileStream fs = new System.IO.FileStream(fileName, System.IO.FileMode.Append, System.IO.FileAccess.Write))
                     using (System.IO.StreamWriter sw = new System.IO.StreamWriter(fs))
                     {
+                        sw.WriteLine($"// ==== Generated with ShinyHobo's BG3 Modder's Multitool ====");
                         foreach (var file in files)
                         {
                             sw.WriteLine($"// === {file.Name} ===");
