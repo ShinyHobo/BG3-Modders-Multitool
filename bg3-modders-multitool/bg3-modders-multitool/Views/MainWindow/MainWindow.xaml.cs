@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
+    using bg3_modders_multitool.Views.Utilities;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -298,6 +299,7 @@ namespace bg3_modders_multitool.Views
         }
         #endregion
 
+        #region Utilities
         /// <summary>
         /// Opens dialog to select paks to unpack
         /// </summary>
@@ -327,6 +329,18 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        /// <summary>
+        /// Opens the atlas tool
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void atlasToolButton_Click(object sender, RoutedEventArgs e)
+        {
+            var atlasToolDialog = new AtlasToolWindow();
+            atlasToolDialog.Show();
+        }
+        #endregion
+
         #region About menu
         private void LegalMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -339,6 +353,5 @@ namespace bg3_modders_multitool.Views
             vm.CheckForUpdates(true);
         }
         #endregion
-
     }
 }

@@ -583,6 +583,7 @@
     <Compile Include="Services\RootTemplateHelper.cs" />
     <Compile Include="ViewModels\MainWindow\DragAndDropBox.cs" />
     <Compile Include="ViewModels\Utilities\AddMissingMetaLsxViewModel.cs" />
+    <Compile Include="ViewModels\Utilities\AtlasToolViewModel.cs" />
     <Compile Include="ViewModels\Utilities\GameObjectViewModel.cs" />
     <Compile Include="ViewModels\Reusables\CheckBox.cs" />
     <Compile Include="Models\InfoJson.cs" />
@@ -597,6 +598,9 @@
     </Compile>
     <Compile Include="Views\Utilities\AddMissingMetaLsx.xaml.cs">
       <DependentUpon>AddMissingMetaLsx.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Utilities\AtlasToolWindow.xaml.cs">
+      <DependentUpon>AtlasToolWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Utilities\IndexingWindow.xaml.cs">
       <DependentUpon>IndexingWindow.xaml</DependentUpon>
@@ -626,6 +630,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Utilities\AddMissingMetaLsx.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Utilities\AtlasToolWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

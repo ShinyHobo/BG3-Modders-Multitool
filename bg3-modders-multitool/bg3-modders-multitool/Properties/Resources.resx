@@ -130,6 +130,12 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Baldur's Gate 3 Modder's Multitool</value>
   </data>
+  <data name="AtlasToolMenuHeader" xml:space="preserve">
+    <value>Atlas Converter</value>
+  </data>
+  <data name="AtlasToolMenuTooltip" xml:space="preserve">
+    <value>Generates and deconstructs .dds atlas files</value>
+  </data>
   <data name="AttemptingToPack" xml:space="preserve">
     <value>Attempting to pack mod.</value>
   </data>

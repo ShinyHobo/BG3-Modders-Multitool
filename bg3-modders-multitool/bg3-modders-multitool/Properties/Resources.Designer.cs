@@ -97,6 +97,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Atlas Converter.
+        /// </summary>
+        public static string AtlasToolMenuHeader {
+            get {
+                return ResourceManager.GetString("AtlasToolMenuHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generates and deconstructs .dds atlas files.
+        /// </summary>
+        public static string AtlasToolMenuTooltip {
+            get {
+                return ResourceManager.GetString("AtlasToolMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempting to pack mod..
         /// </summary>
         public static string AttemptingToPack {
