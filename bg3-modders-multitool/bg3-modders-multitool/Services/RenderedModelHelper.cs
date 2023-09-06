@@ -335,13 +335,59 @@ namespace bg3_modders_multitool.Services
                                                 do
                                                 {
                                                     var attributeId = reader.GetAttribute("id");
-                                                    if (attributeId == "ID")
+                                                    if(attributeId != null)
                                                     {
-                                                        resourceId = reader.GetAttribute("value");
-
-                                                        if (!string.IsNullOrEmpty(bodySetVisualId) && resourceId == id)
+                                                        if (attributeId == "ID")
                                                         {
-                                                            var bodySetVisualResource = LoadVisualResource(bodySetVisualId, visualBanks);
+                                                            resourceId = reader.GetAttribute("value");
+
+                                                            if (!string.IsNullOrEmpty(bodySetVisualId) && resourceId == id)
+                                                            {
+                                                                var bodySetVisualResource = LoadVisualResource(bodySetVisualId, visualBanks);
+
+                                                                foreach (var material in LoadMaterials(bodySetVisualId, visualBanks))
+                                                                {
+                                                                    if (material.Key != null)
+                                                                        materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, id));
+                                                                }
+
+                                                                if (bodySetVisualResource != null)
+                                                                    characterVisualResources.Add(bodySetVisualResource);
+
+                                                                break;
+                                                            }
+                                                        }
+                                                        else if (attributeId == "BodySetVisual")
+                                                        {
+                                                            bodySetVisualId = reader.GetAttribute("value");
+                                                        }
+                                                    }
+                                                } while (reader.ReadToNextSibling("attribute"));
+
+                                                if (resourceId == id)
+                                                {
+                                                    reader.ReadToNextSibling("children");
+                                                    reader.ReadToDescendant("node");
+                                                    do
+                                                    {
+                                                        var nodeId = reader.GetAttribute("id");
+                                                        if (nodeId == "Slots")
+                                                        {
+                                                            var visualResourceId = string.Empty;
+                                                            var slotType = string.Empty;
+                                                            reader.ReadToDescendant("attribute");
+                                                            do
+                                                            {
+                                                                var attributeId = reader.GetAttribute("id");
+                                                                if (attributeId == "VisualResource")
+                                                                {
+                                                                    visualResourceId = reader.GetAttribute("value");
+                                                                }
+                                                                else if (attributeId == "Slot")
+                                                                {
+                                                                    slotType = reader.GetAttribute("value");
+                                                                }
+                                                            } while (reader.ReadToNextSibling("attribute"));
 
                                                             foreach (var material in LoadMaterials(bodySetVisualId, visualBanks))
                                                             {
@@ -349,48 +395,14 @@ namespace bg3_modders_multitool.Services
                                                                     materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, id));
                                                             }
 
-                                                            if (bodySetVisualResource != null)
-                                                                characterVisualResources.Add(bodySetVisualResource);
-
-                                                            return new Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>>(characterVisualResources, materials, slotTypes);
+                                                            var visualResource = LoadVisualResource(visualResourceId, visualBanks);
+                                                            if (visualResource != null)
+                                                                characterVisualResources.Add(visualResource);
+                                                            slotTypes.Add(visualResourceId, slotType);
                                                         }
-                                                    }
-                                                    else if (attributeId == "BodySetVisual")
-                                                    {
-                                                        bodySetVisualId = reader.GetAttribute("value");
-                                                    }
-                                                    else if(attributeId == "Slots")
-                                                    {
-                                                        var bler = "";
-                                                        //var slots = characterVisualResource.Descendants().Where(x => x.Name.LocalName == "node" && x.Attribute("id").Value == "Slots").ToList();
-
-                                                        //visualBanks.TryAdd(resourceId, visualBankFile);
-
-                                                        //    Parallel.ForEach(slots, GeneralHelper.ParallelOptions, slot => {
-                                                        //        var visualResourceId = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "VisualResource").Attribute("value").Value;
-                                                        //        var slotType = slot.Elements("attribute").SingleOrDefault(a => a.Attribute("id").Value == "Slot").Attribute("value").Value;
-                                                        //        lock(slotTypes)
-                                                        //            slotTypes.Add(visualResourceId, slotType);
-                                                        //        Parallel.ForEach(LoadMaterials(visualResourceId, visualBanks), GeneralHelper.ParallelOptions, material => {
-                                                        //            try
-                                                        //            {
-                                                        //                if (material.Key != null && !materials.ContainsKey(material.Key))
-                                                        //                {
-                                                        //                    lock (materials)
-                                                        //                        materials.Add(material.Key, new Tuple<string, string>(material.Value.Item1, visualResourceId));
-                                                        //                }
-                                                        //            }
-                                                        //            catch (Exception ex)
-                                                        //            {
-                                                        //                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
-                                                        //            }
-                                                        //        });
-                                                        //        var visualResource = LoadVisualResource(visualResourceId, visualBanks);
-                                                        //        if (visualResource != null)
-                                                        //            characterVisualResources.Add(visualResource);
-                                                        //    });
-                                                    }
-                                                } while (reader.ReadToNextSibling("attribute"));
+                                                    } while (reader.ReadToNextSibling("node"));
+                                                    return new Tuple<List<string>, Dictionary<string, Tuple<string, string>>, Dictionary<string, string>>(characterVisualResources, materials, slotTypes);
+                                                }
                                             } while (reader.ReadToNextSibling("node"));
                                         }
                                     }
@@ -453,11 +465,11 @@ namespace bg3_modders_multitool.Services
                                             }
                                             else if (attributeId == "SourceFile" && resourceId == id)
                                             {
-                                                    gr2File = reader.GetAttribute("value");
-                                                    if (string.IsNullOrEmpty(gr2File))
-                                                        return null;
-                                                    gr2File = gr2File.Replace(".GR2", string.Empty);
-                                                    return FileHelper.GetPath($"Models\\{gr2File}");
+                                                gr2File = reader.GetAttribute("value");
+                                                if (string.IsNullOrEmpty(gr2File))
+                                                    return null;
+                                                gr2File = gr2File.Replace(".GR2", string.Empty);
+                                                return FileHelper.GetPath($"Models\\{gr2File}");
                                             }
                                         } while (reader.ReadToNextSibling("attribute"));
                                     } while (reader.ReadToNextSibling("node"));
