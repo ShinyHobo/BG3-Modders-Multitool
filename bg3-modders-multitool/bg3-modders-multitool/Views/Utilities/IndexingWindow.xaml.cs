@@ -112,7 +112,7 @@ namespace bg3_modders_multitool.Views
                     var isGr2 = vm.RenderModel();
                     foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
                     {
-                        vm.FileContents.Add(new SearchResult { Key = content.Key, Text = content.Value.Trim() });
+                        vm.FileContents.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
                     }
                     convertAndOpenButton.IsEnabled = true;
                     if(isGr2)
