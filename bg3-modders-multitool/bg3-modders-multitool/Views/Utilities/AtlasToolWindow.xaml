@@ -4,9 +4,59 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="{x:Static p:Resources.AtlasToolMenuHeader}" Height="450" Width="800">
+        Title="{x:Static p:Resources.AtlasToolMenuHeader}" Height="450" Width="550">
     <Grid>
-        
+        <StackPanel>
+            <Border Margin="5" BorderBrush="Black" BorderThickness="1">
+                <StackPanel Margin="5">
+                    <TextBlock Text="Convert from atlas sheet to frames"/>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBox x:Name="fileSelection" Width="400"/>
+                        <Button x:Name="fileSelect" Content="Select files" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBox x:Name="outputFolderSelection" Width="400"/>
+                        <Button x:Name="outputFolderSelect" Content="Select output" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <xctk:IntegerUpDown Name="horizontalFramesInSheet" Minimum="1" Margin="0,0,5,0" DefaultValue="1"/>
+                            <TextBlock Text="Horizontal Frames"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <xctk:IntegerUpDown Name="verticalFramesInSheet" Minimum="1" Margin="0,0,5,0" DefaultValue="1"/>
+                            <TextBlock Text="Vertical Frames"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Button x:Name="convertToFrames" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5"/>
+                </StackPanel>
+            </Border>
+            <Border Margin="5" BorderBrush="Black" BorderThickness="1">
+                <StackPanel Margin="5">
+                    <TextBlock Text="Convert from frames to atlas sheet"/>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBox x:Name="fileSelection2" Width="400"/>
+                        <Button x:Name="fileSelect2" Content="Select files" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBox x:Name="outputFolderSelection2" Width="400"/>
+                        <Button x:Name="outputFolderSelect2" Content="Select output" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <xctk:IntegerUpDown Name="horizontalFramesForSheet" Minimum="1" Margin="0,0,5,0" DefaultValue="1"/>
+                            <TextBlock Text="Horizontal Frames"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <xctk:IntegerUpDown Name="verticalFramesForSheet" Minimum="1" Margin="0,0,5,0" DefaultValue="1"/>
+                            <TextBlock Text="Vertical Frames"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Button x:Name="convertToSheet" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </Grid>
 </Window>
