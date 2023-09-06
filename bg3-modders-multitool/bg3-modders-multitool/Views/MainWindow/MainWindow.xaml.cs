@@ -112,7 +112,15 @@ namespace bg3_modders_multitool.Views
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            System.Diagnostics.Process.Start(vm.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
+            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            if (Directory.Exists(dataDir))
+            {
+                System.Diagnostics.Process.Start(vm.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.InvalidBg3LocationSelection);
+            }
         }
 
         private void GameObjectButton_Click(object sender, RoutedEventArgs e)
@@ -214,7 +222,14 @@ namespace bg3_modders_multitool.Views
         private void gameDataFolderButton_Click(object sender, RoutedEventArgs e)
         {
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            System.Diagnostics.Process.Start(dataDir);
+            if(Directory.Exists(dataDir))
+            {
+                System.Diagnostics.Process.Start(dataDir);
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.InvalidBg3Location);
+            }
         }
         #endregion
 

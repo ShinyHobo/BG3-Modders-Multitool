@@ -34,13 +34,21 @@ namespace bg3_modders_multitool.Services
         {
             Directory.CreateDirectory(FileHelper.UnpackedDataPath);
             var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            var files = Directory.GetFiles(dataDir, "*.pak", System.IO.SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
-            var pakSelection = new Views.PakSelection(files);
-            pakSelection.ShowDialog();
-            pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
-            var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
-            var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file))).ToList();
-            return UnpackPakFiles(paks);
+            if(Directory.Exists(dataDir))
+            {
+                var files = Directory.GetFiles(dataDir, "*.pak", System.IO.SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
+                var pakSelection = new Views.PakSelection(files);
+                pakSelection.ShowDialog();
+                pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
+                var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+                var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file))).ToList();
+                return UnpackPakFiles(paks);
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.InvalidBg3Location);
+                return Task.CompletedTask;
+            }
         }
 
         /// <summary>

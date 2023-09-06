@@ -53,7 +53,11 @@ namespace bg3_modders_multitool.Services
             var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
             var isConvertableToXml = originalExtension.Contains("loca") && extension == "xml";
             var isConvertableToLoca = originalExtension.Contains("xml") && extension == "loca";
+
             string path;
+
+            // TODO - clean up logic here; should accept directory designation rather than using GetPath
+
             if (string.IsNullOrEmpty(newPath))
             {
                 path = GetPath(file);
@@ -63,63 +67,67 @@ namespace bg3_modders_multitool.Services
             {
                 path = file;
             }
-            if (!File.Exists(newPath) && isConvertableToLsx)
+
+            if(!File.Exists(newPath))
             {
-                if(MustRenameLsxResources.Contains(originalExtension))
+                if (isConvertableToLsx)
                 {
-                    var renamedPath = Path.ChangeExtension(path, originalExtension + ".lsf");
-                    File.Move(path, renamedPath);
-                    path = renamedPath;
-                }
-                var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
-                try
-                {
-                    LSLib.LS.Resource resource = ResourceUtils.LoadResource(path);
-                    ResourceUtils.SaveResource(resource, newPath, conversionParams);
-                }
-                catch (Exception ex)
-                {
-                    // Larian decided to rename the .lsx to .lsbs instead of properly LSF encoding them
-                    // These are invalid .lsbs/.lsbc files if this error pops up
-                    if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                    if (MustRenameLsxResources.Contains(originalExtension))
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        var renamedPath = Path.ChangeExtension(path, originalExtension + ".lsf");
+                        File.Move(path, renamedPath);
+                        path = renamedPath;
                     }
-                }
-
-                if (MustRenameLsxResources.Contains(originalExtension))
-                {
-                    File.Move(path, Path.ChangeExtension(path, ""));
-                }
-            }
-            else if(!File.Exists(newPath) && isConvertableToXml)
-            {
-                using (var fs = File.Open(file, System.IO.FileMode.Open))
-                {
-
+                    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                     try
                     {
-                        var resource = LocaUtils.Load(fs, LocaFormat.Loca);
-                        LocaUtils.Save(resource, newPath, LocaFormat.Xml);
-                    } 
-                    catch(Exception ex)
-                    {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
-                    }
-                }
-            }
-            else if(!File.Exists(newPath) && isConvertableToLoca)
-            {
-                using (var fs = File.Open(file, System.IO.FileMode.Open))
-                {
-                    try
-                    {
-                        var resource = LocaUtils.Load(fs, LocaFormat.Xml);
-                        LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                        LSLib.LS.Resource resource = ResourceUtils.LoadResource(path);
+                        ResourceUtils.SaveResource(resource, newPath, conversionParams);
                     }
                     catch (Exception ex)
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        // Larian decided to rename the .lsx to .lsbs instead of properly LSF encoding them
+                        // These are invalid .lsbs/.lsbc files if this error pops up
+                        if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        }
+                    }
+
+                    if (MustRenameLsxResources.Contains(originalExtension))
+                    {
+                        File.Move(path, Path.ChangeExtension(path, ""));
+                    }
+                }
+                else if (isConvertableToXml)
+                {
+                    using (var fs = File.Open(file, System.IO.FileMode.Open))
+                    {
+
+                        try
+                        {
+                            var resource = LocaUtils.Load(fs, LocaFormat.Loca);
+                            LocaUtils.Save(resource, newPath, LocaFormat.Xml);
+                        }
+                        catch (Exception ex)
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        }
+                    }
+                }
+                else if (isConvertableToLoca)
+                {
+                    using (var fs = File.Open(file, System.IO.FileMode.Open))
+                    {
+                        try
+                        {
+                            var resource = LocaUtils.Load(fs, LocaFormat.Xml);
+                            LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                        }
+                        catch (Exception ex)
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        }
                     }
                 }
             }

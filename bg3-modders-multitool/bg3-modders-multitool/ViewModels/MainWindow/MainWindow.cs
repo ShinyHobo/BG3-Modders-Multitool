@@ -39,17 +39,25 @@ namespace bg3_modders_multitool.ViewModels
                 Title = title
             };
             var result = fileDialog.ShowDialog();
-            var file = (string)Properties.Settings.Default[property];
-            switch (result)
+            if(result == System.Windows.Forms.DialogResult.OK)
             {
-                case System.Windows.Forms.DialogResult.OK:
-                    file = fileDialog.FileName;
+                var dataDir = Path.Combine(fileDialog.FileName + "\\..\\", @"..\Data");
+                var extension = Path.GetExtension(fileDialog.FileName);
+                if (Directory.Exists(dataDir) && extension == ".exe")
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.ValidBg3Selected);
+                    var file = fileDialog.FileName;
                     Properties.Settings.Default[property] = file;
                     Properties.Settings.Default.Save();
-                    break;
+                    return file;
+                }
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.InvalidBg3LocationSelection);
+                }
             }
-            
-            return file;
+
+            return string.Empty;
         }
 
         /// <summary>
