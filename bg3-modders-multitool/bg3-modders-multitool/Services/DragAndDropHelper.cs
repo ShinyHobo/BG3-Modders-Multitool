@@ -284,7 +284,8 @@ namespace bg3_modders_multitool.Services
         private static string BuildPack(string path)
         {
             var fileList = FileHelper.DirectorySearch(path);
-            var modDir = $"{TempFolder}\\{new DirectoryInfo(path).Name}";
+            var modName = new DirectoryInfo(path).Name;
+            var modDir = $"{TempFolder}\\{modName}";
             foreach (var file in fileList)
             {
                 var fileParent = file.Replace(path, string.Empty).Replace("\\\\?\\",string.Empty);
@@ -320,8 +321,44 @@ namespace bg3_modders_multitool.Services
                     throw new Exception(string.Format(Properties.Resources.FileMissingExtensionError, file));
                 }
             }
-            
+
+            ProcessStatsGeneratedDataSubfiles(modDir, modName);
+
             return modDir;
+        }
+
+        /// <summary>
+        /// Concatenate Stats\Generated\Data sub directory files
+        /// </summary>
+        /// <param name="directory">The mod workspace directory</param>
+        /// <param name="modName">The mod name to point the search at</param>
+        public static void ProcessStatsGeneratedDataSubfiles(string directory, string modName)
+        {
+            var statsGeneratedDataDir = $"{directory}\\Public\\{modName}\\Stats\\Generated\\Data";
+            var sgdInfo = new DirectoryInfo(statsGeneratedDataDir);
+            if (sgdInfo.Exists)
+            {
+                var sgdDirs = sgdInfo.GetDirectories();
+                var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                foreach (var dir in sgdDirs)
+                {
+                    var files = dir.GetFiles("*.txt", System.IO.SearchOption.AllDirectories);
+                    var fileName = $"{dir.Parent.FullName}\\__MT_GEN_{dir.Name}_{now}.txt";
+                    using (System.IO.FileStream fs = new System.IO.FileStream(fileName, System.IO.FileMode.Append, System.IO.FileAccess.Write))
+                    using (System.IO.StreamWriter sw = new System.IO.StreamWriter(fs))
+                    {
+                        foreach (var file in files)
+                        {
+                            sw.WriteLine($"// === {file.Name} ===");
+                            using (var input = new System.IO.StreamReader(file.FullName))
+                            {
+                                sw.WriteLine(input.ReadToEnd());
+                            }
+                        }
+                    }
+                    Directory.Delete(dir.FullName, true);
+                }
+            }
         }
 
         /// <summary>
