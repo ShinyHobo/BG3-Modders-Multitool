@@ -55,8 +55,7 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(t.Exception.Message);
                 foreach(var ex in t.Exception.InnerExceptions)
                 {
-                    GeneralHelper.WriteToConsole(ex.Message);
-                    GeneralHelper.WriteToConsole(ex.StackTrace);
+                    GeneralHelper.WriteToConsole(ex.ToString());
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
 
@@ -344,7 +343,10 @@ namespace bg3_modders_multitool.Services
             GeneralHelper.WriteToConsole(Properties.Resources.SortingGameObjects);
             GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name).ToList();
             var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
-            var orderedChildren = children.AsParallel().WithDegreeOfParallelism(GeneralHelper.ParallelOptions.MaxDegreeOfParallelism).OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name);
+            var degree = GeneralHelper.ParallelOptions.MaxDegreeOfParallelism;
+            degree = degree < 1 ? 4 : degree;
+            var orderedChildren = children.AsParallel().WithDegreeOfParallelism(degree).OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name);
+            GeneralHelper.WriteToConsole($"Got ordered children");
             var lookup = GameObjects.Where(go => !string.IsNullOrEmpty(go.MapKey)).GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
             Parallel.ForEach(orderedChildren, GeneralHelper.ParallelOptions, (gameObject, loopState) =>
             {
