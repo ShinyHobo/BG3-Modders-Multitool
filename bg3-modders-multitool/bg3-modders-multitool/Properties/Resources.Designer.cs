@@ -1834,7 +1834,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retrived file list. Checking files....
+        ///   Looks up a localized string similar to Retrieved file list. Checking files....
         /// </summary>
         public static string RetrievedFileListDecompressionAlt {
             get {
