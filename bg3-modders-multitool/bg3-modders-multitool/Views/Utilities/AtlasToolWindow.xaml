@@ -15,23 +15,23 @@
                     <TextBlock Text="Convert from atlas sheet to frames"/>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="fileSelection" Width="400"/>
-                        <Button x:Name="fileSelect" Content="Select files" Width="100" Cursor="Hand"/>
+                        <Button x:Name="fileSelectS2F" Content="Select File" Width="100" Cursor="Hand" Click="fileSelectS2F_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="outputFolderSelection" Width="400"/>
-                        <Button x:Name="outputFolderSelect" Content="Select output" Width="100" Cursor="Hand"/>
+                        <Button x:Name="outputFolderSelectS2F" Content="Output folder" Width="100" Cursor="Hand" Click="outputFolderSelectS2F_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <xctk:IntegerUpDown Name="horizontalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="1"/>
+                            <xctk:IntegerUpDown Name="horizontalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="1" ValueChanged="horizontalFramesInSheet_ValueChanged"/>
                             <TextBlock Text="Horizontal Frames"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <xctk:IntegerUpDown Name="verticalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="1"/>
+                            <xctk:IntegerUpDown Name="verticalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="1" ValueChanged="verticalFramesInSheet_ValueChanged"/>
                             <TextBlock Text="Vertical Frames"/>
                         </StackPanel>
                     </StackPanel>
-                    <Button x:Name="convertToFrames" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand"/>
+                    <Button x:Name="convertToFrames" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToFrames_Click"/>
                 </StackPanel>
             </Border>
             <Border Margin="5" BorderBrush="Black" BorderThickness="1">
@@ -39,23 +39,19 @@
                     <TextBlock Text="Convert from frames to atlas sheet"/>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="fileSelection2" Width="400"/>
-                        <Button x:Name="fileSelect2" Content="Select files" Width="100" Cursor="Hand"/>
+                        <Button x:Name="fileSelectF2S" Content="Select files" Width="100" Cursor="Hand" Click="fileSelectF2S_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="outputFolderSelection2" Width="400"/>
-                        <Button x:Name="outputFolderSelect2" Content="Select output" Width="100" Cursor="Hand"/>
+                        <Button x:Name="outputFolderSelectF2S" Content="Select output" Width="100" Cursor="Hand" Click="outputFolderSelectF2S_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <xctk:IntegerUpDown Name="horizontalFramesForSheet" Minimum="1" Margin="0,0,5,0" Value="1"/>
+                            <xctk:IntegerUpDown Name="horizontalFramesForSheet" Minimum="1" Margin="0,0,5,0" Value="1" ValueChanged="horizontalFramesForSheet_ValueChanged"/>
                             <TextBlock Text="Horizontal Frames"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <xctk:IntegerUpDown Name="verticalFramesForSheet" Minimum="1" Margin="0,0,5,0" Value="1"/>
-                            <TextBlock Text="Vertical Frames"/>
-                        </StackPanel>
                     </StackPanel>
-                    <Button x:Name="convertToSheet" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand"/>
+                    <Button x:Name="convertToSheet" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToSheet_Click"/>
                 </StackPanel>
             </Border>
         </StackPanel>
