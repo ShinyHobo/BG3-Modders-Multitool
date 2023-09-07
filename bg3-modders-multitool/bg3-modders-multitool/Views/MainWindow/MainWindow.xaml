@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:bg3_modders_multitool.Views"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
-        Title="{x:Static p:Resources.AppTitle}" MinHeight="482" MinWidth="800">
+        Title="{x:Static p:Resources.AppTitle}" MinHeight="482" MinWidth="800" Height="482" Width="800">
         <!-- Developed by ShinyHobo -->
         <!-- Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd. -->
     <Grid>

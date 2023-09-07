@@ -8,10 +8,12 @@
     /// </summary>
     public partial class AtlasToolWindow : Window
     {
+        private AtlasToolViewModel _viewModel;
         public AtlasToolWindow()
         {
             InitializeComponent();
-            DataContext = new AtlasToolViewModel();
+            _viewModel = new AtlasToolViewModel();
+            DataContext = _viewModel;
         }
 
         #region Atlas to Frames
@@ -20,15 +22,15 @@
         /// </summary>
         private void fileSelectS2F_Click(object sender, RoutedEventArgs e)
         {
-
+            _viewModel.SelectSheetsInput();
         }
 
         /// <summary>
         /// Select the folder to place frames
         /// </summary>
-        private void outputFolderSelectF2S_Click(object sender, RoutedEventArgs e)
+        private void outputFolderSelectS2F_Click(object sender, RoutedEventArgs e)
         {
-
+            _viewModel.SelectAtlasOutput();
         }
 
         /// <summary>
@@ -36,23 +38,7 @@
         /// </summary>
         private void convertToFrames_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        /// <summary>
-        /// Select how many images wide the sheet is
-        /// </summary>
-        private void horizontalFramesInSheet_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-
-        }
-
-        /// <summary>
-        /// Select how many images tall the sheet is
-        /// </summary>
-        private void verticalFramesInSheet_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-
+            _viewModel.ConvertAtlasToFrames();
         }
 
         #endregion
@@ -63,23 +49,15 @@
         /// </summary>
         private void fileSelectF2S_Click(object sender, RoutedEventArgs e)
         {
-
+            _viewModel.SelectAtlasInput();
         }
 
         /// <summary>
-        /// Select the folder to place sheet
+        /// Select where to save the sheet
         /// </summary>
-        private void outputFolderSelectS2F_Click(object sender, RoutedEventArgs e)
+        private void outputFolderSelectF2S_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        /// <summary>
-        /// Select how many files wide the sheet should be
-        /// </summary>
-        private void horizontalFramesForSheet_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-
+            _viewModel.SelectSheetsOutput();
         }
 
         /// <summary>
@@ -87,7 +65,7 @@
         /// </summary>
         private void convertToSheet_Click(object sender, RoutedEventArgs e)
         {
-
+            _viewModel.ConvertFramesToAtlas();
         }
         #endregion
     }

@@ -23,11 +23,11 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <xctk:IntegerUpDown Name="horizontalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="1" ValueChanged="horizontalFramesInSheet_ValueChanged"/>
+                            <xctk:IntegerUpDown Name="horizontalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding HorizontalFramesInSheet}"/>
                             <TextBlock Text="Horizontal Frames"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <xctk:IntegerUpDown Name="verticalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="1" ValueChanged="verticalFramesInSheet_ValueChanged"/>
+                            <xctk:IntegerUpDown Name="verticalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding VerticalFramesInSheet}"/>
                             <TextBlock Text="Vertical Frames"/>
                         </StackPanel>
                     </StackPanel>
@@ -47,7 +47,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <xctk:IntegerUpDown Name="horizontalFramesForSheet" Minimum="1" Margin="0,0,5,0" Value="1" ValueChanged="horizontalFramesForSheet_ValueChanged"/>
+                            <xctk:IntegerUpDown Name="horizontalFramesForSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding HorizontalFramesForSheet}"/>
                             <TextBlock Text="Horizontal Frames"/>
                         </StackPanel>
                     </StackPanel>
