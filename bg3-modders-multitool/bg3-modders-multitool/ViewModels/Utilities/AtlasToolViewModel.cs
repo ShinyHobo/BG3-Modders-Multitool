@@ -1,5 +1,7 @@
 ﻿namespace bg3_modders_multitool.ViewModels.Utilities
 {
+    using Alphaleonis.Win32.Filesystem;
+    using Lucene.Net.Store;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -62,28 +64,60 @@
                 OnNotifyPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// The last atlas directory that was used
+        /// </summary>
+        private string AtlasLastDirectory { get; set; } = Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory();
         #endregion
+        /// <summary>
+        /// Using the selected col/rows and atlas image, deconstructs the image and creates a folder with the same name
+        /// as the origin image containing the individual frames
+        /// </summary>
 
         internal void ConvertAtlasToFrames()
         {
-            throw new NotImplementedException();
+
         }
 
-        internal void ConvertFramesToAtlas()
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// User selects atlas sheet to deconstruct into individual frames
+        /// </summary>
         internal void SelectSheetInput()
         {
-            var selectedFileDialog = new OpenFileDialog()
+            using (var selectedFileDialog = new OpenFileDialog()
             {
-                
-            };
-            var selection = selectedFileDialog.ShowDialog();
-            if (selection == DialogResult.OK)
+                Filter = $"Image Files|*.png;*.dds",
+                Title = "Select Atlas sheet for deconstruction",
+                CheckFileExists = true,
+                InitialDirectory = AtlasLastDirectory
+            })
             {
+                var selection = selectedFileDialog.ShowDialog();
+                if (selection == DialogResult.OK)
+                {
+                    InputSheetFileSelection = selectedFileDialog.FileName;
+                    var info = new DirectoryInfo(selectedFileDialog.FileName);
+                    AtlasLastDirectory = info.Parent.FullName;
+                }
+            }
+        }
 
+        /// <summary>
+        /// User selects the folder to deposit the individual frames into
+        /// </summary>
+        internal void SelectFramesOutput()
+        {
+            using (var selectedFolderDialog = new FolderBrowserDialog() {
+                SelectedPath = AtlasLastDirectory
+            })
+            {
+                var selection = selectedFolderDialog.ShowDialog();
+                if (selection == DialogResult.OK)
+                {
+                    OutputFolderSelectionForFrames = selectedFolderDialog.SelectedPath;
+                    AtlasLastDirectory = selectedFolderDialog.SelectedPath;
+                }
             }
         }
         #endregion
@@ -169,7 +203,7 @@
             }
         }
 
-        internal void SelectSheetsOutput()
+        internal void ConvertFramesToAtlas()
         {
             throw new NotImplementedException();
         }

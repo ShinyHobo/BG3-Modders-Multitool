@@ -30,7 +30,7 @@
         /// </summary>
         private void outputFolderSelectS2F_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.SelectAtlasOutput();
+            _viewModel.SelectFramesOutput();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@
         /// </summary>
         private void outputFolderSelectF2S_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.SelectSheetsOutput();
+            _viewModel.SelectAtlasOutput();
         }
 
         /// <summary>
