@@ -2,6 +2,7 @@
 {
     using Alphaleonis.Win32.Filesystem;
     using Lucene.Net.Store;
+    using Ookii.Dialogs.Wpf;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -108,16 +109,18 @@
         /// </summary>
         internal void SelectFramesOutput()
         {
-            using (var selectedFolderDialog = new FolderBrowserDialog() {
-                SelectedPath = AtlasLastDirectory
-            })
+            var selectedFolderDialog = new VistaFolderBrowserDialog()
             {
-                var selection = selectedFolderDialog.ShowDialog();
-                if (selection == DialogResult.OK)
-                {
-                    OutputFolderSelectionForFrames = selectedFolderDialog.SelectedPath;
-                    AtlasLastDirectory = selectedFolderDialog.SelectedPath;
-                }
+                SelectedPath = AtlasLastDirectory,
+                UseDescriptionForTitle = true,
+                Description = "Select folder to save atlas frames to"
+            };
+
+            var selection = selectedFolderDialog.ShowDialog();
+            if (selection == true)
+            {
+                OutputFolderSelectionForFrames = selectedFolderDialog.SelectedPath;
+                AtlasLastDirectory = selectedFolderDialog.SelectedPath;
             }
         }
         #endregion

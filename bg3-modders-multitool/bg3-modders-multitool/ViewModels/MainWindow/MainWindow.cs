@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.Views;
+    using Ookii.Dialogs.Wpf;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -69,15 +70,16 @@ namespace bg3_modders_multitool.ViewModels
         public string FolderLocationDialog(string property, string title)
         {
             var folder = (string)Settings.Default[property];
-            var folderDialog = new System.Windows.Forms.FolderBrowserDialog
+            var folderDialog = new VistaFolderBrowserDialog()
             {
                 Description = title,
+                UseDescriptionForTitle = true
             };
 
             var result = folderDialog.ShowDialog();
             switch (result)
             {
-                case System.Windows.Forms.DialogResult.OK:
+                case true:
                 { 
                     folder = folderDialog.SelectedPath;
                     Settings.Default[property] = folder;
