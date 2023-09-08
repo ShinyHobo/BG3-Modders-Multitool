@@ -22,7 +22,7 @@
         /// </summary>
         private void fileSelectS2F_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.SelectSheetsInput();
+            _viewModel.SelectSheetInput();
         }
 
         /// <summary>
@@ -49,7 +49,7 @@
         /// </summary>
         private void fileSelectF2S_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.SelectAtlasInput();
+            _viewModel.SelectFramesInput();
         }
 
         /// <summary>

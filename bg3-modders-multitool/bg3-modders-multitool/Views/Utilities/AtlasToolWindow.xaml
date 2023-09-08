@@ -14,11 +14,11 @@
                 <StackPanel Margin="5">
                     <TextBlock Text="Convert from atlas sheet to frames"/>
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <TextBox x:Name="fileSelection" Width="400"/>
+                        <TextBox x:Name="fileSelectionS2F" Width="400" Text="{Binding InputSheetFileSelection}" IsReadOnly="True"/>
                         <Button x:Name="fileSelectS2F" Content="Select File" Width="100" Cursor="Hand" Click="fileSelectS2F_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <TextBox x:Name="outputFolderSelection" Width="400"/>
+                        <TextBox x:Name="outputFolderSelectionS2F" Width="400" Text="{Binding OutputFolderSelectionForFrames}" IsReadOnly="True"/>
                         <Button x:Name="outputFolderSelectS2F" Content="Output folder" Width="100" Cursor="Hand" Click="outputFolderSelectS2F_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -38,11 +38,11 @@
                 <StackPanel Margin="5">
                     <TextBlock Text="Convert from frames to atlas sheet"/>
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <TextBox x:Name="fileSelection2" Width="400"/>
+                        <TextBox x:Name="fileSelectionF2S" Width="400" Text="{Binding InputFilesSelectionForSheet}" IsReadOnly="True"/>
                         <Button x:Name="fileSelectF2S" Content="Select files" Width="100" Cursor="Hand" Click="fileSelectF2S_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <TextBox x:Name="outputFolderSelection2" Width="400"/>
+                        <TextBox x:Name="outputFolderSelectionF2S" Width="400" Text="{Binding OutputFolderSelectionForSheet}" IsReadOnly="True"/>
                         <Button x:Name="outputFolderSelectF2S" Content="Select output" Width="100" Cursor="Hand" Click="outputFolderSelectF2S_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
