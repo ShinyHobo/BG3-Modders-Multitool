@@ -22,6 +22,7 @@ namespace bg3_modders_multitool.ViewModels
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
             ThreadsUnlocked = Properties.Settings.Default.unlockThreads;
+            PakToMods = Properties.Settings.Default.pakToMods;
             AutoUpdater = new AutoUpdaterService(this);
         }
 
@@ -265,6 +266,18 @@ namespace bg3_modders_multitool.ViewModels
             set
             {
                 _threadsUnlocked = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _pakToMods;
+
+        public bool PakToMods
+        {
+            get { return _pakToMods; }
+            set
+            {
+                _pakToMods = value;
                 OnNotifyPropertyChanged();
             }
         }

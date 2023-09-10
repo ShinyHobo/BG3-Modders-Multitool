@@ -345,6 +345,19 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Toggles whether or not to send new paks to the mods folder instead of zipping them
+        /// </summary>
+        /// <param name="setting">True for pak to mods, false to zip in same directory</param>
+        internal static void TogglePakToMods(bool setting)
+        {
+            if (Properties.Settings.Default.pakToMods != setting)
+            {
+                Properties.Settings.Default.pakToMods = setting;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        /// <summary>
         /// If threading is not unlocked, this creates a max degree of parallelism equal to 75% of the processor count multiplied by two, rounded up (2 threads per processor)
         /// </summary>
         public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Settings.Default.unlockThreads ? -1 : Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
