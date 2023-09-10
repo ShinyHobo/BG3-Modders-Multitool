@@ -86,7 +86,7 @@
                 </StackPanel>
 
                 <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0">
-                    <Viewbox Height="255">
+                    <Viewbox Height="255" Width="255">
                         <views:DragAndDropBox x:Name="dragAndDropBox"/>
                     </Viewbox>
                 </Grid>

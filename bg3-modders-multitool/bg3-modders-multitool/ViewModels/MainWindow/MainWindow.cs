@@ -269,6 +269,18 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
+        private bool _pakToMods;
+
+        public bool PakToMods
+        {
+            get { return _pakToMods; }
+            set
+            {
+                _pakToMods = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         private bool _modsFolderLoaded;
 
         public bool ModsFolderLoaded

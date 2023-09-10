@@ -76,6 +76,7 @@ namespace bg3_modders_multitool.Views
             vm.ConfigOpen = false;
         }
 
+        #region Configuration
         /// <summary>
         /// Reloads the language the application uses
         /// </summary>
@@ -97,5 +98,16 @@ namespace bg3_modders_multitool.Views
         {
             GeneralHelper.ToggleUnlockThreads(false);
         }
+
+        private void PakToMods_Checked(object sender, RoutedEventArgs e)
+        {
+            GeneralHelper.TogglePakToMods(true);
+        }
+
+        private void PakToMods_Unchecked(object sender, RoutedEventArgs e)
+        {
+            GeneralHelper.TogglePakToMods(false);
+        }
+        #endregion
     }
 }
