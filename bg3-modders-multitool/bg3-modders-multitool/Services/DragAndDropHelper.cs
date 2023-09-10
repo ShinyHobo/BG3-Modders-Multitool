@@ -248,8 +248,21 @@ namespace bg3_modders_multitool.Services
                                             metaList.Add(Guid.NewGuid().ToString(), ProcessMod(dir, new DirectoryInfo(dir).Name));
                                         }
                                     }
-                                    GenerateInfoJson(metaList);
-                                    GenerateZip(fullPath, dirName);
+
+                                    if (Properties.Settings.Default.pakToMods)
+                                    {
+                                        var modsFolder = $"{Properties.Settings.Default.gameDocumentsPath}\\Mods";
+                                        if(Directory.Exists(modsFolder))
+                                        {
+                                            File.Move($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", MoveOptions.ReplaceExisting);
+                                            GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        GenerateInfoJson(metaList);
+                                        GenerateZip(fullPath, dirName);
+                                    }
                                     CleanTempDirectory();
                                 }
                                 else if(File.Exists(fullPath))

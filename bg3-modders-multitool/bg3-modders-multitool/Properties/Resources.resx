@@ -694,8 +694,18 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="PakLabel" xml:space="preserve">
     <value>Pak</value>
   </data>
+  <data name="PakModedToMods" xml:space="preserve">
+    <value>{0} pak moved to Mods folder!</value>
+    <comment>pak name</comment>
+  </data>
   <data name="PakSelectionTitle" xml:space="preserve">
     <value>.pak Selection</value>
+  </data>
+  <data name="PakToModsLabel" xml:space="preserve">
+    <value>Pack .paks to Mods folder instead of zipping</value>
+  </data>
+  <data name="PakToModsTooltip" xml:space="preserve">
+    <value>Send newly built mods to the Mods folder (make sure the game's Documents folder is configured)</value>
   </data>
   <data name="PakUnpacked" xml:space="preserve">
     <value>{0} unpacked!</value>

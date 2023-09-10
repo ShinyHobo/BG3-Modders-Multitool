@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
-        Height="260" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Height="270" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Grid>
         <Grid Margin="10,0,10,0">
             <Label x:Name="bg3exeLabel" Content="{x:Static p:Resources.BG3ExeLabel}" HorizontalAlignment="Left" Margin="-5,0,0,0" VerticalAlignment="Top"/>
@@ -19,9 +19,9 @@
             <Button x:Name="gameDocumentPathSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" 
                     Width="75" Height="23" Click="GameDocumentsLocationSelect_Click" Cursor="Hand" ToolTip="{x:Static p:Resources.GameDocsLocationTooltip}"/>
         </Grid>
-        <Grid Margin="10,103,200,70">
+        <Grid Margin="10,103,200,60">
             <Label Content="{x:Static p:Resources.LanguageSelectionLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-5,0,0,0"/>
-            <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Margin="0, 25, 0, 0" Cursor="Hand" 
+            <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Cursor="Hand" Height="22"
                  SelectionChanged="Language_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -39,6 +39,11 @@
             <Label x:Name="unlockThreadsToggle" Content="{x:Static p:Resources.UnlockThreadsLabel}" HorizontalAlignment="Left" Margin="12,-3,0,0" VerticalAlignment="Top"/>
             <CheckBox ToolTip="{x:Static p:Resources.UnlockThreadsToolTip}" Cursor="Hand" Margin="0,3,300,28"
                 IsChecked="{Binding ThreadsUnlocked}" Checked="UnlockThreads_Checked" Unchecked="UnlockThreads_Unchecked" />
+        </Grid>
+        <Grid Margin="10,195,0,0">
+            <Label x:Name="pakToModsToggle" Content="{x:Static p:Resources.PakToModsLabel}" HorizontalAlignment="Left" Margin="12,-3,0,0" VerticalAlignment="Top"/>
+            <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" Margin="0,3,140,18" IsEnabled="{Binding ModsFolderLoaded}"
+                IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" />
         </Grid>
     </Grid>
 </Window>

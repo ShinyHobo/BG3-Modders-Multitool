@@ -1670,11 +1670,38 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} pak moved to Mods folder!.
+        /// </summary>
+        public static string PakModedToMods {
+            get {
+                return ResourceManager.GetString("PakModedToMods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .pak Selection.
         /// </summary>
         public static string PakSelectionTitle {
             get {
                 return ResourceManager.GetString("PakSelectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pack .paks to Mods folder instead of zipping.
+        /// </summary>
+        public static string PakToModsLabel {
+            get {
+                return ResourceManager.GetString("PakToModsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send newly built mods to the Mods folder (make sure the game&apos;s Documents folder is configured).
+        /// </summary>
+        public static string PakToModsTooltip {
+            get {
+                return ResourceManager.GetString("PakToModsTooltip", resourceCulture);
             }
         }
         

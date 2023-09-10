@@ -94,5 +94,17 @@ namespace bg3_modders_multitool.Properties {
                 this["unlockThreads"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool pakToMods {
+            get {
+                return ((bool)(this["pakToMods"]));
+            }
+            set {
+                this["pakToMods"] = value;
+            }
+        }
     }
 }
