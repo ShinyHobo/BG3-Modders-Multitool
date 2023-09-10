@@ -22,6 +22,7 @@ namespace bg3_modders_multitool.ViewModels
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
             ThreadsUnlocked = Properties.Settings.Default.unlockThreads;
+            PakToMods = Properties.Settings.Default.pakToMods;
             AutoUpdater = new AutoUpdaterService(this);
         }
 
