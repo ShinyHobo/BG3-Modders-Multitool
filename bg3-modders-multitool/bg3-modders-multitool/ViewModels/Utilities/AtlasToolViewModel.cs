@@ -1,17 +1,22 @@
 ﻿namespace bg3_modders_multitool.ViewModels.Utilities
 {
     using Alphaleonis.Win32.Filesystem;
-    using Lucene.Net.Store;
+    using bg3_modders_multitool.Services;
     using Ookii.Dialogs.Wpf;
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
     public class AtlasToolViewModel : BaseViewModel
     {
         #region Atlas to Frames
         #region Properties
+        public bool CanConvertToFrames => !string.IsNullOrEmpty(InputSheetFileSelection) && !string.IsNullOrEmpty(OutputFolderSelectionForFrames);
+
         private int _horizontalFramesInSheet = 1;
         /// <summary>
         /// The number of frames wide the sheet is
@@ -21,6 +26,8 @@
             set
             {
                 _horizontalFramesInSheet = value;
+                if (sheetInputWidth != 0 && value != 0)
+                    SheetOutputWidth = sheetInputWidth / value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -34,6 +41,8 @@
             set
             {
                 _verticalFramesInSheet = value;
+                if(sheetInputHeight != 0 && value != 0)
+                    SheetOutputHeight = sheetInputHeight / value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -48,7 +57,37 @@
             set
             {
                 _inputSheetFileSelection = value;
+                var ext = Path.GetExtension(value);
+                if (ext == ".png")
+                {
+                    using (var dimms = Image.FromFile(value))
+                    {
+                        sheetInputHeight = dimms.Height;
+                        sheetInputWidth = dimms.Width;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        using (var image = Pfim.Pfimage.FromFile(InputSheetFileSelection))
+                        {
+                            sheetInputHeight = image.Height;
+                            sheetInputWidth = image.Width;
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                    }
+                }
+
+                SheetOutputWidth = sheetInputWidth / HorizontalFramesInSheet;
+                SheetOutputHeight = sheetInputHeight / VerticalFramesInSheet;
+
+                SheetInputDimensions = string.Format(Properties.Resources.InputImageDimensions, sheetInputWidth, sheetInputHeight);
                 OnNotifyPropertyChanged();
+                OnNotifyPropertyChanged("CanConvertToFrames");
             }
         }
 
@@ -63,6 +102,61 @@
             {
                 _outputFolderSelectionForFrames = value;
                 OnNotifyPropertyChanged();
+                OnNotifyPropertyChanged("CanConvertToFrames");
+            }
+        }
+
+        private int sheetInputHeight;
+        private int sheetInputWidth;
+
+        private int _sheetOutputHeight;
+        public int SheetOutputHeight
+        {
+            get { return _sheetOutputHeight; }
+            set {
+                _sheetOutputHeight = value;
+                SheetOutputDimensions = string.Format(Properties.Resources.OutputImageDimensions, SheetOutputWidth, SheetOutputHeight);
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _sheetOutputWidth;
+        public int SheetOutputWidth
+        {
+            get { return _sheetOutputWidth; }
+            set
+            {
+                _sheetOutputWidth = value;
+                SheetOutputDimensions = string.Format(Properties.Resources.OutputImageDimensions, SheetOutputWidth, SheetOutputHeight);
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _sheetInputDimensions;
+        /// <summary>
+        /// The width/height dimensions of the input sheet
+        /// </summary>
+        public string SheetInputDimensions
+        {
+            get { return _sheetInputDimensions; }
+            set
+            {
+                _sheetInputDimensions = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _sheetOutputDimensions;
+        /// <summary>
+        /// The width/height dimensions of the output sheet
+        /// </summary>
+        public string SheetOutputDimensions
+        {
+            get { return _sheetOutputDimensions; }
+            set
+            {
+                _sheetOutputDimensions = value;
+                OnNotifyPropertyChanged();
             }
         }
 
@@ -75,10 +169,52 @@
         /// Using the selected col/rows and atlas image, deconstructs the image and creates a folder with the same name
         /// as the origin image containing the individual frames
         /// </summary>
-
         internal void ConvertAtlasToFrames()
         {
-
+            try
+            {
+                var ext = Path.GetExtension(InputSheetFileSelection);
+                var name = Path.GetFileNameWithoutExtension(InputSheetFileSelection);
+                if (ext == ".png")
+                {
+                    var folderPath = Path.Combine(OutputFolderSelectionForFrames, name);
+                    Directory.CreateDirectory(folderPath);
+                    using (var img = Image.FromFile(InputSheetFileSelection))
+                    {
+                        var imageNum = 0;
+                        for (int i = 0; i < HorizontalFramesInSheet; i++)
+                        {
+                            for (int j = 0; j < VerticalFramesInSheet; j++)
+                            {
+                                var frame = new Bitmap(SheetOutputWidth, SheetOutputHeight);
+                                var gfx = Graphics.FromImage(frame);
+                                gfx.DrawImage(img, new Rectangle(0, 0, SheetOutputWidth, SheetOutputHeight), new Rectangle(j * SheetOutputWidth, i * SheetOutputHeight, SheetOutputWidth, SheetOutputHeight), GraphicsUnit.Pixel);
+                                gfx.Dispose();
+                                frame.Save(Path.Combine(folderPath, $"{imageNum.ToString().PadLeft(4, '0')}.png"), ImageFormat.Png);
+                                frame.Dispose();
+                                imageNum++;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    using (var image = Pfim.Pfimage.FromFile(InputSheetFileSelection))
+                    {
+                        var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                        var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
+                        using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                        {
+                            //bitmap.Save(ms, ImageFormat.Png);
+                            //bitmap.Dispose();
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+            }
         }
 
         /// <summary>

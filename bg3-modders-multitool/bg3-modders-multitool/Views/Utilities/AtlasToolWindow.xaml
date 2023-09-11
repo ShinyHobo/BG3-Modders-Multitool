@@ -30,8 +30,12 @@
                             <xctk:IntegerUpDown Name="verticalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding VerticalFramesInSheet}"/>
                             <TextBlock Text="Vertical Frames"/>
                         </StackPanel>
+                        <StackPanel Margin="10,0,0,0">
+                            <TextBlock Text="{Binding SheetInputDimensions}"/>
+                            <TextBlock Text="{Binding SheetOutputDimensions}"/>
+                        </StackPanel>
                     </StackPanel>
-                    <Button x:Name="convertToFrames" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToFrames_Click"/>
+                    <Button x:Name="convertToFrames" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToFrames_Click" IsEnabled="{Binding CanConvertToFrames}"/>
                 </StackPanel>
             </Border>
             <Border Margin="5" BorderBrush="Black" BorderThickness="1">

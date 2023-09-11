@@ -567,6 +567,10 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="InfoGenerated" xml:space="preserve">
     <value>info.json generated.</value>
   </data>
+  <data name="InputImageDimensions" xml:space="preserve">
+    <value>Input dimensions: {0}x{1}</value>
+    <comment>width, height</comment>
+  </data>
   <data name="InvalidBg3Location" xml:space="preserve">
     <value>Can't find Data directory. Ensure that your bg3.exe selection is correct.</value>
   </data>
@@ -704,6 +708,10 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="OutOfMemFailedToIndex" xml:space="preserve">
     <value>OOME: Failed to index {0}</value>
     <comment>file path</comment>
+  </data>
+  <data name="OutputImageDimensions" xml:space="preserve">
+    <value>Output dimensions: {0}x{1}</value>
+    <comment>width, height</comment>
   </data>
   <data name="PakFileDescription" xml:space="preserve">
     <value>Mod Pak</value>

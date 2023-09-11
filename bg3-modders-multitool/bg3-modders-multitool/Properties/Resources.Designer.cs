@@ -1301,6 +1301,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Input dimensions: {0}x{1}.
+        /// </summary>
+        public static string InputImageDimensions {
+            get {
+                return ResourceManager.GetString("InputImageDimensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can&apos;t find Data directory. Ensure that your bg3.exe selection is correct..
         /// </summary>
         public static string InvalidBg3Location {
@@ -1693,6 +1702,15 @@ namespace bg3_modders_multitool.Properties {
         public static string OutOfMemFailedToIndex {
             get {
                 return ResourceManager.GetString("OutOfMemFailedToIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output dimensions: {0}x{1}.
+        /// </summary>
+        public static string OutputImageDimensions {
+            get {
+                return ResourceManager.GetString("OutputImageDimensions", resourceCulture);
             }
         }
         
