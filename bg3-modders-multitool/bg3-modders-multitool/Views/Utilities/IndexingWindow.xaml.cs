@@ -57,8 +57,8 @@ namespace bg3_modders_multitool.Views
                 vm.FileContents = new ObservableCollection<SearchResult>();
                 vm.Results = new ObservableCollection<SearchResult>();
                 var matches = await vm.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems, !vm.LeadingWildcardDisabled);
-                vm.FullResultList = matches.Matches;
-                vm.FullResultList.AddRange(matches.FilteredMatches);
+                vm.FullResultList = matches.Matches.ToList();
+                vm.FullResultList.AddRange(matches.FilteredMatches.ToList());
                 vm.FullResultList.Sort();
                 foreach (string result in matches.Matches)
                 {
