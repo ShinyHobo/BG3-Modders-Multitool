@@ -19,7 +19,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="outputFolderSelectionS2F" Width="400" Text="{Binding OutputFolderSelectionForFrames}" IsReadOnly="True"/>
-                        <Button x:Name="outputFolderSelectS2F" Content="{x:Static p:Resources.AtlasOutputFolder}" Width="100" Cursor="Hand" Click="outputFolderSelectS2F_Click"/>
+                        <Button x:Name="outputFolderSelectS2F" Content="{x:Static p:Resources.AtlasSelectOutput}" Width="100" Cursor="Hand" Click="outputFolderSelectS2F_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="5">
@@ -47,7 +47,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="outputFolderSelectionF2S" Width="400" Text="{Binding OutputFolderSelectionForSheet}" IsReadOnly="True"/>
-                        <Button x:Name="outputFolderSelectF2S" Content="{x:Static p:Resources.AtlasSelectSheetOutput}" Width="100" Cursor="Hand" Click="outputFolderSelectF2S_Click"/>
+                        <Button x:Name="outputFolderSelectF2S" Content="{x:Static p:Resources.AtlasSelectOutput}" Width="100" Cursor="Hand" Click="outputFolderSelectF2S_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="5">

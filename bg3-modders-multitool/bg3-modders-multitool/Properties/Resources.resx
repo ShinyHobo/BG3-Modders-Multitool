@@ -154,16 +154,13 @@
   <data name="AtlasHorizontalFrames" xml:space="preserve">
     <value>Horizontal Frames</value>
   </data>
-  <data name="AtlasOutputFolder" xml:space="preserve">
-    <value>Output folder</value>
-  </data>
   <data name="AtlasSelectFile" xml:space="preserve">
     <value>Select file</value>
   </data>
   <data name="AtlasSelectFiles" xml:space="preserve">
     <value>Select files</value>
   </data>
-  <data name="AtlasSelectSheetOutput" xml:space="preserve">
+  <data name="AtlasSelectOutput" xml:space="preserve">
     <value>Select output</value>
   </data>
   <data name="AtlasToolMenuHeader" xml:space="preserve">

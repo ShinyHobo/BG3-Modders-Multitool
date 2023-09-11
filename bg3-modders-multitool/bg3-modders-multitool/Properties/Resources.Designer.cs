@@ -169,15 +169,6 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Output folder.
-        /// </summary>
-        public static string AtlasOutputFolder {
-            get {
-                return ResourceManager.GetString("AtlasOutputFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Select file.
         /// </summary>
         public static string AtlasSelectFile {
@@ -198,9 +189,9 @@ namespace bg3_modders_multitool.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Select output.
         /// </summary>
-        public static string AtlasSelectSheetOutput {
+        public static string AtlasSelectOutput {
             get {
-                return ResourceManager.GetString("AtlasSelectSheetOutput", resourceCulture);
+                return ResourceManager.GetString("AtlasSelectOutput", resourceCulture);
             }
         }
         
