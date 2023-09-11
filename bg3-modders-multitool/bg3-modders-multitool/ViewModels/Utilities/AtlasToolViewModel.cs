@@ -208,7 +208,7 @@
             }
             catch(Exception ex)
             {
-                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.StackTrace);
             }
         }
 
@@ -258,6 +258,7 @@
 
         #region Frames to Atlas
         #region Properties
+        public bool CanConvertToSheet => !string.IsNullOrEmpty(InputFilesSelectionForSheet) && !string.IsNullOrEmpty(OutputFolderSelectionForSheet);
         private int _horizontalFramesForSheet = 1;
         /// <summary>
         /// The number of frames wide to make the sheet; the height will automatically be calculated
@@ -326,6 +327,7 @@
             {
                 _inputFilesSelectionForSheet = value;
                 OnNotifyPropertyChanged();
+                OnNotifyPropertyChanged("CanConvertToSheet");
             }
         }
 
@@ -340,6 +342,7 @@
             {
                 _outputFolderSelectionForSheet = value;
                 OnNotifyPropertyChanged();
+                OnNotifyPropertyChanged("CanConvertToSheet");
             }
         }
 
@@ -424,7 +427,7 @@
             {
                 InitialDirectory = AtlasLastDirectory,
                 Title = Properties.Resources.AtlasFileSaveTitle,
-                Filter = $"*.png|*.png|*.dds|*.dds"
+                Filter = $"*.png|*.png"
             };
 
             var selection = selectedFileDialog.ShowDialog();
@@ -436,13 +439,16 @@
             }
         }
 
+        /// <summary>
+        /// Convert the selected files to a single png sheet
+        /// </summary>
         internal void ConvertFramesToAtlas()
         {
             try
             {
                 var ext = Path.GetExtension(OutputFolderSelectionForSheet);
 
-                GeneralHelper.WriteToConsole("Constructing atlas from selected frames...");
+                GeneralHelper.WriteToConsole(Properties.Resources.ConstructingAtlas);
 
                 var atlasWidth = FrameWidth * HorizontalFramesForSheet;
                 var atlasHeight = FrameHeight * VerticalFramesForSheet;
@@ -466,17 +472,14 @@
                         }
                     }
                     imgGfx.Dispose();
-                    if (ext == ".png")
-                    {
-                        img.Save(OutputFolderSelectionForSheet, ImageFormat.Png);
-                    }
+                    img.Save(OutputFolderSelectionForSheet, ImageFormat.Png);
                 }
 
-                GeneralHelper.WriteToConsole("Constructed atlas sheet.");
+                GeneralHelper.WriteToConsole(Properties.Resources.AtlasConstructed);
             }
             catch (Exception ex)
             {
-                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+                GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.StackTrace);
             }
         }
         #endregion

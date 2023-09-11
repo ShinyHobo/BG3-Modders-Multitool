@@ -97,6 +97,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Constructed atlas sheet..
+        /// </summary>
+        public static string AtlasConstructed {
+            get {
+                return ResourceManager.GetString("AtlasConstructed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Atlas deconstructed..
         /// </summary>
         public static string AtlasDeconstructed {
@@ -436,6 +445,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ConfirmButton {
             get {
                 return ResourceManager.GetString("ConfirmButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Constructing atlas from selected frames....
+        /// </summary>
+        public static string ConstructingAtlas {
+            get {
+                return ResourceManager.GetString("ConstructingAtlas", resourceCulture);
             }
         }
         
@@ -1025,6 +1043,16 @@ namespace bg3_modders_multitool.Properties {
         public static string GamePaksInstructions {
             get {
                 return ResourceManager.GetString("GamePaksInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: {0}
+        ///{1}.
+        /// </summary>
+        public static string GeneralError {
+            get {
+                return ResourceManager.GetString("GeneralError", resourceCulture);
             }
         }
         

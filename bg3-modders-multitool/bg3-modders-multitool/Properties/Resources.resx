@@ -130,6 +130,9 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Baldur's Gate 3 Modder's Multitool</value>
   </data>
+  <data name="AtlasConstructed" xml:space="preserve">
+    <value>Constructed atlas sheet.</value>
+  </data>
   <data name="AtlasDeconstructed" xml:space="preserve">
     <value>Atlas deconstructed.</value>
   </data>
@@ -246,6 +249,9 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
   <data name="ConfirmButton" xml:space="preserve">
     <value>Confirm</value>
+  </data>
+  <data name="ConstructingAtlas" xml:space="preserve">
+    <value>Constructing atlas from selected frames...</value>
   </data>
   <data name="ConvertingModelDae" xml:space="preserve">
     <value>Converting model to .dae for rendering...</value>
@@ -471,6 +477,11 @@ Do you wish to continue?</value>
   </data>
   <data name="GamePaksInstructions" xml:space="preserve">
     <value>Select game .paks you want to unpack:</value>
+  </data>
+  <data name="GeneralError" xml:space="preserve">
+    <value>Error: {0}
+{1}</value>
+    <comment>error message, stack trace</comment>
   </data>
   <data name="GenerateTitle" xml:space="preserve">
     <value>Generate</value>

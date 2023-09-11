@@ -59,7 +59,7 @@
                             <TextBlock Text="{Binding FrameOutputDimensions}"/>
                         </StackPanel>
                     </StackPanel>
-                    <Button x:Name="convertToSheet" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToSheet_Click"/>
+                    <Button x:Name="convertToSheet" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToSheet_Click" IsEnabled="{Binding CanConvertToSheet}"/>
                 </StackPanel>
             </Border>
         </StackPanel>
