@@ -1842,6 +1842,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open folder.
+        /// </summary>
+        public static string OpenFolderTooltip {
+            get {
+                return ResourceManager.GetString("OpenFolderTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Opening GameObject Explorer. This could take a while..
         /// </summary>
         public static string OpeningGOE {

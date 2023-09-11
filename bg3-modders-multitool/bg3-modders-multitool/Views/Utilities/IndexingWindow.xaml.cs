@@ -205,5 +205,12 @@ namespace bg3_modders_multitool.Views
             var newFile = FileHelper.Convert(selectedPath, "lsx");
             FileHelper.OpenFile(newFile, line);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as SearchResults;
+            var selectedPath = FileHelper.GetPath(vm.SelectedPath);
+            System.Diagnostics.Process.Start("explorer.exe", $"/select,{selectedPath}");
+        }
     }
 }
