@@ -756,6 +756,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="On" xml:space="preserve">
     <value>on</value>
   </data>
+  <data name="OpenFolderTooltip" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
   <data name="OpeningGOE" xml:space="preserve">
     <value>Opening GameObject Explorer. This could take a while.</value>
   </data>
