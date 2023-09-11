@@ -496,6 +496,10 @@ namespace bg3_modders_multitool.Services
                 }
                 return true;
             }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToReadData, pak);
+            }
             return false;
         }
 

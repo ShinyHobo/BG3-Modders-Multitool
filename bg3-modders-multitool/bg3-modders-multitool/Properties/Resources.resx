@@ -367,12 +367,20 @@ Do you wish to continue?</value>
     <value>Failed to load Races.lsx for {0}.pak.</value>
     <comment>pak name</comment>
   </data>
+  <data name="FailedToLoadStatStructure" xml:space="preserve">
+    <value>Failed to load StatStructure line '{0}'</value>
+    <comment>stat structure line</comment>
+  </data>
   <data name="FailedToPackMod" xml:space="preserve">
     <value>Failed to pack mod: {0}</value>
     <comment>error message</comment>
   </data>
   <data name="FailedToProcessWorkspace" xml:space="preserve">
     <value>Could not open file/folder.</value>
+  </data>
+  <data name="FailedToReadData" xml:space="preserve">
+    <value>Failed to load data for the {0} pak. GameObject inheritence will be incomplete.</value>
+    <comment>pak name</comment>
   </data>
   <data name="FailedToReadDirectory" xml:space="preserve">
     <value>Could not read from directory: {0}</value>

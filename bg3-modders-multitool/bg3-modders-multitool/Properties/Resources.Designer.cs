@@ -741,6 +741,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to load StatStructure line &apos;{0}&apos;.
+        /// </summary>
+        public static string FailedToLoadStatStructure {
+            get {
+                return ResourceManager.GetString("FailedToLoadStatStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to pack mod: {0}.
         /// </summary>
         public static string FailedToPackMod {
@@ -755,6 +764,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FailedToProcessWorkspace {
             get {
                 return ResourceManager.GetString("FailedToProcessWorkspace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load data for the {0} pak. GameObject inheritence will be incomplete..
+        /// </summary>
+        public static string FailedToReadData {
+            get {
+                return ResourceManager.GetString("FailedToReadData", resourceCulture);
             }
         }
         

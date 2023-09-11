@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.Models.StatStructures
 {
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Properties;
+    using bg3_modders_multitool.Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -128,14 +129,25 @@ namespace bg3_modders_multitool.Models.StatStructures
         /// <param name="statStructures">The list of stat structures to search through.</param>
         public void InheritProperties(string line, List<StatStructure> statStructures)
         {
-            var usingEntry = line.Substring(6).Replace("\"", "");
-            var match = statStructures.FirstOrDefault(ss => ss?.Entry == usingEntry);
-            var clone = match.Clone();
-            clone.Entry = Entry;
-            clone.Type = Type;
-            clone.Using = usingEntry;
-            statStructures.Remove(this);
-            statStructures.Add(clone);
+            try
+            {
+                var usingEntry = line.Substring(6).Replace("\"", "");
+                var match = statStructures.FirstOrDefault(ss => ss?.Entry == usingEntry);
+                if (match != null)
+                {
+                    var clone = match.Clone();
+                    clone.Entry = Entry;
+                    clone.Type = Type;
+                    clone.Using = usingEntry;
+                    statStructures.Remove(this);
+                    statStructures.Add(clone);
+                }
+            }
+            catch(Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+            }
+            
         }
 
         /// <summary>
