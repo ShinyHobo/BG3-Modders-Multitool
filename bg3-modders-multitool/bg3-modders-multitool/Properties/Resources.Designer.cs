@@ -350,6 +350,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Waiting for application to fully close before updating....
+        /// </summary>
+        public static string ClosingAppForUpdate {
+            get {
+                return ResourceManager.GetString("ClosingAppForUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuration needed: missing bg3.exe!.
         /// </summary>
         public static string ConfigNeededLabel {

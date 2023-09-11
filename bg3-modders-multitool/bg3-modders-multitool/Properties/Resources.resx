@@ -217,6 +217,9 @@
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
 Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
+  <data name="ClosingAppForUpdate" xml:space="preserve">
+    <value>Waiting for application to fully close before updating...</value>
+  </data>
   <data name="ConfigNeededLabel" xml:space="preserve">
     <value>Configuration needed: missing bg3.exe!</value>
   </data>
