@@ -6,7 +6,9 @@ namespace bg3_modders_multitool.ViewModels
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Windows;
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels.Reusables;
 
     public class PakSelection : BaseViewModel
@@ -17,6 +19,9 @@ namespace bg3_modders_multitool.ViewModels
         /// <param name="files"></param>
         public void CreateFileList(List<string> files)
         {
+            var unpackedInfo = new DirectoryInfo(FileHelper.UnpackedDataPath);
+            var unpackedDirs = unpackedInfo.GetDirectories().Select(x => $"{x.Name}.pak").ToList();
+            DisclaimerVisible = unpackedDirs.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             PakList = new ObservableCollection<CheckBox>();
             foreach (string file in files)
             {
@@ -25,7 +30,7 @@ namespace bg3_modders_multitool.ViewModels
                 if (!isMultipartNumber)
                     PakList.Add(new CheckBox
                     {
-                        Name = fileName,
+                        Name = unpackedDirs.Contains(fileName) ? $"{fileName}*" : fileName,
                         IsSelected = false
                     });
             }
@@ -51,6 +56,17 @@ namespace bg3_modders_multitool.ViewModels
             get { return _pakList;  }
             set {
                 _pakList = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private Visibility _disclaimerVisible = Visibility.Collapsed;
+        public Visibility DisclaimerVisible
+        {
+            get { return _disclaimerVisible; }
+            set
+            {
+                _disclaimerVisible = value;
                 OnNotifyPropertyChanged();
             }
         }

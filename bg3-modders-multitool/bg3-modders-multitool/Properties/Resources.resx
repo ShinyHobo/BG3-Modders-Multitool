@@ -773,6 +773,9 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Output dimensions: {0}x{1}</value>
     <comment>width, height</comment>
   </data>
+  <data name="PakAlreadyUnpacked" xml:space="preserve">
+    <value>* .pak already unpacked</value>
+  </data>
   <data name="PakFileDescription" xml:space="preserve">
     <value>Mod Pak</value>
   </data>

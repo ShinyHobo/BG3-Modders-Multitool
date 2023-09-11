@@ -1887,6 +1887,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to * .pak already unpacked.
+        /// </summary>
+        public static string PakAlreadyUnpacked {
+            get {
+                return ResourceManager.GetString("PakAlreadyUnpacked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mod Pak.
         /// </summary>
         public static string PakFileDescription {
