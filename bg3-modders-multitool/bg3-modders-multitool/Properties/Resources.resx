@@ -133,6 +133,18 @@
   <data name="AtlasDeconstructed" xml:space="preserve">
     <value>Atlas deconstructed.</value>
   </data>
+  <data name="AtlasDeconstructionSelectionTitle" xml:space="preserve">
+    <value>Select atlas sheet for deconstruction</value>
+  </data>
+  <data name="AtlasFileSaveTitle" xml:space="preserve">
+    <value>Select location to save atlas file to</value>
+  </data>
+  <data name="AtlasFramesSaveTitle" xml:space="preserve">
+    <value>Select folder to save atlas frames to</value>
+  </data>
+  <data name="AtlasFramesSelectTitle" xml:space="preserve">
+    <value>Select frames to generate atlas sheet with</value>
+  </data>
   <data name="AtlasToolMenuHeader" xml:space="preserve">
     <value>Atlas Converter</value>
   </data>
@@ -526,6 +538,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="IconTabLabel" xml:space="preserve">
     <value>Icon</value>
+  </data>
+  <data name="ImageFilesFilter" xml:space="preserve">
+    <value>Image Files</value>
   </data>
   <data name="IndexButtonTooltip" xml:space="preserve">
     <value>Click to begin indexing</value>

@@ -1,10 +1,8 @@
 ﻿namespace bg3_modders_multitool.ViewModels.Utilities
 {
     using Alphaleonis.Win32.Filesystem;
-    using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Services;
     using Ookii.Dialogs.Wpf;
-    using SharpDX.Direct3D9;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -221,8 +219,8 @@
         {
             using (var selectedFileDialog = new OpenFileDialog()
             {
-                Filter = $"Image Files|*.png;*.dds",
-                Title = "Select Atlas sheet for deconstruction",
+                Filter = $"{Properties.Resources.ImageFilesFilter}|*.png;*.dds",
+                Title = Properties.Resources.AtlasDeconstructionSelectionTitle,
                 CheckFileExists = true,
                 InitialDirectory = AtlasLastDirectory
             })
@@ -246,7 +244,7 @@
             {
                 SelectedPath = AtlasLastDirectory,
                 UseDescriptionForTitle = true,
-                Description = "Select folder to save atlas frames to"
+                Description = Properties.Resources.AtlasFramesSaveTitle
             };
 
             var selection = selectedFolderDialog.ShowDialog();
@@ -317,34 +315,76 @@
         }
         #endregion
 
-        internal void SelectAtlasOutput()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Select the frames used to generate an atlas sheet
         /// </summary>
         internal void SelectFramesInput()
         {
-            var selectedFilesDialog = new OpenFileDialog()
+            using (var selectedFilesDialog = new OpenFileDialog()
             {
+                Filter = $"{Properties.Resources.ImageFilesFilter}|*.png;*.dds",
+                Title = Properties.Resources.AtlasFramesSelectTitle,
+                CheckFileExists = true,
+                InitialDirectory = AtlasLastDirectory,
                 Multiselect = true
+            })
+            {
+                var selection = selectedFilesDialog.ShowDialog();
+                if (selection == DialogResult.OK)
+                {
+                    InputFilesSelectionForSheet = string.Join(", ", selectedFilesDialog.SafeFileNames);
+                    SelectedFrames = selectedFilesDialog.FileNames.ToList();
+                    var info = new DirectoryInfo(selectedFilesDialog.FileName);
+                    AtlasLastDirectory = info.Parent.FullName;
+
+                    foreach(var file in SelectedFrames)
+                    {
+                        // TODO - validate that all images are the same size
+                        // TODO - get width/height of files
+
+                        var ext = Path.GetExtension(file);
+                        var name = Path.GetFileNameWithoutExtension(file);
+                        if(ext == ".png")
+                        {
+
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Select the directory and enter the file name to be used for the generated atlas sheet
+        /// </summary>
+        internal void SelectAtlasOutput()
+        {
+            var selectedFileDialog = new SaveFileDialog()
+            {
+                InitialDirectory = AtlasLastDirectory,
+                Title = Properties.Resources.AtlasFileSaveTitle,
+                Filter = $"*.png|*.png|*.dds|*.dds"
             };
-            var selection = selectedFilesDialog.ShowDialog();
+
+            var selection = selectedFileDialog.ShowDialog();
             if (selection == DialogResult.OK)
             {
-                InputFilesSelectionForSheet = string.Join(", ", selectedFilesDialog.SafeFileNames);
-                SelectedFrames = selectedFilesDialog.FileNames.ToList();
+                OutputFolderSelectionForSheet = selectedFileDialog.FileName;
+                var info = new DirectoryInfo(selectedFileDialog.FileName);
+                AtlasLastDirectory = info.Parent.FullName;
             }
         }
 
         internal void ConvertFramesToAtlas()
         {
-            throw new NotImplementedException();
+
         }
         #endregion
 
+        #region Helpers
         /// <summary>
         /// Pulls images out of a given atlas bitmap and saves the individual frames
         /// </summary>
@@ -398,5 +438,6 @@
                     return false;
             return true;
         }
+        #endregion
     }
 }

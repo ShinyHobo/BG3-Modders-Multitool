@@ -106,6 +106,42 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select atlas sheet for deconstruction.
+        /// </summary>
+        public static string AtlasDeconstructionSelectionTitle {
+            get {
+                return ResourceManager.GetString("AtlasDeconstructionSelectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select location to save atlas file to.
+        /// </summary>
+        public static string AtlasFileSaveTitle {
+            get {
+                return ResourceManager.GetString("AtlasFileSaveTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select folder to save atlas frames to.
+        /// </summary>
+        public static string AtlasFramesSaveTitle {
+            get {
+                return ResourceManager.GetString("AtlasFramesSaveTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select frames to generate atlas sheet with.
+        /// </summary>
+        public static string AtlasFramesSelectTitle {
+            get {
+                return ResourceManager.GetString("AtlasFramesSelectTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Atlas Converter.
         /// </summary>
         public static string AtlasToolMenuHeader {
@@ -1180,6 +1216,15 @@ namespace bg3_modders_multitool.Properties {
         public static string IconTabLabel {
             get {
                 return ResourceManager.GetString("IconTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image Files.
+        /// </summary>
+        public static string ImageFilesFilter {
+            get {
+                return ResourceManager.GetString("ImageFilesFilter", resourceCulture);
             }
         }
         
