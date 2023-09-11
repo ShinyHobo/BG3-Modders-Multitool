@@ -133,6 +133,9 @@
   <data name="AtlasConstructed" xml:space="preserve">
     <value>Constructed atlas sheet.</value>
   </data>
+  <data name="AtlasConvert" xml:space="preserve">
+    <value>Convert</value>
+  </data>
   <data name="AtlasDeconstructed" xml:space="preserve">
     <value>Atlas deconstructed.</value>
   </data>
@@ -148,11 +151,26 @@
   <data name="AtlasFramesSelectTitle" xml:space="preserve">
     <value>Select frames to generate atlas sheet with</value>
   </data>
+  <data name="AtlasHorizontalFrames" xml:space="preserve">
+    <value>Horizontal Frames</value>
+  </data>
+  <data name="AtlasSelectFile" xml:space="preserve">
+    <value>Select file</value>
+  </data>
+  <data name="AtlasSelectFiles" xml:space="preserve">
+    <value>Select files</value>
+  </data>
+  <data name="AtlasSelectOutput" xml:space="preserve">
+    <value>Select output</value>
+  </data>
   <data name="AtlasToolMenuHeader" xml:space="preserve">
     <value>Atlas Converter</value>
   </data>
   <data name="AtlasToolMenuTooltip" xml:space="preserve">
     <value>Generates and deconstructs .dds atlas files</value>
+  </data>
+  <data name="AtlasVerticalFrames" xml:space="preserve">
+    <value>Vertical Frames</value>
   </data>
   <data name="AttemptingToPack" xml:space="preserve">
     <value>Attempting to pack mod.</value>
@@ -252,6 +270,12 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
   <data name="ConstructingAtlas" xml:space="preserve">
     <value>Constructing atlas from selected frames...</value>
+  </data>
+  <data name="ConvertFromAtlasToFrames" xml:space="preserve">
+    <value>Convert from atlas sheet to frames</value>
+  </data>
+  <data name="ConvertFromFramesToAtlas" xml:space="preserve">
+    <value>Convert from frames to atlas sheet</value>
   </data>
   <data name="ConvertingModelDae" xml:space="preserve">
     <value>Converting model to .dae for rendering...</value>

@@ -106,6 +106,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Convert.
+        /// </summary>
+        public static string AtlasConvert {
+            get {
+                return ResourceManager.GetString("AtlasConvert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Atlas deconstructed..
         /// </summary>
         public static string AtlasDeconstructed {
@@ -151,6 +160,42 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Horizontal Frames.
+        /// </summary>
+        public static string AtlasHorizontalFrames {
+            get {
+                return ResourceManager.GetString("AtlasHorizontalFrames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select file.
+        /// </summary>
+        public static string AtlasSelectFile {
+            get {
+                return ResourceManager.GetString("AtlasSelectFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select files.
+        /// </summary>
+        public static string AtlasSelectFiles {
+            get {
+                return ResourceManager.GetString("AtlasSelectFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select output.
+        /// </summary>
+        public static string AtlasSelectOutput {
+            get {
+                return ResourceManager.GetString("AtlasSelectOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Atlas Converter.
         /// </summary>
         public static string AtlasToolMenuHeader {
@@ -165,6 +210,15 @@ namespace bg3_modders_multitool.Properties {
         public static string AtlasToolMenuTooltip {
             get {
                 return ResourceManager.GetString("AtlasToolMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vertical Frames.
+        /// </summary>
+        public static string AtlasVerticalFrames {
+            get {
+                return ResourceManager.GetString("AtlasVerticalFrames", resourceCulture);
             }
         }
         
@@ -454,6 +508,24 @@ namespace bg3_modders_multitool.Properties {
         public static string ConstructingAtlas {
             get {
                 return ResourceManager.GetString("ConstructingAtlas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Convert from atlas sheet to frames.
+        /// </summary>
+        public static string ConvertFromAtlasToFrames {
+            get {
+                return ResourceManager.GetString("ConvertFromAtlasToFrames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Convert from frames to atlas sheet.
+        /// </summary>
+        public static string ConvertFromFramesToAtlas {
+            get {
+                return ResourceManager.GetString("ConvertFromFramesToAtlas", resourceCulture);
             }
         }
         

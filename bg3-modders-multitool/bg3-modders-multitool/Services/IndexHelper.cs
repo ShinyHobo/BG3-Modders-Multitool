@@ -61,7 +61,7 @@ namespace bg3_modders_multitool.Services
             return Task.Run(() =>
             {
                 Application.Current.Dispatcher.Invoke(() => {
-                    DataContext.IsIndexing = true;
+                    DataContext.AllowIndexing = false;
                 });
                 if (filelist==null)
                 {
@@ -73,6 +73,7 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(Properties.Resources.FileListRetrieved);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    DataContext.IsIndexing = true;
                     DataContext.IndexFileTotal = filelist.Count;
                     DataContext.IndexStartTime = DateTime.Now;
                     DataContext.IndexFileCount = 0;
