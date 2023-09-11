@@ -12,54 +12,54 @@
         <StackPanel>
             <Border Margin="5" BorderBrush="Black" BorderThickness="1">
                 <StackPanel Margin="5">
-                    <TextBlock Text="Convert from atlas sheet to frames"/>
+                    <TextBlock Text="{x:Static p:Resources.ConvertFromAtlasToFrames}"/>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="fileSelectionS2F" Width="400" Text="{Binding InputSheetFileSelection}" IsReadOnly="True"/>
-                        <Button x:Name="fileSelectS2F" Content="Select File" Width="100" Cursor="Hand" Click="fileSelectS2F_Click"/>
+                        <Button x:Name="fileSelectS2F" Content="{x:Static p:Resources.AtlasSelectFile}" Width="100" Cursor="Hand" Click="fileSelectS2F_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="outputFolderSelectionS2F" Width="400" Text="{Binding OutputFolderSelectionForFrames}" IsReadOnly="True"/>
-                        <Button x:Name="outputFolderSelectS2F" Content="Output folder" Width="100" Cursor="Hand" Click="outputFolderSelectS2F_Click"/>
+                        <Button x:Name="outputFolderSelectS2F" Content="{x:Static p:Resources.AtlasOutputFolder}" Width="100" Cursor="Hand" Click="outputFolderSelectS2F_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <xctk:IntegerUpDown Name="horizontalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding HorizontalFramesInSheet}"/>
-                            <TextBlock Text="Horizontal Frames"/>
+                            <TextBlock Text="{x:Static p:Resources.AtlasHorizontalFrames}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <xctk:IntegerUpDown Name="verticalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding VerticalFramesInSheet}"/>
-                            <TextBlock Text="Vertical Frames"/>
+                            <TextBlock Text="{x:Static p:Resources.AtlasVerticalFrames}"/>
                         </StackPanel>
                         <StackPanel Margin="10,-2,0,0">
                             <TextBlock Text="{Binding SheetInputDimensions}"/>
                             <TextBlock Text="{Binding SheetOutputDimensions}"/>
                         </StackPanel>
                     </StackPanel>
-                    <Button x:Name="convertToFrames" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToFrames_Click" IsEnabled="{Binding CanConvertToFrames}"/>
+                    <Button x:Name="convertToFrames" Width="100" Content="{x:Static p:Resources.AtlasConvert}" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToFrames_Click" IsEnabled="{Binding CanConvertToFrames}"/>
                 </StackPanel>
             </Border>
             <Border Margin="5" BorderBrush="Black" BorderThickness="1">
                 <StackPanel Margin="5">
-                    <TextBlock Text="Convert from frames to atlas sheet"/>
+                    <TextBlock Text="{x:Static p:Resources.ConvertFromFramesToAtlas}"/>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="fileSelectionF2S" Width="400" Text="{Binding InputFilesSelectionForSheet}" IsReadOnly="True"/>
-                        <Button x:Name="fileSelectF2S" Content="Select files" Width="100" Cursor="Hand" Click="fileSelectF2S_Click"/>
+                        <Button x:Name="fileSelectF2S" Content="{x:Static p:Resources.AtlasSelectFiles}" Width="100" Cursor="Hand" Click="fileSelectF2S_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBox x:Name="outputFolderSelectionF2S" Width="400" Text="{Binding OutputFolderSelectionForSheet}" IsReadOnly="True"/>
-                        <Button x:Name="outputFolderSelectF2S" Content="Select output" Width="100" Cursor="Hand" Click="outputFolderSelectF2S_Click"/>
+                        <Button x:Name="outputFolderSelectF2S" Content="{x:Static p:Resources.AtlasSelectSheetOutput}" Width="100" Cursor="Hand" Click="outputFolderSelectF2S_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <xctk:IntegerUpDown Name="horizontalFramesForSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding HorizontalFramesForSheet}"/>
-                            <TextBlock Text="Horizontal Frames"/>
+                            <TextBlock Text="{x:Static p:Resources.AtlasHorizontalFrames}"/>
                         </StackPanel>
                         <StackPanel Margin="10,-2,0,0">
                             <TextBlock Text="{Binding FrameInputDimensions}"/>
                             <TextBlock Text="{Binding FrameOutputDimensions}"/>
                         </StackPanel>
                     </StackPanel>
-                    <Button x:Name="convertToSheet" Width="100" Content="Convert" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToSheet_Click" IsEnabled="{Binding CanConvertToSheet}"/>
+                    <Button x:Name="convertToSheet" Width="100" Content="{x:Static p:Resources.AtlasConvert}" HorizontalAlignment="Right" Margin="5" Cursor="Hand" Click="convertToSheet_Click" IsEnabled="{Binding CanConvertToSheet}"/>
                 </StackPanel>
             </Border>
         </StackPanel>
