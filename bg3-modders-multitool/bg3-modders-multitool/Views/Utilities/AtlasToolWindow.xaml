@@ -30,7 +30,7 @@
                             <xctk:IntegerUpDown Name="verticalFramesInSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding VerticalFramesInSheet}"/>
                             <TextBlock Text="Vertical Frames"/>
                         </StackPanel>
-                        <StackPanel Margin="10,0,0,0">
+                        <StackPanel Margin="10,-2,0,0">
                             <TextBlock Text="{Binding SheetInputDimensions}"/>
                             <TextBlock Text="{Binding SheetOutputDimensions}"/>
                         </StackPanel>
@@ -54,7 +54,7 @@
                             <xctk:IntegerUpDown Name="horizontalFramesForSheet" Minimum="1" Margin="0,0,5,0" Value="{Binding HorizontalFramesForSheet}"/>
                             <TextBlock Text="Horizontal Frames"/>
                         </StackPanel>
-                        <StackPanel Margin="10,0,0,0">
+                        <StackPanel Margin="10,-2,0,0">
                             <TextBlock Text="{Binding FrameInputDimensions}"/>
                             <TextBlock Text="{Binding FrameOutputDimensions}"/>
                         </StackPanel>
