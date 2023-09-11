@@ -97,6 +97,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Atlas deconstructed..
+        /// </summary>
+        public static string AtlasDeconstructed {
+            get {
+                return ResourceManager.GetString("AtlasDeconstructed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Atlas Converter.
         /// </summary>
         public static string AtlasToolMenuHeader {
@@ -485,6 +494,15 @@ namespace bg3_modders_multitool.Properties {
         public static string DecompressQuestionTitle {
             get {
                 return ResourceManager.GetString("DecompressQuestionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deconstructing atlas sheet to {0}.
+        /// </summary>
+        public static string DeconstructingAtlas {
+            get {
+                return ResourceManager.GetString("DeconstructingAtlas", resourceCulture);
             }
         }
         

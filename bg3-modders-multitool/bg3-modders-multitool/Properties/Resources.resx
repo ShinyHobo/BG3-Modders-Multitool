@@ -130,6 +130,9 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Baldur's Gate 3 Modder's Multitool</value>
   </data>
+  <data name="AtlasDeconstructed" xml:space="preserve">
+    <value>Atlas deconstructed.</value>
+  </data>
   <data name="AtlasToolMenuHeader" xml:space="preserve">
     <value>Atlas Converter</value>
   </data>
@@ -267,6 +270,10 @@ Do you wish to continue?</value>
   </data>
   <data name="DecompressQuestionTitle" xml:space="preserve">
     <value>Ready to decompress your files?</value>
+  </data>
+  <data name="DeconstructingAtlas" xml:space="preserve">
+    <value>Deconstructing atlas sheet to {0}</value>
+    <comment>save location</comment>
   </data>
   <data name="DescriptionHandleLabel" xml:space="preserve">
     <value>DescriptionHandle</value>

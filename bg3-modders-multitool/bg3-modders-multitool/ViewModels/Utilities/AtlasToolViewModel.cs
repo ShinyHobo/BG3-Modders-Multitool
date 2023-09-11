@@ -1,8 +1,10 @@
 ﻿namespace bg3_modders_multitool.ViewModels.Utilities
 {
     using Alphaleonis.Win32.Filesystem;
+    using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Services;
     using Ookii.Dialogs.Wpf;
+    using SharpDX.Direct3D9;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -175,39 +177,34 @@
             {
                 var ext = Path.GetExtension(InputSheetFileSelection);
                 var name = Path.GetFileNameWithoutExtension(InputSheetFileSelection);
+                var folderPath = Path.Combine(OutputFolderSelectionForFrames, name);
+
+                GeneralHelper.WriteToConsole(Properties.Resources.DeconstructingAtlas, folderPath);
+
+                // Create and/or clean the output directory
+                Directory.CreateDirectory(folderPath);
+                DirectoryInfo di = new DirectoryInfo(folderPath);
+                foreach (FileInfo file in di.GetFiles()) file.Delete();
+
                 if (ext == ".png")
                 {
-                    var folderPath = Path.Combine(OutputFolderSelectionForFrames, name);
-                    Directory.CreateDirectory(folderPath);
                     using (var img = Image.FromFile(InputSheetFileSelection))
                     {
-                        var imageNum = 0;
-                        for (int i = 0; i < HorizontalFramesInSheet; i++)
-                        {
-                            for (int j = 0; j < VerticalFramesInSheet; j++)
-                            {
-                                var frame = new Bitmap(SheetOutputWidth, SheetOutputHeight);
-                                var gfx = Graphics.FromImage(frame);
-                                gfx.DrawImage(img, new Rectangle(0, 0, SheetOutputWidth, SheetOutputHeight), new Rectangle(j * SheetOutputWidth, i * SheetOutputHeight, SheetOutputWidth, SheetOutputHeight), GraphicsUnit.Pixel);
-                                gfx.Dispose();
-                                frame.Save(Path.Combine(folderPath, $"{imageNum.ToString().PadLeft(4, '0')}.png"), ImageFormat.Png);
-                                frame.Dispose();
-                                imageNum++;
-                            }
-                        }
+                        DeconstructAtlas(img, folderPath);
                     }
                 }
                 else
                 {
-                    using (var image = Pfim.Pfimage.FromFile(InputSheetFileSelection))
+                    using (var dds = Pfim.Pfimage.FromFile(InputSheetFileSelection))
                     {
-                        var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
-                        var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
+                        var data = Marshal.UnsafeAddrOfPinnedArrayElement(dds.Data, 0);
+                        var bitmap = new Bitmap(dds.Width, dds.Height, dds.Stride, PixelFormat.Format32bppArgb, data);
                         using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
                         {
-                            //bitmap.Save(ms, ImageFormat.Png);
-                            //bitmap.Dispose();
+                            bitmap.Save(ms, ImageFormat.Png);
+                            DeconstructAtlas(bitmap, folderPath);
                         }
+                        bitmap.Dispose();
                     }
                 }
             }
@@ -347,5 +344,59 @@
             throw new NotImplementedException();
         }
         #endregion
+
+        /// <summary>
+        /// Pulls images out of a given atlas bitmap and saves the individual frames
+        /// </summary>
+        /// <param name="bitmap">The atlas bitmap</param>
+        /// <param name="saveLocation">The location to save the frames</param>
+        private void DeconstructAtlas(Image image, string saveLocation)
+        {
+            var imageNum = 0;
+            for (int i = 0; i < VerticalFramesInSheet; i++)
+            {
+                for (int j = 0; j < HorizontalFramesInSheet; j++)
+                {
+                    var frame = new Bitmap(SheetOutputWidth, SheetOutputHeight);
+                    var gfx = Graphics.FromImage(frame);
+                    gfx.DrawImage(image, new Rectangle(0, 0, SheetOutputWidth, SheetOutputHeight), new Rectangle(j * SheetOutputWidth, i * SheetOutputHeight, SheetOutputWidth, SheetOutputHeight), GraphicsUnit.Pixel);
+                    gfx.Dispose();
+                    if (!CheckIfTransparent(frame))
+                    {
+                        frame.Save(Path.Combine(saveLocation, $"{imageNum.ToString().PadLeft(4, '0')}.png"), ImageFormat.Png);
+                    }
+                    frame.Dispose();
+                    imageNum++;
+                }
+            }
+            GeneralHelper.WriteToConsole(Properties.Resources.AtlasDeconstructed);
+        }
+
+        /// <summary>
+        /// Check if image is completely transparent
+        /// https://stackoverflow.com/a/53688608
+        /// </summary>
+        /// <param name="bitmap">The image to check</param>
+        /// <returns>Whether or not the image is completely transparent</returns>
+        private static bool CheckIfTransparent(Bitmap bitmap)
+        {
+            // Not an alpha-capable color format. Note that GDI+ indexed images are alpha-capable on the palette.
+            if (((ImageFlags)bitmap.Flags & ImageFlags.HasAlpha) == 0)
+                return false;
+            // Indexed format, and no alpha colours in the image's palette: immediate pass.
+            if ((bitmap.PixelFormat & PixelFormat.Indexed) != 0 && bitmap.Palette.Entries.All(c => c.A == 255))
+                return false;
+            // Get the byte data 'as 32-bit ARGB'. This offers a converted version of the image data without modifying the original image.
+            BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            Int32 len = bitmap.Height * data.Stride;
+            Byte[] bytes = new Byte[len];
+            Marshal.Copy(data.Scan0, bytes, 0, len);
+            bitmap.UnlockBits(data);
+            // Check the alpha bytes in the data. Since the data is little-endian, the actual byte order is [BB GG RR AA]
+            for (Int32 i = 3; i < len; i += 4)
+                if (bytes[i] != 0)
+                    return false;
+            return true;
+        }
     }
 }
