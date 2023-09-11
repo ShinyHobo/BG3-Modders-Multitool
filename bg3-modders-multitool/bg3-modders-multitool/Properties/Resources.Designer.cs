@@ -97,6 +97,78 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Constructed atlas sheet..
+        /// </summary>
+        public static string AtlasConstructed {
+            get {
+                return ResourceManager.GetString("AtlasConstructed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Atlas deconstructed..
+        /// </summary>
+        public static string AtlasDeconstructed {
+            get {
+                return ResourceManager.GetString("AtlasDeconstructed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select atlas sheet for deconstruction.
+        /// </summary>
+        public static string AtlasDeconstructionSelectionTitle {
+            get {
+                return ResourceManager.GetString("AtlasDeconstructionSelectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select location to save atlas file to.
+        /// </summary>
+        public static string AtlasFileSaveTitle {
+            get {
+                return ResourceManager.GetString("AtlasFileSaveTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select folder to save atlas frames to.
+        /// </summary>
+        public static string AtlasFramesSaveTitle {
+            get {
+                return ResourceManager.GetString("AtlasFramesSaveTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select frames to generate atlas sheet with.
+        /// </summary>
+        public static string AtlasFramesSelectTitle {
+            get {
+                return ResourceManager.GetString("AtlasFramesSelectTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Atlas Converter.
+        /// </summary>
+        public static string AtlasToolMenuHeader {
+            get {
+                return ResourceManager.GetString("AtlasToolMenuHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generates and deconstructs .dds atlas files.
+        /// </summary>
+        public static string AtlasToolMenuTooltip {
+            get {
+                return ResourceManager.GetString("AtlasToolMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempting to pack mod..
         /// </summary>
         public static string AttemptingToPack {
@@ -332,6 +404,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Waiting for application to fully close before updating....
+        /// </summary>
+        public static string ClosingAppForUpdate {
+            get {
+                return ResourceManager.GetString("ClosingAppForUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuration needed: missing bg3.exe!.
         /// </summary>
         public static string ConfigNeededLabel {
@@ -364,6 +445,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ConfirmButton {
             get {
                 return ResourceManager.GetString("ConfirmButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Constructing atlas from selected frames....
+        /// </summary>
+        public static string ConstructingAtlas {
+            get {
+                return ResourceManager.GetString("ConstructingAtlas", resourceCulture);
             }
         }
         
@@ -458,6 +548,15 @@ namespace bg3_modders_multitool.Properties {
         public static string DecompressQuestionTitle {
             get {
                 return ResourceManager.GetString("DecompressQuestionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deconstructing atlas sheet to {0}.
+        /// </summary>
+        public static string DeconstructingAtlas {
+            get {
+                return ResourceManager.GetString("DeconstructingAtlas", resourceCulture);
             }
         }
         
@@ -714,6 +813,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to load StatStructure line &apos;{0}&apos;.
+        /// </summary>
+        public static string FailedToLoadStatStructure {
+            get {
+                return ResourceManager.GetString("FailedToLoadStatStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to pack mod: {0}.
         /// </summary>
         public static string FailedToPackMod {
@@ -728,6 +836,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FailedToProcessWorkspace {
             get {
                 return ResourceManager.GetString("FailedToProcessWorkspace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load data for the {0} pak. GameObject inheritence will be incomplete..
+        /// </summary>
+        public static string FailedToReadData {
+            get {
+                return ResourceManager.GetString("FailedToReadData", resourceCulture);
             }
         }
         
@@ -930,6 +1047,16 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error: {0}
+        ///{1}.
+        /// </summary>
+        public static string GeneralError {
+            get {
+                return ResourceManager.GetString("GeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generate.
         /// </summary>
         public static string GenerateTitle {
@@ -1085,6 +1212,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to How to Use.
+        /// </summary>
+        public static string HowToUseMenu {
+            get {
+                return ResourceManager.GetString("HowToUseMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the tool wiki.
+        /// </summary>
+        public static string HowToUseMenuTooltip {
+            get {
+                return ResourceManager.GetString("HowToUseMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Icon.
         /// </summary>
         public static string IconLabel {
@@ -1099,6 +1244,15 @@ namespace bg3_modders_multitool.Properties {
         public static string IconTabLabel {
             get {
                 return ResourceManager.GetString("IconTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image Files.
+        /// </summary>
+        public static string ImageFilesFilter {
+            get {
+                return ResourceManager.GetString("ImageFilesFilter", resourceCulture);
             }
         }
         
@@ -1234,6 +1388,15 @@ namespace bg3_modders_multitool.Properties {
         public static string InfoGenerated {
             get {
                 return ResourceManager.GetString("InfoGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input dimensions: {0}x{1}.
+        /// </summary>
+        public static string InputImageDimensions {
+            get {
+                return ResourceManager.GetString("InputImageDimensions", resourceCulture);
             }
         }
         
@@ -1634,6 +1797,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output dimensions: {0}x{1}.
+        /// </summary>
+        public static string OutputImageDimensions {
+            get {
+                return ResourceManager.GetString("OutputImageDimensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mod Pak.
         /// </summary>
         public static string PakFileDescription {
@@ -1974,6 +2146,15 @@ namespace bg3_modders_multitool.Properties {
         public static string SortingGameObjects {
             get {
                 return ResourceManager.GetString("SortingGameObjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source frames are not uniform!.
+        /// </summary>
+        public static string SourceFramesAreNotUniform {
+            get {
+                return ResourceManager.GetString("SourceFramesAreNotUniform", resourceCulture);
             }
         }
         

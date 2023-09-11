@@ -62,6 +62,7 @@ namespace bg3_modders_multitool.Models
                 return null;
             }
 
+            // TODO - memory optimize
             var newTextureAtlas = new TextureAtlas { Path = path, Icons = new List<IconUV>() };
             XmlDocument doc = new XmlDocument();
             doc.Load(path);

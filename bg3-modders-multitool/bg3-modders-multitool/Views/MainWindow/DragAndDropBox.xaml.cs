@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Properties;
     using Lucene.Net.Store;
+    using Ookii.Dialogs.Wpf;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Markup;
@@ -54,13 +55,14 @@ namespace bg3_modders_multitool.Views
         private async void OnClick()
         {
             var vm = DataContext as ViewModels.DragAndDropBox;
-            var folderDialog = new System.Windows.Forms.FolderBrowserDialog
+            var folderDialog = new VistaFolderBrowserDialog()
             {
                 Description = Properties.Resources.PleaseSelectWorkspace,
-                SelectedPath = string.IsNullOrEmpty(lastDirectory) ? Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory() : lastDirectory
+                SelectedPath = string.IsNullOrEmpty(lastDirectory) ? Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory() : lastDirectory,
+                UseDescriptionForTitle = true
             };
 
-            if(folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if(folderDialog.ShowDialog() == true)
             {
                 lastDirectory = folderDialog.SelectedPath;
                 DataObject data = new DataObject(DataFormats.FileDrop, new string[] { folderDialog.SelectedPath });

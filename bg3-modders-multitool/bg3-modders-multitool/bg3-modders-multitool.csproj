@@ -211,6 +211,9 @@
     <Reference Include="NVorbis, Version=0.10.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NVorbis.0.10.5\lib\net45\NVorbis.dll</HintPath>
     </Reference>
+    <Reference Include="Ookii.Dialogs.Wpf, Version=5.0.0.0, Culture=neutral, PublicKeyToken=66aa232afad40158, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ookii.Dialogs.Wpf.5.0.1\lib\net462\Ookii.Dialogs.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Pfim, Version=0.11.2.0, Culture=neutral, PublicKeyToken=c0ebc20d008ae134, processorArchitecture=MSIL">
       <HintPath>..\packages\Pfim.0.11.2\lib\netstandard2.0\Pfim.dll</HintPath>
     </Reference>
@@ -256,6 +259,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.7.0.2\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -355,6 +359,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
@@ -583,6 +588,7 @@
     <Compile Include="Services\RootTemplateHelper.cs" />
     <Compile Include="ViewModels\MainWindow\DragAndDropBox.cs" />
     <Compile Include="ViewModels\Utilities\AddMissingMetaLsxViewModel.cs" />
+    <Compile Include="ViewModels\Utilities\AtlasToolViewModel.cs" />
     <Compile Include="ViewModels\Utilities\GameObjectViewModel.cs" />
     <Compile Include="ViewModels\Reusables\CheckBox.cs" />
     <Compile Include="Models\InfoJson.cs" />
@@ -597,6 +603,9 @@
     </Compile>
     <Compile Include="Views\Utilities\AddMissingMetaLsx.xaml.cs">
       <DependentUpon>AddMissingMetaLsx.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Utilities\AtlasToolWindow.xaml.cs">
+      <DependentUpon>AtlasToolWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Utilities\IndexingWindow.xaml.cs">
       <DependentUpon>IndexingWindow.xaml</DependentUpon>
@@ -626,6 +635,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Utilities\AddMissingMetaLsx.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Utilities\AtlasToolWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

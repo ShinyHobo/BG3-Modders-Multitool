@@ -30,6 +30,7 @@
                             <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
                                 ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
                         </MenuItem>
+                        <MenuItem x:Name="atlasToolButton" Header="{x:Static p:Resources.AtlasToolMenuHeader}" Icon="🗺️" ToolTip="{x:Static p:Resources.AtlasToolMenuTooltip}" Click="atlasToolButton_Click"/>
                     </MenuItem>
                     <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}" ToolTip="{x:Static p:Resources.ShortcutsMenuTooltip}">
                         <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
@@ -66,6 +67,7 @@
                             <MenuItem Header="{x:Static p:Resources.LegalMenu}" Icon="⚖️" Click="LegalMenu_Click"/>
                         </MenuItem>
                         <MenuItem Header="{x:Static p:Resources.CheckForUpdates}" Click="CheckForUpdates_Click" Icon="🔃" ToolTip="{x:Static p:Resources.CheckForUpdatesTooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.HowToUseMenu}" Click="HowToUse_Click" Icon=" ❓" ToolTip="{x:Static p:Resources.HowToUseMenuTooltip}"/>
                         <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click" Icon="🐞" ToolTip="{x:Static p:Resources.ReportABugTooltip}"/>
                         <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click" Icon="☕" ToolTip="{x:Static p:Resources.KofiTooltip}"/>
                     </MenuItem>
