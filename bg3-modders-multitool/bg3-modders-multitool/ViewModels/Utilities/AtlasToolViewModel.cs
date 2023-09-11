@@ -438,7 +438,46 @@
 
         internal void ConvertFramesToAtlas()
         {
+            try
+            {
+                var ext = Path.GetExtension(OutputFolderSelectionForSheet);
 
+                GeneralHelper.WriteToConsole("Constructing atlas from selected frames...");
+
+                var atlasWidth = FrameWidth * HorizontalFramesForSheet;
+                var atlasHeight = FrameHeight * VerticalFramesForSheet;
+                using (var img = new Bitmap(atlasWidth, atlasHeight))
+                {
+                    var imgGfx = Graphics.FromImage(img);
+                    for (int i = 0; i < VerticalFramesForSheet; i++)
+                    {
+                        for (int j = 0; j < HorizontalFramesForSheet; j++)
+                        {
+                            var index = i * HorizontalFramesForSheet + j;
+                            if (index < SelectedFrames.Count)
+                            {
+                                var file = SelectedFrames[index];
+                                using (var frame = Image.FromFile(file))
+                                {
+                                    imgGfx.DrawImage(frame, new Rectangle(j * FrameWidth, i * FrameHeight, FrameWidth, FrameHeight), new Rectangle(0, 0, FrameWidth, FrameHeight), GraphicsUnit.Pixel);
+                                    frame.Dispose();
+                                }
+                            }
+                        }
+                    }
+                    imgGfx.Dispose();
+                    if (ext == ".png")
+                    {
+                        img.Save(OutputFolderSelectionForSheet, ImageFormat.Png);
+                    }
+                }
+
+                GeneralHelper.WriteToConsole("Constructed atlas sheet.");
+            }
+            catch (Exception ex)
+            {
+                GeneralHelper.WriteToConsole($"{ex.Message}\n{ex.StackTrace}");
+            }
         }
         #endregion
 
