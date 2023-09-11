@@ -2122,6 +2122,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source frames are not uniform!.
+        /// </summary>
+        public static string SourceFramesAreNotUniform {
+            get {
+                return ResourceManager.GetString("SourceFramesAreNotUniform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable to get significantly faster, but less robust results..
         /// </summary>
         public static string SpeedIndexSearchTooltip {

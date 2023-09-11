@@ -266,6 +266,7 @@
             get { return _horizontalFramesForSheet; }
             set { 
                 _horizontalFramesForSheet = value;
+                CalculateAtlasDimensions();
                 OnNotifyPropertyChanged();
             } 
         }
@@ -280,6 +281,34 @@
             set
             {
                 _verticalFramesForSheet = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _frameHeight;
+        /// <summary>
+        /// The source image height
+        /// </summary>
+        public int FrameHeight
+        {
+            get { return _frameHeight; }
+            set
+            {
+                _frameHeight = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _frameWidth;
+        /// <summary>
+        /// The source image width
+        /// </summary>
+        public int FrameWidth
+        {
+            get { return _frameWidth; }
+            set
+            {
+                _frameWidth = value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -313,6 +342,34 @@
                 OnNotifyPropertyChanged();
             }
         }
+
+        private string _frameInputDimensions;
+        /// <summary>
+        /// The frame input dimenions
+        /// </summary>
+        public string FrameInputDimensions
+        {
+            get { return _frameInputDimensions; }
+            set
+            {
+                _frameInputDimensions = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _frameOutputDimensions;
+        /// <summary>
+        /// The frame to atlas output dimensions
+        /// </summary>
+        public string FrameOutputDimensions
+        {
+            get { return _frameOutputDimensions; }
+            set
+            {
+                _frameOutputDimensions = value;
+                OnNotifyPropertyChanged();
+            }
+        }
         #endregion
 
         /// <summary>
@@ -337,24 +394,25 @@
                     var info = new DirectoryInfo(selectedFilesDialog.FileName);
                     AtlasLastDirectory = info.Parent.FullName;
 
-                    foreach(var file in SelectedFrames)
+                    var dimms = ValidateFrameUniformity();
+                    if(dimms.Width > 0 && dimms.Height > 0)
                     {
-                        // TODO - validate that all images are the same size
-                        // TODO - get width/height of files
-
-                        var ext = Path.GetExtension(file);
-                        var name = Path.GetFileNameWithoutExtension(file);
-                        if(ext == ".png")
-                        {
-
-                        }
-                        else
-                        {
-
-                        }
+                        FrameWidth = dimms.Width;
+                        FrameHeight = dimms.Height;
+                        FrameInputDimensions = string.Format(Properties.Resources.InputImageDimensions, FrameWidth, FrameHeight);
+                        CalculateAtlasDimensions();
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculates the vertical frames for the sheet and updates the view
+        /// </summary>
+        private void CalculateAtlasDimensions()
+        {
+            VerticalFramesForSheet = (int)Math.Ceiling((float)SelectedFrames.Count / HorizontalFramesForSheet);
+            FrameOutputDimensions = string.Format(Properties.Resources.OutputImageDimensions, FrameWidth * HorizontalFramesForSheet, FrameHeight * VerticalFramesForSheet);
         }
 
         /// <summary>
@@ -437,6 +495,55 @@
                 if (bytes[i] != 0)
                     return false;
             return true;
+        }
+
+        /// <summary>
+        /// Validates that all input images are the same size.
+        /// </summary>
+        /// <returns>The image size. Returns 0,0 if not uniform</returns>
+        private (int Width, int Height) ValidateFrameUniformity()
+        {
+            var height = 0;
+            var width = 0;
+            var diffDimms = false;
+
+            foreach (var file in SelectedFrames)
+            {
+                var ext = Path.GetExtension(file);
+                var name = Path.GetFileNameWithoutExtension(file);
+                var imgHeight = 0;
+                var imgWidth = 0;
+                if (ext == ".png")
+                {
+                    using (var img = Image.FromFile(file))
+                    {
+                        imgHeight = img.Height;
+                        imgWidth = img.Width;
+                    }
+                }
+                else
+                {
+                    using (var dds = Pfim.Pfimage.FromFile(file))
+                    {
+                        imgHeight = dds.Height;
+                        imgWidth = dds.Width;
+                    }
+                }
+                if (height == 0)
+                    height = imgHeight;
+                if (width == 0)
+                    width = imgWidth;
+                diffDimms = width != imgWidth || height != imgHeight;
+                if (diffDimms)
+                    break;
+            }
+
+            if (diffDimms)
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.SourceFramesAreNotUniform);
+                return (0, 0);
+            }
+            return (width, height);
         }
         #endregion
     }

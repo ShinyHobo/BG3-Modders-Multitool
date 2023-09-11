@@ -855,6 +855,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="SortingGameObjects" xml:space="preserve">
     <value>Sorting GameObjects...</value>
   </data>
+  <data name="SourceFramesAreNotUniform" xml:space="preserve">
+    <value>Source frames are not uniform!</value>
+  </data>
   <data name="SpeedIndexSearchTooltip" xml:space="preserve">
     <value>Enable to get significantly faster, but less robust results.</value>
   </data>
