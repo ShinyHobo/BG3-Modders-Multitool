@@ -1130,6 +1130,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to How to Use.
+        /// </summary>
+        public static string HowToUseMenu {
+            get {
+                return ResourceManager.GetString("HowToUseMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the tool wiki.
+        /// </summary>
+        public static string HowToUseMenuTooltip {
+            get {
+                return ResourceManager.GetString("HowToUseMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Icon.
         /// </summary>
         public static string IconLabel {

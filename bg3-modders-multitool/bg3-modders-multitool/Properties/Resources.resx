@@ -508,6 +508,12 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="HelpMenuTooltip" xml:space="preserve">
     <value>A collection of modding resources and support links</value>
   </data>
+  <data name="HowToUseMenu" xml:space="preserve">
+    <value>How to Use</value>
+  </data>
+  <data name="HowToUseMenuTooltip" xml:space="preserve">
+    <value>Opens the tool wiki</value>
+  </data>
   <data name="IconLabel" xml:space="preserve">
     <value>Icon</value>
   </data>

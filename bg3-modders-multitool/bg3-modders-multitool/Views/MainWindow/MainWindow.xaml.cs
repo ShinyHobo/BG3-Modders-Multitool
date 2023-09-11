@@ -297,6 +297,14 @@ namespace bg3_modders_multitool.Views
             var vm = DataContext as ViewModels.MainWindow;
             vm.CheckForUpdates();
         }
+
+        /// <summary>
+        /// Opens the wiki
+        /// </summary>
+        private void HowToUse_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki");
+        }
         #endregion
 
         #region Utilities
