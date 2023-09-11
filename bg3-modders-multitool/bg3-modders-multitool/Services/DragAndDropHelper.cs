@@ -403,7 +403,15 @@ namespace bg3_modders_multitool.Services
             {
                 PackMod(buildDir, destination);
                 Directory.Delete(buildDir, true);
-                return GetMetalsxList(Directory.GetDirectories(path + "\\Mods"));
+                var modsPath = Path.Combine(path, "Mods");
+                var pathList = Directory.GetDirectories(modsPath);
+                if(pathList.Length == 0)
+                {
+                    var newModsPath = Path.Combine(modsPath, dirName);
+                    Directory.CreateDirectory(newModsPath);
+                    pathList = new string[] { newModsPath };
+                }
+                return GetMetalsxList(pathList);
             }
             return new List<string>();
         }
