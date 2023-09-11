@@ -7,15 +7,16 @@
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
         MinWidth="250"
-        Title="{x:Static p:Resources.PakSelectionTitle}" Height="233.734" Width="165.434" ResizeMode="NoResize">
+        Title="{x:Static p:Resources.PakSelectionTitle}" Width="165.434" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Padding="5,5,5,5" Text="{x:Static p:Resources.GamePaksInstructions}"/>
-        <ListView Grid.Row="1" Grid.Column="0" x:Name="pakList"  ItemsSource="{Binding PakList}" Padding="5,5,5,5" MaxHeight="360">
+        <TextBlock Grid.Row="0" Padding="5,5,5,5" Text="{x:Static p:Resources.GamePaksInstructions}"/>
+        <ListView Grid.Row="1" x:Name="pakList" ItemsSource="{Binding PakList}" Padding="5,5,5,5" MaxHeight="360">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
@@ -26,14 +27,15 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Border Grid.Row="3" Grid.Column="0" Padding="5,5,5,5">
+        <Border Grid.Row="2" Padding="5,5,5,5">
             <StackPanel Orientation="Vertical">
+                <TextBlock Text="{x:Static p:Resources.PakAlreadyUnpacked}" HorizontalAlignment="Left" Margin="4,-3,0,5" Visibility="{Binding DisclaimerVisible}"/>
                 <Button Content="{x:Static p:Resources.SelectAllButton}" x:Name="selectAll" Margin="5,0,5,5" Click="SelectAll_Click" Cursor="Hand"/>
                 <Button Content="{x:Static p:Resources.DeslectAllButton}" x:Name="deselectAll" Margin="5,0,5,5" Click="DeselectAll_Click" Cursor="Hand"/>
             </StackPanel>
         </Border>
-        <Border Grid.Row="4" Grid.Column="0" Padding="5,5,5,5">
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,55,0,0" Height="50">
+        <Border Grid.Row="3" Padding="5,5,5,5">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,-10,0,0" Height="50">
                 <Button Content="{x:Static p:Resources.ConfirmButton}" x:Name="confirm" Margin="5,5,5,5" Width="100" Foreground="White" Background="#FF87C157" Click="Confirm_Click" Cursor="Hand"/>
                 <Button Content="{x:Static p:Resources.CancelButton}" x:Name="cancel" Margin="5,5,5,5" Width="100" Background="#FFC30505" Foreground="White" Click="Cancel_Click" Cursor="Hand"/>
             </StackPanel>
