@@ -118,7 +118,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string OnApplyRoll { get; set; }
         public string OnApplySuccess { get; set; }
         public string OnApplyFail { get; set; }
-        public Guid StatusSoundState { get; set; }
+        public string StatusSoundState { get; set; }
         public List<string> AnimationSetOverride { get; set; }
         public List<string> MeshEffect { get; set; }
         public string UseCosts { get; set; } // TODO - Create model for this
@@ -131,6 +131,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string TooltipPermanentWarnings { get; set; }
         public List<AuraFlag> AuraFlags { get; set; }
         public bool HideOverheadUI {get; set; }
+        public Guid EndEffect { get; set; }
 
         public override StatStructure Clone()
         {

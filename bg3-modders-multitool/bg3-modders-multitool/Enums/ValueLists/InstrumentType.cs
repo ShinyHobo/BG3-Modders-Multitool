@@ -9,6 +9,12 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Flute,
         Lute,
         Lyre,
-        Violin
+        Violin,
+        Horn,
+        Shawm,
+        Dulcimer,
+        Bagpipes,
+        Saxophone,
+        Musicbox,
     }
 }

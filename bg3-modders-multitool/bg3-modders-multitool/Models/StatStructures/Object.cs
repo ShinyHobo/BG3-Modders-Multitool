@@ -77,6 +77,8 @@ namespace bg3_modders_multitool.Models.StatStructures
         public ObjectSize GameSize { get; set; }
         public int SupplyValue { get; set; }
         public ObjectSize SoundSize { get; set; }
+        public string PassivesOnEquip { get; set; }
+        public string StatusInInventory { get; set; }
 
         public override StatStructure Clone()
         {

@@ -19,6 +19,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Downed,
         Shouting,
         Performing,
-        Suffocating
+        Suffocating,
+        Frightened,
     }
 }

@@ -26,6 +26,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         NeedDualWieldingBoost,
         AddToHotbar,
         Unstowable,
-        StaffOrClub
+        StaffOrClub,
+        NotSheathable
     }
 }

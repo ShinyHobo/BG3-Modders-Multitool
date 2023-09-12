@@ -48,6 +48,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         SG_DG,
         SG_Drunk,
         SG_RemoveOnRespec,
-        SG_Sleeping
+        SG_Sleeping,
+        SG_Doppelganger,
     }
 }

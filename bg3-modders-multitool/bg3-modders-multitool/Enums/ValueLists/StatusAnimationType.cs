@@ -33,6 +33,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Suffocating,
         Laughing_Hideous,
         Frightened,
-        Petrified
+        Petrified,
+        Channeling,
     }
 }

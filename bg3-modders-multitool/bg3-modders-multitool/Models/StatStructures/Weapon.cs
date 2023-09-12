@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Models.StatStructures
     using bg3_modders_multitool.Enums.ValueLists;
     using System;
     using System.Collections.Generic;
+    using System.Windows.Markup;
 
     public class Weapon : StatStructure
     {
@@ -67,6 +68,9 @@ namespace bg3_modders_multitool.Models.StatStructures
         public ObjectSize GameSize { get; set; }
         public string PassivesOnEquip { get; set; }
         public string StatusOnEquip { get; set; }
+        public string UniqueWeaponSoundSwitch { get; set; }
+        public string PassivesOffHand { get; set; }
+        public string BoostsOnEquipOffHand { get; set; }
 
         public override StatStructure Clone()
         {
