@@ -62,6 +62,9 @@ namespace bg3_modders_multitool.Enums.ValueLists
         DisableBlood,
         IgnorePreviouslyPickedEntities,
         CombatLogSetSingleLineRoll,
-        NoCameraMove
+        NoCameraMove,
+        CallAlliesSpell,
+        IgnoreAoO,
+        DisplayDamageModifiers,
     }
 }

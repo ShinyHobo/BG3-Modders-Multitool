@@ -192,9 +192,9 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string RootSpellID { get; set; }
         public int PowerLevel { get; set; }
         public int SourceLimbIndex { get; set; }
-        public float TargetCeiling { get; set; }
+        public string TargetCeiling { get; set; }
         public float TargetFloor { get; set; }
-        public List<Guid> Trajectories { get; set; }
+        public List<string> Trajectories { get; set; }
         public List<string> SpellAnimation { get; set; } // TODO - Create type for this, has complex form "73afb4e5-8cfe-4479-95cf-16889597fee3(CMBT_Range_RHand_01_Prepare),,"
         public List<string> DualWieldingSpellAnimation { get; set; } // TODO - See SpellAnimation
         public SpellHitAnimationType HitAnimationType { get; set; }
@@ -218,7 +218,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string PrepareLoopSound { get; set; }
         public string ShortDescription { get; set; }
         public List<string> ShortDescriptionParams { get; set; }
-        public Guid TooltipOnSave { get; set; }
+        public string TooltipOnSave { get; set; }
         public string ConcentrationSpellID { get; set; }
         public string InterruptPrototype { get; set; }
         public List<string> OriginSpellProperties { get; set; }
@@ -234,6 +234,11 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ItemWall { get; set; }
         public string ItemWallStatus { get; set; }
         public bool IgnoreTeleport { get; set; }
+        public string OriginSpellRoll { get; set; }
+        public string OriginSpellSuccess { get; set; }
+        public string OriginSpellFail { get; set; }
+        public string ThrowOrigin { get; set; }
+        public string ThrowableSpellProperties { get; set; }
 
         public override StatStructure Clone()
         {

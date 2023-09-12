@@ -18,6 +18,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Necrotic,
         Physical,
         Psychic,
-        Radiant
+        Radiant,
+        Disintegrate,
+        Cold
     }
 }

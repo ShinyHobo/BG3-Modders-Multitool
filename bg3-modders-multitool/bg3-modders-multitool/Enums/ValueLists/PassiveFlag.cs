@@ -22,6 +22,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OncePerShortRestPerItem,
         OncePerLongRestPerItem,
         ToggleForParty,
-        ForceShowInCC
+        ForceShowInCC,
+        DisplayBoostInTooltip,
     }
 }
