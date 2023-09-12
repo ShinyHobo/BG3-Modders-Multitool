@@ -1815,6 +1815,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Mods folder found. Please add one and try again..
+        /// </summary>
+        public static string NoModsFolderFound {
+            get {
+                return ResourceManager.GetString("NoModsFolderFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are up to date!.
         /// </summary>
         public static string NoUpdatesFound {

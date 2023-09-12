@@ -64,7 +64,7 @@ namespace bg3_modders_multitool.Services
                 if(metaList.Count == 0)
                 {
                     // meta.lsx not found, discontinue
-                    throw new Exception(Properties.Resources.MetaLsxNotFound);
+                    throw new System.IO.FileNotFoundException(Properties.Resources.MetaLsxNotFound);
                 }
             }
             return metaList;
@@ -233,20 +233,30 @@ namespace bg3_modders_multitool.Services
                                 if (Directory.Exists(fullPath))
                                 {
                                     var metaList = new Dictionary<string, List<string>>();
-                                    var dirName = new DirectoryInfo(fullPath).Name;
+                                    var dirInfo = new DirectoryInfo(fullPath);
+                                    var dirName = dirInfo.Name;
                                     GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName, dirName);
+                                    var metaFiles = dirInfo.GetFiles("meta.lsx", System.IO.SearchOption.AllDirectories);
+                                    var modsFolders = dirInfo.GetDirectories("Mods", System.IO.SearchOption.AllDirectories);
+
                                     if (Directory.Exists(fullPath + "\\Mods"))
                                     {
                                         // single mod directory
                                         metaList.Add(Guid.NewGuid().ToString(), ProcessMod(fullPath, dirName));
                                     }
-                                    else
+                                    else if(modsFolders.Length > 0)
                                     {
                                         // multiple mod directories?
                                         foreach (string dir in Directory.GetDirectories(fullPath))
                                         {
                                             metaList.Add(Guid.NewGuid().ToString(), ProcessMod(dir, new DirectoryInfo(dir).Name));
                                         }
+                                    }
+                                    else
+                                    {
+                                        GeneralHelper.WriteToConsole(Properties.Resources.NoModsFolderFound);
+                                        CleanTempDirectory();
+                                        return;
                                     }
 
                                     if (Properties.Settings.Default.pakToMods)
@@ -281,9 +291,14 @@ namespace bg3_modders_multitool.Services
                         }
                     }
                 }
-                catch (Exception ex)
+                catch(System.IO.FileNotFoundException ex)
                 {
                     GeneralHelper.WriteToConsole(ex.Message);
+                    CleanTempDirectory();
+                }
+                catch (Exception ex)
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.StackTrace);
                     CleanTempDirectory();
                 }
             });
