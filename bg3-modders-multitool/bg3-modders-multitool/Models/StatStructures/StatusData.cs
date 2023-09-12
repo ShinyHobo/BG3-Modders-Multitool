@@ -131,6 +131,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string TooltipPermanentWarnings { get; set; }
         public List<AuraFlag> AuraFlags { get; set; }
         public bool HideOverheadUI {get; set; }
+        public Guid EndEffect { get; set; }
 
         public override StatStructure Clone()
         {

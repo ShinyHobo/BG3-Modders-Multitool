@@ -230,6 +230,10 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string HighlightConditions { get; set; }
         public string ThrowableSpellRoll { get; set; }
         public string ThrowableSpellSuccess { get; set; }
+        public int ForceTarget { get; set; }
+        public string ItemWall { get; set; }
+        public string ItemWallStatus { get; set; }
+        public bool IgnoreTeleport { get; set; }
 
         public override StatStructure Clone()
         {

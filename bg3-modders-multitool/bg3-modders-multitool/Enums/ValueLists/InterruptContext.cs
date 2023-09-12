@@ -10,6 +10,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         OnPostRoll,
         OnCastHit,
         OnPreDamage,
-        OnLeaveAttackRange
+        OnLeaveAttackRange,
+        OnEnterAttackRange
     }
 }

@@ -110,6 +110,8 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
                 }
 
+                ReadData();
+                return null;
                 ReadVisualBanks();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 ReadTranslations();
@@ -119,7 +121,7 @@ namespace bg3_modders_multitool.Services
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 foreach (var pak in Paks)
                 {
-                    ReadData(pak);
+                    //ReadData(pak);
                     if (GameObjectViewModel.LoadingCanceled) return null;
                     ReadIcons(pak);
                     if (GameObjectViewModel.LoadingCanceled) return null;
@@ -459,47 +461,50 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="pak">The pak to search in.</param>
         /// <returns>Whether the stats were read.</returns>
-        private bool ReadData(string pak)
+        private bool ReadData()
         {
-            var dataDir = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Stats\\Generated\\Data");
-            if (Directory.Exists(dataDir))
+            var dataInfo = new DirectoryInfo(FileHelper.UnpackedDataPath);
+            var dataDirs = dataInfo.GetDirectories("Data", System.IO.SearchOption.AllDirectories).Where(d => d.Parent.Name == "Generated");
+            foreach(var dataDir in dataDirs)
             {
-                var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
-                foreach (var file in dataFiles)
+                if (Directory.Exists(dataDir.FullName))
                 {
-                    if (GameObjectViewModel.LoadingCanceled) return false;
-                    var fileType = Models.StatStructures.StatStructure.FileType(file);
-                    var line = string.Empty;
-                    using(var fileStream = new System.IO.StreamReader(file))
+                    var dataFiles = Directory.EnumerateFiles(dataDir.FullName, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
+                    foreach (var file in dataFiles)
                     {
-                        while ((line = fileStream.ReadLine()) != null)
+                        if (GameObjectViewModel.LoadingCanceled) return false;
+                        var fileType = Models.StatStructures.StatStructure.FileType(file);
+                        var line = string.Empty;
+                        using (var fileStream = new System.IO.StreamReader(file))
                         {
-                            if (line.Contains("new entry"))
+                            while ((line = fileStream.ReadLine()) != null)
                             {
-                                StatStructures.Add(Models.StatStructures.StatStructure.New(fileType, line.Substring(10)));
-                            }
-                            else if (line.IndexOf("type") == 0)
-                            {
-                                StatStructures.Last().Type = fileType;
-                            }
-                            else if (line.IndexOf("using") == 0)
-                            {
-                                StatStructures.Last().InheritProperties(line, StatStructures);
-                            }
-                            else if (!string.IsNullOrEmpty(line))
-                            {
-                                StatStructures.Last().LoadProperty(line);
+                                if (line.Contains("new entry"))
+                                {
+                                    StatStructures.Add(Models.StatStructures.StatStructure.New(fileType, line.Substring(10)));
+                                }
+                                else if (line.IndexOf("type") == 0)
+                                {
+                                    StatStructures.Last().Type = fileType;
+                                }
+                                else if (line.IndexOf("using") == 0)
+                                {
+                                    StatStructures.Last().InheritProperties(line, StatStructures);
+                                }
+                                else if (!string.IsNullOrEmpty(line))
+                                {
+                                    StatStructures.Last().LoadProperty(line);
+                                }
                             }
                         }
                     }
                 }
-                return true;
+                else
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToReadData, dataDir.FullName.Replace(FileHelper.UnpackedDataPath+@"\",string.Empty));
+                }
             }
-            else
-            {
-                GeneralHelper.WriteToConsole(Properties.Resources.FailedToReadData, pak);
-            }
-            return false;
+            return true;
         }
 
         /// <summary>

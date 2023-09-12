@@ -4,7 +4,6 @@
 namespace bg3_modders_multitool.Models.StatStructures
 {
     using Alphaleonis.Win32.Filesystem;
-    using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
     using System;
     using System.Collections.Generic;
@@ -214,7 +213,11 @@ namespace bg3_modders_multitool.Models.StatStructures
             {
                 // This can usually be fixed by adding the Modifier data to the given StatStructure type
                 #if DEBUG
-                Services.GeneralHelper.WriteToConsole(Resources.ErrorParsingProperty, line, Enum.GetName(Type.GetType(), Type), ex.Message);
+                //Services.GeneralHelper.WriteToConsole(Resources.ErrorParsingProperty, line, Enum.GetName(Type.GetType(), Type), ex.Message);
+                using (System.IO.StreamWriter writetext = new System.IO.StreamWriter($"Development\\{Enum.GetName(Type.GetType(), Type)}_{paramPair[0]}.txt", true))
+                {
+                    writetext.WriteLine($"{paramPair[1]},");
+                }
                 #endif
             }
         }
