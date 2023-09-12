@@ -139,5 +139,29 @@ namespace bg3_modders_multitool.Models
                 return img;
             }
         }
+
+        /// <summary>
+        /// Converts a dds file into a bitmap image
+        /// </summary>
+        /// <param name="file">The dds file</param>
+        /// <returns>The bitmap image</returns>
+        public static BitmapImage ConvertDDSToBitmap(string file)
+        {
+            using (var image = Pfim.Pfimage.FromFile(file))
+            {
+                var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
+                using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                {
+                    bitmap.Save(ms, ImageFormat.Png);
+
+                    using (var m2 = new System.IO.MemoryStream(ms.ToArray()))
+                    {
+                        var bmp = new Bitmap(ms);
+                        return ConvertBitmapToImage(bmp);
+                    }
+                }
+            }
+        }
     }
 }

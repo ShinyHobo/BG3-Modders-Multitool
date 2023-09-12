@@ -13,6 +13,7 @@ namespace bg3_modders_multitool.ViewModels
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -181,7 +182,28 @@ namespace bg3_modders_multitool.ViewModels
                 GameObjectChildren = autoGenGameObject?.Children;
                 var hasModel = GameObjectAttributes?.Any(goa => goa.Name == "CharacterVisualResourceID" || goa.Name == "VisualTemplate");
                 Stats = RootTemplateHelper.StatStructures.FirstOrDefault(ss => ss.Entry == value.Stats);
-                Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                try
+                {
+                    Icon = null;
+                    if(Info.Icon != null)
+                    {
+                        Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                        if (Icon == null)
+                        {
+                            var iconInfo = new FileInfo(FileHelper.GetPath($"Shared\\Mods\\SharedDev\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));
+                            if (!iconInfo.Exists)
+                                iconInfo = new FileInfo(FileHelper.GetPath($"Shared\\Mods\\Shared\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));
+                            if(!iconInfo.Exists)
+                                iconInfo = new FileInfo(FileHelper.GetPath($"Gustav_Textures\\Mods\\GustavDev\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));
+                            if (!iconInfo.Exists)
+                                iconInfo = new FileInfo(FileHelper.GetPath($"Gustav_Textures\\Mods\\Gustav\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));
+                            if (iconInfo.Exists)
+                                Icon = TextureAtlas.ConvertDDSToBitmap(iconInfo.FullName);
+                        }
+                    }
+                }
+                catch { }
+                
                 LoadModels();
                 OnNotifyPropertyChanged();
             }
