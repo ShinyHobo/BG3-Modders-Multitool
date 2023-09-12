@@ -394,6 +394,7 @@
                 {
                     InputFilesSelectionForSheet = string.Join(", ", selectedFilesDialog.SafeFileNames);
                     SelectedFrames = selectedFilesDialog.FileNames.ToList();
+                    SelectedFrames.Sort();
                     var info = new DirectoryInfo(selectedFilesDialog.FileName);
                     AtlasLastDirectory = info.Parent.FullName;
 
