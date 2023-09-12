@@ -110,8 +110,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
                 }
 
-                ReadData();
-                return null;
+                
                 ReadVisualBanks();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 ReadTranslations();
@@ -119,13 +118,10 @@ namespace bg3_modders_multitool.Services
                 //ReadTextureBanks();
                 ReadRootTemplate();
                 if (GameObjectViewModel.LoadingCanceled) return null;
-                foreach (var pak in Paks)
-                {
-                    //ReadData(pak);
-                    if (GameObjectViewModel.LoadingCanceled) return null;
-                    ReadIcons(pak);
-                    if (GameObjectViewModel.LoadingCanceled) return null;
-                }
+                ReadData();
+                if (GameObjectViewModel.LoadingCanceled) return null;
+                ReadIcons();
+                if (GameObjectViewModel.LoadingCanceled) return null;
                 if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindIconsPak);
@@ -459,7 +455,6 @@ namespace bg3_modders_multitool.Services
         /// Reads the stats and converts them into a StatStructure list.
         /// Uses reflection to dynamically generate data.
         /// </summary>
-        /// <param name="pak">The pak to search in.</param>
         /// <returns>Whether the stats were read.</returns>
         private bool ReadData()
         {
@@ -510,40 +505,27 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Reads the texture atlas for icon displays.
         /// </summary>
-        /// <param name="pak">The pak to load texture atlas for.</param>
         /// <returns>Whether the texture atlas was created.</returns>
-        private bool ReadIcons(string pak)
+        private bool ReadIcons()
         {
-            var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
-            if (File.Exists(@"\\?\" + metaLoc))
+            var iconFiles = GetFileList("IconUVList");
+            foreach(var iconFile in iconFiles)
             {
-                try
+                var file = new FileInfo(FileHelper.GetPath(iconFile));
+                if (file.Exists)
                 {
-                    var meta = DragAndDropHelper.ReadMeta(metaLoc);
-                    var characterIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
-                    if (File.Exists(@"\\?\" + characterIconAtlas))
+                    try
                     {
-                        TextureAtlases.Add(TextureAtlas.Read(characterIconAtlas, pak));
+                        TextureAtlases.Add(TextureAtlas.Read(file.FullName, new DirectoryInfo(iconFile).Parent.Parent.Name));
                     }
-                    var objectIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items.lsx");
-                    if (File.Exists(@"\\?\" + objectIconAtlas))
+                    catch
                     {
-                        TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas, pak));
+                        GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, file);
                     }
-                    var objectIconAtlas2 = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items_2.lsx");
-                    if (File.Exists(@"\\?\" + objectIconAtlas2))
-                    {
-                        TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas2, pak));
-                    }
-                    return true;
                 }
-                catch
-                {
-                    metaLoc = metaLoc.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
-                    GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, metaLoc);
-                }
+                
             }
-            return false;
+            return true;
         }
 
         /// <summary>
