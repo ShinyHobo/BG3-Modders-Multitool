@@ -88,6 +88,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced.
+        /// </summary>
+        public static string AdvancedLabel {
+            get {
+                return ResourceManager.GetString("AdvancedLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Baldur&apos;s Gate 3 Modder&apos;s Multitool.
         /// </summary>
         public static string AppTitle {
@@ -237,6 +246,15 @@ namespace bg3_modders_multitool.Properties {
         public static string AttributesTabLabel {
             get {
                 return ResourceManager.GetString("AttributesTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available Colors.
+        /// </summary>
+        public static string AvailableColorsLabel {
+            get {
+                return ResourceManager.GetString("AvailableColorsLabel", resourceCulture);
             }
         }
         
@@ -458,11 +476,29 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click to select color:.
+        /// </summary>
+        public static string ClickToSelectColorLabel {
+            get {
+                return ResourceManager.GetString("ClickToSelectColorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Waiting for application to fully close before updating....
         /// </summary>
         public static string ClosingAppForUpdate {
             get {
                 return ResourceManager.GetString("ClosingAppForUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Color Picker.
+        /// </summary>
+        public static string ColorPickerMenu {
+            get {
+                return ResourceManager.GetString("ColorPickerMenu", resourceCulture);
             }
         }
         
@@ -553,6 +589,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ConvertOpenButtonTooltip {
             get {
                 return ResourceManager.GetString("ConvertOpenButtonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied {0} to clipboard!.
+        /// </summary>
+        public static string CopiedToClipboard {
+            get {
+                return ResourceManager.GetString("CopiedToClipboard", resourceCulture);
             }
         }
         
@@ -1280,6 +1325,24 @@ namespace bg3_modders_multitool.Properties {
         public static string HelpMenuTooltip {
             get {
                 return ResourceManager.GetString("HelpMenuTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEX.
+        /// </summary>
+        public static string HEXLabel {
+            get {
+                return ResourceManager.GetString("HEXLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to copy the HEX value to your clipboard.
+        /// </summary>
+        public static string HEXTooltip {
+            get {
+                return ResourceManager.GetString("HEXTooltip", resourceCulture);
             }
         }
         
@@ -2141,6 +2204,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to sARGB.
+        /// </summary>
+        public static string sARGBLabel {
+            get {
+                return ResourceManager.GetString("sARGBLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to copy the sARGB value to your clipboard.
+        /// </summary>
+        public static string sARGBTooltip {
+            get {
+                return ResourceManager.GetString("sARGBTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string Search {
@@ -2263,6 +2344,15 @@ namespace bg3_modders_multitool.Properties {
         public static string SpeedIndexSearchTooltip {
             get {
                 return ResourceManager.GetString("SpeedIndexSearchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard.
+        /// </summary>
+        public static string StandardLabel {
+            get {
+                return ResourceManager.GetString("StandardLabel", resourceCulture);
             }
         }
         

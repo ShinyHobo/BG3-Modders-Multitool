@@ -31,6 +31,7 @@
                                 ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
                         </MenuItem>
                         <MenuItem x:Name="atlasToolButton" Header="{x:Static p:Resources.AtlasToolMenuHeader}" Icon="🗺️" ToolTip="{x:Static p:Resources.AtlasToolMenuTooltip}" Click="atlasToolButton_Click"/>
+                        <MenuItem x:Name="colorPicker" Header="{x:Static p:Resources.ColorPickerMenu}" Icon="🎨" Click="colorPicker_Click"/>
                     </MenuItem>
                     <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}" ToolTip="{x:Static p:Resources.ShortcutsMenuTooltip}">
                         <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"

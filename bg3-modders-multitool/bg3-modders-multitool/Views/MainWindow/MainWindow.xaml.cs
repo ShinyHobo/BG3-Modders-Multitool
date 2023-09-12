@@ -347,6 +347,17 @@ namespace bg3_modders_multitool.Views
             var atlasToolDialog = new AtlasToolWindow();
             atlasToolDialog.Show();
         }
+
+        /// <summary>
+        /// Opens the color picker window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void colorPicker_Click(object sender, RoutedEventArgs e)
+        {
+            var colorPickerWIndow = new ColorPickerWindow();
+            colorPickerWIndow.Show();
+        }
         #endregion
 
         #region About menu

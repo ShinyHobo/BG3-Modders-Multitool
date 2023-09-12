@@ -607,6 +607,9 @@
     <Compile Include="Views\Utilities\AtlasToolWindow.xaml.cs">
       <DependentUpon>AtlasToolWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Utilities\ColorPickerWindow.xaml.cs">
+      <DependentUpon>ColorPickerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Utilities\IndexingWindow.xaml.cs">
       <DependentUpon>IndexingWindow.xaml</DependentUpon>
     </Compile>
@@ -639,6 +642,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Utilities\AtlasToolWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Utilities\ColorPickerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
