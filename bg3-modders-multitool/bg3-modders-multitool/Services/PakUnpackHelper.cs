@@ -8,6 +8,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
@@ -191,7 +192,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.RetrievedFileListDecompression);
                 
                 var defaultPath = @"\\?\" + FileHelper.GetPath("");
-                var convertFiles = new List<string>();
+                var convertFiles = new ConcurrentBag<string>();
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
                 Parallel.ForEach(fileList, GeneralHelper.ParallelOptions, (file, loopState) => {
@@ -269,7 +270,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Resources.DecompressionCancelled);
                 }
 
-                return convertFiles;
+                return convertFiles.ToList();
             });
         }
 
