@@ -382,7 +382,7 @@
         {
             using (var selectedFilesDialog = new OpenFileDialog()
             {
-                Filter = $"{Properties.Resources.ImageFilesFilter}|*.png;*.dds",
+                Filter = $"{Properties.Resources.ImageFilesFilter}|*.png",
                 Title = Properties.Resources.AtlasFramesSelectTitle,
                 CheckFileExists = true,
                 InitialDirectory = AtlasLastDirectory,
