@@ -13,7 +13,7 @@
         {
             InitializeComponent();
             hex.Content = "#00000000";
-            sARGB.Content = "0.00000000 0.00000000 0.00000000 0.00000000";
+            sRGB.Content = "0.00000000 0.00000000 0.00000000";
         }
 
         private void colorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
@@ -22,11 +22,10 @@
 
             hex.Content = selectedColor.ToString();
 
-            var scA = selectedColor.ScA.ToString("0.00000000");
             var scR = selectedColor.ScR.ToString("0.00000000");
             var scG = selectedColor.ScG.ToString("0.00000000");
             var scB = selectedColor.ScB.ToString("0.00000000");
-            sARGB.Content = $"{scA} {scR} {scG} {scB}";
+            sRGB.Content = $"{scR} {scG} {scB}";
         }
 
         private void hex_Click(object sender, RoutedEventArgs e)
@@ -37,8 +36,8 @@
 
         private void sARGB_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.Clipboard.SetDataObject(sARGB.Content, false, 10, 10);
-            GeneralHelper.WriteToConsole(Properties.Resources.CopiedToClipboard, sARGB.Content);
+            System.Windows.Forms.Clipboard.SetDataObject(sRGB.Content, false, 10, 10);
+            GeneralHelper.WriteToConsole(Properties.Resources.CopiedToClipboard, sRGB.Content);
         }
     }
 }

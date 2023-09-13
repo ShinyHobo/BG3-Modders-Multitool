@@ -7,17 +7,17 @@
         mc:Ignorable="d"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         ResizeMode="CanMinimize"
-        Title="{x:Static p:Resources.ColorPickerMenu}" Height="190" Width="301">
+        Title="{x:Static p:Resources.ColorPickerMenu}" Height="190" Width="281">
     <Grid>
         <StackPanel HorizontalAlignment="Left" Margin="5">
             <StackPanel>
                 <TextBlock Text="{x:Static p:Resources.HEXLabel}"/>
-                <Button x:Name="hex" Height="30" Padding="5" Background="White" Cursor="Hand" Width="274" ToolTip="{x:Static p:Resources.HEXTooltip}" Click="hex_Click"/>
+                <Button x:Name="hex" Height="30" Padding="5" Background="White" Cursor="Hand" Width="254" ToolTip="{x:Static p:Resources.HEXTooltip}" Click="hex_Click"/>
                 <TextBlock Text="{x:Static p:Resources.sARGBLabel}"/>
-                <Button x:Name="sARGB" Padding="5" Height="30" Background="White" Cursor="Hand" Margin="0,5" Width="274" ToolTip="{x:Static p:Resources.sARGBTooltip}" Click="sARGB_Click"/>
+                <Button x:Name="sRGB" Padding="5" Height="30" Background="White" Cursor="Hand" Margin="0,5" Width="254" ToolTip="{x:Static p:Resources.sARGBTooltip}" Click="sARGB_Click"/>
             </StackPanel>
             <TextBlock Text="{x:Static p:Resources.ClickToSelectColorLabel}"/>
-            <xctk:ColorPicker x:Name="colorPicker" SelectedColorChanged="colorPicker_SelectedColorChanged" AvailableColorsSortingMode="HueSaturationBrightness" Width="274"
+            <xctk:ColorPicker x:Name="colorPicker" SelectedColorChanged="colorPicker_SelectedColorChanged" AvailableColorsSortingMode="HueSaturationBrightness" Width="254"
                   Cursor="Hand" ShowDropDownButton="False" AdvancedTabHeader="{x:Static p:Resources.AdvancedLabel}"
                   StandardColorsHeader="{x:Static p:Resources.StandardLabel}" AvailableColorsHeader="{x:Static p:Resources.AvailableColorsLabel}"/>
         </StackPanel>

@@ -2204,7 +2204,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to sARGB.
+        ///   Looks up a localized string similar to sRGB.
         /// </summary>
         public static string sARGBLabel {
             get {
@@ -2213,7 +2213,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Click to copy the sARGB value to your clipboard.
+        ///   Looks up a localized string similar to Click to copy the sRGB value to your clipboard.
         /// </summary>
         public static string sARGBTooltip {
             get {

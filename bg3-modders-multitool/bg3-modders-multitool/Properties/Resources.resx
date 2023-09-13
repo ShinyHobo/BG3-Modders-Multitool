@@ -886,10 +886,10 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Retrieving file list for decompression.</value>
   </data>
   <data name="sARGBLabel" xml:space="preserve">
-    <value>sARGB</value>
+    <value>sRGB</value>
   </data>
   <data name="sARGBTooltip" xml:space="preserve">
-    <value>Click to copy the sARGB value to your clipboard</value>
+    <value>Click to copy the sRGB value to your clipboard</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
