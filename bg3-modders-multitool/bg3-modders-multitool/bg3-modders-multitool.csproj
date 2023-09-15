@@ -582,6 +582,7 @@
     <Compile Include="Services\FileHelper.cs" />
     <Compile Include="Services\GeneralHelper.cs" />
     <Compile Include="Services\IndexHelper.cs" />
+    <Compile Include="Services\PakReaderHelper.cs" />
     <Compile Include="Services\PakUnpackHelper.cs" />
     <Compile Include="Services\PathHelper.cs" />
     <Compile Include="Services\RenderedModelHelper.cs" />
