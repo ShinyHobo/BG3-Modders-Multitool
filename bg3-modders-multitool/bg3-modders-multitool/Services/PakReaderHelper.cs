@@ -33,7 +33,10 @@
         /// <returns>The file contents</returns>
         public string ReadPakFileContents(string filePath)
         {
-            var file = PackagedFiles.First(pf => pf.Name == filePath);
+            var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath);
+            if (file == null)
+                return string.Empty;
+
             byte[] output;
             byte[] buffer = new byte[32768];
             try

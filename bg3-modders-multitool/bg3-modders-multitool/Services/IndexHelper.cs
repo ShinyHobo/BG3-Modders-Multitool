@@ -144,7 +144,7 @@ namespace bg3_modders_multitool.Services
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
-                    new TextField("path", path, Field.Store.YES),
+                    new TextField("path", path.Replace("/","\\"), Field.Store.YES),
                     new TextField("title", fileName, Field.Store.YES)
                 };
 
@@ -421,44 +421,68 @@ namespace bg3_modders_multitool.Services
         /// <returns>A list of file line and trimmed contents.</returns>
         public Dictionary<long, string> GetFileContents(string path)
         {
-            var lines = new ConcurrentDictionary<long, string>();
+            var lines = new Dictionary<long, string>();
             if (File.Exists(path))
             {
                 var extension = Path.GetExtension(path);
                 var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    Parallel.ForEach(File.ReadLines(path), GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
-                    {
-                        var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
-                        if (index >= 0)
-                        {
-                            var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
-                            var escapedLine = System.Security.SecurityElement.Escape(line);
-                            escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
-                            lines.TryAdd(lineNumber, escapedLine);
-                        }
-                    });
+                    lines = ReadFileContentsForMatches(File.ReadLines(path));
                 }
+
                 if (lines.Count == 0)
                 {
                     if(imageExtensions.Contains(extension))
                     {
-                        lines.TryAdd(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
+                        lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
                     }
                     else
                     {
-                        lines.TryAdd(0, Properties.Resources.NoLinesFound);
+                        lines.Add(0, Properties.Resources.NoLinesFound);
                     }
                 }
             }
             else
             {
+                var pakPath = path.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
+                var pak = pakPath.Split('\\')[0];
+                path = pakPath.Replace(pak + "\\", string.Empty);
+                pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.Contains(pak + ".pak"));
+                if (pakPath != null)
+                {
+                    var helper = new PakReaderHelper(pakPath);
+                    var contents = helper.ReadPakFileContents(path);
+                    lines = ReadFileContentsForMatches(contents.Split('\n'));
+                }
+
                 if (lines.Count == 0)
                 {
-                    lines.TryAdd(0, string.Format(Properties.Resources.FileNoExist, path));
+                    lines.Add(0, string.Format(Properties.Resources.FileNoExist, path));
                 }
             }
+            return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        /// <summary>
+        /// Reads the given file contents for line matches and highlights them
+        /// </summary>
+        /// <param name="contents">The file contents</param>
+        /// <returns>The list of matched lines</returns>
+        private Dictionary<long, string> ReadFileContentsForMatches(IEnumerable<string> contents)
+        {
+            var lines = new ConcurrentDictionary<long, string>();
+            Parallel.ForEach(contents, GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
+            {
+                var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
+                if (index >= 0)
+                {
+                    var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
+                    var escapedLine = System.Security.SecurityElement.Escape(line);
+                    escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
+                    lines.TryAdd(lineNumber, escapedLine);
+                }
+            });
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }
