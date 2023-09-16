@@ -9,7 +9,6 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Properties;
-    using LSLib.Granny.GR2;
     using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
@@ -22,6 +21,7 @@ namespace bg3_modders_multitool.Services
 
     public class RootTemplateHelper
     {
+        #region Properties
         private List<Translation> Translations = new List<Translation>();
         private List<PakReaderHelper> PakReaderHelpers = new List<PakReaderHelper>();
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
@@ -42,6 +42,7 @@ namespace bg3_modders_multitool.Services
         public Dictionary<string, string> BodySetVisuals { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> MaterialBanks { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> TextureBanks { get; set; } = new Dictionary<string, string>();
+        #endregion
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
@@ -493,45 +494,43 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the stats were read.</returns>
         private bool ReadData()
         {
-            var dataInfo = new DirectoryInfo(FileHelper.UnpackedDataPath);
-            var dataDirs = dataInfo.GetDirectories("Data", System.IO.SearchOption.AllDirectories).Where(d => d.Parent.Name == "Generated");
-            foreach(var dataDir in dataDirs)
+            foreach(var pak in PakReaderHelpers)
             {
-                if (Directory.Exists(dataDir.FullName))
+                var files = pak.PackagedFiles.Where(pf => pf.Name.Contains("Stats/Generated/Data"))
+                    .Where(pf => Path.GetExtension(pf.Name) == ".txt" && !ExcludedData.Contains(Path.GetFileNameWithoutExtension(pf.Name)))
+                    .Select(pf => pf.Name);
+
+                foreach (var file in files)
                 {
-                    var dataFiles = Directory.EnumerateFiles(dataDir.FullName, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
-                    foreach (var file in dataFiles)
+                    if (GameObjectViewModel.LoadingCanceled) return false;
+                    var fileType = Models.StatStructures.StatStructure.FileType(file);
+                    var line = string.Empty;
+
+                    var contents = pak.ReadPakFileContents(file);
+
+                    using (var ms = new System.IO.MemoryStream(contents))
+                    using (var fileStream = new System.IO.StreamReader(ms))
                     {
-                        if (GameObjectViewModel.LoadingCanceled) return false;
-                        var fileType = Models.StatStructures.StatStructure.FileType(file);
-                        var line = string.Empty;
-                        using (var fileStream = new System.IO.StreamReader(file))
+                        while ((line = fileStream.ReadLine()) != null)
                         {
-                            while ((line = fileStream.ReadLine()) != null)
+                            if (line.Contains("new entry"))
                             {
-                                if (line.Contains("new entry"))
-                                {
-                                    StatStructures.Add(Models.StatStructures.StatStructure.New(fileType, line.Substring(10)));
-                                }
-                                else if (line.IndexOf("type") == 0)
-                                {
-                                    StatStructures.Last().Type = fileType;
-                                }
-                                else if (line.IndexOf("using") == 0)
-                                {
-                                    StatStructures.Last().InheritProperties(line, StatStructures);
-                                }
-                                else if (!string.IsNullOrEmpty(line))
-                                {
-                                    StatStructures.Last().LoadProperty(line);
-                                }
+                                StatStructures.Add(Models.StatStructures.StatStructure.New(fileType, line.Substring(10)));
+                            }
+                            else if (line.IndexOf("type") == 0)
+                            {
+                                StatStructures.Last().Type = fileType;
+                            }
+                            else if (line.IndexOf("using") == 0)
+                            {
+                                StatStructures.Last().InheritProperties(line, StatStructures);
+                            }
+                            else if (!string.IsNullOrEmpty(line))
+                            {
+                                StatStructures.Last().LoadProperty(line);
                             }
                         }
                     }
-                }
-                else
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToReadData, dataDir.FullName.Replace(FileHelper.UnpackedDataPath+@"\",string.Empty));
                 }
             }
             return true;
