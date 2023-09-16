@@ -681,7 +681,7 @@ namespace bg3_modders_multitool.Services
                             reader.ReadToFollowing("region");
                         }
                     }
-                    catch(Exception e)
+                    catch
                     {
                         GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
                         reader.Dispose();

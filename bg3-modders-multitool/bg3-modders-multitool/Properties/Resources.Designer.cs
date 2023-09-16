@@ -1477,7 +1477,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No index available! Please unpack game assets and generate an index..
+        ///   Looks up a localized string similar to No index available! Click Utilities =&gt; Index and select an option to generate an index..
         /// </summary>
         public static string IndexNotFound {
             get {

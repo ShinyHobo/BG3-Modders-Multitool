@@ -209,7 +209,7 @@ namespace bg3_modders_multitool.Models.StatStructures
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // This can usually be fixed by adding the Modifier data to the given StatStructure type
                 #if DEBUG

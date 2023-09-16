@@ -633,7 +633,7 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>For creating and searching through an index of the unpacked game files quickly</value>
   </data>
   <data name="IndexNotFound" xml:space="preserve">
-    <value>No index available! Please unpack game assets and generate an index.</value>
+    <value>No index available! Click Utilities =&gt; Index and select an option to generate an index.</value>
   </data>
   <data name="IndexPakFilesButton" xml:space="preserve">
     <value>Index Pak Files</value>

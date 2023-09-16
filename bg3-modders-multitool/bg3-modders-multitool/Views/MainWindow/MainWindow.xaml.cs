@@ -37,15 +37,8 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private async void Unpack_Click(object sender, RoutedEventArgs e)
         {
-            unpack.Visibility = Visibility.Hidden;
-            unpack_Cancel.Visibility = Visibility.Visible;
             var vm = DataContext as ViewModels.MainWindow;
-            await vm.Unpacker.UnpackSelectedPakFiles().ContinueWith(delegate {
-                Application.Current.Dispatcher.Invoke(() => {
-                    unpack.Visibility = Visibility.Visible;
-                    unpack_Cancel.Visibility = Visibility.Hidden;
-                });
-            });
+            await vm.Unpacker.UnpackSelectedPakFiles();
         }
 
         /// <summary>
@@ -56,8 +49,6 @@ namespace bg3_modders_multitool.Views
         {
             var vm = DataContext as ViewModels.MainWindow;
             vm.Unpacker.Cancelled = true;
-            unpack.Visibility = Visibility.Visible;
-            unpack_Cancel.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -351,12 +342,7 @@ namespace bg3_modders_multitool.Views
                 DragAndDropHelper.CleanTempDirectory();
 
                 var vm = DataContext as ViewModels.MainWindow;
-                await vm.Unpacker.UnpackPakFiles(unpackPakDialog.FileNames.ToList(), false).ContinueWith(delegate {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        unpack.Visibility = Visibility.Visible;
-                        unpack_Cancel.Visibility = Visibility.Hidden;
-                    });
-                });
+                await vm.Unpacker.UnpackPakFiles(unpackPakDialog.FileNames.ToList(), false);
             }
         }
 
