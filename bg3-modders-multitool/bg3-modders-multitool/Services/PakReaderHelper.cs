@@ -75,30 +75,36 @@
             var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
             if (file != null)
             {
-                var originalExtension = Path.GetExtension(filePath);
-                var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
-                var isConvertableToXml = originalExtension.Contains("loca");
-                var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
-                if (isConvertableToLsx)
+                lock(file.PackageStream)
                 {
-                    var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
-                    var resource = ResourceUtils.LoadResource(file.MakeStream(), ResourceUtils.ExtensionToResourceFormat(filePath));
-                    ResourceUtils.SaveResource(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), conversionParams);
-                }
-                else if (isConvertableToXml)
-                {
-                    var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
-                    var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
-                    LocaUtils.Save(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), LocaFormat.Xml);
-                }
-                else
-                {
-                    var path = FileHelper.GetPath($"{PakName}\\{filePath}");
-                    FileManager.TryToCreateDirectory(path);
-                    var contents = ReadPakFileContents(filePath);
-                    using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
+                    file.PackageStream.Position = 0;
+                    var originalExtension = Path.GetExtension(filePath);
+                    var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
+                    var isConvertableToXml = originalExtension.Contains("loca");
+                    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                    if (isConvertableToLsx)
                     {
-                        fileStream.Write(contents, 0, contents.Length);
+                        var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
+                        var format = ResourceUtils.ExtensionToResourceFormat(filePath);
+                        var resource = ResourceUtils.LoadResource(file.MakeStream(), format);
+                        ResourceUtils.SaveResource(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), conversionParams);
+                    }
+                    else if (isConvertableToXml)
+                    {
+                        var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
+                        var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
+
+                        LocaUtils.Save(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), LocaFormat.Xml);
+                    }
+                    else
+                    {
+                        var path = FileHelper.GetPath($"{PakName}\\{filePath}");
+                        FileManager.TryToCreateDirectory(path);
+                        var contents = ReadPakFileContents(filePath);
+                        using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
+                        {
+                            fileStream.Write(contents, 0, contents.Length);
+                        }
                     }
                 }
             }
@@ -117,7 +123,7 @@
         /// Opens and decompresses the selected pak file if it is not already
         /// </summary>
         /// <param name="selectedPath">The selected pak file path</param>
-        internal static void OpenPakFile(string selectedPath)
+        public static void OpenPakFile(string selectedPath)
         {
             selectedPath = selectedPath.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
             if (!File.Exists(FileHelper.GetPath(selectedPath)))

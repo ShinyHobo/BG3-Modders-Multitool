@@ -311,7 +311,7 @@ Dropping a .pak will unpack it into a nearby directory. </value>
 Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.</value>
   </data>
   <data name="CorruptXmlFile" xml:space="preserve">
-    <value>{0} appears to be corrupt or missing. Delete file and Decompress, then try again. Skipping file...</value>
+    <value>{0} appears to be corrupt or missing. Skipping file...</value>
     <comment>file path</comment>
   </data>
   <data name="CouldNotLoadImage" xml:space="preserve">

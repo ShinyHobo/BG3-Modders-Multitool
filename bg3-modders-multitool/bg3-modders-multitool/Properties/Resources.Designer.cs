@@ -622,7 +622,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} appears to be corrupt or missing. Delete file and Decompress, then try again. Skipping file....
+        ///   Looks up a localized string similar to {0} appears to be corrupt or missing. Skipping file....
         /// </summary>
         public static string CorruptXmlFile {
             get {
