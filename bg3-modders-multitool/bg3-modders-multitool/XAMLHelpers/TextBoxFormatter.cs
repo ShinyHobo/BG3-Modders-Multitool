@@ -60,14 +60,23 @@ namespace bg3_modders_multitool.XAMLHelpers
 
                         try
                         {
-                            // convert image to something WPF can read
-                            using (var image2 = Pfim.Pfimage.FromFile(imageLoc))
+                            Pfim.IImage pfimImage;
+                            if (File.Exists(imageLoc))
                             {
-                                var data = Marshal.UnsafeAddrOfPinnedArrayElement(image2.Data, 0);
-                                var bitmap = new System.Drawing.Bitmap(image2.Width, image2.Height, image2.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
-                                var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                                image.Source = bitmapImage;
+                                // convert image to something WPF can read
+                                pfimImage = Pfim.Pfimage.FromFile(imageLoc);
                             }
+                            else
+                            {
+                                var imageData = Convert.FromBase64String(imageLoc);
+                                pfimImage = Pfim.Pfimage.FromStream(new MemoryStream(imageData));
+                            }
+
+                            var data = Marshal.UnsafeAddrOfPinnedArrayElement(pfimImage.Data, 0);
+                            var bitmap = new System.Drawing.Bitmap(pfimImage.Width, pfimImage.Height, pfimImage.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
+                            var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                            image.Source = bitmapImage;
+                            pfimImage.Dispose();
                         } catch { }
                         textBlock.Inlines.Add(result);
                     }

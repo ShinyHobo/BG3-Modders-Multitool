@@ -31,11 +31,11 @@
         /// </summary>
         /// <param name="filePath">The internal pak file path</param>
         /// <returns>The file contents</returns>
-        public string ReadPakFileContents(string filePath)
+        public byte[] ReadPakFileContents(string filePath)
         {
-            var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath);
+            var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
             if (file == null)
-                return string.Empty;
+                return null;
 
             byte[] output;
             byte[] buffer = new byte[32768];
@@ -60,7 +60,7 @@
                 file.ReleaseStream();
             }
 
-            return System.Text.Encoding.UTF8.GetString(output);
+            return output;
         }
     }
 }

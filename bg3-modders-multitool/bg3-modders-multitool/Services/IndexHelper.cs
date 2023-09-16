@@ -23,6 +23,10 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
     using System.Text.RegularExpressions;
+    using System.Windows.Interop;
+    using System.Windows.Documents;
+    using System.Windows.Media;
+    using System.Windows.Markup;
 
     public class IndexHelper
     {
@@ -153,7 +157,7 @@ namespace bg3_modders_multitool.Services
                 if (!extensionsToExclude.Contains(extension))
                 {
                     var contents = helper.ReadPakFileContents(file);
-                    doc.Add(new TextField("body", contents, Field.Store.NO));
+                    doc.Add(new TextField("body", System.Text.Encoding.UTF8.GetString(contents), Field.Store.NO));
                 }
 
                 writer.AddDocument(doc);
@@ -423,10 +427,11 @@ namespace bg3_modders_multitool.Services
         public Dictionary<long, string> GetFileContents(string path)
         {
             var lines = new Dictionary<long, string>();
-            if (File.Exists(path))
+            var fileExists = File.Exists(path);
+            var extension = Path.GetExtension(path);
+            var isExcluded = extensionsToExclude.Contains(extension);
+            if (fileExists)
             {
-                var extension = Path.GetExtension(path);
-                var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
                     lines = ReadFileContentsForMatches(File.ReadLines(path));
@@ -437,10 +442,6 @@ namespace bg3_modders_multitool.Services
                     if(imageExtensions.Contains(extension))
                     {
                         lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
-                    }
-                    else
-                    {
-                        lines.Add(0, Properties.Resources.NoLinesFound);
                     }
                 }
             }
@@ -453,16 +454,43 @@ namespace bg3_modders_multitool.Services
                 pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.Contains(pak + ".pak"));
                 if (pakPath != null)
                 {
+                    // TODO - convert file?
                     var helper = new PakReaderHelper(pakPath);
-                    var contents = helper.ReadPakFileContents(path.Replace('\\', '/'));
-                    lines = ReadFileContentsForMatches(contents.Split('\n'));
-                }
+                    var contents = helper.ReadPakFileContents(path);
+                    if (!isExcluded)
+                    {
+                        lines = ReadFileContentsForMatches(System.Text.Encoding.UTF8.GetString(contents).Split('\n'));
+                    }
 
-                if (lines.Count == 0)
+                    if (lines.Count == 0)
+                    {
+                        if (imageExtensions.Contains(extension))
+                        {
+                            if(contents == null)
+                            {
+                                lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
+                            }
+                            else
+                            {
+                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{Convert.ToBase64String(contents)}\" Height=\"500\"></Image></InlineUIContainer>");
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (lines.Count == 0)
+            {
+                if(fileExists)
+                {
+                    lines.Add(0, Properties.Resources.NoLinesFound);
+                }
+                else
                 {
                     lines.Add(0, string.Format(Properties.Resources.FileNoExist, path));
                 }
             }
+
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 

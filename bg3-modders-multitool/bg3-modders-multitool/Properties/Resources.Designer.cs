@@ -622,6 +622,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not load image: {0}.
+        /// </summary>
+        public static string CouldNotLoadImage {
+            get {
+                return ResourceManager.GetString("CouldNotLoadImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decompress Files.
         /// </summary>
         public static string DecompressFilesButton {
