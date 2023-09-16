@@ -3,8 +3,8 @@
 /// </summary>
 namespace bg3_modders_multitool.Models
 {
-    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Services;
+    using LSLib.LS;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
@@ -139,22 +139,28 @@ namespace bg3_modders_multitool.Models
         /// <summary>
         /// Converts a dds file into a bitmap image
         /// </summary>
-        /// <param name="file">The dds file</param>
+        /// <param name="iconInfo">The dds file</param>
         /// <returns>The bitmap image</returns>
-        public static BitmapImage ConvertDDSToBitmap(string file)
+        public static BitmapImage ConvertDDSToBitmap(PackagedFileInfo iconInfo)
         {
-            using (var image = Pfim.Pfimage.FromFile(file))
+            lock(iconInfo.PackageStream)
             {
-                var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
-                var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
-                using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                iconInfo.PackageStream.Position = 0;
+                var iconStream = iconInfo.MakeStream();
+                using (var image = Pfim.Pfimage.FromStream(iconStream))
                 {
-                    bitmap.Save(ms, ImageFormat.Png);
-
-                    using (var m2 = new System.IO.MemoryStream(ms.ToArray()))
+                    var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                    var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
+                    iconInfo.ReleaseStream();
+                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
                     {
-                        var bmp = new Bitmap(ms);
-                        return ConvertBitmapToImage(bmp);
+                        bitmap.Save(ms, ImageFormat.Png);
+
+                        using (var m2 = new System.IO.MemoryStream(ms.ToArray()))
+                        {
+                            var bmp = new Bitmap(ms);
+                            return ConvertBitmapToImage(bmp);
+                        }
                     }
                 }
             }
