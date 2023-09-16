@@ -663,18 +663,18 @@ namespace bg3_modders_multitool.Services
                                             {
                                                 bodySetVisual = reader.GetAttribute("value");
                                                 if (!string.IsNullOrEmpty(bodySetVisual))
-                                                    bodySetVisuals.TryAdd(bodySetVisual, visualBankFile);
+                                                    bodySetVisuals.TryAdd(bodySetVisual, visualBankFile + ".lsx");
                                             }
                                         } while (reader.ReadToNextSibling("attribute"));
 
                                         if (isCharacterVisualBank)
-                                            characterVisualBanks.TryAdd(resourceId, visualBankFile);
+                                            characterVisualBanks.TryAdd(resourceId, visualBankFile + ".lsx");
                                         else if (isMaterialBank)
-                                            materialBanks.TryAdd(resourceId, visualBankFile);
+                                            materialBanks.TryAdd(resourceId, visualBankFile + ".lsx");
                                         else if (isTextureBank)
-                                            textureBanks.TryAdd(resourceId, visualBankFile);
+                                            textureBanks.TryAdd(resourceId, visualBankFile + ".lsx");
                                         else if (isVisualBank)
-                                            visualBanks.TryAdd(resourceId, visualBankFile);
+                                            visualBanks.TryAdd(resourceId, visualBankFile + ".lsx");
                                     } while (reader.ReadToNextSibling("node"));
                                 }
                             }
