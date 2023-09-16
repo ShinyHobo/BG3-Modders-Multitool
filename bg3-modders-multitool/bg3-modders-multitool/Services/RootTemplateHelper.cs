@@ -127,15 +127,9 @@ namespace bg3_modders_multitool.Services
                 CloseFileProgress();
                 if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 ReadData();
-                CloseFileProgress();
                 if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 ReadIcons();
-                CloseFileProgress();
                 if (GameObjectViewModel.LoadingCanceled) goto canceled;
-                if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindIconsPak);
-                }
                 SortRootTemplate();
                 if (GameObjectViewModel.LoadingCanceled) goto canceled;
 
@@ -545,19 +539,9 @@ namespace bg3_modders_multitool.Services
             var iconFiles = GetFileList("IconUVList");
             foreach(var iconFile in iconFiles)
             {
-                var file = new FileInfo(FileHelper.GetPath(iconFile));
-                if (file.Exists)
-                {
-                    try
-                    {
-                        TextureAtlases.Add(TextureAtlas.Read(file.FullName, new DirectoryInfo(iconFile).Parent.Parent.Name));
-                    }
-                    catch
-                    {
-                        GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, file);
-                    }
-                }
-                
+                var helper = PakReaderHelpers.First(h => h.PakName == iconFile.Split('\\')[0]);
+                var contents = helper.ReadPakFileContents(PakReaderHelper.GetPakPath(iconFile));
+                TextureAtlases.Add(TextureAtlas.Read(contents, iconFile, new DirectoryInfo(iconFile).Parent.Parent.Name));
             }
             return true;
         }

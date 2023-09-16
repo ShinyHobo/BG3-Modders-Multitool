@@ -20,7 +20,8 @@
                     <MenuItem Header="{x:Static p:Resources.UtilitiesMenuLabel}" ToolTip="{x:Static p:Resources.MultitoolTools}">
                         <MenuItem Header="{x:Static p:Resources.UnpackModPaks}" ToolTip="{x:Static p:Resources.UnpackModPakTooltip}" Click="UnpackMod_Click" Icon="📦"/>
                         <MenuItem Header="{x:Static p:Resources.IndexMenu}" ToolTip="{x:Static p:Resources.IndexMenuTooltip}" Icon="📇">
-                            <MenuItem x:Name="indexPakFiles" Header="{x:Static p:Resources.IndexPakFilesButton}" Click="indexPakFiles_Click"/>
+                            <MenuItem x:Name="indexPakFiles" Header="{x:Static p:Resources.IndexPakFilesButton}" Click="indexPakFiles_Click" Icon="🔎"
+                                ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
                             <MenuItem x:Name="indexUnpackedDataFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
                                 ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" />
                             </MenuItem>
@@ -51,8 +52,8 @@
                     </MenuItem>
                     <MenuItem Header="{x:Static p:Resources.Help}" ToolTip="{x:Static p:Resources.HelpMenuTooltip}">
                         <MenuItem Header="{x:Static p:Resources.ModdingResources}" Icon="📚">
-                            <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3WikiTooltip}"/>
                             <MenuItem Header="{x:Static p:Resources.BG3CommunityLibrary}" Click="BG3CommWikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3CommWikiTooltip}"/>
+                            <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3WikiTooltip}"/>
                             <Separator />
                             <MenuItem Header="{x:Static p:Resources.ModdingTutorial}" Click="ModTutLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.ModTutTooltip}"/>
                             <Separator />
