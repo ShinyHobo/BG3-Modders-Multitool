@@ -2,9 +2,11 @@
 {
     using LSLib.LS;
     using LSLib.LS.Enums;
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Helper for reading files directly from pak files without unpacking
@@ -109,6 +111,28 @@
         public static List<string> GetPakList()
         {
             return Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
+        }
+
+        /// <summary>
+        /// Opens the decompress the selected pak file if it is not already
+        /// </summary>
+        /// <param name="selectedPath">The selected pak file path</param>
+        internal static void OpenPakFile(string selectedPath)
+        {
+            if (!File.Exists(FileHelper.GetPath(selectedPath)))
+            {
+                var pak = selectedPath.Split('\\')[0];
+                var pakFile = $"{pak}.pak";
+                var paks = PakReaderHelper.GetPakList();
+                var pakPath = paks.FirstOrDefault(p => p.Contains(pakFile));
+                if (File.Exists(pakPath))
+                {
+                    var helper = new PakReaderHelper(pakPath);
+                    var regex = new Regex(Regex.Escape(pak + "\\"));
+                    var path = regex.Replace(selectedPath, string.Empty, 1);
+                    helper.DecompressPakFile(path);
+                }
+            }
         }
     }
 }
