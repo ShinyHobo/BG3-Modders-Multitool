@@ -80,7 +80,7 @@
                 if (isConvertableToLsx)
                 {
                     var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
-                    Resource resource = ResourceUtils.LoadResource(file.MakeStream(), ResourceUtils.ExtensionToResourceFormat(filePath));
+                    var resource = ResourceUtils.LoadResource(file.MakeStream(), ResourceUtils.ExtensionToResourceFormat(filePath));
                     ResourceUtils.SaveResource(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), conversionParams);
                 }
                 else if (isConvertableToXml)
@@ -88,6 +88,16 @@
                     var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
                     var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
                     LocaUtils.Save(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), LocaFormat.Xml);
+                }
+                else
+                {
+                    var path = FileHelper.GetPath($"{PakName}\\{filePath}");
+                    FileManager.TryToCreateDirectory(path);
+                    var contents = ReadPakFileContents(filePath);
+                    using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
+                    {
+                        fileStream.Write(contents, 0, contents.Length);
+                    }
                 }
             }
         }
