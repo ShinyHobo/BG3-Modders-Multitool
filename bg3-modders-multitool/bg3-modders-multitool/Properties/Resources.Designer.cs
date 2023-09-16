@@ -1432,7 +1432,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Index Files.
+        ///   Looks up a localized string similar to Index UnpackedData Files (Legacy).
         /// </summary>
         public static string IndexFilesButton {
             get {
@@ -1482,6 +1482,15 @@ namespace bg3_modders_multitool.Properties {
         public static string IndexNotFound {
             get {
                 return ResourceManager.GetString("IndexNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index Pak Files.
+        /// </summary>
+        public static string IndexPakFilesButton {
+            get {
+                return ResourceManager.GetString("IndexPakFilesButton", resourceCulture);
             }
         }
         

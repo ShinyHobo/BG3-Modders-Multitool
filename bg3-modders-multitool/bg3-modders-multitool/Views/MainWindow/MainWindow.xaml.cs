@@ -96,16 +96,34 @@ namespace bg3_modders_multitool.Views
 
         private void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
+            IndexFiles(false);
+        }
+
+        private void indexPakFiles_Click(object sender, RoutedEventArgs e)
+        {
+            IndexFiles(true);
+        }
+
+        /// <summary>
+        /// Creates a confirmation prompt
+        /// On accept, deletes the index and generates a new one
+        /// </summary>
+        /// <param name="directIndex">Whether or not to index the pak files directly, or index the files inside UnpackedData (legacy mode)</param>
+        private void IndexFiles(bool directIndex)
+        {
             var result = System.Windows.Forms.DialogResult.OK;
-            if(IndexHelper.IndexDirectoryExists())
+            if (IndexHelper.IndexDirectoryExists())
             {
                 result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
             }
 
-            if(result.Equals(System.Windows.Forms.DialogResult.OK))
+            if (result.Equals(System.Windows.Forms.DialogResult.OK))
             {
                 var vm = DataContext as ViewModels.MainWindow;
-                vm.SearchResults.IndexHelper.Index();
+                if(directIndex)
+                    vm.SearchResults.IndexHelper.IndexDirectly();
+                else
+                    vm.SearchResults.IndexHelper.Index();
             }
         }
         #endregion

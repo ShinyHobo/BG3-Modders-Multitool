@@ -9,6 +9,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Properties;
+    using LSLib.Granny.GR2;
     using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
@@ -94,6 +95,7 @@ namespace bg3_modders_multitool.Services
             Races?.Clear();
             StatStructures?.Clear();
             TextureAtlases?.Clear();
+            PakReaderHelpers.Clear();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -115,26 +117,32 @@ namespace bg3_modders_multitool.Services
 
                 ReadVisualBanks();
                 CloseFileProgress();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 ReadTranslations();
                 CloseFileProgress();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 //ReadTextureBanks();
                 ReadRootTemplate();
                 CloseFileProgress();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 ReadData();
                 CloseFileProgress();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 ReadIcons();
                 CloseFileProgress();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindIconsPak);
                 }
                 SortRootTemplate();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
+
+                canceled:
+                if (GameObjectViewModel.LoadingCanceled) {
+                    return null;
+                }
+
                 Loaded = true;
                 return string.Join(",", GameObjectAttributes.Values.GroupBy(g => g).Select(g => g.Last()).ToList());
             });

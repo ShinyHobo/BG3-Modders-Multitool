@@ -617,7 +617,7 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Available index is corrupt. Please rerun the indexer to create a new one.</value>
   </data>
   <data name="IndexFilesButton" xml:space="preserve">
-    <value>Index Files</value>
+    <value>Index UnpackedData Files (Legacy)</value>
   </data>
   <data name="IndexFinished" xml:space="preserve">
     <value>Indexing process finished in {0}.</value>
@@ -634,6 +634,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="IndexNotFound" xml:space="preserve">
     <value>No index available! Please unpack game assets and generate an index.</value>
+  </data>
+  <data name="IndexPakFilesButton" xml:space="preserve">
+    <value>Index Pak Files</value>
   </data>
   <data name="IndexSearchButton" xml:space="preserve">
     <value>Search Index</value>

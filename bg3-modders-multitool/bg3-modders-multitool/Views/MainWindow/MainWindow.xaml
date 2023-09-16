@@ -20,10 +20,10 @@
                     <MenuItem Header="{x:Static p:Resources.UtilitiesMenuLabel}" ToolTip="{x:Static p:Resources.MultitoolTools}">
                         <MenuItem Header="{x:Static p:Resources.UnpackModPaks}" ToolTip="{x:Static p:Resources.UnpackModPakTooltip}" Click="UnpackMod_Click" Icon="📦"/>
                         <MenuItem Header="{x:Static p:Resources.IndexMenu}" ToolTip="{x:Static p:Resources.IndexMenuTooltip}" Icon="📇">
-                            <MenuItem x:Name="indexFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
-                                ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" >
+                            <MenuItem x:Name="indexPakFiles" Header="{x:Static p:Resources.IndexPakFilesButton}" Click="indexPakFiles_Click"/>
+                            <MenuItem x:Name="indexUnpackedDataFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
+                                ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" />
                             </MenuItem>
-                        </MenuItem>
                         <MenuItem Header="{x:Static p:Resources.GOEButton}" ToolTip="{x:Static p:Resources.GOEMenuTooltip}" Icon="📚">
                             <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
                                 ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
