@@ -52,6 +52,10 @@ namespace bg3_modders_multitool.Services
         }
 
         #region Direct Indexing
+        /// <summary>
+        /// Indexes the pak files directly in memory without the need for unpacking them to disk
+        /// </summary>
+        /// <returns>The indexing task</returns>
         public Task IndexDirectly()
         {
             return Task.Run(() => {
@@ -88,6 +92,10 @@ namespace bg3_modders_multitool.Services
             });
         }
 
+        /// <summary>
+        /// Indexes the provided pak helpers
+        /// </summary>
+        /// <param name="helpers">The pak reader helpers that contain the files streams</param>
         private void IndexFilesDirectly(List<PakReaderHelper> helpers)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
@@ -119,6 +127,12 @@ namespace bg3_modders_multitool.Services
             });
         }
 
+        /// <summary>
+        /// Indexes the file contents
+        /// </summary>
+        /// <param name="file">The internal pak file path</param>
+        /// <param name="helper">The pak helper</param>
+        /// <param name="writer">The index writer</param>
         private void IndexLuceneFileDirectly(string file, PakReaderHelper helper, IndexWriter writer)
         {
             var path = $"{helper.PakName}\\{file}";

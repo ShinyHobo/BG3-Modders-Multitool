@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
 
+    /// <summary>
+    /// Helper for reading files directly from pak files without unpacking
+    /// </summary>
     public class PakReaderHelper
     {
         private PackageReader PackageReader;
@@ -24,6 +26,11 @@
             catch(NotAPackageException) { }
         }
 
+        /// <summary>
+        /// Reads the file from this pak and gets the contents
+        /// </summary>
+        /// <param name="filePath">The internal pak file path</param>
+        /// <returns>The file contents</returns>
         public string ReadPakFileContents(string filePath)
         {
             var file = PackagedFiles.First(pf => pf.Name == filePath);
