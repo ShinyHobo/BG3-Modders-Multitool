@@ -51,6 +51,108 @@ namespace bg3_modders_multitool.Services
             GC.Collect();
         }
 
+        #region Direct Indexing
+        public Task IndexDirectly()
+        {
+            return Task.Run(() => {
+                Application.Current.Dispatcher.Invoke(() => {
+                    //DataContext.AllowIndexing = false;
+                });
+
+                var helpers = new List<PakReaderHelper>();
+                var fileCount = 0;
+                var paks = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
+                foreach ( var pak in paks )
+                {
+                    var helper = new PakReaderHelper(pak);
+                    if (helper.PackagedFiles != null)
+                    {
+                        helpers.Add(helper);
+                        fileCount += helper.PackagedFiles.Count;
+                    }
+                }
+
+                // Display total file count being indexed
+                GeneralHelper.WriteToConsole(Properties.Resources.FileListRetrieved);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IsIndexing = true;
+                    DataContext.IndexFileTotal = fileCount;
+                    DataContext.IndexStartTime = DateTime.Now;
+                    DataContext.IndexFileCount = 0;
+                });
+
+                if (System.IO.Directory.Exists(luceneIndex))
+                    System.IO.Directory.Delete(luceneIndex, true);
+                IndexFilesDirectly(helpers);
+            });
+        }
+
+        private void IndexFilesDirectly(List<PakReaderHelper> helpers)
+        {
+            GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
+            using (Analyzer a = new CustomAnalyzer())
+            {
+                IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                config.SetUseCompoundFile(false);
+                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                {
+                    Parallel.ForEach(helpers, GeneralHelper.ParallelOptions, helper => {
+                       foreach (var file in helper.PackagedFiles)
+                       {
+                            try
+                            {
+                                IndexLuceneFileDirectly(file.Name, helper, writer);
+                            }
+                            catch (OutOfMemoryException)
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
+                            }
+                        }
+                    });
+                    GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
+                    writer.Commit();
+                }
+            }
+            GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
+            Application.Current.Dispatcher.Invoke(() => {
+                DataContext.IsIndexing = false;
+            });
+        }
+
+        private void IndexLuceneFileDirectly(string file, PakReaderHelper helper, IndexWriter writer)
+        {
+            var path = $"{helper.PakName}\\{file}";
+            try
+            {
+                var fileName = Path.GetFileName(file);
+                var extension = Path.GetExtension(file);
+
+                var doc = new Document
+                {
+                    //new Int64Field("id", id, Field.Store.YES),
+                    new TextField("path", path, Field.Store.YES),
+                    new TextField("title", fileName, Field.Store.YES)
+                };
+
+                // if file type is excluded, only track file name and path so it can be searched for by name
+                if (!extensionsToExclude.Contains(extension))
+                {
+                    var contents = helper.ReadPakFileContents(file);
+                    doc.Add(new TextField("body", contents, Field.Store.NO));
+                }
+
+                writer.AddDocument(doc);
+            }
+            catch (Exception ex)
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
+            }
+            lock (DataContext)
+                DataContext.IndexFileCount++;
+        }
+        #endregion
+
         #region Indexing
         /// <summary>
         /// Generates an index using the given filelist.

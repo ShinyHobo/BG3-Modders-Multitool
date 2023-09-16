@@ -23,8 +23,9 @@ namespace bg3_modders_multitool.Services
         public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
         public static readonly string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
-        public static readonly string UnpackedDataPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
-        public static readonly string UnpackedModsPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+        public static string UnpackedDataPath => $"{Directory.GetCurrentDirectory()}\\UnpackedData";
+        public static string UnpackedModsPath => $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+        public static string DataDirectory => Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
 
         /// <summary>
         /// List of all known file types used
@@ -442,7 +443,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="setting">Whether to enable or disable the mod.</param>
         public static void CreateDestroyQuickLaunchMod(bool setting)
         {
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            var dataDir = FileHelper.DataDirectory;
             var modLocation = Path.Combine(dataDir, "Video\\");
             var modFilepath = Path.Combine(modLocation,"Splash_Logo_Larian.bk2");
             if (setting)

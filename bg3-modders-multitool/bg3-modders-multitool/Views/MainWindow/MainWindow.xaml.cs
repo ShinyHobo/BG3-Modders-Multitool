@@ -113,7 +113,7 @@ namespace bg3_modders_multitool.Views
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            var dataDir = FileHelper.DataDirectory;
             if (Directory.Exists(dataDir))
             {
                 System.Diagnostics.Process.Start(vm.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
@@ -222,8 +222,8 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void gameDataFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            if(Directory.Exists(dataDir))
+            var dataDir = FileHelper.DataDirectory;
+            if (Directory.Exists(dataDir))
             {
                 System.Diagnostics.Process.Start(dataDir);
             }
