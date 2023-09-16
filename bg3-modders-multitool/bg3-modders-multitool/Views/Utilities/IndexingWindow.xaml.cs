@@ -124,10 +124,6 @@ namespace bg3_modders_multitool.Views
                     {
                         convertAndOpenButton.Content = "Convert & Open";
                     }
-                    else if (FileHelper.CanConvertToOgg(vm.SelectedPath))
-                    {
-                        convertAndOpenButton.Content = "Play Audio (ogg)";
-                    }
                     else
                     {
                         convertAndOpenButton.Content = "Open";
@@ -159,11 +155,7 @@ namespace bg3_modders_multitool.Views
                 }
             }
 
-            if (ext == ".wem")
-            {
-                FileHelper.PlayAudio(selectedPath);
-            }
-            else if(ext == ".loca")
+            if(ext == ".loca")
             {
                 var newFile = FileHelper.Convert(selectedPath, "xml");
                 FileHelper.OpenFile(newFile);
