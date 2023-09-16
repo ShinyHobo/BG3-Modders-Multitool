@@ -187,7 +187,14 @@ namespace bg3_modders_multitool.ViewModels
                     Icon = null;
                     if(Info.Icon != null)
                     {
-                        Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                        var atlas = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon));
+                        if (atlas != null)
+                        {
+                            var pakName = atlas.Path.Split('\\')[0];
+                            var pak = RootTemplateHelper.PakReaderHelpers.FirstOrDefault(pa => pa.PakName == pakName);
+                            Icon = atlas.GetIcon(Info.Icon, pak);
+                        }
+
                         if (Icon == null)
                         {
                             var iconInfo = new FileInfo(FileHelper.GetPath($"Shared\\Mods\\SharedDev\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));

@@ -23,7 +23,7 @@ namespace bg3_modders_multitool.Services
     {
         #region Properties
         private List<Translation> Translations = new List<Translation>();
-        private List<PakReaderHelper> PakReaderHelpers = new List<PakReaderHelper>();
+        public List<PakReaderHelper> PakReaderHelpers { get; private set; } = new List<PakReaderHelper>();
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
         private bool Loaded = false;
         private bool GameObjectsCached = false;
