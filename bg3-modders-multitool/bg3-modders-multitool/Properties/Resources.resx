@@ -413,7 +413,8 @@ Do you wish to continue?</value>
     <comment>loca filename, pak name</comment>
   </data>
   <data name="FailedToIndexFile" xml:space="preserve">
-    <value>Failed to index file [{0}]:\n{1}</value>
+    <value>Failed to index file [{0}]:
+{1}</value>
     <comment>file path, error message</comment>
   </data>
   <data name="FailedToLoadDae" xml:space="preserve">
@@ -421,7 +422,8 @@ Do you wish to continue?</value>
     <comment>error message, inner error message</comment>
   </data>
   <data name="FailedToLoadFile" xml:space="preserve">
-    <value>Could not load {0}:\n{1}</value>
+    <value>Could not load {0}:
+{1}</value>
     <comment>file path, error message</comment>
   </data>
   <data name="FailedToLoadModel" xml:space="preserve">
@@ -566,7 +568,9 @@ Are you sure you want to delete the GameObject cache?</value>
     <comment>uuid/guid type, guid/uuid text</comment>
   </data>
   <data name="GUIDCopyFailed" xml:space="preserve">
-    <value>Failed to copy to clipboard ({0} blocking):\n{1}\n{2}</value>
+    <value>Failed to copy to clipboard ({0} blocking):
+{1}
+{2}</value>
     <comment>process name, error message, stack trace</comment>
   </data>
   <data name="HandleLabel" xml:space="preserve">

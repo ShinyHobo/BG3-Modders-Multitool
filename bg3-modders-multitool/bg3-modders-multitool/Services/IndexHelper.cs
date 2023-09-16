@@ -30,7 +30,7 @@ namespace bg3_modders_multitool.Services
         // audio: .wem
         // video: .bk2
         // shaders: .bshd, .shd
-        private static readonly string[] extensionsToExclude = { ".bin",".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".fbx", ".dae", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd", ".jpg",".gts",".data",".patch" };
+        private static readonly string[] extensionsToExclude = { ".bin",".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".fbx", ".dae", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd", ".jpg",".gts",".data",".patch",".psd" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga", ".jpg" };
         public static readonly string[] BinaryExtensions = { ".lsf", ".bin", ".loca", ".data", ".patch" };
         private static readonly string luceneIndex = "lucene/index";
@@ -98,8 +98,7 @@ namespace bg3_modders_multitool.Services
                 using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                 {
                     Parallel.ForEach(helpers, GeneralHelper.ParallelOptions, helper => {
-                       foreach (var file in helper.PackagedFiles)
-                       {
+                        Parallel.ForEach(helper.PackagedFiles, GeneralHelper.ParallelOptions, file => {
                             try
                             {
                                 IndexLuceneFileDirectly(file.Name, helper, writer);
@@ -108,7 +107,7 @@ namespace bg3_modders_multitool.Services
                             {
                                 GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
                             }
-                        }
+                        });
                     });
                     GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
                     writer.Commit();

@@ -885,7 +885,8 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to index file [{0}]:\n{1}.
+        ///   Looks up a localized string similar to Failed to index file [{0}]:
+        ///{1}.
         /// </summary>
         public static string FailedToIndexFile {
             get {
@@ -903,7 +904,8 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not load {0}:\n{1}.
+        ///   Looks up a localized string similar to Could not load {0}:
+        ///{1}.
         /// </summary>
         public static string FailedToLoadFile {
             get {
@@ -1293,7 +1295,9 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to copy to clipboard ({0} blocking):\n{1}\n{2}.
+        ///   Looks up a localized string similar to Failed to copy to clipboard ({0} blocking):
+        ///{1}
+        ///{2}.
         /// </summary>
         public static string GUIDCopyFailed {
             get {
