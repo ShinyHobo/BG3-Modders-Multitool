@@ -14,7 +14,6 @@ namespace bg3_modders_multitool.XAMLHelpers
     using System.Windows.Documents;
     using System.Windows.Interop;
     using System.Windows.Markup;
-    using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using System.Xml;
 

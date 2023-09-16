@@ -22,11 +22,6 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Index.Extensions;
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
-    using System.Text.RegularExpressions;
-    using System.Windows.Interop;
-    using System.Windows.Documents;
-    using System.Windows.Media;
-    using System.Windows.Markup;
 
     public class IndexHelper
     {
@@ -449,8 +444,7 @@ namespace bg3_modders_multitool.Services
             {
                 var pakPath = path.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
                 var pak = pakPath.Split('\\')[0];
-                var regex = new Regex(Regex.Escape(pak + "\\"));
-                path = regex.Replace(pakPath, string.Empty, 1);
+                path = PakReaderHelper.GetPakPath(pakPath);
                 pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.Contains(pak + ".pak"));
                 if (pakPath != null)
                 {

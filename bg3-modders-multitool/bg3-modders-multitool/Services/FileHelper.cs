@@ -16,7 +16,6 @@ namespace bg3_modders_multitool.Services
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Text;
-    using System.Threading.Tasks;
 
     public static class FileHelper
     {

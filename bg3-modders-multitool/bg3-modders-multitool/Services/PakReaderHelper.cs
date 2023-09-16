@@ -2,7 +2,6 @@
 {
     using LSLib.LS;
     using LSLib.LS.Enums;
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -135,11 +134,21 @@
                 if (File.Exists(pakPath))
                 {
                     var helper = new PakReaderHelper(pakPath);
-                    var regex = new Regex(Regex.Escape(pak + "\\"));
-                    var path = regex.Replace(selectedPath, string.Empty, 1);
-                    helper.DecompressPakFile(path);
+                    helper.DecompressPakFile(GetPakPath(selectedPath));
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the internal pak file path
+        /// </summary>
+        /// <param name="path">The path to convert</param>
+        /// <returns>The internal path</returns>
+        public static string GetPakPath(string path)
+        {
+            var pakName = path.Split('\\')[0];
+            var regex = new Regex(Regex.Escape(pakName + "\\"));
+            return regex.Replace(path, string.Empty, 1);
         }
     }
 }

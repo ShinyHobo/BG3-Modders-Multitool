@@ -22,6 +22,7 @@ namespace bg3_modders_multitool.Services
     public class RootTemplateHelper
     {
         private List<Translation> Translations = new List<Translation>();
+        private List<PakReaderHelper> PakReaderHelpers = new List<PakReaderHelper>();
         private readonly string[] Paks = { "Shared","Gustav" };
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
         private bool Loaded = false;
@@ -103,14 +104,16 @@ namespace bg3_modders_multitool.Services
         {
             return await Task.Run(() => {
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
-
-                // check if Models directory exists
-                if(!Directory.Exists($"{FileHelper.UnpackedDataPath}\\Models"))
+                var paks = PakReaderHelper.GetPakList();
+                foreach (var pak in paks)
                 {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
+                    var helper = new PakReaderHelper(pak);
+                    if (helper.PackagedFiles != null)
+                    {
+                        PakReaderHelpers.Add(helper);
+                    }
                 }
 
-                
                 ReadVisualBanks();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 ReadTranslations();
@@ -596,17 +599,6 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
             }
 
-            var helpers = new List<PakReaderHelper>();
-            var paks = PakReaderHelper.GetPakList();
-            foreach (var pak in paks)
-            {
-                var helper = new PakReaderHelper(pak);
-                if (helper.PackagedFiles != null)
-                {
-                    helpers.Add(helper);
-                }
-            }
-
             #endregion
             Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, (visualBankFile, loopTask) =>
             {
@@ -615,9 +607,9 @@ namespace bg3_modders_multitool.Services
                 var fileExists = File.Exists(fileToExist) || File.Exists(fileToExist + ".lsx");
                 if(!fileExists)
                 {
-                    var helper = helpers.FirstOrDefault(h => h.PakName == visualBankFile.Split('\\')[0]);
-                    var regex = new Regex(Regex.Escape(helper.PakName + "\\"));
-                    helper.DecompressPakFile(regex.Replace(visualBankFile, string.Empty, 1));
+                    PakReaderHelper.GetPakPath(visualBankFile);
+                    var helper = PakReaderHelpers.First(h => h.PakName == visualBankFile.Split('\\')[0]);
+                    helper.DecompressPakFile(PakReaderHelper.GetPakPath(visualBankFile));
                     fileExists = true;
                 }
 
