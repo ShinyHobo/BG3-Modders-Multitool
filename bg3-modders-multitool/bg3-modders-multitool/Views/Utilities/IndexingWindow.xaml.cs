@@ -154,7 +154,6 @@ namespace bg3_modders_multitool.Views
                     helper.DecompressPakFile(path);
                 }
             }
-
             if(ext == ".loca")
             {
                 var newFile = FileHelper.Convert(selectedPath, "xml");

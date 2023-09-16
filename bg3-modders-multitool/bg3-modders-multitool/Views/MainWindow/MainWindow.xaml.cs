@@ -290,6 +290,11 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start("https://github.com/Norbyte/lslib/releases");
         }
+
+        private void ConvertWemLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://katiefrogs.github.io/vgmstream-web/");
+        }
         #endregion
 
         private void CheckForUpdates_Click(object sender, RoutedEventArgs e)

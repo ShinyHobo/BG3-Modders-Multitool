@@ -298,6 +298,9 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   <data name="ConvertOpenButtonTooltip" xml:space="preserve">
     <value>Converts all convertable, unpacked files to .lsx</value>
   </data>
+  <data name="ConvertWemMenu" xml:space="preserve">
+    <value>WEM Converter</value>
+  </data>
   <data name="CopiedToClipboard" xml:space="preserve">
     <value>Copied {0} to clipboard!</value>
     <comment>text</comment>

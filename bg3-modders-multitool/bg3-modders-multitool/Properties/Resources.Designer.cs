@@ -593,6 +593,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WEM Converter.
+        /// </summary>
+        public static string ConvertWemMenu {
+            get {
+                return ResourceManager.GetString("ConvertWemMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copied {0} to clipboard!.
         /// </summary>
         public static string CopiedToClipboard {
