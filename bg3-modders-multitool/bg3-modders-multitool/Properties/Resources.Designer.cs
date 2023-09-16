@@ -1022,7 +1022,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is mising a file exenstion! Please correct and try again. Packing cancelled..
+        ///   Looks up a localized string similar to {0} is mising a file extension! Please correct and try again. Packing cancelled..
         /// </summary>
         public static string FileMissingExtensionError {
             get {
