@@ -23,7 +23,6 @@ namespace bg3_modders_multitool.Services
     {
         private List<Translation> Translations = new List<Translation>();
         private List<PakReaderHelper> PakReaderHelpers = new List<PakReaderHelper>();
-        private readonly string[] Paks = { "Shared","Gustav" };
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
         private bool Loaded = false;
         private bool GameObjectsCached = false;
@@ -115,15 +114,20 @@ namespace bg3_modders_multitool.Services
                 }
 
                 ReadVisualBanks();
+                CloseFileProgress();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 ReadTranslations();
+                CloseFileProgress();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 //ReadTextureBanks();
                 ReadRootTemplate();
+                CloseFileProgress();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 ReadData();
+                CloseFileProgress();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 ReadIcons();
+                CloseFileProgress();
                 if (GameObjectViewModel.LoadingCanceled) return null;
                 if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
                 {
@@ -229,6 +233,7 @@ namespace bg3_modders_multitool.Services
 
             GeneralHelper.WriteToConsole(Properties.Resources.ReadingGameObjects);
             var rootTemplates = GetFileList("GameObjects");
+            ShowFileProgress(rootTemplates.Count);
 #if DEBUG
             var typeBag = new ConcurrentBag<string>();
             var idBag = new ConcurrentBag<string>();
@@ -237,8 +242,18 @@ namespace bg3_modders_multitool.Services
             Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, (rootTemplate, loopState) =>
             {
                 if (GameObjectViewModel.LoadingCanceled) loopState.Break();
+                var fileToExist = rootTemplate;
                 rootTemplate = FileHelper.GetPath(rootTemplate);
-                if (File.Exists(FileHelper.GetPath(rootTemplate)))
+
+                var fileExists = File.Exists(rootTemplate) || File.Exists(rootTemplate + ".lsx");
+                if (!fileExists)
+                {
+                    var helper = PakReaderHelpers.First(h => h.PakName == fileToExist.Split('\\')[0]);
+                    helper.DecompressPakFile(PakReaderHelper.GetPakPath(fileToExist));
+                    fileExists = true;
+                }
+
+                if (fileExists)
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", Path.ChangeExtension(rootTemplate, "lsx"));
                     if (File.Exists(FileHelper.GetPath(rootTemplatePath)))
@@ -314,8 +329,11 @@ namespace bg3_modders_multitool.Services
                             return;
                         }
                     }
+                    UpdateFileProgress();
                 }
             });
+            CloseFileProgress();
+            if (GameObjectViewModel.LoadingCanceled) return false;
             #if DEBUG
             FileHelper.SerializeObject(typeBag.ToList().Distinct().ToList(), "GameObjectTypes");
             FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
@@ -586,16 +604,7 @@ namespace bg3_modders_multitool.Services
             visualBankFiles = visualBankFiles.Distinct().ToList();
             if (visualBankFiles.Count > 0)
             {
-                App.Current.Dispatcher.Invoke(() => {
-                    var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
-                    if (dataContext != null)
-                    {
-                        dataContext.SearchResults.IsIndexing = true;
-                        dataContext.SearchResults.IndexFileTotal = visualBankFiles.Count;
-                        dataContext.SearchResults.IndexStartTime = DateTime.Now;
-                        dataContext.SearchResults.IndexFileCount = 0;
-                    }
-                });
+                ShowFileProgress(visualBankFiles.Count);
                 GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
             }
 
@@ -607,7 +616,6 @@ namespace bg3_modders_multitool.Services
                 var fileExists = File.Exists(fileToExist) || File.Exists(fileToExist + ".lsx");
                 if(!fileExists)
                 {
-                    PakReaderHelper.GetPakPath(visualBankFile);
                     var helper = PakReaderHelpers.First(h => h.PakName == visualBankFile.Split('\\')[0]);
                     helper.DecompressPakFile(PakReaderHelper.GetPakPath(visualBankFile));
                     fileExists = true;
@@ -685,14 +693,11 @@ namespace bg3_modders_multitool.Services
                     finally
                     {
                         reader.Dispose();
-                        App.Current.Dispatcher.Invoke(() => {
-                            var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
-                            if (dataContext != null)
-                                dataContext.SearchResults.IndexFileCount++;
-                        });
+                        UpdateFileProgress();
                     }
                 }
             });
+            CloseFileProgress();
             if (GameObjectViewModel.LoadingCanceled) return false;
             CharacterVisualBanks = characterVisualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             VisualBanks = visualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -763,5 +768,48 @@ namespace bg3_modders_multitool.Services
             }
         }
         #endregion
+
+        /// <summary>
+        /// Displays the file progress bar and initilizes the data fields
+        /// Disables index and file buttons
+        /// </summary>
+        /// <param name="fileCount">The number of files</param>
+        private static void ShowFileProgress(int fileCount)
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                {
+                    dataContext.SearchResults.IsIndexing = true;
+                    dataContext.SearchResults.IndexFileTotal = fileCount;
+                    dataContext.SearchResults.IndexStartTime = DateTime.Now;
+                    dataContext.SearchResults.IndexFileCount = 0;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Updates the file progress bar
+        /// </summary>
+        private static void UpdateFileProgress()
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                    dataContext.SearchResults.IndexFileCount++;
+            });
+        }
+
+        /// <summary>
+        /// Hides the file progress bar and re-enables the buttons
+        /// </summary>
+        private static void CloseFileProgress()
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                    dataContext.SearchResults.IsIndexing = false;
+            });
+        }
     }
 }
