@@ -548,6 +548,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Convert &amp; Open.
+        /// </summary>
+        public static string ConvertAndOpenButton {
+            get {
+                return ResourceManager.GetString("ConvertAndOpenButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Convert from atlas sheet to frames.
         /// </summary>
         public static string ConvertFromAtlasToFrames {
@@ -1036,6 +1045,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FileNotFound {
             get {
                 return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Operations.
+        /// </summary>
+        public static string FileOperationsMenu {
+            get {
+                return ResourceManager.GetString("FileOperationsMenu", resourceCulture);
             }
         }
         
@@ -1941,6 +1959,24 @@ namespace bg3_modders_multitool.Properties {
         public static string On {
             get {
                 return ResourceManager.GetString("On", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string OpenButton {
+            get {
+                return ResourceManager.GetString("OpenButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open .dae.
+        /// </summary>
+        public static string OpenDaeButton {
+            get {
+                return ResourceManager.GetString("OpenDaeButton", resourceCulture);
             }
         }
         

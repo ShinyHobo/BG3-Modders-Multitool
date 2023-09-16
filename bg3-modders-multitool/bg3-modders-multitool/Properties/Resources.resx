@@ -283,6 +283,9 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   <data name="ConstructingAtlas" xml:space="preserve">
     <value>Constructing atlas from selected frames...</value>
   </data>
+  <data name="ConvertAndOpenButton" xml:space="preserve">
+    <value>Convert &amp; Open</value>
+  </data>
   <data name="ConvertFromAtlasToFrames" xml:space="preserve">
     <value>Convert from atlas sheet to frames</value>
   </data>
@@ -476,6 +479,9 @@ Do you wish to continue?</value>
   </data>
   <data name="FileNotFound" xml:space="preserve">
     <value>File not found.</value>
+  </data>
+  <data name="FileOperationsMenu" xml:space="preserve">
+    <value>File Operations</value>
   </data>
   <data name="FileTypeNotSupported" xml:space="preserve">
     <value>File type  {0} not supported!</value>
@@ -794,6 +800,12 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="On" xml:space="preserve">
     <value>on</value>
+  </data>
+  <data name="OpenButton" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="OpenDaeButton" xml:space="preserve">
+    <value>Open .dae</value>
   </data>
   <data name="OpenFolderTooltip" xml:space="preserve">
     <value>Open folder</value>

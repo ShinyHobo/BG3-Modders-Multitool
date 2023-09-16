@@ -117,15 +117,15 @@ namespace bg3_modders_multitool.Views
                     convertAndOpenButton.IsEnabled = true;
                     if(isGr2)
                     {
-                        convertAndOpenButton.Content = "Open .dae";
+                        convertAndOpenButton.Content = Properties.Resources.OpenDaeButton;
                     }
                     else if(FileHelper.CanConvertToLsx(vm.SelectedPath)||vm.SelectedPath.EndsWith(".loca"))
                     {
-                        convertAndOpenButton.Content = "Convert & Open";
+                        convertAndOpenButton.Content = Properties.Resources.ConvertAndOpenButton;
                     }
                     else
                     {
-                        convertAndOpenButton.Content = "Open";
+                        convertAndOpenButton.Content = Properties.Resources.OpenButton;
                     }
                 }
             }

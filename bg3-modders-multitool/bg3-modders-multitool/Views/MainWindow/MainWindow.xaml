@@ -31,7 +31,7 @@
                             <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
                                 ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
                         </MenuItem>
-                        <MenuItem Header="File Operations" Icon="🗃️">
+                        <MenuItem Header="{x:Static p:Resources.FileOperationsMenu}" Icon="🗃️">
                             <MenuItem Header="{x:Static p:Resources.UnpackFilesButton}" Click="Unpack_Click" Icon="🗜️"
                                       IsEnabled="{Binding UnpackAllowed}" ToolTip="{x:Static p:Resources.UnpackButtonTooltip}"/>
                             <MenuItem Header="{x:Static p:Resources.DecompressFilesButton}" Click="Decompress_Click" Icon="🎈"
