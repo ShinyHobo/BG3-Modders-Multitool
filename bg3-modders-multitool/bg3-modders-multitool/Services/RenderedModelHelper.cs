@@ -114,6 +114,7 @@ namespace bg3_modders_multitool.Services
         public static Dictionary<string, List<MeshGeometry3DObject>> GetMesh(string filename, Dictionary<string, Tuple<string, string>> materials,
             Dictionary<string, string> slotTypes, Dictionary<string, string> materialBanks, Dictionary<string, string> textureBanks)
         {
+            PakReaderHelper.OpenPakFile(filename + ".GR2");
             var file = LoadFile(filename);
             if (file == null)
                 return null;

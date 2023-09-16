@@ -114,16 +114,17 @@
         }
 
         /// <summary>
-        /// Opens the decompress the selected pak file if it is not already
+        /// Opens and decompresses the selected pak file if it is not already
         /// </summary>
         /// <param name="selectedPath">The selected pak file path</param>
         internal static void OpenPakFile(string selectedPath)
         {
+            selectedPath = selectedPath.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
             if (!File.Exists(FileHelper.GetPath(selectedPath)))
             {
                 var pak = selectedPath.Split('\\')[0];
                 var pakFile = $"{pak}.pak";
-                var paks = PakReaderHelper.GetPakList();
+                var paks = GetPakList();
                 var pakPath = paks.FirstOrDefault(p => p.Contains(pakFile));
                 if (File.Exists(pakPath))
                 {
