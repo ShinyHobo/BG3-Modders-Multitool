@@ -21,8 +21,9 @@ namespace bg3_modders_multitool.Services
 
     public class RootTemplateHelper
     {
+        #region Properties
         private List<Translation> Translations = new List<Translation>();
-        private readonly string[] Paks = { "Shared","Gustav" };
+        public List<PakReaderHelper> PakReaderHelpers { get; private set; } = new List<PakReaderHelper>();
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
         private bool Loaded = false;
         private bool GameObjectsCached = false;
@@ -41,6 +42,7 @@ namespace bg3_modders_multitool.Services
         public Dictionary<string, string> BodySetVisuals { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> MaterialBanks { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> TextureBanks { get; set; } = new Dictionary<string, string>();
+        #endregion
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
@@ -94,6 +96,7 @@ namespace bg3_modders_multitool.Services
             Races?.Clear();
             StatStructures?.Clear();
             TextureAtlases?.Clear();
+            PakReaderHelpers.Clear();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -103,31 +106,38 @@ namespace bg3_modders_multitool.Services
         {
             return await Task.Run(() => {
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
-
-                // check if Models directory exists
-                if(!Directory.Exists($"{FileHelper.UnpackedDataPath}\\Models"))
+                var paks = PakReaderHelper.GetPakList();
+                foreach (var pak in paks)
                 {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
+                    var helper = new PakReaderHelper(pak);
+                    if (helper.PackagedFiles != null)
+                    {
+                        PakReaderHelpers.Add(helper);
+                    }
                 }
 
-                
                 ReadVisualBanks();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                CloseFileProgress();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 ReadTranslations();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                CloseFileProgress();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 //ReadTextureBanks();
                 ReadRootTemplate();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                CloseFileProgress();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 ReadData();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 ReadIcons();
-                if (GameObjectViewModel.LoadingCanceled) return null;
-                if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindIconsPak);
-                }
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 SortRootTemplate();
-                if (GameObjectViewModel.LoadingCanceled) return null;
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
+
+                canceled:
+                if (GameObjectViewModel.LoadingCanceled) {
+                    return null;
+                }
+
                 Loaded = true;
                 return string.Join(",", GameObjectAttributes.Values.GroupBy(g => g).Select(g => g.Last()).ToList());
             });
@@ -164,8 +174,14 @@ namespace bg3_modders_multitool.Services
             var xmlPath = Path.ChangeExtension(selectedLanguagePath, ".xml");
             var translationFileConverted = FileHelper.GetPath(xmlPath);
             var pathCheck = translationFileConverted.Replace(".xml", ".loca.xml");
-            if (!File.Exists(translationFileConverted)&&File.Exists(pathCheck))
+            if (!File.Exists(translationFileConverted) && File.Exists(pathCheck))
             {
+                translationFileConverted = pathCheck;
+            } 
+            else if(!File.Exists(translationFileConverted) && !File.Exists(pathCheck))
+            {
+                var helper = PakReaderHelpers.First(h => h.PakName == selectedLanguagePath.Split('\\')[0]);
+                helper.DecompressPakFile(PakReaderHelper.GetPakPath(selectedLanguagePath));
                 translationFileConverted = pathCheck;
             }
 
@@ -226,6 +242,7 @@ namespace bg3_modders_multitool.Services
 
             GeneralHelper.WriteToConsole(Properties.Resources.ReadingGameObjects);
             var rootTemplates = GetFileList("GameObjects");
+            ShowFileProgress(rootTemplates.Count);
 #if DEBUG
             var typeBag = new ConcurrentBag<string>();
             var idBag = new ConcurrentBag<string>();
@@ -234,8 +251,18 @@ namespace bg3_modders_multitool.Services
             Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, (rootTemplate, loopState) =>
             {
                 if (GameObjectViewModel.LoadingCanceled) loopState.Break();
+                var fileToExist = rootTemplate;
                 rootTemplate = FileHelper.GetPath(rootTemplate);
-                if (File.Exists(FileHelper.GetPath(rootTemplate)))
+
+                var fileExists = File.Exists(rootTemplate) || File.Exists(rootTemplate + ".lsx");
+                if (!fileExists)
+                {
+                    var helper = PakReaderHelpers.First(h => h.PakName == fileToExist.Split('\\')[0]);
+                    helper.DecompressPakFile(PakReaderHelper.GetPakPath(fileToExist));
+                    fileExists = true;
+                }
+
+                if (fileExists)
                 {
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", Path.ChangeExtension(rootTemplate, "lsx"));
                     if (File.Exists(FileHelper.GetPath(rootTemplatePath)))
@@ -311,8 +338,11 @@ namespace bg3_modders_multitool.Services
                             return;
                         }
                     }
+                    UpdateFileProgress();
                 }
             });
+            CloseFileProgress();
+            if (GameObjectViewModel.LoadingCanceled) return false;
             #if DEBUG
             FileHelper.SerializeObject(typeBag.ToList().Distinct().ToList(), "GameObjectTypes");
             FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
@@ -458,45 +488,43 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the stats were read.</returns>
         private bool ReadData()
         {
-            var dataInfo = new DirectoryInfo(FileHelper.UnpackedDataPath);
-            var dataDirs = dataInfo.GetDirectories("Data", System.IO.SearchOption.AllDirectories).Where(d => d.Parent.Name == "Generated");
-            foreach(var dataDir in dataDirs)
+            foreach(var pak in PakReaderHelpers)
             {
-                if (Directory.Exists(dataDir.FullName))
+                var files = pak.PackagedFiles.Where(pf => pf.Name.Contains("Stats/Generated/Data"))
+                    .Where(pf => Path.GetExtension(pf.Name) == ".txt" && !ExcludedData.Contains(Path.GetFileNameWithoutExtension(pf.Name)))
+                    .Select(pf => pf.Name);
+
+                foreach (var file in files)
                 {
-                    var dataFiles = Directory.EnumerateFiles(dataDir.FullName, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
-                    foreach (var file in dataFiles)
+                    if (GameObjectViewModel.LoadingCanceled) return false;
+                    var fileType = Models.StatStructures.StatStructure.FileType(file);
+                    var line = string.Empty;
+
+                    var contents = pak.ReadPakFileContents(file);
+
+                    using (var ms = new System.IO.MemoryStream(contents))
+                    using (var fileStream = new System.IO.StreamReader(ms))
                     {
-                        if (GameObjectViewModel.LoadingCanceled) return false;
-                        var fileType = Models.StatStructures.StatStructure.FileType(file);
-                        var line = string.Empty;
-                        using (var fileStream = new System.IO.StreamReader(file))
+                        while ((line = fileStream.ReadLine()) != null)
                         {
-                            while ((line = fileStream.ReadLine()) != null)
+                            if (line.Contains("new entry"))
                             {
-                                if (line.Contains("new entry"))
-                                {
-                                    StatStructures.Add(Models.StatStructures.StatStructure.New(fileType, line.Substring(10)));
-                                }
-                                else if (line.IndexOf("type") == 0)
-                                {
-                                    StatStructures.Last().Type = fileType;
-                                }
-                                else if (line.IndexOf("using") == 0)
-                                {
-                                    StatStructures.Last().InheritProperties(line, StatStructures);
-                                }
-                                else if (!string.IsNullOrEmpty(line))
-                                {
-                                    StatStructures.Last().LoadProperty(line);
-                                }
+                                StatStructures.Add(Models.StatStructures.StatStructure.New(fileType, line.Substring(10)));
+                            }
+                            else if (line.IndexOf("type") == 0)
+                            {
+                                StatStructures.Last().Type = fileType;
+                            }
+                            else if (line.IndexOf("using") == 0)
+                            {
+                                StatStructures.Last().InheritProperties(line, StatStructures);
+                            }
+                            else if (!string.IsNullOrEmpty(line))
+                            {
+                                StatStructures.Last().LoadProperty(line);
                             }
                         }
                     }
-                }
-                else
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToReadData, dataDir.FullName.Replace(FileHelper.UnpackedDataPath+@"\",string.Empty));
                 }
             }
             return true;
@@ -511,19 +539,9 @@ namespace bg3_modders_multitool.Services
             var iconFiles = GetFileList("IconUVList");
             foreach(var iconFile in iconFiles)
             {
-                var file = new FileInfo(FileHelper.GetPath(iconFile));
-                if (file.Exists)
-                {
-                    try
-                    {
-                        TextureAtlases.Add(TextureAtlas.Read(file.FullName, new DirectoryInfo(iconFile).Parent.Parent.Name));
-                    }
-                    catch
-                    {
-                        GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, file);
-                    }
-                }
-                
+                var helper = PakReaderHelpers.First(h => h.PakName == iconFile.Split('\\')[0]);
+                var contents = helper.ReadPakFileContents(PakReaderHelper.GetPakPath(iconFile));
+                TextureAtlases.Add(TextureAtlas.Read(contents, iconFile, new DirectoryInfo(iconFile).Parent.Parent.Name));
             }
             return true;
         }
@@ -550,11 +568,6 @@ namespace bg3_modders_multitool.Services
                 TextureBanks = deserializedTextureBanks;
                 return true;
             }
-
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                return (App.Current.MainWindow.DataContext as ViewModels.MainWindow).SearchResults.PakUnpackHelper.DecompressAllConvertableFiles(null, true);
-            }).Wait();
 
             if (GameObjectViewModel.LoadingCanceled) return false;
 
@@ -587,82 +600,101 @@ namespace bg3_modders_multitool.Services
             visualBankFiles.AddRange(characterVisualBanksFiles);
             visualBankFiles = visualBankFiles.Distinct().ToList();
             if (visualBankFiles.Count > 0)
+            {
+                ShowFileProgress(visualBankFiles.Count);
                 GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
+            }
+
             #endregion
             Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, (visualBankFile, loopTask) =>
             {
                 if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
-                if (File.Exists(FileHelper.GetPath(visualBankFile)))
+                var fileToExist = FileHelper.GetPath(visualBankFile);
+                var fileExists = File.Exists(fileToExist) || File.Exists(fileToExist + ".lsx");
+                if(!fileExists)
                 {
+                    var helper = PakReaderHelpers.First(h => h.PakName == visualBankFile.Split('\\')[0]);
+                    helper.DecompressPakFile(PakReaderHelper.GetPakPath(visualBankFile));
+                    fileExists = true;
+                }
+
+                if (fileExists)
+                {
+                    XmlReader reader;
+
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", Path.ChangeExtension(visualBankFile, "lsx"));
+                    reader = XmlReader.Create(FileHelper.GetPath(visualBankFilePath));
 
                     try
                     {
-                        using (XmlReader reader = XmlReader.Create(FileHelper.GetPath(visualBankFilePath)))
+                        reader.MoveToContent();
+                        while (!reader.EOF)
                         {
-                            reader.MoveToContent();
-                            while (!reader.EOF)
+                            if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
+                            if (reader.Name == "region")
                             {
-                                if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
-                                if (reader.Name == "region")
+                                var sectionId = reader.GetAttribute("id");
+                                var isCharacterVisualBank = sectionId == "CharacterVisualBank";
+                                var isVisualBank = sectionId == "VisualBank";
+                                var isMaterialBank = sectionId == "MaterialBank";
+                                var isTextureBank = sectionId == "TextureBank";
+
+                                if (isCharacterVisualBank || isVisualBank || isMaterialBank || isTextureBank)
                                 {
-                                    var sectionId = reader.GetAttribute("id");
-                                    var isCharacterVisualBank = sectionId == "CharacterVisualBank";
-                                    var isVisualBank = sectionId == "VisualBank";
-                                    var isMaterialBank = sectionId == "MaterialBank";
-                                    var isTextureBank = sectionId == "TextureBank";
-
-                                    if (isCharacterVisualBank || isVisualBank || isMaterialBank || isTextureBank)
+                                    if (!reader.ReadToDescendant("children"))
                                     {
-                                        if (!reader.ReadToDescendant("children"))
-                                        {
-                                            reader.ReadToFollowing("region");
-                                        }
+                                        reader.ReadToFollowing("region");
+                                    }
 
-                                        reader.ReadToDescendant("node");
+                                    reader.ReadToDescendant("node");
+                                    do
+                                    {
+                                        reader.ReadToDescendant("attribute");
+                                        var resourceId = string.Empty;
+                                        var bodySetVisual = string.Empty;
                                         do
                                         {
-                                            reader.ReadToDescendant("attribute");
-                                            var resourceId = string.Empty;
-                                            var bodySetVisual = string.Empty;
-                                            do
+                                            var attributeId = reader.GetAttribute("id");
+                                            if (attributeId == "ID")
                                             {
-                                                var attributeId = reader.GetAttribute("id");
-                                                if (attributeId == "ID")
-                                                {
-                                                    resourceId = reader.GetAttribute("value");
-                                                }
-                                                else if (attributeId == "BodySetVisual")
-                                                {
-                                                    bodySetVisual = reader.GetAttribute("value");
-                                                    if (!string.IsNullOrEmpty(bodySetVisual))
-                                                        bodySetVisuals.TryAdd(bodySetVisual, visualBankFile);
-                                                }
-                                            } while (reader.ReadToNextSibling("attribute"));
+                                                resourceId = reader.GetAttribute("value");
+                                            }
+                                            else if (attributeId == "BodySetVisual")
+                                            {
+                                                bodySetVisual = reader.GetAttribute("value");
+                                                if (!string.IsNullOrEmpty(bodySetVisual))
+                                                    bodySetVisuals.TryAdd(bodySetVisual, visualBankFile + ".lsx");
+                                            }
+                                        } while (reader.ReadToNextSibling("attribute"));
 
-                                            if (isCharacterVisualBank)
-                                                characterVisualBanks.TryAdd(resourceId, visualBankFile);
-                                            else if (isMaterialBank)
-                                                materialBanks.TryAdd(resourceId, visualBankFile);
-                                            else if (isTextureBank)
-                                                textureBanks.TryAdd(resourceId, visualBankFile);
-                                            else if (isVisualBank)
-                                                visualBanks.TryAdd(resourceId, visualBankFile);
-                                        } while (reader.ReadToNextSibling("node"));
-                                    }
+                                        if (isCharacterVisualBank)
+                                            characterVisualBanks.TryAdd(resourceId, visualBankFile + ".lsx");
+                                        else if (isMaterialBank)
+                                            materialBanks.TryAdd(resourceId, visualBankFile + ".lsx");
+                                        else if (isTextureBank)
+                                            textureBanks.TryAdd(resourceId, visualBankFile + ".lsx");
+                                        else if (isVisualBank)
+                                            visualBanks.TryAdd(resourceId, visualBankFile + ".lsx");
+                                    } while (reader.ReadToNextSibling("node"));
                                 }
-                                reader.ReadToFollowing("region");
                             }
+                            reader.ReadToFollowing("region");
                         }
                     }
                     catch
                     {
-                        var filePath2 = visualBankFilePath.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
-                        GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, filePath2);
+                        GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
+                        reader.Dispose();
                         return;
+                    }
+                    finally
+                    {
+                        reader.Dispose();
+                        UpdateFileProgress();
                     }
                 }
             });
+            CloseFileProgress();
             if (GameObjectViewModel.LoadingCanceled) return false;
             CharacterVisualBanks = characterVisualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             VisualBanks = visualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -692,10 +724,10 @@ namespace bg3_modders_multitool.Services
                 rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsx")));
             }).Wait();
 
-            // Use slow query to double check that files exist in index
+            // Double check that files exist in index
             if(rtList.Count == 0)
             {
-                IndexHelper.SearchFiles(searchTerm, false).ContinueWith(results => {
+                IndexHelper.SearchFiles(searchTerm, false, null, false).ContinueWith(results => {
                     rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsf")));
                 }).Wait();
             }
@@ -733,5 +765,48 @@ namespace bg3_modders_multitool.Services
             }
         }
         #endregion
+
+        /// <summary>
+        /// Displays the file progress bar and initilizes the data fields
+        /// Disables index and file buttons
+        /// </summary>
+        /// <param name="fileCount">The number of files</param>
+        private static void ShowFileProgress(int fileCount)
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                {
+                    dataContext.SearchResults.IsIndexing = true;
+                    dataContext.SearchResults.IndexFileTotal = fileCount;
+                    dataContext.SearchResults.IndexStartTime = DateTime.Now;
+                    dataContext.SearchResults.IndexFileCount = 0;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Updates the file progress bar
+        /// </summary>
+        private static void UpdateFileProgress()
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                    dataContext.SearchResults.IndexFileCount++;
+            });
+        }
+
+        /// <summary>
+        /// Hides the file progress bar and re-enables the buttons
+        /// </summary>
+        private static void CloseFileProgress()
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                    dataContext.SearchResults.IsIndexing = false;
+            });
+        }
     }
 }

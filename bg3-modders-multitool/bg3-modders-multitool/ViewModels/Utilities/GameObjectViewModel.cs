@@ -187,18 +187,29 @@ namespace bg3_modders_multitool.ViewModels
                     Icon = null;
                     if(Info.Icon != null)
                     {
-                        Icon = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon))?.GetIcon(Info.Icon);
+                        var atlas = RootTemplateHelper.TextureAtlases.FirstOrDefault(ta => ta == null ? false : ta.Icons.Any(icon => icon.MapKey == Info.Icon));
+                        if (atlas != null)
+                        {
+                            var pakName = atlas.Path.Split('\\')[0];
+                            var pak = RootTemplateHelper.PakReaderHelpers.FirstOrDefault(pa => pa.PakName == pakName);
+                            Icon = atlas.GetIcon(Info.Icon, pak);
+                        }
+
                         if (Icon == null)
                         {
-                            var iconInfo = new FileInfo(FileHelper.GetPath($"Shared\\Mods\\SharedDev\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));
-                            if (!iconInfo.Exists)
-                                iconInfo = new FileInfo(FileHelper.GetPath($"Shared\\Mods\\Shared\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));
-                            if(!iconInfo.Exists)
-                                iconInfo = new FileInfo(FileHelper.GetPath($"Gustav_Textures\\Mods\\GustavDev\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));
-                            if (!iconInfo.Exists)
-                                iconInfo = new FileInfo(FileHelper.GetPath($"Gustav_Textures\\Mods\\Gustav\\GUI\\Assets\\Portraits\\{_info.Icon}.DDS"));
-                            if (iconInfo.Exists)
-                                Icon = TextureAtlas.ConvertDDSToBitmap(iconInfo.FullName);
+                            var sharedPak = RootTemplateHelper.PakReaderHelpers.FirstOrDefault(pa => pa.PakName == "Shared");
+                            var gustavTexturesPak = RootTemplateHelper.PakReaderHelpers.FirstOrDefault(pa => pa.PakName == "Gustav_Textures");
+
+                            var iconInfo = sharedPak.PackagedFiles.FirstOrDefault(pf => pf.Name.Equals($"Mods/SharedDev/GUI/Assets/Portraits/{_info.Icon}.DDS"));
+                            if (iconInfo == null)
+                                iconInfo = sharedPak.PackagedFiles.FirstOrDefault(pf => pf.Name.Equals($"Mods/Shared/GUI/Assets/Portraits/{_info.Icon}.DDS"));
+                            if (iconInfo == null)
+                                iconInfo = gustavTexturesPak.PackagedFiles.FirstOrDefault(pf => pf.Name.Equals($"Mods/GustavDev/GUI/Assets/Portraits/{_info.Icon}.DDS"));
+                            if (iconInfo == null)
+                                iconInfo = gustavTexturesPak.PackagedFiles.FirstOrDefault(pf => pf.Name.Equals($"Mods/Gustav/GUI/Assets/Portraits/{_info.Icon}.DDS"));
+                            
+                            if (iconInfo != null)
+                                Icon = TextureAtlas.ConvertDDSToBitmap(iconInfo);
                         }
                     }
                 }

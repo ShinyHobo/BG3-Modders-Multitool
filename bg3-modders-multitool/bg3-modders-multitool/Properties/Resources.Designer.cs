@@ -548,6 +548,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Convert &amp; Open.
+        /// </summary>
+        public static string ConvertAndOpenButton {
+            get {
+                return ResourceManager.GetString("ConvertAndOpenButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Convert from atlas sheet to frames.
         /// </summary>
         public static string ConvertFromAtlasToFrames {
@@ -593,6 +602,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WEM Converter.
+        /// </summary>
+        public static string ConvertWemMenu {
+            get {
+                return ResourceManager.GetString("ConvertWemMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copied {0} to clipboard!.
         /// </summary>
         public static string CopiedToClipboard {
@@ -613,11 +631,20 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} appears to be corrupt or missing. Delete file and Decompress, then try again. Skipping file....
+        ///   Looks up a localized string similar to {0} appears to be corrupt or missing. Skipping file....
         /// </summary>
         public static string CorruptXmlFile {
             get {
                 return ResourceManager.GetString("CorruptXmlFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load image: {0}.
+        /// </summary>
+        public static string CouldNotLoadImage {
+            get {
+                return ResourceManager.GetString("CouldNotLoadImage", resourceCulture);
             }
         }
         
@@ -885,7 +912,8 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to index file [{0}]:\n{1}.
+        ///   Looks up a localized string similar to Failed to index file [{0}]:
+        ///{1}.
         /// </summary>
         public static string FailedToIndexFile {
             get {
@@ -903,7 +931,8 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not load {0}:\n{1}.
+        ///   Looks up a localized string similar to Could not load {0}:
+        ///{1}.
         /// </summary>
         public static string FailedToLoadFile {
             get {
@@ -993,7 +1022,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is mising a file exenstion! Please correct and try again. Packing cancelled..
+        ///   Looks up a localized string similar to {0} is mising a file extension! Please correct and try again. Packing cancelled..
         /// </summary>
         public static string FileMissingExtensionError {
             get {
@@ -1016,6 +1045,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FileNotFound {
             get {
                 return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Operations.
+        /// </summary>
+        public static string FileOperationsMenu {
+            get {
+                return ResourceManager.GetString("FileOperationsMenu", resourceCulture);
             }
         }
         
@@ -1293,7 +1331,9 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to copy to clipboard ({0} blocking):\n{1}\n{2}.
+        ///   Looks up a localized string similar to Failed to copy to clipboard ({0} blocking):
+        ///{1}
+        ///{2}.
         /// </summary>
         public static string GUIDCopyFailed {
             get {
@@ -1410,7 +1450,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Index Files.
+        ///   Looks up a localized string similar to Index UnpackedData Files (Legacy).
         /// </summary>
         public static string IndexFilesButton {
             get {
@@ -1455,11 +1495,20 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No index available! Please unpack game assets and generate an index..
+        ///   Looks up a localized string similar to No index available! Click Utilities =&gt; Index and select an option to generate an index..
         /// </summary>
         public static string IndexNotFound {
             get {
                 return ResourceManager.GetString("IndexNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index Pak Files.
+        /// </summary>
+        public static string IndexPakFilesButton {
+            get {
+                return ResourceManager.GetString("IndexPakFilesButton", resourceCulture);
             }
         }
         
@@ -1910,6 +1959,24 @@ namespace bg3_modders_multitool.Properties {
         public static string On {
             get {
                 return ResourceManager.GetString("On", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string OpenButton {
+            get {
+                return ResourceManager.GetString("OpenButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open .dae.
+        /// </summary>
+        public static string OpenDaeButton {
+            get {
+                return ResourceManager.GetString("OpenDaeButton", resourceCulture);
             }
         }
         

@@ -30,7 +30,7 @@ namespace bg3_modders_multitool.Services
         // audio: .wem
         // video: .bk2
         // shaders: .bshd, .shd
-        private static readonly string[] extensionsToExclude = { ".bin",".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".fbx", ".dae", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd", ".jpg",".gts",".data",".patch" };
+        private static readonly string[] extensionsToExclude = { ".bin",".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".fbx", ".dae", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd", ".jpg",".gts",".data",".patch",".psd" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga", ".jpg" };
         public static readonly string[] BinaryExtensions = { ".lsf", ".bin", ".loca", ".data", ".patch" };
         private static readonly string luceneIndex = "lucene/index";
@@ -50,6 +50,121 @@ namespace bg3_modders_multitool.Services
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
+
+        #region Direct Indexing
+        /// <summary>
+        /// Indexes the pak files directly in memory without the need for unpacking them to disk
+        /// </summary>
+        /// <returns>The indexing task</returns>
+        public Task IndexDirectly()
+        {
+            return Task.Run(() => {
+                Application.Current.Dispatcher.Invoke(() => {
+                    //DataContext.AllowIndexing = false;
+                });
+
+                var helpers = new List<PakReaderHelper>();
+                var fileCount = 0;
+                var paks = PakReaderHelper.GetPakList();
+                foreach ( var pak in paks )
+                {
+                    var helper = new PakReaderHelper(pak);
+                    if (helper.PackagedFiles != null)
+                    {
+                        helpers.Add(helper);
+                        fileCount += helper.PackagedFiles.Count;
+                    }
+                }
+
+                // Display total file count being indexed
+                GeneralHelper.WriteToConsole(Properties.Resources.FileListRetrieved);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IsIndexing = true;
+                    DataContext.IndexFileTotal = fileCount;
+                    DataContext.IndexStartTime = DateTime.Now;
+                    DataContext.IndexFileCount = 0;
+                });
+
+                if (System.IO.Directory.Exists(luceneIndex))
+                    System.IO.Directory.Delete(luceneIndex, true);
+                IndexFilesDirectly(helpers);
+            });
+        }
+
+        /// <summary>
+        /// Indexes the provided pak helpers
+        /// </summary>
+        /// <param name="helpers">The pak reader helpers that contain the files streams</param>
+        private void IndexFilesDirectly(List<PakReaderHelper> helpers)
+        {
+            GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
+            using (Analyzer a = new CustomAnalyzer())
+            {
+                IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                config.SetUseCompoundFile(false);
+                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                {
+                    Parallel.ForEach(helpers, GeneralHelper.ParallelOptions, helper => {
+                        Parallel.ForEach(helper.PackagedFiles, GeneralHelper.ParallelOptions, file => {
+                            try
+                            {
+                                IndexLuceneFileDirectly(file.Name, helper, writer);
+                            }
+                            catch (OutOfMemoryException)
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
+                            }
+                        });
+                    });
+                    GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
+                    writer.Commit();
+                }
+            }
+            GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
+            Application.Current.Dispatcher.Invoke(() => {
+                DataContext.IsIndexing = false;
+            });
+        }
+
+        /// <summary>
+        /// Indexes the file contents
+        /// </summary>
+        /// <param name="file">The internal pak file path</param>
+        /// <param name="helper">The pak helper</param>
+        /// <param name="writer">The index writer</param>
+        private void IndexLuceneFileDirectly(string file, PakReaderHelper helper, IndexWriter writer)
+        {
+            var path = $"{helper.PakName}\\{file}";
+            try
+            {
+                var fileName = Path.GetFileName(file);
+                var extension = Path.GetExtension(file);
+
+                var doc = new Document
+                {
+                    //new Int64Field("id", id, Field.Store.YES),
+                    new TextField("path", path.Replace("/","\\"), Field.Store.YES),
+                    new TextField("title", fileName, Field.Store.YES)
+                };
+
+                // if file type is excluded, only track file name and path so it can be searched for by name
+                if (!extensionsToExclude.Contains(extension))
+                {
+                    var contents = helper.ReadPakFileContents(file);
+                    doc.Add(new TextField("body", System.Text.Encoding.UTF8.GetString(contents), Field.Store.NO));
+                }
+
+                writer.AddDocument(doc);
+            }
+            catch (Exception ex)
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
+            }
+            lock (DataContext)
+                DataContext.IndexFileCount++;
+        }
+        #endregion
 
         #region Indexing
         /// <summary>
@@ -306,44 +421,92 @@ namespace bg3_modders_multitool.Services
         /// <returns>A list of file line and trimmed contents.</returns>
         public Dictionary<long, string> GetFileContents(string path)
         {
-            var lines = new ConcurrentDictionary<long, string>();
-            if (File.Exists(path))
+            var lines = new Dictionary<long, string>();
+            var fileExists = File.Exists(path);
+            var extension = Path.GetExtension(path);
+            var isExcluded = extensionsToExclude.Contains(extension);
+            if (fileExists)
             {
-                var extension = Path.GetExtension(path);
-                var isExcluded = extensionsToExclude.Contains(extension);
                 if (!isExcluded)
                 {
-                    Parallel.ForEach(File.ReadLines(path), GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
-                    {
-                        var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
-                        if (index >= 0)
-                        {
-                            var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
-                            var escapedLine = System.Security.SecurityElement.Escape(line);
-                            escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
-                            lines.TryAdd(lineNumber, escapedLine);
-                        }
-                    });
+                    lines = ReadFileContentsForMatches(File.ReadLines(path));
                 }
+
                 if (lines.Count == 0)
                 {
                     if(imageExtensions.Contains(extension))
                     {
-                        lines.TryAdd(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
-                    }
-                    else
-                    {
-                        lines.TryAdd(0, Properties.Resources.NoLinesFound);
+                        lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{path.Replace("\\\\?\\", "")}\" Height=\"500\"></Image></InlineUIContainer>");
                     }
                 }
             }
             else
             {
-                if (lines.Count == 0)
+                var pakPath = path.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
+                var pak = pakPath.Split('\\')[0];
+                path = PakReaderHelper.GetPakPath(pakPath);
+                pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.Contains(pak + ".pak"));
+                if (pakPath != null)
                 {
-                    lines.TryAdd(0, string.Format(Properties.Resources.FileNoExist, path));
+                    fileExists = true;
+                    var helper = new PakReaderHelper(pakPath);
+                    var contents = helper.ReadPakFileContents(path);
+                    if (!isExcluded)
+                    {
+                        lines = ReadFileContentsForMatches(System.Text.Encoding.UTF8.GetString(contents).Split('\n'));
+                    }
+
+                    if (lines.Count == 0)
+                    {
+                        if (imageExtensions.Contains(extension))
+                        {
+                            if(contents == null)
+                            {
+                                lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
+                            }
+                            else
+                            {
+                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{Convert.ToBase64String(contents)}\" Height=\"500\"></Image></InlineUIContainer>");
+                            }
+                        }
+                    }
                 }
             }
+
+            if (lines.Count == 0)
+            {
+                if(fileExists)
+                {
+                    lines.Add(0, Properties.Resources.NoLinesFound);
+                }
+                else
+                {
+                    lines.Add(0, string.Format(Properties.Resources.FileNoExist, path));
+                }
+            }
+
+            return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        /// <summary>
+        /// Reads the given file contents for line matches and highlights them
+        /// </summary>
+        /// <param name="contents">The file contents</param>
+        /// <returns>The list of matched lines</returns>
+        private Dictionary<long, string> ReadFileContentsForMatches(IEnumerable<string> contents)
+        {
+            var lines = new ConcurrentDictionary<long, string>();
+            Parallel.ForEach(contents, GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
+            {
+                var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
+                if (index >= 0)
+                {
+                    var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
+                    var escapedLine = System.Security.SecurityElement.Escape(line);
+                    escapedLine = escapedLine.Replace(text, $"<Span Background=\"Yellow\">{text}</Span>");
+                    lines.TryAdd(lineNumber, escapedLine);
+                }
+            });
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }

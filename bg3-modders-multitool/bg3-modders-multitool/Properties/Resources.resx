@@ -283,6 +283,9 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   <data name="ConstructingAtlas" xml:space="preserve">
     <value>Constructing atlas from selected frames...</value>
   </data>
+  <data name="ConvertAndOpenButton" xml:space="preserve">
+    <value>Convert &amp; Open</value>
+  </data>
   <data name="ConvertFromAtlasToFrames" xml:space="preserve">
     <value>Convert from atlas sheet to frames</value>
   </data>
@@ -298,6 +301,9 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   <data name="ConvertOpenButtonTooltip" xml:space="preserve">
     <value>Converts all convertable, unpacked files to .lsx</value>
   </data>
+  <data name="ConvertWemMenu" xml:space="preserve">
+    <value>WEM Converter</value>
+  </data>
   <data name="CopiedToClipboard" xml:space="preserve">
     <value>Copied {0} to clipboard!</value>
     <comment>text</comment>
@@ -308,7 +314,11 @@ Dropping a .pak will unpack it into a nearby directory. </value>
 Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.</value>
   </data>
   <data name="CorruptXmlFile" xml:space="preserve">
-    <value>{0} appears to be corrupt or missing. Delete file and Decompress, then try again. Skipping file...</value>
+    <value>{0} appears to be corrupt or missing. Skipping file...</value>
+    <comment>file path</comment>
+  </data>
+  <data name="CouldNotLoadImage" xml:space="preserve">
+    <value>Could not load image: {0}</value>
     <comment>file path</comment>
   </data>
   <data name="DecompressFilesButton" xml:space="preserve">
@@ -413,7 +423,8 @@ Do you wish to continue?</value>
     <comment>loca filename, pak name</comment>
   </data>
   <data name="FailedToIndexFile" xml:space="preserve">
-    <value>Failed to index file [{0}]:\n{1}</value>
+    <value>Failed to index file [{0}]:
+{1}</value>
     <comment>file path, error message</comment>
   </data>
   <data name="FailedToLoadDae" xml:space="preserve">
@@ -421,7 +432,8 @@ Do you wish to continue?</value>
     <comment>error message, inner error message</comment>
   </data>
   <data name="FailedToLoadFile" xml:space="preserve">
-    <value>Could not load {0}:\n{1}</value>
+    <value>Could not load {0}:
+{1}</value>
     <comment>file path, error message</comment>
   </data>
   <data name="FailedToLoadModel" xml:space="preserve">
@@ -458,7 +470,7 @@ Do you wish to continue?</value>
     <value>File list retrieved.</value>
   </data>
   <data name="FileMissingExtensionError" xml:space="preserve">
-    <value>{0} is mising a file exenstion! Please correct and try again. Packing cancelled.</value>
+    <value>{0} is mising a file extension! Please correct and try again. Packing cancelled.</value>
     <comment>file path</comment>
   </data>
   <data name="FileNoExist" xml:space="preserve">
@@ -467,6 +479,9 @@ Do you wish to continue?</value>
   </data>
   <data name="FileNotFound" xml:space="preserve">
     <value>File not found.</value>
+  </data>
+  <data name="FileOperationsMenu" xml:space="preserve">
+    <value>File Operations</value>
   </data>
   <data name="FileTypeNotSupported" xml:space="preserve">
     <value>File type  {0} not supported!</value>
@@ -566,7 +581,9 @@ Are you sure you want to delete the GameObject cache?</value>
     <comment>uuid/guid type, guid/uuid text</comment>
   </data>
   <data name="GUIDCopyFailed" xml:space="preserve">
-    <value>Failed to copy to clipboard ({0} blocking):\n{1}\n{2}</value>
+    <value>Failed to copy to clipboard ({0} blocking):
+{1}
+{2}</value>
     <comment>process name, error message, stack trace</comment>
   </data>
   <data name="HandleLabel" xml:space="preserve">
@@ -606,7 +623,7 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Available index is corrupt. Please rerun the indexer to create a new one.</value>
   </data>
   <data name="IndexFilesButton" xml:space="preserve">
-    <value>Index Files</value>
+    <value>Index UnpackedData Files (Legacy)</value>
   </data>
   <data name="IndexFinished" xml:space="preserve">
     <value>Indexing process finished in {0}.</value>
@@ -622,7 +639,10 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>For creating and searching through an index of the unpacked game files quickly</value>
   </data>
   <data name="IndexNotFound" xml:space="preserve">
-    <value>No index available! Please unpack game assets and generate an index.</value>
+    <value>No index available! Click Utilities =&gt; Index and select an option to generate an index.</value>
+  </data>
+  <data name="IndexPakFilesButton" xml:space="preserve">
+    <value>Index Pak Files</value>
   </data>
   <data name="IndexSearchButton" xml:space="preserve">
     <value>Search Index</value>
@@ -780,6 +800,12 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="On" xml:space="preserve">
     <value>on</value>
+  </data>
+  <data name="OpenButton" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="OpenDaeButton" xml:space="preserve">
+    <value>Open .dae</value>
   </data>
   <data name="OpenFolderTooltip" xml:space="preserve">
     <value>Open folder</value>

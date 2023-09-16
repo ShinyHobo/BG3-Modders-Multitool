@@ -16,21 +16,21 @@ namespace bg3_modders_multitool.Services
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Text;
-    using System.Threading.Tasks;
 
     public static class FileHelper
     {
         public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
         public static readonly string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
-        public static readonly string UnpackedDataPath = $"{Directory.GetCurrentDirectory()}\\UnpackedData";
-        public static readonly string UnpackedModsPath = $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+        public static string UnpackedDataPath => $"{Directory.GetCurrentDirectory()}\\UnpackedData";
+        public static string UnpackedModsPath => $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+        public static string DataDirectory => Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
 
         /// <summary>
         /// List of all known file types used
         /// </summary>
         public static readonly string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".cur",".dae",".dat",
-            ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
+            ".data",".dds",".div",".fbx",".ffxactor",".ffxbones",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
             ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsfx",".lsj",".lsx",".metal",".ogg",".osi",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
             ".txt",".wav",".wem",".xaml",".xml", Properties.Resources.Extensionless
         };
@@ -50,6 +50,11 @@ namespace bg3_modders_multitool.Services
 
             var originalExtension = Path.GetExtension(file);
             var newFile = string.IsNullOrEmpty(originalExtension) ? $"{file}.{extension}" : file.Replace(originalExtension, $"{originalExtension}.{extension}");
+
+            if(File.Exists(GetPath(newFile))) {
+                return newFile;
+            }
+
             var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
             var isConvertableToXml = originalExtension.Contains("loca") && extension == "xml";
             var isConvertableToLoca = originalExtension.Contains("xml") && extension == "loca";
@@ -148,84 +153,6 @@ namespace bg3_modders_multitool.Services
             }
             var extension = Path.GetExtension(file);
             return ConvertableLsxResources.Contains(extension);
-        }
-
-        /// <summary>
-        /// Converts a .wem file to an .ogg file in-place.
-        /// </summary>
-        /// <param name="file">The file to convert.</param>
-        /// <returns>The new file path.</returns>
-        public static string ConvertToOgg(string file)
-        {
-            try
-            {
-                if (CanConvertToOgg(file))
-                {
-                    file = GetPath(file);
-                    var newFile = file.Replace(Path.GetExtension(file), ".ogg");
-                    if (File.Exists(newFile))
-                    {
-                        return newFile;
-                    }
-                    var tempFile = Path.GetTempFileName();
-                    using (System.IO.FileStream fs = new System.IO.FileStream(tempFile,
-                        System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None,
-                        4096, System.IO.FileOptions.RandomAccess))
-                    {
-                        WEMSharp.WEMFile wem = new WEMSharp.WEMFile(file, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
-                        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("bg3_modders_multitool.packed_codebooks_aoTuV_603.bin");
-                        for (int i = 0; i < resource.Length; i++)
-                            fs.WriteByte((byte)resource.ReadByte());
-                        fs.Close();
-
-                        wem.GenerateOGG(newFile, tempFile, false, false);
-                        file = newFile;
-                    }
-                    System.IO.File.Delete(tempFile);
-                }
-            }
-            catch
-            {
-                GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertOgg);
-            }
-            return file;
-        }
-
-        /// <summary>
-        /// Checks to see if the file is convertable to ogg.
-        /// </summary>
-        /// <param name="file">The file to check.</param>
-        /// <returns>Whether or not the file is convertable.</returns>
-        public static bool CanConvertToOgg(string file)
-        {
-            var extension = Path.GetExtension(file);
-            return extension == ".wem";
-        }
-
-        /// <summary>
-        /// Converts .wem files to .ogg and plays them.
-        /// </summary>
-        /// <param name="file">The file to play.</param>
-        public static void PlayAudio(string file)
-        {
-            file = ConvertToOgg(file);
-
-            try
-            {
-                Task.Run(() => {
-                    using (var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(file))
-                    using (var waveOut = new NAudio.Wave.WaveOutEvent())
-                    {
-                        waveOut.Init(vorbisStream);
-                        waveOut.Play(); // is async
-                        while (waveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped);
-                    }
-                });
-            }
-            catch
-            {
-                GeneralHelper.WriteToConsole(Properties.Resources.ProblemPlayingAudio);
-            }
         }
 
         /// <summary>
@@ -442,7 +369,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="setting">Whether to enable or disable the mod.</param>
         public static void CreateDestroyQuickLaunchMod(bool setting)
         {
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            var dataDir = FileHelper.DataDirectory;
             var modLocation = Path.Combine(dataDir, "Video\\");
             var modFilepath = Path.Combine(modLocation,"Splash_Logo_Larian.bk2");
             if (setting)

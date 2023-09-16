@@ -34,10 +34,10 @@ namespace bg3_modders_multitool.Services
         public Task UnpackSelectedPakFiles()
         {
             Directory.CreateDirectory(FileHelper.UnpackedDataPath);
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            if(Directory.Exists(dataDir))
+            var dataDir = FileHelper.DataDirectory;
+            if (Directory.Exists(dataDir))
             {
-                var files = Directory.GetFiles(dataDir, "*.pak", System.IO.SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
+                var files = PakReaderHelper.GetPakList();
                 var pakSelection = new Views.PakSelection(files);
                 pakSelection.ShowDialog();
                 pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();

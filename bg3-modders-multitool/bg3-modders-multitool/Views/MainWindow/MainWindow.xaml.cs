@@ -37,15 +37,8 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private async void Unpack_Click(object sender, RoutedEventArgs e)
         {
-            unpack.Visibility = Visibility.Hidden;
-            unpack_Cancel.Visibility = Visibility.Visible;
             var vm = DataContext as ViewModels.MainWindow;
-            await vm.Unpacker.UnpackSelectedPakFiles().ContinueWith(delegate {
-                Application.Current.Dispatcher.Invoke(() => {
-                    unpack.Visibility = Visibility.Visible;
-                    unpack_Cancel.Visibility = Visibility.Hidden;
-                });
-            });
+            await vm.Unpacker.UnpackSelectedPakFiles();
         }
 
         /// <summary>
@@ -56,8 +49,6 @@ namespace bg3_modders_multitool.Views
         {
             var vm = DataContext as ViewModels.MainWindow;
             vm.Unpacker.Cancelled = true;
-            unpack.Visibility = Visibility.Visible;
-            unpack_Cancel.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -96,16 +87,34 @@ namespace bg3_modders_multitool.Views
 
         private void IndexFiles_Click(object sender, RoutedEventArgs e)
         {
+            IndexFiles(false);
+        }
+
+        private void indexPakFiles_Click(object sender, RoutedEventArgs e)
+        {
+            IndexFiles(true);
+        }
+
+        /// <summary>
+        /// Creates a confirmation prompt
+        /// On accept, deletes the index and generates a new one
+        /// </summary>
+        /// <param name="directIndex">Whether or not to index the pak files directly, or index the files inside UnpackedData (legacy mode)</param>
+        private void IndexFiles(bool directIndex)
+        {
             var result = System.Windows.Forms.DialogResult.OK;
-            if(IndexHelper.IndexDirectoryExists())
+            if (IndexHelper.IndexDirectoryExists())
             {
                 result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
             }
 
-            if(result.Equals(System.Windows.Forms.DialogResult.OK))
+            if (result.Equals(System.Windows.Forms.DialogResult.OK))
             {
                 var vm = DataContext as ViewModels.MainWindow;
-                vm.SearchResults.IndexHelper.Index();
+                if(directIndex)
+                    vm.SearchResults.IndexHelper.IndexDirectly();
+                else
+                    vm.SearchResults.IndexHelper.Index();
             }
         }
         #endregion
@@ -113,7 +122,7 @@ namespace bg3_modders_multitool.Views
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ViewModels.MainWindow;
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            var dataDir = FileHelper.DataDirectory;
             if (Directory.Exists(dataDir))
             {
                 System.Diagnostics.Process.Start(vm.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
@@ -222,8 +231,8 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void gameDataFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
-            if(Directory.Exists(dataDir))
+            var dataDir = FileHelper.DataDirectory;
+            if (Directory.Exists(dataDir))
             {
                 System.Diagnostics.Process.Start(dataDir);
             }
@@ -290,6 +299,11 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start("https://github.com/Norbyte/lslib/releases");
         }
+
+        private void ConvertWemLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://katiefrogs.github.io/vgmstream-web/");
+        }
         #endregion
 
         private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
@@ -328,12 +342,7 @@ namespace bg3_modders_multitool.Views
                 DragAndDropHelper.CleanTempDirectory();
 
                 var vm = DataContext as ViewModels.MainWindow;
-                await vm.Unpacker.UnpackPakFiles(unpackPakDialog.FileNames.ToList(), false).ContinueWith(delegate {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        unpack.Visibility = Visibility.Visible;
-                        unpack_Cancel.Visibility = Visibility.Hidden;
-                    });
-                });
+                await vm.Unpacker.UnpackPakFiles(unpackPakDialog.FileNames.ToList(), false);
             }
         }
 

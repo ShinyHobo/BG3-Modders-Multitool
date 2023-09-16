@@ -117,19 +117,15 @@ namespace bg3_modders_multitool.Views
                     convertAndOpenButton.IsEnabled = true;
                     if(isGr2)
                     {
-                        convertAndOpenButton.Content = "Open .dae";
+                        convertAndOpenButton.Content = Properties.Resources.OpenDaeButton;
                     }
-                    else if(FileHelper.CanConvertToLsx(vm.SelectedPath))
+                    else if(FileHelper.CanConvertToLsx(vm.SelectedPath)||vm.SelectedPath.EndsWith(".loca"))
                     {
-                        convertAndOpenButton.Content = "Convert & Open";
-                    }
-                    else if (FileHelper.CanConvertToOgg(vm.SelectedPath))
-                    {
-                        convertAndOpenButton.Content = "Play Audio (ogg)";
+                        convertAndOpenButton.Content = Properties.Resources.ConvertAndOpenButton;
                     }
                     else
                     {
-                        convertAndOpenButton.Content = "Open";
+                        convertAndOpenButton.Content = Properties.Resources.OpenButton;
                     }
                 }
             }
@@ -142,9 +138,13 @@ namespace bg3_modders_multitool.Views
             var vm = DataContext as SearchResults;
             var ext = Path.GetExtension(vm.SelectedPath);
             var selectedPath = FileHelper.GetPath(vm.SelectedPath);
-            if (ext == ".wem")
+
+            PakReaderHelper.OpenPakFile(vm.SelectedPath);
+            
+            if(ext == ".loca")
             {
-                FileHelper.PlayAudio(selectedPath);
+                var newFile = FileHelper.Convert(selectedPath, "xml");
+                FileHelper.OpenFile(newFile);
             }
             else
             {
@@ -202,8 +202,19 @@ namespace bg3_modders_multitool.Views
             var line = int.Parse(content.Text.Split(':').First());
             var vm = DataContext as SearchResults;
             var selectedPath = FileHelper.GetPath(vm.SelectedPath);
-            var newFile = FileHelper.Convert(selectedPath, "lsx");
-            FileHelper.OpenFile(newFile, line);
+            PakReaderHelper.OpenPakFile(vm.SelectedPath);
+
+            var ext = Path.GetExtension(vm.SelectedPath);
+            if (ext == ".loca")
+            {
+                var newFile = FileHelper.Convert(selectedPath, "xml");
+                FileHelper.OpenFile(newFile, line);
+            }
+            else
+            {
+                var newFile = FileHelper.Convert(selectedPath, "lsx");
+                FileHelper.OpenFile(newFile, line);
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
