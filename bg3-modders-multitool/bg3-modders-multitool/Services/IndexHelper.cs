@@ -70,7 +70,7 @@ namespace bg3_modders_multitool.Services
 
                 var helpers = new List<PakReaderHelper>();
                 var fileCount = 0;
-                var paks = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
+                var paks = PakReaderHelper.GetPakList();
                 foreach ( var pak in paks )
                 {
                     var helper = new PakReaderHelper(pak);
@@ -454,7 +454,7 @@ namespace bg3_modders_multitool.Services
                 pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.Contains(pak + ".pak"));
                 if (pakPath != null)
                 {
-                    // TODO - convert file?
+                    fileExists = true;
                     var helper = new PakReaderHelper(pakPath);
                     var contents = helper.ReadPakFileContents(path);
                     if (!isExcluded)

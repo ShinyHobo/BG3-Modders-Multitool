@@ -9,6 +9,7 @@ namespace bg3_modders_multitool.Views
     using System;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
@@ -119,7 +120,7 @@ namespace bg3_modders_multitool.Views
                     {
                         convertAndOpenButton.Content = "Open .dae";
                     }
-                    else if(FileHelper.CanConvertToLsx(vm.SelectedPath))
+                    else if(FileHelper.CanConvertToLsx(vm.SelectedPath)||vm.SelectedPath.EndsWith(".loca"))
                     {
                         convertAndOpenButton.Content = "Convert & Open";
                     }
@@ -142,9 +143,30 @@ namespace bg3_modders_multitool.Views
             var vm = DataContext as SearchResults;
             var ext = Path.GetExtension(vm.SelectedPath);
             var selectedPath = FileHelper.GetPath(vm.SelectedPath);
+
+            if(!File.Exists(selectedPath))
+            {
+                var pak = vm.SelectedPath.Split('\\')[0];
+                var pakFile = $"{pak}.pak";
+                var paks = PakReaderHelper.GetPakList();
+                var pakPath = paks.FirstOrDefault(p => p.Contains(pakFile));
+                if(File.Exists(pakPath))
+                {
+                    var helper = new PakReaderHelper(pakPath);
+                    var regex = new Regex(Regex.Escape(pak + "\\"));
+                    var path = regex.Replace(vm.SelectedPath, string.Empty, 1);
+                    helper.DecompressPakFile(path);
+                }
+            }
+
             if (ext == ".wem")
             {
                 FileHelper.PlayAudio(selectedPath);
+            }
+            else if(ext == ".loca")
+            {
+                var newFile = FileHelper.Convert(selectedPath, "xml");
+                FileHelper.OpenFile(newFile);
             }
             else
             {

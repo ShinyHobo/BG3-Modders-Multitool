@@ -1,6 +1,7 @@
 ﻿namespace bg3_modders_multitool.Services
 {
     using LSLib.LS;
+    using LSLib.LS.Enums;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -61,6 +62,43 @@
             }
 
             return output;
+        }
+
+        /// <summary>
+        /// Decompresses the selected file directly from the pak into its readable format
+        /// </summary>
+        /// <param name="filePath">The pak file path</param>
+        public void DecompressPakFile(string filePath)
+        {
+            var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
+            if (file != null)
+            {
+                var originalExtension = Path.GetExtension(filePath);
+                var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
+                var isConvertableToXml = originalExtension.Contains("loca");
+                var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                if (isConvertableToLsx)
+                {
+                    var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
+                    Resource resource = ResourceUtils.LoadResource(file.MakeStream(), ResourceUtils.ExtensionToResourceFormat(filePath));
+                    ResourceUtils.SaveResource(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), conversionParams);
+                }
+                else if (isConvertableToXml)
+                {
+                    var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
+                    var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
+                    LocaUtils.Save(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), LocaFormat.Xml);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of pak directory infomation
+        /// </summary>
+        /// <returns>The pak list</returns>
+        public static List<string> GetPakList()
+        {
+            return Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
         }
     }
 }
