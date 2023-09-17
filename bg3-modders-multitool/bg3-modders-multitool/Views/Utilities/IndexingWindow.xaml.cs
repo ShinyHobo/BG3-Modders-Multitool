@@ -64,6 +64,7 @@ namespace bg3_modders_multitool.Views
                 {
                     vm.Results.Add(new SearchResult { Path = result });
                 }
+                vm.Results = new ObservableCollection<SearchResult>(vm.Results.OrderBy(x => x.Path));
                 searchFilesButton.IsEnabled = true;
                 fileTypeFilter.IsEnabled = true;
                 search.IsEnabled = true;
@@ -189,6 +190,7 @@ namespace bg3_modders_multitool.Views
                             {
                                 vm.Results.Add(new SearchResult { Path = result });
                             }
+                            vm.Results = new ObservableCollection<SearchResult>(vm.Results.OrderBy(x => x.Path));
                         }
                     }
                 });
