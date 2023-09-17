@@ -221,6 +221,9 @@ namespace bg3_modders_multitool.Views
         {
             var vm = DataContext as SearchResults;
             var selectedPath = FileHelper.GetPath(vm.SelectedPath);
+
+            PakReaderHelper.OpenPakFile(vm.SelectedPath);
+
             System.Diagnostics.Process.Start("explorer.exe", $"/select,{selectedPath}");
         }
     }
