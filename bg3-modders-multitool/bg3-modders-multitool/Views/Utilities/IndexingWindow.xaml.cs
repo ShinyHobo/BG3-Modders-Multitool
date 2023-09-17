@@ -190,8 +190,8 @@ namespace bg3_modders_multitool.Views
                             {
                                 vm.Results.Add(new SearchResult { Path = result });
                             }
-                            vm.Results = new ObservableCollection<SearchResult>(vm.Results.OrderBy(x => x.Path));
                         }
+                        vm.Results = new ObservableCollection<SearchResult>(vm.Results.OrderBy(x => x.Path));
                     }
                 });
             }, ct);
