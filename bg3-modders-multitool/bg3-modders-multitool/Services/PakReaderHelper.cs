@@ -130,7 +130,7 @@
                 var pak = selectedPath.Split('\\')[0];
                 var pakFile = $"{pak}.pak";
                 var paks = GetPakList();
-                var pakPath = paks.FirstOrDefault(p => p.Contains(pakFile));
+                var pakPath = paks.FirstOrDefault(p => p.EndsWith("\\" + pakFile));
                 if (File.Exists(pakPath))
                 {
                     var helper = new PakReaderHelper(pakPath);

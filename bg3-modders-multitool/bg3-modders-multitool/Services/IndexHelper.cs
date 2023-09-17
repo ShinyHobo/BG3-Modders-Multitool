@@ -445,7 +445,8 @@ namespace bg3_modders_multitool.Services
                 var pakPath = path.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
                 var pak = pakPath.Split('\\')[0];
                 path = PakReaderHelper.GetPakPath(pakPath);
-                pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.Contains(pak + ".pak"));
+                var paks = PakReaderHelper.GetPakList();
+                pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.EndsWith("\\" + pak + ".pak"));
                 if (pakPath != null)
                 {
                     fileExists = true;
