@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
+    using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
     using System.Globalization;
     using System.IO;
@@ -15,6 +16,8 @@ namespace bg3_modders_multitool.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ViewModels.MainWindow MainWindowVM;
+
         public MainWindow()
         {
             // Explicitly set the translation to use
@@ -22,11 +25,16 @@ namespace bg3_modders_multitool.Views
             System.Threading.Thread.CurrentThread.CurrentUICulture = string.IsNullOrEmpty(selectedLanguage) ? CultureInfo.InvariantCulture : new CultureInfo(selectedLanguage);
 
             InitializeComponent();
-            DataContext = new ViewModels.MainWindow
+
+            MainWindowVM = new ViewModels.MainWindow
             {
                 DragAndDropBox = (ViewModels.DragAndDropBox)dragAndDropBox.DataContext,
-                SearchResults = new ViewModels.SearchResults()
+                SearchResults = new SearchResults()
             };
+
+            DataContext = MainWindowVM;
+
+            MainWindowVM.SearchResults.AllowIndexing = true;
         }
 
         #region File Unpacker

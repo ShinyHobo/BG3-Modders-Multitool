@@ -1504,6 +1504,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No index available!  Generating index now....
+        /// </summary>
+        public static string IndexNotFoundGenerating {
+            get {
+                return ResourceManager.GetString("IndexNotFoundGenerating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Index Pak Files.
         /// </summary>
         public static string IndexPakFilesButton {

@@ -139,7 +139,7 @@ namespace bg3_modders_multitool.ViewModels
         public bool AllowIndexing {
             get { return _allowIndexing; }
             set {
-                _allowIndexing = value;
+                _allowIndexing = value && !string.IsNullOrEmpty(((MainWindow)Application.Current.MainWindow.DataContext)?.Bg3ExeLocation);
                 OnNotifyPropertyChanged();
             }
         }

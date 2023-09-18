@@ -185,11 +185,20 @@ namespace bg3_modders_multitool.ViewModels
         public string Bg3ExeLocation {
             get { return _bg3exeLocation; }
             set {
-                _bg3exeLocation = value;
-                UnpackAllowed = !string.IsNullOrEmpty(value);
-                LaunchGameAllowed = !string.IsNullOrEmpty(value);
-                ConfigNeeded = ValidateConfigNeeded();
-                OnNotifyPropertyChanged();
+                if(!string.IsNullOrEmpty(value))
+                {
+                    _bg3exeLocation = value;
+                    UnpackAllowed = true;
+                    LaunchGameAllowed = true;
+                    ConfigNeeded = ValidateConfigNeeded();
+                    if (SearchResults != null)
+                        SearchResults.AllowIndexing = true;
+
+                    PathHelper.Instance.InitializePaths();
+                    GameDocumentsLocation = Settings.Default.gameDocumentsPath ?? string.Empty;
+
+                    OnNotifyPropertyChanged();
+                }
             }
         }
 

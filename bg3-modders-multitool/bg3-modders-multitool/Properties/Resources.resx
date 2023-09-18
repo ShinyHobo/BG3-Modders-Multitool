@@ -641,6 +641,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="IndexNotFound" xml:space="preserve">
     <value>No index available! Click Utilities =&gt; Index and select an option to generate an index.</value>
   </data>
+  <data name="IndexNotFoundGenerating" xml:space="preserve">
+    <value>No index available!  Generating index now...</value>
+  </data>
   <data name="IndexPakFilesButton" xml:space="preserve">
     <value>Index Pak Files</value>
   </data>
