@@ -2244,7 +2244,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retrived file list. Starting decompression....
+        ///   Looks up a localized string similar to Retrieved file list. Starting decompression....
         /// </summary>
         public static string RetrievedFileListDecompression {
             get {
