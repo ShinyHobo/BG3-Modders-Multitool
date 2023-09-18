@@ -86,7 +86,7 @@ namespace bg3_modders_multitool.Services
                     var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                     try
                     {
-                        Resource resource = ResourceUtils.LoadResource(path, new ResourceLoadParameters());
+                        Resource resource = ResourceUtils.LoadResource(path, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
                         ResourceUtils.SaveResource(resource, newPath, conversionParams);
                     }
                     catch (Exception ex)
