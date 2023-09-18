@@ -9,6 +9,7 @@ namespace bg3_modders_multitool.Views
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
 
     /// <summary>
@@ -90,7 +91,17 @@ namespace bg3_modders_multitool.Views
         #region Indexing
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            new IndexingWindow().Show();
+            if (!IndexHelper.IndexDirectoryExists())
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFoundGenerating);
+                IndexFiles(true).ContinueWith((i) => {
+                    Application.Current.Dispatcher.Invoke(() => { new IndexingWindow().Show(); });
+                });
+            }
+            else
+            {
+                new IndexingWindow().Show();
+            }
         }
 
         private void IndexFiles_Click(object sender, RoutedEventArgs e)
@@ -108,32 +119,35 @@ namespace bg3_modders_multitool.Views
         /// On accept, deletes the index and generates a new one
         /// </summary>
         /// <param name="directIndex">Whether or not to index the pak files directly, or index the files inside UnpackedData (legacy mode)</param>
-        private void IndexFiles(bool directIndex)
+        private Task IndexFiles(bool directIndex)
         {
-            var result = System.Windows.Forms.DialogResult.OK;
-            if (IndexHelper.IndexDirectoryExists())
-            {
-                result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
-            }
+            return Task.Run(() => {
+                var result = System.Windows.Forms.DialogResult.OK;
+                if (IndexHelper.IndexDirectoryExists())
+                {
+                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
+                }
 
-            if (result.Equals(System.Windows.Forms.DialogResult.OK))
-            {
-                var vm = DataContext as ViewModels.MainWindow;
-                if(directIndex)
-                    vm.SearchResults.IndexHelper.IndexDirectly();
-                else
-                    vm.SearchResults.IndexHelper.Index();
-            }
+                if (result.Equals(System.Windows.Forms.DialogResult.OK))
+                {
+                    Application.Current.Dispatcher.Invoke(async () =>
+                    {
+                        if (directIndex)
+                            await MainWindowVM.SearchResults.IndexHelper.IndexDirectly();
+                        else
+                            await MainWindowVM.SearchResults.IndexHelper.Index();
+                    }).Wait();
+                }
+            });
         }
         #endregion
 
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
             var dataDir = FileHelper.DataDirectory;
             if (Directory.Exists(dataDir))
             {
-                System.Diagnostics.Process.Start(vm.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
+                System.Diagnostics.Process.Start(MainWindowVM.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
             }
             else
             {

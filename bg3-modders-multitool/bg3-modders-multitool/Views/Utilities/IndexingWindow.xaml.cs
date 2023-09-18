@@ -25,11 +25,13 @@ namespace bg3_modders_multitool.Views
         private bool isMouseOver = false;
         private string hoverFile;
         private Button pathButton;
+        private SearchResults SearchResults = new SearchResults();
 
         public IndexingWindow()
         {
             InitializeComponent();
-            DataContext = new SearchResults();
+            DataContext = SearchResults;
+
             ((SearchResults)DataContext).IndexHelper.DataContext = (SearchResults)DataContext;
             ((SearchResults)DataContext).ViewPort = viewport;
             timer.Interval = TimeSpan.FromMilliseconds(400);

@@ -60,7 +60,7 @@ namespace bg3_modders_multitool.Services
         {
             return Task.Run(() => {
                 Application.Current.Dispatcher.Invoke(() => {
-                    //DataContext.AllowIndexing = false;
+                    DataContext.AllowIndexing = false;
                 });
 
                 var helpers = new List<PakReaderHelper>();
@@ -124,6 +124,7 @@ namespace bg3_modders_multitool.Services
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
             Application.Current.Dispatcher.Invoke(() => {
                 DataContext.IsIndexing = false;
+                DataContext.AllowIndexing = true;
             });
         }
 
