@@ -85,7 +85,7 @@
                     {
                         var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
                         var format = ResourceUtils.ExtensionToResourceFormat(filePath);
-                        var resource = ResourceUtils.LoadResource(file.MakeStream(), format);
+                        var resource = ResourceUtils.LoadResource(file.MakeStream(), format, new ResourceLoadParameters());
                         ResourceUtils.SaveResource(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), conversionParams);
                     }
                     else if (isConvertableToXml)
