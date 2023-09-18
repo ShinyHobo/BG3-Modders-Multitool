@@ -128,7 +128,7 @@
                     <Button x:Name="searchButton" Content="{x:Static p:Resources.IndexSearchButton}" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
                             ToolTip="{x:Static p:Resources.IndexSearchButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
                 </Grid>
-                <TextBlock x:Name="configNeeded" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="300,244,30,150" Visibility="{Binding ConfigNeeded}"/>
+                <TextBlock x:Name="configNeeded" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="300,244,0,0" Visibility="{Binding ConfigNeeded}"/>
             </Grid>
             <Grid Grid.Row="1">
                 <ScrollViewer x:Name="ConsoleScroller" MinHeight="150" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged" Margin="5">
