@@ -115,6 +115,11 @@
         /// <returns>The pak list</returns>
         public static List<string> GetPakList()
         {
+            if(string.IsNullOrEmpty(Properties.Settings.Default.bg3Exe))
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.InvalidBg3Location);
+                return new List<string>();
+            }
             return Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", SearchOption.AllDirectories).Select(file => Path.GetFullPath(file)).ToList();
         }
 
