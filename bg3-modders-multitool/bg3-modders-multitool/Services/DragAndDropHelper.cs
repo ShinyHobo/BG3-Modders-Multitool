@@ -17,6 +17,7 @@ namespace bg3_modders_multitool.Services
     using System.Xml;
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Views.Utilities;
+    using System.Linq;
 
     public static class DragAndDropHelper
     {
@@ -311,48 +312,62 @@ namespace bg3_modders_multitool.Services
         /// <returns>The new mod build directory.</returns>
         private static string BuildPack(string path)
         {
-            var fileList = FileHelper.DirectorySearch(path);
             var modName = new DirectoryInfo(path).Name;
             var modDir = $"{TempFolder}\\{modName}";
+
+            CopyWorkingFilesToTempDir(path, modDir);
+
+            // TODO - ProcessLsxMerges
+
+            ProcessStatsGeneratedDataSubfiles(modDir, modName);
+
+            // TODO - perform conversions last
+
+            // convert and save to temp dir
+            // FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
+            // TODO -  delete original file
+
+            return modDir;
+        }
+
+        /// <summary>
+        /// Copies the working files to the temp directory for merging and conversion
+        /// </summary>
+        /// <param name="path">The mod root path</param>
+        /// <param name="modDir">The working path directory to copy to</param>
+        private static void CopyWorkingFilesToTempDir(string path, string modDir)
+        {
+            var fileList = FileHelper.DirectorySearch(path);
             foreach (var file in fileList)
             {
-                var fileParent = file.Replace(path, string.Empty).Replace("\\\\?\\",string.Empty);
+                var fileParent = file.Replace(path, string.Empty).Replace("\\\\?\\", string.Empty);
                 var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(fileName);
                 if (!string.IsNullOrEmpty(extension))
                 {
-                    var conversionFile = fileName.Replace(extension, string.Empty);
-                    var secondExtension = Path.GetExtension(conversionFile);
                     // copy to temp dir
                     var mod = $"\\\\?\\{modDir}{fileParent}";
                     var modParent = new DirectoryInfo(mod).Parent.FullName;
 
-                    // TODO - check if matching file for .lsf exists as .lsf.lsx, ignore if yes
-
-                    if (string.IsNullOrEmpty(secondExtension))
+                    // check if matching file for .lsf exists as .lsf.lsx and ignore if yes
+                    if (new FileInfo(file).Directory.GetFiles(fileName + "*").Length == 1)
                     {
                         Directory.CreateDirectory(modParent);
                         File.Copy(file, mod, true);
                     }
-                    else
-                    {
-
-                        // TODO - perform conversions last
-
-                        // convert and save to temp dir
-                        // FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
-                        // TODO -  delete original file
-                    }
-                }
-                else
-                {
-                    throw new Exception(string.Format(Properties.Resources.FileMissingExtensionError, file));
                 }
             }
+        }
 
-            ProcessStatsGeneratedDataSubfiles(modDir, modName);
-
-            return modDir;
+        /// <summary>
+        /// Concatenates .lsx files prior to conversion to .lsf
+        /// </summary>
+        /// <param name="directory">The mod workspace directory</param>
+        /// <param name="modName">The mod name to point the search at</param>
+        private static void ProcessLsxMerges(string directory, string modName)
+        {
+            // RootTemplates => _merged
+            // Progressions, Races, ClassDescriptions, ActionResourceDefinitions
         }
 
         /// <summary>
@@ -388,16 +403,6 @@ namespace bg3_modders_multitool.Services
                     Directory.Delete(dir.FullName, true);
                 }
             }
-        }
-
-        /// <summary>
-        /// Concatenates .lsx files prior to conversion to .lsf
-        /// </summary>
-        /// <param name="directory">The mod workspace directory</param>
-        /// <param name="modName">The mod name to point the search at</param>
-        private static void ProcessLsxMerges(string directory, string modName)
-        {
-
         }
 
         /// <summary>
