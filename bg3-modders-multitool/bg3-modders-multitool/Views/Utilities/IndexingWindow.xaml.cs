@@ -49,14 +49,11 @@ namespace bg3_modders_multitool.Views
         {
             if(!string.IsNullOrEmpty(search.Text) && fileTypeFilter.SelectedItems.Count > 0)
             {
-                searchFilesButton.IsEnabled = false;
-                leadingWildcardDisabledCheckbox.IsEnabled = false;
-                fileTypeFilter.IsEnabled = false;
-                search.IsEnabled = false;
-                convertAndOpenButton.IsEnabled = false;
+                SearchResults.AllowInteraction = false;
                 SearchResults.SelectedPath = string.Empty;
                 SearchResults.FileContents = new ObservableCollection<SearchResult>();
                 SearchResults.Results = new ObservableCollection<SearchResult>();
+                SearchResults.SelectAllToggled = false;
                 var matches = await SearchResults.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems, !SearchResults.LeadingWildcardDisabled);
                 SearchResults.FullResultList = matches.Matches.ToList();
                 SearchResults.FullResultList.AddRange(matches.FilteredMatches.ToList());
@@ -66,11 +63,7 @@ namespace bg3_modders_multitool.Views
                     SearchResults.Results.Add(new SearchResult { Path = result });
                 }
                 SearchResults.Results = new ObservableCollection<SearchResult>(SearchResults.Results.OrderBy(x => x.Path));
-                searchFilesButton.IsEnabled = true;
-                fileTypeFilter.IsEnabled = true;
-                search.IsEnabled = true;
-                convertAndOpenButton.IsEnabled = true;
-                leadingWildcardDisabledCheckbox.IsEnabled = true;
+                SearchResults.AllowInteraction = true;
                 search.Focus();
             }
         }
@@ -111,7 +104,7 @@ namespace bg3_modders_multitool.Views
                     SearchResults.FileContents = new ObservableCollection<SearchResult>();
                     SearchResults.SelectedPath = ((TextBlock)pathButton.Content).Text;
                     var isGr2 = SearchResults.RenderModel();
-                    foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
+                    foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile, SearchResults.PreviewConvertedToggled))
                     {
                         SearchResults.FileContents.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
                     }
@@ -135,29 +128,32 @@ namespace bg3_modders_multitool.Views
 
         private void ConvertAndOpenButton_Click(object sender, RoutedEventArgs e)
         {
-            convertAndOpenButton.IsEnabled = false;
-            var ext = Path.GetExtension(SearchResults.SelectedPath);
-            var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
+            if(SearchResults.SelectedPath != null)
+            {
+                SearchResults.AllowInteraction = false;
+                var ext = Path.GetExtension(SearchResults.SelectedPath);
+                var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
 
-            PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
-            
-            if(ext == ".loca")
-            {
-                var newFile = FileHelper.Convert(selectedPath, "xml");
-                FileHelper.OpenFile(newFile);
+                PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+
+                if (ext == ".loca")
+                {
+                    var newFile = FileHelper.Convert(selectedPath, "xml");
+                    FileHelper.OpenFile(newFile);
+                }
+                else
+                {
+                    var newFile = FileHelper.Convert(selectedPath, "lsx");
+                    FileHelper.OpenFile(newFile);
+                }
+                SearchResults.AllowInteraction = true;
             }
-            else
-            {
-                var newFile = FileHelper.Convert(selectedPath, "lsx");
-                FileHelper.OpenFile(newFile);
-            }
-            convertAndOpenButton.IsEnabled = true;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var vm = DataContext as SearchResults;
-            vm.Clear();
+            SearchResults.Extracting = false; // cancel any running extraction operations
+            SearchResults.Clear();
         }
 
         private CancellationTokenSource UpdateFilterCancellation { get; set; }
@@ -177,7 +173,6 @@ namespace bg3_modders_multitool.Views
                 {
                     if (SearchResults.FullResultList != null)
                     {
-
                         SearchResults.FileContents = new ObservableCollection<SearchResult>();
                         SearchResults.Results = new ObservableCollection<SearchResult>();
                         foreach (string result in SearchResults.FullResultList)
@@ -195,6 +190,11 @@ namespace bg3_modders_multitool.Views
             }, ct);
         }
 
+        /// <summary>
+        /// Opens the given file in Notepad++ to the line number, if possible
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void lineNumberButton_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -216,6 +216,11 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        /// <summary>
+        /// Extracts, converts, and opens the folder to the currently previewed file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenFolder_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(SearchResults.SelectedPath))
@@ -227,12 +232,73 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        /// <summary>
+        /// Extracts and converts the currently previewed file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExtractFile_Click(object sender, RoutedEventArgs e)
         {
             if(!string.IsNullOrEmpty(SearchResults.SelectedPath))
             {
                 PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
                 GeneralHelper.WriteToConsole(Properties.Resources.ResourceExtracted, SearchResults.SelectedPath);
+            }
+        }
+
+        /// <summary>
+        /// Toggles all/none file selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToggleSelection_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchResults.Results != null)
+            {
+                SearchResults.AllowInteraction = false;
+
+                foreach (var file in SearchResults.Results)
+                {
+                    file.Selected = SearchResults.SelectAllToggled;
+                }
+                SearchResults.AllowInteraction = true;
+            }
+            else
+            {
+                SearchResults.SelectAllToggled = false;
+            }
+        }
+
+        /// <summary>
+        /// Begin extracting all selected files from list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ExtractSelected_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchResults.Results != null)
+            {
+                SearchResults.Extracting = true;
+                SearchResults.AllowInteraction = false;
+                Task.Run(() => {
+                    var filesToExtract = SearchResults.Results.Where(r => r.Selected);
+                    GeneralHelper.WriteToConsole(Properties.Resources.FileExtractionStarted, filesToExtract.Count());
+                    var helpers = PakReaderHelper.GetPakHelpers();
+                    Parallel.ForEach(filesToExtract, GeneralHelper.ParallelOptions, (file, status) => {
+                        if(!SearchResults.Extracting)
+                            status.Stop();
+                        var helper = helpers.First(h => h.PakName == file.Path.Split('\\')[0]);
+                        helper.DecompressPakFile(PakReaderHelper.GetPakPath(file.Path));
+                        file.Selected = false;
+                    });
+                    if (SearchResults.Extracting)
+                        GeneralHelper.WriteToConsole(Properties.Resources.FileExtractionComplete);
+                    else
+                        GeneralHelper.WriteToConsole(Properties.Resources.FileExtractionCanceled);
+                    SearchResults.SelectAllToggled = false;
+                    SearchResults.AllowInteraction = true;
+                    SearchResults.Extracting = false;
+                });
             }
         }
     }

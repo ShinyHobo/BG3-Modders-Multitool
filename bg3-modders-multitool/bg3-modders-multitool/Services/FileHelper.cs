@@ -156,6 +156,19 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Checks if the file is a convertable file
+        /// </summary>
+        /// <param name="file">The file to check</param>
+        /// <returns>Whether or not the file is convertable</returns>
+        public static bool IsConvertable(string file)
+        {
+            var originalExtension = Path.GetExtension(file);
+            var isConvertableToLsx = CanConvertToLsx(file);
+            var isConvertableToXml = originalExtension.Contains("loca");
+            return isConvertableToLsx || isConvertableToXml;
+        }
+
+        /// <summary>
         /// Gets a list of files in a directory.
         /// </summary>
         /// <param name="directory">The directory root to search.</param>

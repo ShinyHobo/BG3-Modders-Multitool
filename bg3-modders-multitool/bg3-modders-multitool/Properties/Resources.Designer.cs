@@ -849,6 +849,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extract Selected.
+        /// </summary>
+        public static string ExtractSelectedButton {
+            get {
+                return ResourceManager.GetString("ExtractSelectedButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects failed to load. {0} seconds passed..
         /// </summary>
         public static string FailedGOE {
@@ -1018,6 +1027,33 @@ namespace bg3_modders_multitool.Properties {
         public static string FileDroppingNotSupported {
             get {
                 return ResourceManager.GetString("FileDroppingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File extraction cancelled..
+        /// </summary>
+        public static string FileExtractionCanceled {
+            get {
+                return ResourceManager.GetString("FileExtractionCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File extraction complete!.
+        /// </summary>
+        public static string FileExtractionComplete {
+            get {
+                return ResourceManager.GetString("FileExtractionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting extraction of {0} files....
+        /// </summary>
+        public static string FileExtractionStarted {
+            get {
+                return ResourceManager.GetString("FileExtractionStarted", resourceCulture);
             }
         }
         
@@ -2139,6 +2175,15 @@ namespace bg3_modders_multitool.Properties {
         public static string PleaseSelectWorkspace {
             get {
                 return ResourceManager.GetString("PleaseSelectWorkspace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview converted file.
+        /// </summary>
+        public static string PreviewConvertedButton {
+            get {
+                return ResourceManager.GetString("PreviewConvertedButton", resourceCulture);
             }
         }
         

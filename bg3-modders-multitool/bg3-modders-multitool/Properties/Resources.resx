@@ -397,6 +397,9 @@ Do you wish to continue?</value>
   <data name="ExtractFileTooltip" xml:space="preserve">
     <value>Extract file</value>
   </data>
+  <data name="ExtractSelectedButton" xml:space="preserve">
+    <value>Extract Selected</value>
+  </data>
   <data name="FailedGOE" xml:space="preserve">
     <value>GameObjects failed to load. {0} seconds passed.</value>
     <comment>seconds</comment>
@@ -468,6 +471,16 @@ Do you wish to continue?</value>
   </data>
   <data name="FileDroppingNotSupported" xml:space="preserve">
     <value>File dropping is not yet supported.</value>
+  </data>
+  <data name="FileExtractionCanceled" xml:space="preserve">
+    <value>File extraction cancelled.</value>
+  </data>
+  <data name="FileExtractionComplete" xml:space="preserve">
+    <value>File extraction complete!</value>
+  </data>
+  <data name="FileExtractionStarted" xml:space="preserve">
+    <value>Starting extraction of {0} files...</value>
+    <comment>file count</comment>
   </data>
   <data name="FileListRetrieved" xml:space="preserve">
     <value>File list retrieved.</value>
@@ -865,6 +878,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="PleaseSelectWorkspace" xml:space="preserve">
     <value>Please select your mod workspace directory</value>
+  </data>
+  <data name="PreviewConvertedButton" xml:space="preserve">
+    <value>Preview converted file</value>
   </data>
   <data name="ProblemPlayingAudio" xml:space="preserve">
     <value>Problem playing audio file!!</value>

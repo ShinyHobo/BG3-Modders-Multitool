@@ -6,7 +6,6 @@ namespace bg3_modders_multitool.ViewModels
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Services;
     using HelixToolkit.Wpf.SharpDX;
-    using Lucene.Net.Codecs.Compressing;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -31,6 +30,7 @@ namespace bg3_modders_multitool.ViewModels
             matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
             matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
             Transform = new System.Windows.Media.Media3D.MatrixTransform3D(matrix);
+            AllowInteraction = true;
         }
 
         public void Clear()
@@ -52,6 +52,8 @@ namespace bg3_modders_multitool.ViewModels
         #region Indexing
         public IndexHelper IndexHelper { get; set; }
         public PakUnpackHelper PakUnpackHelper { get; set; }
+
+        public bool Extracting { get; set; }
 
         private int _resultTotal;
 
@@ -85,6 +87,33 @@ namespace bg3_modders_multitool.ViewModels
             get { return _results; }
             set {
                 _results = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _selectAllToggled;
+        public bool SelectAllToggled { 
+            get { return _selectAllToggled; }
+            set { 
+                _selectAllToggled = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _previewConvertedToggled;
+        public bool PreviewConvertedToggled {
+            get { return _previewConvertedToggled; }
+            set {
+                _previewConvertedToggled = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _allowInteraction;
+        public bool AllowInteraction {
+            get { return _allowInteraction; }
+            set {
+                _allowInteraction = value;
                 OnNotifyPropertyChanged();
             }
         }
@@ -304,6 +333,16 @@ namespace bg3_modders_multitool.ViewModels
             get { return _text; }
             set {
                 _text = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _selected;
+
+        public bool Selected { 
+            get { return _selected; } 
+            set {
+                _selected = value;
                 OnNotifyPropertyChanged();
             }
         }
