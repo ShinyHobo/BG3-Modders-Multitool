@@ -326,22 +326,22 @@ namespace bg3_modders_multitool.Services
                     // copy to temp dir
                     var mod = $"\\\\?\\{modDir}{fileParent}";
                     var modParent = new DirectoryInfo(mod).Parent.FullName;
+
+                    // TODO - check if matching file for .lsf exists as .lsf.lsx, ignore if yes
+
                     if (string.IsNullOrEmpty(secondExtension))
                     {
-                        if (!Directory.Exists(modParent))
-                        {
-                            Directory.CreateDirectory(modParent);
-                        }
-                        if (File.Exists(mod))
-                        {
-                            File.Delete(mod);
-                        }
-                        File.Copy(file, mod);
+                        Directory.CreateDirectory(modParent);
+                        File.Copy(file, mod, true);
                     }
                     else
                     {
+
+                        // TODO - perform conversions last
+
                         // convert and save to temp dir
-                        FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
+                        // FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
+                        // TODO -  delete original file
                     }
                 }
                 else
@@ -360,7 +360,7 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="directory">The mod workspace directory</param>
         /// <param name="modName">The mod name to point the search at</param>
-        public static void ProcessStatsGeneratedDataSubfiles(string directory, string modName)
+        private static void ProcessStatsGeneratedDataSubfiles(string directory, string modName)
         {
             var statsGeneratedDataDir = $"{directory}\\Public\\{modName}\\Stats\\Generated\\Data";
             var sgdInfo = new DirectoryInfo(statsGeneratedDataDir);
@@ -388,6 +388,16 @@ namespace bg3_modders_multitool.Services
                     Directory.Delete(dir.FullName, true);
                 }
             }
+        }
+
+        /// <summary>
+        /// Concatenates .lsx files prior to conversion to .lsf
+        /// </summary>
+        /// <param name="directory">The mod workspace directory</param>
+        /// <param name="modName">The mod name to point the search at</param>
+        private static void ProcessLsxMerges(string directory, string modName)
+        {
+
         }
 
         /// <summary>
