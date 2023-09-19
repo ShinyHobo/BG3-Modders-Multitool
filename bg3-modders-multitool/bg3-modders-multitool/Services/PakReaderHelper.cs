@@ -132,17 +132,20 @@
         /// <param name="selectedPath">The selected pak file path</param>
         public static string OpenPakFile(string selectedPath)
         {
-            selectedPath = selectedPath.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
-            if (!File.Exists(FileHelper.GetPath(selectedPath)))
+            if(selectedPath != null)
             {
-                var pak = selectedPath.Split('\\')[0];
-                var pakFile = $"{pak}.pak";
-                var paks = GetPakList();
-                var pakPath = paks.FirstOrDefault(p => p.EndsWith("\\" + pakFile));
-                if (File.Exists(pakPath))
+                selectedPath = selectedPath.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
+                if (!File.Exists(FileHelper.GetPath(selectedPath)))
                 {
-                    var helper = new PakReaderHelper(pakPath);
-                    return helper.DecompressPakFile(GetPakPath(selectedPath));
+                    var pak = selectedPath.Split('\\')[0];
+                    var pakFile = $"{pak}.pak";
+                    var paks = GetPakList();
+                    var pakPath = paks.FirstOrDefault(p => p.EndsWith("\\" + pakFile));
+                    if (File.Exists(pakPath))
+                    {
+                        var helper = new PakReaderHelper(pakPath);
+                        return helper.DecompressPakFile(GetPakPath(selectedPath));
+                    }
                 }
             }
             return null;

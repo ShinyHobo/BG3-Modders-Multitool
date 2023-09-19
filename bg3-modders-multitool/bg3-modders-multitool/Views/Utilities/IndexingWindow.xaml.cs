@@ -49,14 +49,11 @@ namespace bg3_modders_multitool.Views
         {
             if(!string.IsNullOrEmpty(search.Text) && fileTypeFilter.SelectedItems.Count > 0)
             {
-                searchFilesButton.IsEnabled = false;
-                leadingWildcardDisabledCheckbox.IsEnabled = false;
-                fileTypeFilter.IsEnabled = false;
-                search.IsEnabled = false;
-                convertAndOpenButton.IsEnabled = false;
+                SearchResults.AllowInteraction = false;
                 SearchResults.SelectedPath = string.Empty;
                 SearchResults.FileContents = new ObservableCollection<SearchResult>();
                 SearchResults.Results = new ObservableCollection<SearchResult>();
+                SearchResults.SelectAllToggled = false;
                 var matches = await SearchResults.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems, !SearchResults.LeadingWildcardDisabled);
                 SearchResults.FullResultList = matches.Matches.ToList();
                 SearchResults.FullResultList.AddRange(matches.FilteredMatches.ToList());
@@ -66,11 +63,7 @@ namespace bg3_modders_multitool.Views
                     SearchResults.Results.Add(new SearchResult { Path = result });
                 }
                 SearchResults.Results = new ObservableCollection<SearchResult>(SearchResults.Results.OrderBy(x => x.Path));
-                searchFilesButton.IsEnabled = true;
-                fileTypeFilter.IsEnabled = true;
-                search.IsEnabled = true;
-                convertAndOpenButton.IsEnabled = true;
-                leadingWildcardDisabledCheckbox.IsEnabled = true;
+                SearchResults.AllowInteraction = true;
                 search.Focus();
             }
         }
@@ -135,23 +128,26 @@ namespace bg3_modders_multitool.Views
 
         private void ConvertAndOpenButton_Click(object sender, RoutedEventArgs e)
         {
-            convertAndOpenButton.IsEnabled = false;
-            var ext = Path.GetExtension(SearchResults.SelectedPath);
-            var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
+            if(SearchResults.SelectedPath != null)
+            {
+                SearchResults.AllowInteraction = false;
+                var ext = Path.GetExtension(SearchResults.SelectedPath);
+                var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
 
-            PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
-            
-            if(ext == ".loca")
-            {
-                var newFile = FileHelper.Convert(selectedPath, "xml");
-                FileHelper.OpenFile(newFile);
+                PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+
+                if (ext == ".loca")
+                {
+                    var newFile = FileHelper.Convert(selectedPath, "xml");
+                    FileHelper.OpenFile(newFile);
+                }
+                else
+                {
+                    var newFile = FileHelper.Convert(selectedPath, "lsx");
+                    FileHelper.OpenFile(newFile);
+                }
+                SearchResults.AllowInteraction = true;
             }
-            else
-            {
-                var newFile = FileHelper.Convert(selectedPath, "lsx");
-                FileHelper.OpenFile(newFile);
-            }
-            convertAndOpenButton.IsEnabled = true;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -177,7 +173,6 @@ namespace bg3_modders_multitool.Views
                 {
                     if (SearchResults.FullResultList != null)
                     {
-
                         SearchResults.FileContents = new ObservableCollection<SearchResult>();
                         SearchResults.Results = new ObservableCollection<SearchResult>();
                         foreach (string result in SearchResults.FullResultList)
@@ -238,12 +233,38 @@ namespace bg3_modders_multitool.Views
 
         private void ToggleSelection_Click(object sender, RoutedEventArgs e)
         {
+            if (SearchResults.Results != null)
+            {
+                SearchResults.AllowInteraction = false;
 
+                foreach (var file in SearchResults.Results)
+                {
+                    file.Selected = SearchResults.SelectAllToggled;
+                }
+                SearchResults.AllowInteraction = true;
+            }
+            else
+            {
+                SearchResults.SelectAllToggled = false;
+            }
         }
 
         private void ExtractSelected_Click(object sender, RoutedEventArgs e)
         {
-
+            if (SearchResults.Results != null)
+            {
+                SearchResults.AllowInteraction = false;
+                var filesToExtract = SearchResults.Results.Where(r => r.Selected);
+                foreach (var file in filesToExtract)
+                {
+                    var path = FileHelper.GetPath(file.Path);
+                    PakReaderHelper.OpenPakFile(file.Path);
+                    GeneralHelper.WriteToConsole(Properties.Resources.ResourceExtracted, file.Path);
+                    file.Selected = false;
+                }
+                SearchResults.SelectAllToggled = false;
+                SearchResults.AllowInteraction = true;
+            }
         }
     }
 }
