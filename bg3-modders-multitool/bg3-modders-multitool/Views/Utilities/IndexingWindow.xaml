@@ -59,7 +59,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Height="23" Width="23" Margin="773,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📂" ToolTip="{x:Static p:Resources.OpenFolderTooltip}" Click="Button_Click"/>
+        <Button Height="23" Width="23" Margin="773,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📂" ToolTip="{x:Static p:Resources.OpenFolderTooltip}" Click="OpenFolder_Click"/>
         <TextBox IsReadOnly="True" Text="{Binding SelectedPath}"  Margin="800,10,117,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Stretch" Background="Transparent"/>
         <Button x:Name="convertAndOpenButton" Content="{x:Static p:Resources.ConvertOpenButton}" Margin="0,10,10,0" Width="102" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Click="ConvertAndOpenButton_Click" IsEnabled="False" Cursor="Hand"></Button>

@@ -216,7 +216,7 @@ namespace bg3_modders_multitool.Views
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void OpenFolder_Click(object sender, RoutedEventArgs e)
         {
             var newFile = PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
 
