@@ -316,6 +316,8 @@ namespace bg3_modders_multitool.Services
 
             CopyWorkingFilesToTempDir(path, modDir);
 
+            // TODO - lint lsx files
+
             // TODO - ProcessLsxMerges
 
             ProcessStatsGeneratedDataSubfiles(modDir, modName);
