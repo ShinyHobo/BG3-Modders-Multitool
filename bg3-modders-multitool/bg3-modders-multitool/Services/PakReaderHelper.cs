@@ -69,7 +69,8 @@
         /// Decompresses the selected file directly from the pak into its readable format
         /// </summary>
         /// <param name="filePath">The pak file path</param>
-        public string DecompressPakFile(string filePath)
+        /// <param name="altPath">Alternate path to save the file to</param>
+        public string DecompressPakFile(string filePath, string altPath = null)
         {
             var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
             if (file != null)
@@ -83,18 +84,20 @@
                     var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                     if (isConvertableToLsx)
                     {
-                        var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
                         var format = ResourceUtils.ExtensionToResourceFormat(filePath);
                         var resource = ResourceUtils.LoadResource(file.MakeStream(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
-                        ResourceUtils.SaveResource(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), conversionParams);
-                        return FileHelper.GetPath($"{PakName}\\{newFile}");
+                        var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
+                        newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
+                        ResourceUtils.SaveResource(resource, newFile, conversionParams);
+                        return newFile;
                     }
                     else if (isConvertableToXml)
                     {
-                        var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
                         var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
-                        LocaUtils.Save(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), LocaFormat.Xml);
-                        return FileHelper.GetPath($"{PakName}\\{newFile}");
+                        var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
+                        newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
+                        LocaUtils.Save(resource, newFile, LocaFormat.Xml);
+                        return newFile;
                     }
                     else
                     {
