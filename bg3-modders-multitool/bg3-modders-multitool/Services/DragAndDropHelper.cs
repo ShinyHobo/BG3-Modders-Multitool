@@ -316,9 +316,10 @@ namespace bg3_modders_multitool.Services
 
             CopyWorkingFilesToTempDir(path, modDir);
 
-            // TODO - lint lsx files
+            // TODO - add option to turn off
+            LintLsxFiles(modDir, modName);
 
-            // TODO - ProcessLsxMerges
+            ProcessLsxMerges(modDir, modName);
 
             ProcessStatsGeneratedDataSubfiles(modDir, modName);
 
@@ -355,6 +356,11 @@ namespace bg3_modders_multitool.Services
                     }
                 }
             }
+        }
+
+        private static void LintLsxFiles(string directory, string modName)
+        {
+
         }
 
         /// <summary>
