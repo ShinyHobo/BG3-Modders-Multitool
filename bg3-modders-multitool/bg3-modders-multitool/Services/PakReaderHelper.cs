@@ -69,7 +69,7 @@
         /// Decompresses the selected file directly from the pak into its readable format
         /// </summary>
         /// <param name="filePath">The pak file path</param>
-        public void DecompressPakFile(string filePath)
+        public string DecompressPakFile(string filePath)
         {
             var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
             if (file != null)
@@ -87,13 +87,14 @@
                         var format = ResourceUtils.ExtensionToResourceFormat(filePath);
                         var resource = ResourceUtils.LoadResource(file.MakeStream(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
                         ResourceUtils.SaveResource(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), conversionParams);
+                        return FileHelper.GetPath($"{PakName}\\{newFile}");
                     }
                     else if (isConvertableToXml)
                     {
                         var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
                         var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
-
                         LocaUtils.Save(resource, FileHelper.GetPath($"{PakName}\\{newFile}"), LocaFormat.Xml);
+                        return FileHelper.GetPath($"{PakName}\\{newFile}");
                     }
                     else
                     {
@@ -104,9 +105,11 @@
                         {
                             fileStream.Write(contents, 0, contents.Length);
                         }
+                        return path;
                     }
                 }
             }
+            return null;
         }
 
         /// <summary>
@@ -127,7 +130,7 @@
         /// Opens and decompresses the selected pak file if it is not already
         /// </summary>
         /// <param name="selectedPath">The selected pak file path</param>
-        public static void OpenPakFile(string selectedPath)
+        public static string OpenPakFile(string selectedPath)
         {
             selectedPath = selectedPath.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
             if (!File.Exists(FileHelper.GetPath(selectedPath)))
@@ -139,9 +142,10 @@
                 if (File.Exists(pakPath))
                 {
                     var helper = new PakReaderHelper(pakPath);
-                    helper.DecompressPakFile(GetPakPath(selectedPath));
+                    return helper.DecompressPakFile(GetPakPath(selectedPath));
                 }
             }
+            return null;
         }
 
         /// <summary>
