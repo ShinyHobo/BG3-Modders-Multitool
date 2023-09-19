@@ -849,6 +849,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extract Selected.
+        /// </summary>
+        public static string ExtractSelectedButton {
+            get {
+                return ResourceManager.GetString("ExtractSelectedButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects failed to load. {0} seconds passed..
         /// </summary>
         public static string FailedGOE {

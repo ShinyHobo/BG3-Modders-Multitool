@@ -397,6 +397,9 @@ Do you wish to continue?</value>
   <data name="ExtractFileTooltip" xml:space="preserve">
     <value>Extract file</value>
   </data>
+  <data name="ExtractSelectedButton" xml:space="preserve">
+    <value>Extract Selected</value>
+  </data>
   <data name="FailedGOE" xml:space="preserve">
     <value>GameObjects failed to load. {0} seconds passed.</value>
     <comment>seconds</comment>

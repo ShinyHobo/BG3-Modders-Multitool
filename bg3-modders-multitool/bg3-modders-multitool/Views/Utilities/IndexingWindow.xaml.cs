@@ -235,5 +235,15 @@ namespace bg3_modders_multitool.Views
                 GeneralHelper.WriteToConsole(Properties.Resources.ResourceExtracted, SearchResults.SelectedPath);
             }
         }
+
+        private void ToggleSelection_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExtractSelected_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

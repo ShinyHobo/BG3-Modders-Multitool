@@ -307,5 +307,15 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        private bool _selected;
+
+        public bool Selected { 
+            get { return _selected; } 
+            set {
+                _selected = value;
+                OnNotifyPropertyChanged();
+            }
+        }
     }
 }
