@@ -54,19 +54,18 @@ namespace bg3_modders_multitool.Views
                 fileTypeFilter.IsEnabled = false;
                 search.IsEnabled = false;
                 convertAndOpenButton.IsEnabled = false;
-                var vm = DataContext as SearchResults;
-                vm.SelectedPath = string.Empty;
-                vm.FileContents = new ObservableCollection<SearchResult>();
-                vm.Results = new ObservableCollection<SearchResult>();
-                var matches = await vm.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems, !vm.LeadingWildcardDisabled);
-                vm.FullResultList = matches.Matches.ToList();
-                vm.FullResultList.AddRange(matches.FilteredMatches.ToList());
-                vm.FullResultList.Sort();
+                SearchResults.SelectedPath = string.Empty;
+                SearchResults.FileContents = new ObservableCollection<SearchResult>();
+                SearchResults.Results = new ObservableCollection<SearchResult>();
+                var matches = await SearchResults.IndexHelper.SearchFiles(search.Text, true, fileTypeFilter.SelectedItems, !SearchResults.LeadingWildcardDisabled);
+                SearchResults.FullResultList = matches.Matches.ToList();
+                SearchResults.FullResultList.AddRange(matches.FilteredMatches.ToList());
+                SearchResults.FullResultList.Sort();
                 foreach (string result in matches.Matches)
                 {
-                    vm.Results.Add(new SearchResult { Path = result });
+                    SearchResults.Results.Add(new SearchResult { Path = result });
                 }
-                vm.Results = new ObservableCollection<SearchResult>(vm.Results.OrderBy(x => x.Path));
+                SearchResults.Results = new ObservableCollection<SearchResult>(SearchResults.Results.OrderBy(x => x.Path));
                 searchFilesButton.IsEnabled = true;
                 fileTypeFilter.IsEnabled = true;
                 search.IsEnabled = true;
@@ -107,22 +106,21 @@ namespace bg3_modders_multitool.Views
         {
             if (isMouseOver)
             {
-                var vm = DataContext as SearchResults;
-                if (string.IsNullOrEmpty(vm.SelectedPath)|| hoverFile != FileHelper.GetPath(vm.SelectedPath))
+                if (string.IsNullOrEmpty(SearchResults.SelectedPath)|| hoverFile != FileHelper.GetPath(SearchResults.SelectedPath))
                 {
-                    vm.FileContents = new ObservableCollection<SearchResult>();
-                    vm.SelectedPath = ((TextBlock)pathButton.Content).Text;
-                    var isGr2 = vm.RenderModel();
-                    foreach (var content in vm.IndexHelper.GetFileContents(hoverFile))
+                    SearchResults.FileContents = new ObservableCollection<SearchResult>();
+                    SearchResults.SelectedPath = ((TextBlock)pathButton.Content).Text;
+                    var isGr2 = SearchResults.RenderModel();
+                    foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
                     {
-                        vm.FileContents.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
+                        SearchResults.FileContents.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
                     }
                     convertAndOpenButton.IsEnabled = true;
                     if(isGr2)
                     {
                         convertAndOpenButton.Content = Properties.Resources.OpenDaeButton;
                     }
-                    else if(FileHelper.CanConvertToLsx(vm.SelectedPath)||vm.SelectedPath.EndsWith(".loca"))
+                    else if(FileHelper.CanConvertToLsx(SearchResults.SelectedPath)|| SearchResults.SelectedPath.EndsWith(".loca"))
                     {
                         convertAndOpenButton.Content = Properties.Resources.ConvertAndOpenButton;
                     }
@@ -138,11 +136,10 @@ namespace bg3_modders_multitool.Views
         private void ConvertAndOpenButton_Click(object sender, RoutedEventArgs e)
         {
             convertAndOpenButton.IsEnabled = false;
-            var vm = DataContext as SearchResults;
-            var ext = Path.GetExtension(vm.SelectedPath);
-            var selectedPath = FileHelper.GetPath(vm.SelectedPath);
+            var ext = Path.GetExtension(SearchResults.SelectedPath);
+            var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
 
-            PakReaderHelper.OpenPakFile(vm.SelectedPath);
+            PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
             
             if(ext == ".loca")
             {
@@ -178,22 +175,21 @@ namespace bg3_modders_multitool.Views
             {
                 Application.Current.Dispatcher.Invoke(delegate
                 {
-                    var vm = DataContext as SearchResults;
-                    if (vm.FullResultList != null)
+                    if (SearchResults.FullResultList != null)
                     {
-                        
-                        vm.FileContents = new ObservableCollection<SearchResult>();
-                        vm.Results = new ObservableCollection<SearchResult>();
-                        foreach (string result in vm.FullResultList)
+
+                        SearchResults.FileContents = new ObservableCollection<SearchResult>();
+                        SearchResults.Results = new ObservableCollection<SearchResult>();
+                        foreach (string result in SearchResults.FullResultList)
                         {
                             var ext = Path.GetExtension(result).ToLower();
                             ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
                             if (fileTypeFilter.SelectedItems != null && fileTypeFilter.SelectedItems.Contains(ext))
                             {
-                                vm.Results.Add(new SearchResult { Path = result });
+                                SearchResults.Results.Add(new SearchResult { Path = result });
                             }
                         }
-                        vm.Results = new ObservableCollection<SearchResult>(vm.Results.OrderBy(x => x.Path));
+                        SearchResults.Results = new ObservableCollection<SearchResult>(SearchResults.Results.OrderBy(x => x.Path));
                     }
                 });
             }, ct);
@@ -204,11 +200,10 @@ namespace bg3_modders_multitool.Views
             var btn = sender as Button;
             var content = btn.Content as TextBlock;
             var line = int.Parse(content.Text.Split(':').First());
-            var vm = DataContext as SearchResults;
-            var selectedPath = FileHelper.GetPath(vm.SelectedPath);
-            PakReaderHelper.OpenPakFile(vm.SelectedPath);
+            var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
+            PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
 
-            var ext = Path.GetExtension(vm.SelectedPath);
+            var ext = Path.GetExtension(SearchResults.SelectedPath);
             if (ext == ".loca")
             {
                 var newFile = FileHelper.Convert(selectedPath, "xml");
@@ -223,10 +218,7 @@ namespace bg3_modders_multitool.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as SearchResults;
-            var selectedPath = FileHelper.GetPath(vm.SelectedPath);
-
-            var newFile = PakReaderHelper.OpenPakFile(vm.SelectedPath);
+            var newFile = PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
 
             System.Diagnostics.Process.Start("explorer.exe", $"/select,{newFile}");
         }
