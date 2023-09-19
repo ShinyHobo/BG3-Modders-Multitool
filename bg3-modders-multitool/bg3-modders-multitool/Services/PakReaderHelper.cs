@@ -162,5 +162,24 @@
             var regex = new Regex(Regex.Escape(pakName + "\\"));
             return regex.Replace(path, string.Empty, 1);
         }
+
+        /// <summary>
+        /// Gets the list of all pak reader helpers
+        /// </summary>
+        /// <returns>The list of pak reader helpers</returns>
+        public static List<PakReaderHelper> GetPakHelpers()
+        {
+            var pakHelpers = new List<PakReaderHelper>();
+            var paks = GetPakList();
+            foreach (var pak in paks)
+            {
+                var helper = new PakReaderHelper(pak);
+                if (helper.PackagedFiles != null)
+                {
+                    pakHelpers.Add(helper);
+                }
+            }
+            return pakHelpers;
+        }
     }
 }

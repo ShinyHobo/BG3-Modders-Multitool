@@ -152,8 +152,8 @@ namespace bg3_modders_multitool.Views
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var vm = DataContext as SearchResults;
-            vm.Clear();
+            SearchResults.Extracting = false; // cancel any running extraction operations
+            SearchResults.Clear();
         }
 
         private CancellationTokenSource UpdateFilterCancellation { get; set; }
@@ -190,6 +190,11 @@ namespace bg3_modders_multitool.Views
             }, ct);
         }
 
+        /// <summary>
+        /// Opens the given file in Notepad++ to the line number, if possible
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void lineNumberButton_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -211,6 +216,11 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        /// <summary>
+        /// Extracts, converts, and opens the folder to the currently previewed file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenFolder_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(SearchResults.SelectedPath))
@@ -222,6 +232,11 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        /// <summary>
+        /// Extracts and converts the currently previewed file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExtractFile_Click(object sender, RoutedEventArgs e)
         {
             if(!string.IsNullOrEmpty(SearchResults.SelectedPath))
@@ -231,6 +246,11 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        /// <summary>
+        /// Toggles all/none file selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ToggleSelection_Click(object sender, RoutedEventArgs e)
         {
             if (SearchResults.Results != null)
@@ -249,21 +269,36 @@ namespace bg3_modders_multitool.Views
             }
         }
 
+        /// <summary>
+        /// Begin extracting all selected files from list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExtractSelected_Click(object sender, RoutedEventArgs e)
         {
             if (SearchResults.Results != null)
             {
+                SearchResults.Extracting = true;
                 SearchResults.AllowInteraction = false;
-                var filesToExtract = SearchResults.Results.Where(r => r.Selected);
-                foreach (var file in filesToExtract)
-                {
-                    var path = FileHelper.GetPath(file.Path);
-                    PakReaderHelper.OpenPakFile(file.Path);
-                    GeneralHelper.WriteToConsole(Properties.Resources.ResourceExtracted, file.Path);
-                    file.Selected = false;
-                }
-                SearchResults.SelectAllToggled = false;
-                SearchResults.AllowInteraction = true;
+                Task.Run(() => {
+                    var filesToExtract = SearchResults.Results.Where(r => r.Selected);
+                    GeneralHelper.WriteToConsole(Properties.Resources.FileExtractionStarted, filesToExtract.Count());
+                    var helpers = PakReaderHelper.GetPakHelpers();
+                    Parallel.ForEach(filesToExtract, GeneralHelper.ParallelOptions, (file, status) => {
+                        if(!SearchResults.Extracting)
+                            status.Stop();
+                        var helper = helpers.First(h => h.PakName == file.Path.Split('\\')[0]);
+                        helper.DecompressPakFile(PakReaderHelper.GetPakPath(file.Path));
+                        file.Selected = false;
+                    });
+                    if (SearchResults.Extracting)
+                        GeneralHelper.WriteToConsole(Properties.Resources.FileExtractionComplete);
+                    else
+                        GeneralHelper.WriteToConsole(Properties.Resources.FileExtractionCanceled);
+                    SearchResults.SelectAllToggled = false;
+                    SearchResults.AllowInteraction = true;
+                    SearchResults.Extracting = false;
+                });
             }
         }
     }

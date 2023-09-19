@@ -53,6 +53,8 @@ namespace bg3_modders_multitool.ViewModels
         public IndexHelper IndexHelper { get; set; }
         public PakUnpackHelper PakUnpackHelper { get; set; }
 
+        public bool Extracting { get; set; }
+
         private int _resultTotal;
 
         public int IndexFileTotal {

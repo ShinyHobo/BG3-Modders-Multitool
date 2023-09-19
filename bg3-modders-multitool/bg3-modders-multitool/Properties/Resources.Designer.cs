@@ -1031,6 +1031,33 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File extraction cancelled..
+        /// </summary>
+        public static string FileExtractionCanceled {
+            get {
+                return ResourceManager.GetString("FileExtractionCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File extraction complete!.
+        /// </summary>
+        public static string FileExtractionComplete {
+            get {
+                return ResourceManager.GetString("FileExtractionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting extraction of {0} files....
+        /// </summary>
+        public static string FileExtractionStarted {
+            get {
+                return ResourceManager.GetString("FileExtractionStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File list retrieved..
         /// </summary>
         public static string FileListRetrieved {
