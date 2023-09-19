@@ -100,6 +100,15 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
+        private bool _previewConvertedToggled;
+        public bool PreviewConvertedToggled {
+            get { return _previewConvertedToggled; }
+            set {
+                _previewConvertedToggled = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         private bool _allowInteraction;
         public bool AllowInteraction {
             get { return _allowInteraction; }

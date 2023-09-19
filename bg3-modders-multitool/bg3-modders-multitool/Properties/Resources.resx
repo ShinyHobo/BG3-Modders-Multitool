@@ -879,6 +879,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="PleaseSelectWorkspace" xml:space="preserve">
     <value>Please select your mod workspace directory</value>
   </data>
+  <data name="PreviewConvertedButton" xml:space="preserve">
+    <value>Preview converted file</value>
+  </data>
   <data name="ProblemPlayingAudio" xml:space="preserve">
     <value>Problem playing audio file!!</value>
   </data>

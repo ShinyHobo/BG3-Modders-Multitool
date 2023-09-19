@@ -2179,6 +2179,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Preview converted file.
+        /// </summary>
+        public static string PreviewConvertedButton {
+            get {
+                return ResourceManager.GetString("PreviewConvertedButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem playing audio file!!.
         /// </summary>
         public static string ProblemPlayingAudio {
