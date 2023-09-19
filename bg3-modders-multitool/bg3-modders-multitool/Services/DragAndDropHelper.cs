@@ -17,7 +17,6 @@ namespace bg3_modders_multitool.Services
     using System.Xml;
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Views.Utilities;
-    using System.Linq;
 
     public static class DragAndDropHelper
     {
@@ -321,15 +320,12 @@ namespace bg3_modders_multitool.Services
 
             ProcessStatsGeneratedDataSubfiles(modDir, modName);
 
-            // TODO - perform conversions last
-
-            // convert and save to temp dir
-            // FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
-            // TODO -  delete original file
+            ConvertFiles(modDir);
 
             return modDir;
         }
 
+        #region Packing Steps
         /// <summary>
         /// Copies the working files to the temp directory for merging and conversion
         /// </summary>
@@ -337,17 +333,17 @@ namespace bg3_modders_multitool.Services
         /// <param name="modDir">The working path directory to copy to</param>
         private static void CopyWorkingFilesToTempDir(string path, string modDir)
         {
-            var fileList = FileHelper.DirectorySearch(path);
+            var fileList = Directory.GetFiles(path, "*", System.IO.SearchOption.AllDirectories);
             foreach (var file in fileList)
             {
-                var fileParent = file.Replace(path, string.Empty).Replace("\\\\?\\", string.Empty);
                 var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(fileName);
                 if (!string.IsNullOrEmpty(extension))
                 {
                     // copy to temp dir
-                    var mod = $"\\\\?\\{modDir}{fileParent}";
-                    var modParent = new DirectoryInfo(mod).Parent.FullName;
+                    var fileParent = file.Replace(path, string.Empty);
+                    var mod = $"{modDir}{fileParent}";
+                    var modParent = new Alphaleonis.Win32.Filesystem.DirectoryInfo(mod).Parent.FullName;
 
                     // check if matching file for .lsf exists as .lsf.lsx and ignore if yes
                     if (new FileInfo(file).Directory.GetFiles(fileName + "*").Length == 1)
@@ -404,6 +400,30 @@ namespace bg3_modders_multitool.Services
                 }
             }
         }
+
+        /// <summary>
+        /// Converts all convertable files to their compressed version recursively
+        /// </summary>
+        /// <param name="tempPath">The mod temp path location</param>
+        private static void ConvertFiles(string tempPath)
+        {
+            var fileList = Directory.GetFiles(tempPath, "*", System.IO.SearchOption.AllDirectories);
+            foreach (var file in fileList)
+            {
+                var fileName = Path.GetFileName(file);
+                var extension = Path.GetExtension(file);
+                var conversionFile = fileName.Replace(extension, string.Empty);
+                var secondExtension = Path.GetExtension(conversionFile);
+                var mod = $"{new FileInfo(file).Directory}\\{fileName}";
+                var modParent = new Alphaleonis.Win32.Filesystem.DirectoryInfo(mod).Parent.FullName;
+                if(!string.IsNullOrEmpty(secondExtension))
+                {
+                    FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
+                    File.Delete(file);
+                }
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Process mod for packing.

@@ -156,51 +156,6 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
-        /// Gets a list of files in a directory.
-        /// </summary>
-        /// <param name="directory">The directory root to search.</param>
-        /// <returns>A list of files in the directory.</returns>
-        public static List<string> DirectorySearch(string directory)
-        {
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-            var fileList = RecursiveFileSearch(directory);
-            if (fileList.Count == 0)
-            {
-                GeneralHelper.WriteToConsole(Properties.Resources.NoFilesFound);
-            }
-            return fileList;
-        }
-
-        /// <summary>
-        /// Recursively searches for all files within the given directory.
-        /// </summary>
-        /// <param name="directory">The directory root to search.</param>
-        /// <returns>A list of files in the directory.</returns>
-        private static List<string> RecursiveFileSearch(string directory)
-        {
-            var fileList = new List<string>();
-            foreach (string dir in Directory.GetDirectories(directory))
-            {
-                try
-                {
-                    foreach (string file in Directory.GetFiles(dir))
-                    {
-                        fileList.Add(file);
-                    }
-                    fileList.AddRange(RecursiveFileSearch(dir));
-                }
-                catch
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToReadDirectory, directory);
-                }
-            }
-            return fileList;
-        }
-
-        /// <summary>
         /// Gets the complete list of extensions of the files in the given file list.
         /// </summary>
         /// <param name="fileList">The file list to scan.</param>

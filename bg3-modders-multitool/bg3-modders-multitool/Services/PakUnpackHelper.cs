@@ -169,13 +169,13 @@ namespace bg3_modders_multitool.Services
                 }
 
                 path = string.IsNullOrEmpty(path) ? @"\\?\" + FileHelper.UnpackedDataPath : path;
-                var fileList = FileHelper.DirectorySearch(path);
+                var fileList = Directory.GetFiles(path, "*", System.IO.SearchOption.AllDirectories);
 
-                if(DataContext != null)
+                if (DataContext != null)
                 {
                     Application.Current.Dispatcher.Invoke(() => {
                         DataContext.IsIndexing = true;
-                        DataContext.IndexFileTotal = fileList.Count;
+                        DataContext.IndexFileTotal = fileList.Length;
                         DataContext.IndexStartTime = DateTime.Now;
                         DataContext.IndexFileCount = 0;
                     });
@@ -260,7 +260,6 @@ namespace bg3_modders_multitool.Services
                     });
                 }
 
-                fileList.Clear();
                 if(wasDecompressing)
                 {
                     GeneralHelper.WriteToConsole(Resources.DecompressionComplete, elapsedTime);
