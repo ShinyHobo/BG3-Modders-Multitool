@@ -394,6 +394,9 @@ Do you wish to continue?</value>
     <value>extensionless</value>
     <comment>for files without an extension</comment>
   </data>
+  <data name="ExtractFileTooltip" xml:space="preserve">
+    <value>Extract file</value>
+  </data>
   <data name="FailedGOE" xml:space="preserve">
     <value>GameObjects failed to load. {0} seconds passed.</value>
     <comment>seconds</comment>
@@ -898,6 +901,10 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="ReportABugTooltip" xml:space="preserve">
     <value>Report a bug or problem to the GitHub issues page</value>
+  </data>
+  <data name="ResourceExtracted" xml:space="preserve">
+    <value>Resource extracted: {0}</value>
+    <comment>file path</comment>
   </data>
   <data name="ResultsHaveBeenFiltered" xml:space="preserve">
     <value>{0} results have been filtered out.</value>

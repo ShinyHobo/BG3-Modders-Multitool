@@ -840,6 +840,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extract file.
+        /// </summary>
+        public static string ExtractFileTooltip {
+            get {
+                return ResourceManager.GetString("ExtractFileTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects failed to load. {0} seconds passed..
         /// </summary>
         public static string FailedGOE {
@@ -2231,6 +2240,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ReportABugTooltip {
             get {
                 return ResourceManager.GetString("ReportABugTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resource extracted: {0}.
+        /// </summary>
+        public static string ResourceExtracted {
+            get {
+                return ResourceManager.GetString("ResourceExtracted", resourceCulture);
             }
         }
         
