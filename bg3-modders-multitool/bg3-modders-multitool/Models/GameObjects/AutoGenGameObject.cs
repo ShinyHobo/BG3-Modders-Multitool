@@ -19,8 +19,8 @@ namespace bg3_modders_multitool.Models.GameObjects
         public AutoGenGameObject(string file, string mapKey)
         {
 			file = FileHelper.GetPath(file);
-
-			if (File.Exists(file))
+            file = FileHelper.Convert(file, "lsx", Path.ChangeExtension(file, "lsx"));
+            if (File.Exists(file))
             {
                 var stream = File.OpenText(file);
                 using (var fileStream = stream)
