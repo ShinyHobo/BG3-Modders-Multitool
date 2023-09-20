@@ -270,7 +270,7 @@ namespace bg3_modders_multitool.Services
                                     if (GameObjectViewModel.LoadingCanceled) loopState.Break();
                                     if (reader.Name == "region")
                                     {
-                                        var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath };
+                                        var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileToExist };
 
                                         if (!reader.ReadToDescendant("children"))
                                         {
