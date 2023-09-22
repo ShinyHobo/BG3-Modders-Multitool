@@ -649,7 +649,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Decompress Files.
+        ///   Looks up a localized string similar to Decompress UnpackedData Files.
         /// </summary>
         public static string DecompressFilesButton {
             get {
@@ -1094,7 +1094,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File Operations.
+        ///   Looks up a localized string similar to Game File Operations.
         /// </summary>
         public static string FileOperationsMenu {
             get {
@@ -2649,7 +2649,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unpack .pak Files.
+        ///   Looks up a localized string similar to Unpack Game Files.
         /// </summary>
         public static string UnpackFilesButton {
             get {
@@ -2703,7 +2703,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unpack mod .pak(s).
+        ///   Looks up a localized string similar to Unpack mod(s).
         /// </summary>
         public static string UnpackModPaks {
             get {

@@ -322,7 +322,7 @@ Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endor
     <comment>file path</comment>
   </data>
   <data name="DecompressFilesButton" xml:space="preserve">
-    <value>Decompress Files</value>
+    <value>Decompress UnpackedData Files</value>
   </data>
   <data name="DecompressionCancelled" xml:space="preserve">
     <value>Decompression cancelled</value>
@@ -497,7 +497,7 @@ Do you wish to continue?</value>
     <value>File not found.</value>
   </data>
   <data name="FileOperationsMenu" xml:space="preserve">
-    <value>File Operations</value>
+    <value>Game File Operations</value>
   </data>
   <data name="FileTypeNotSupported" xml:space="preserve">
     <value>File type  {0} not supported!</value>
@@ -1043,7 +1043,7 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Pak Unpacking Progress</value>
   </data>
   <data name="UnpackFilesButton" xml:space="preserve">
-    <value>Unpack .pak Files</value>
+    <value>Unpack Game Files</value>
   </data>
   <data name="UnpackingCancelled" xml:space="preserve">
     <value>Unpacking processes cancelled successfully!</value>
@@ -1062,7 +1062,7 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Unpacking processes starting; this could take a while.</value>
   </data>
   <data name="UnpackModPaks" xml:space="preserve">
-    <value>Unpack mod .pak(s)</value>
+    <value>Unpack mod(s)</value>
   </data>
   <data name="UnpackModPakTooltip" xml:space="preserve">
     <value>Unpacks the selected .pak file(s) into the UnpackedMods folder, near the application.</value>
