@@ -122,8 +122,8 @@
                             <Run Text="{Binding SearchResults.IndexFileCount, Mode=OneWay}"/> /
                             <Run Text="{Binding SearchResults.IndexFileTotal, Mode=OneWay}"/>
                         </TextBlock>
-                        <TextBlock Margin="0,25,0,-34" Text="{Binding Source={x:Static p:Resources.EstimateLabel}, StringFormat='{}{0}: '}"></TextBlock>
-                        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="50,25,0,-34" TextWrapping="Wrap" Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
+                        <!--<TextBlock Margin="0,25,0,-34" Text="{Binding Source={x:Static p:Resources.EstimateLabel}, StringFormat='{}{0}: '}"></TextBlock>-->
+                        <!--<TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="50,25,0,-34" TextWrapping="Wrap" Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>-->
                     </Grid>
                     <Button x:Name="searchButton" Content="{x:Static p:Resources.IndexSearchButton}" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
                             ToolTip="{x:Static p:Resources.IndexSearchButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>

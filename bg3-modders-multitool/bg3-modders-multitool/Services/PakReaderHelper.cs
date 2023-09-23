@@ -40,53 +40,59 @@
             if (file == null)
                 return null;
 
-            byte[] output;
+            byte[] output = new byte[0];
             byte[] buffer = new byte[32768];
             try
             {
-                lock (file.PackageStream)
+                using (MemoryStream originalStream = new MemoryStream())
                 {
-                    var failedToConvert = false;
-                    __reset:
-                    file.PackageStream.Position = 0;
-                    using (Stream ms = file.MakeStream())
-                    using (BinaryReader reader = new BinaryReader(ms))
-                    using (MemoryStream msStream = new MemoryStream())
+                    lock (file.PackageStream)
                     {
-                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(Path.GetExtension(file.Name)) && file.SizeOnDisk != 0;
-                        if (convert && canConvertToLsx && !failedToConvert)
+                        file.PackageStream.Position = 0;
+                        using (Stream ms = file.MakeStream())
+                        using (BinaryReader reader = new BinaryReader(ms))
                         {
-                            try
+                            int count;
+                            while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+                                originalStream.Write(buffer, 0, count);
+                        }
+                    }
+                    
+                    if(file.SizeOnDisk != 0)
+                    {
+                        // TODO check loca
+                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(Path.GetExtension(file.Name));
+                        if(convert && canConvertToLsx)
+                        {
+                            using (MemoryStream newOutStream = new MemoryStream())
                             {
-                                var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
-                                var format = ResourceUtils.ExtensionToResourceFormat(filePath);
-                                var resource = ResourceUtils.LoadResource(ms, format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
-                                LSXWriter lSXWriter = new LSXWriter(msStream);
-                                lSXWriter.Version = conversionParams.LSX;
-                                lSXWriter.PrettyPrint = conversionParams.PrettyPrint;
-                                conversionParams.ToSerializationSettings(lSXWriter.SerializationSettings);
-                                lSXWriter.Write(resource);
-                                output = msStream.ToArray();
-                                return output;
-                            }
-                            catch(Exception ex)
-                            {
-                                if(!FileHelper.IsSpecialLSFSignature(ex.Message))
+                                try
                                 {
-                                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, ".lsf", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                                    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                                    var format = ResourceUtils.ExtensionToResourceFormat(filePath);
+                                    originalStream.Position = 0;
+                                    var resource = ResourceUtils.LoadResource(originalStream, format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                                    LSXWriter lSXWriter = new LSXWriter(newOutStream);
+                                    lSXWriter.Version = conversionParams.LSX;
+                                    lSXWriter.PrettyPrint = conversionParams.PrettyPrint;
+                                    conversionParams.ToSerializationSettings(lSXWriter.SerializationSettings);
+                                    lSXWriter.Write(resource);
+                                    output = newOutStream.ToArray();
+                                    return output;
                                 }
-                                failedToConvert = true;
-                                file.ReleaseStream();
-                                goto __reset;
+                                catch (Exception ex)
+                                {
+                                    if (!FileHelper.IsSpecialLSFSignature(ex.Message))
+                                    {
+                                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, ".lsf", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                                    }
+                                }
                             }
                         }
-
-                        // TODO check loca
-
-                        int count;
-                        while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
-                            msStream.Write(buffer, 0, count);
-                        output = msStream.ToArray();
+                        else
+                        {
+                            output = originalStream.ToArray();
+                        }
                     }
                 }
             }
