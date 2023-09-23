@@ -34,7 +34,7 @@
         /// </summary>
         /// <param name="filePath">The internal pak file path</param>
         /// <returns>The file contents</returns>
-        public byte[] ReadPakFileContents(string filePath)
+        public byte[] ReadPakFileContents(string filePath, bool convert = false)
         {
             var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
             if (file == null)
@@ -44,13 +44,46 @@
             byte[] buffer = new byte[32768];
             try
             {
+                var failedToConvert = false;
                 lock (file.PackageStream)
                 {
+                    __reset:
+                    
                     file.PackageStream.Position = 0;
                     using (Stream ms = file.MakeStream())
                     using (BinaryReader reader = new BinaryReader(ms))
                     using (MemoryStream msStream = new MemoryStream())
                     {
+                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(Path.GetExtension(file.Name));
+                        if (convert && canConvertToLsx && !failedToConvert)
+                        {
+                            try
+                            {
+                                var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                                var format = ResourceUtils.ExtensionToResourceFormat(filePath);
+                                var resource = ResourceUtils.LoadResource(ms, format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                                LSXWriter lSXWriter = new LSXWriter(msStream);
+                                lSXWriter.Version = conversionParams.LSX;
+                                lSXWriter.PrettyPrint = conversionParams.PrettyPrint;
+                                conversionParams.ToSerializationSettings(lSXWriter.SerializationSettings);
+                                lSXWriter.Write(resource);
+                                output = msStream.ToArray();
+                                return output;
+                            }
+                            catch(Exception ex)
+                            {
+                                if(!FileHelper.IsSpecialLSFSignature(ex.Message))
+                                {
+                                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, ".lsf", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                                }
+                                failedToConvert = true;
+                                file.ReleaseStream();
+                                goto __reset;
+                            }
+                        }
+
+                        // TODO check loca
+
                         int count;
                         while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
                             msStream.Write(buffer, 0, count);
@@ -105,7 +138,7 @@
                     }
                     catch(Exception ex)
                     {
-                        if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                        if (FileHelper.IsSpecialLSFSignature(ex.Message))
                         {
                             GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, isConvertableToLsx ? ".lsx" : ".xml", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                         }
