@@ -4,7 +4,6 @@
 namespace bg3_modders_multitool.ViewModels.Utilities
 {
     using bg3_modders_multitool.Services;
-    using LSLib.LS.Story;
     using System;
     using System.Linq;
     using System.Xml.Linq;

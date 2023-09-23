@@ -17,6 +17,9 @@ namespace bg3_modders_multitool.Services
     using System.Xml;
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Views.Utilities;
+    using System.Xml.Linq;
+    using System.Linq;
+    using System.Windows.Controls;
 
     public static class DragAndDropHelper
     {
@@ -348,7 +351,7 @@ namespace bg3_modders_multitool.Services
                     // copy to temp dir
                     var fileParent = file.Replace(path, string.Empty);
                     var mod = $"{modDir}{fileParent}";
-                    var modParent = new Alphaleonis.Win32.Filesystem.DirectoryInfo(mod).Parent.FullName;
+                    var modParent = new DirectoryInfo(mod).Parent.FullName;
 
                     // check if matching file for .lsf exists as .lsf.lsx and ignore if yes
                     if (new FileInfo(file).Directory.GetFiles(fileName + "*").Length == 1)
@@ -373,7 +376,40 @@ namespace bg3_modders_multitool.Services
         private static void ProcessLsxMerges(string directory, string modName)
         {
             // RootTemplates => _merged
-            // Progressions, Races, ClassDescriptions, ActionResourceDefinitions
+
+            foreach(var dir in new string[] { "Progressions", "Races", "ClassDescriptions", "ActionResourceDefinitions" })
+            {
+                var path = Path.Combine(directory, "Public", modName, dir);
+                var dirInfo = new DirectoryInfo(path);
+                if(dirInfo.Exists)
+                {
+                    var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
+                    var xml = XDocument.Parse(template);
+                    xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
+                    xml.Descendants("region").Single().Attribute("id").Value = dir;
+                    var children = xml.Descendants("children").Single();
+                    var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
+                    foreach(var file in files)
+                    {
+                        using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
+                        {
+                            var contents = XDocument.Parse(reader.ReadToEnd());
+                            var contentChildren = contents.Descendants("children").Elements().ToList();
+                            foreach(var child in contentChildren)
+                            {
+                                children.Add(child);
+                            }
+                        }
+                        file.Delete();
+                    }
+                    xml.Save($"{path}\\{dir}.lsx");
+
+                    foreach(var delDir in dirInfo.GetDirectories())
+                    {
+                        delDir.Delete(true);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -396,7 +432,7 @@ namespace bg3_modders_multitool.Services
                     using (System.IO.FileStream fs = new System.IO.FileStream(fileName, System.IO.FileMode.Append, System.IO.FileAccess.Write))
                     using (System.IO.StreamWriter sw = new System.IO.StreamWriter(fs))
                     {
-                        sw.WriteLine($"// ==== Generated with ShinyHobo's BG3 Modder's Multitool ====");
+                        sw.WriteLine($"// ==== {Properties.Resources.GeneratedWithDisclaimer} ====");
                         foreach (var file in files)
                         {
                             sw.WriteLine($"// === {file.Name} ===");
