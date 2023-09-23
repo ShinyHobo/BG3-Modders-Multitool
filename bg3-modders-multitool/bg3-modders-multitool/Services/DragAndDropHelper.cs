@@ -19,7 +19,6 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Views.Utilities;
     using System.Xml.Linq;
     using System.Linq;
-    using System.Windows.Controls;
 
     public static class DragAndDropHelper
     {
@@ -475,9 +474,12 @@ namespace bg3_modders_multitool.Services
                 var extension = Path.GetExtension(file);
                 var conversionFile = fileName.Replace(extension, string.Empty);
                 var secondExtension = Path.GetExtension(conversionFile);
+
+                var validExtension = FileHelper.ConvertableLsxResources.Contains(secondExtension) || secondExtension == ".loca";
+
                 var mod = $"{new FileInfo(file).Directory}\\{fileName}";
-                var modParent = new Alphaleonis.Win32.Filesystem.DirectoryInfo(mod).Parent.FullName;
-                if(!string.IsNullOrEmpty(secondExtension))
+                var modParent = new DirectoryInfo(mod).Parent.FullName;
+                if(validExtension)
                 {
                     FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
                     File.Delete(file);
