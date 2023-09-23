@@ -86,8 +86,15 @@ namespace bg3_modders_multitool.Services
                     var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                     try
                     {
-                        Resource resource = ResourceUtils.LoadResource(path, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
-                        ResourceUtils.SaveResource(resource, newPath, conversionParams);
+                        if(File.GetSize(path) == 0)
+                        {
+                            newFile = file;
+                        }
+                        else
+                        {
+                            Resource resource = ResourceUtils.LoadResource(path, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                            ResourceUtils.SaveResource(resource, newPath, conversionParams);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -97,6 +104,7 @@ namespace bg3_modders_multitool.Services
                         {
                             GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                         }
+                        newFile = file;
                     }
 
                     if (MustRenameLsxResources.Contains(originalExtension))
