@@ -62,7 +62,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        
         <CheckBox Height="23" Width="72" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,6" Cursor="Hand" IsChecked="{Binding SelectAllToggled}" x:Name="selectAll"
                   Content="{x:Static p:Resources.SelectAllButton}" Click="ToggleSelection_Click" IsEnabled="{Binding AllowInteraction}"/>
         <Button Height="23" Width="102" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="96,0,0,10" Cursor="Hand" x:Name="extractAll" IsEnabled="{Binding AllowInteraction}"

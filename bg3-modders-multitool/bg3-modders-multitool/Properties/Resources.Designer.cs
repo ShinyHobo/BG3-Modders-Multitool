@@ -1257,6 +1257,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generated with ShinyHobo&apos;s BG3 Modder&apos;s Multitool.
+        /// </summary>
+        public static string GeneratedWithDisclaimer {
+            get {
+                return ResourceManager.GetString("GeneratedWithDisclaimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generate.
         /// </summary>
         public static string GenerateTitle {

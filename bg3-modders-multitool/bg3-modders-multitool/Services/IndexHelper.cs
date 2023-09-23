@@ -172,7 +172,7 @@ namespace bg3_modders_multitool.Services
         /// Generates an index using the given filelist.
         /// </summary>
         /// <param name="filelist">The list of files to index.</param>
-        public Task Index(List<string> filelist = null)
+        public Task Index(string[] filelist = null)
         {
             return Task.Run(() =>
             {
@@ -182,7 +182,7 @@ namespace bg3_modders_multitool.Services
                 if (filelist==null)
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.RetrievingFileList);
-                    filelist = FileHelper.DirectorySearch(@"\\?\" + FileHelper.UnpackedDataPath);
+                    filelist = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.UnpackedDataPath, "*", System.IO.SearchOption.AllDirectories);
                 }
 
                 // Display total file count being indexed
@@ -190,7 +190,7 @@ namespace bg3_modders_multitool.Services
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     DataContext.IsIndexing = true;
-                    DataContext.IndexFileTotal = filelist.Count;
+                    DataContext.IndexFileTotal = filelist.Length;
                     DataContext.IndexStartTime = DateTime.Now;
                     DataContext.IndexFileCount = 0;
                 });
@@ -205,7 +205,7 @@ namespace bg3_modders_multitool.Services
         /// Indexes the given files using an analyzer.
         /// </summary>
         /// <param name="files">The file list to index.</param>
-        private void IndexFiles(List<string> files)
+        private void IndexFiles(string[] files)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
             using (Analyzer a = new CustomAnalyzer())

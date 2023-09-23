@@ -554,6 +554,9 @@ Do you wish to continue?</value>
 {1}</value>
     <comment>error message, stack trace</comment>
   </data>
+  <data name="GeneratedWithDisclaimer" xml:space="preserve">
+    <value>Generated with ShinyHobo's BG3 Modder's Multitool</value>
+  </data>
   <data name="GenerateTitle" xml:space="preserve">
     <value>Generate</value>
   </data>

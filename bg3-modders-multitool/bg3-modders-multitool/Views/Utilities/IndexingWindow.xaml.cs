@@ -215,7 +215,6 @@ namespace bg3_modders_multitool.Views
                 FileHelper.OpenFile(newFile, line);
             }
         }
-
         /// <summary>
         /// Extracts, converts, and opens the folder to the currently previewed file
         /// </summary>
