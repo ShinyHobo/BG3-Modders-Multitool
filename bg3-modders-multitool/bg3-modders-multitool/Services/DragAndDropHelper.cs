@@ -377,32 +377,49 @@ namespace bg3_modders_multitool.Services
         {
             // RootTemplates => _merged
 
-            foreach(var dir in new string[] { "Progressions", "Races", "ClassDescriptions", "ActionResourceDefinitions" })
+            foreach(var dir in new string[] { "Progressions", "Races", "ClassDescriptions", "ActionResourceDefinitions", "Lists", "RootTemplates"})
             {
+                var isRootTemplate = dir == "RootTemplates";
+                var isList = dir == "Lists";
                 var path = Path.Combine(directory, "Public", modName, dir);
                 var dirInfo = new DirectoryInfo(path);
                 if(dirInfo.Exists)
                 {
-                    var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
-                    var xml = XDocument.Parse(template);
-                    xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
-                    xml.Descendants("region").Single().Attribute("id").Value = dir;
-                    var children = xml.Descendants("children").Single();
                     var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
-                    foreach(var file in files)
+                    var fileGroups = isList ? files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First()) : files.GroupBy(f => "not list");
+                    foreach(var fileGroup in fileGroups)
                     {
-                        using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
+                        var groupName = fileGroup.Key;
+                        var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
+                        var xml = XDocument.Parse(template);
+                        xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
+                        if (isRootTemplate)
                         {
-                            var contents = XDocument.Parse(reader.ReadToEnd());
-                            var contentChildren = contents.Descendants("children").Elements().ToList();
-                            foreach(var child in contentChildren)
-                            {
-                                children.Add(child);
-                            }
+                            xml.Descendants("region").Single().Attribute("id").Value = "Templates";
+                            xml.Descendants("node").Single().Attribute("id").Value = "Templates";
                         }
-                        file.Delete();
+                        else
+                        {
+                            xml.Descendants("region").Single().Attribute("id").Value = dir;
+                        }
+                        var children = xml.Descendants("children").Single();
+
+
+                        foreach (var file in fileGroup)
+                        {
+                            using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
+                            {
+                                var contents = XDocument.Parse(reader.ReadToEnd());
+                                var contentChildren = contents.Descendants("children").Elements().ToList();
+                                foreach (var child in contentChildren)
+                                {
+                                    children.Add(child);
+                                }
+                            }
+                            file.Delete();
+                        }
+                        xml.Save($"{path}\\{(isList ? groupName : dir)}{(isRootTemplate ? ".lsf" : "")}.lsx");
                     }
-                    xml.Save($"{path}\\{dir}.lsx");
 
                     foreach(var delDir in dirInfo.GetDirectories())
                     {
