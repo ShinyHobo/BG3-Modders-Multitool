@@ -375,8 +375,6 @@ namespace bg3_modders_multitool.Services
         /// <param name="modName">The mod name to point the search at</param>
         private static void ProcessLsxMerges(string directory, string modName)
         {
-            // RootTemplates => _merged
-
             foreach(var dir in new string[] { "Progressions", "Races", "ClassDescriptions", "ActionResourceDefinitions", "Lists", "RootTemplates"})
             {
                 var isRootTemplate = dir == "RootTemplates";
@@ -389,7 +387,6 @@ namespace bg3_modders_multitool.Services
                     var fileGroups = isList ? files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First()) : files.GroupBy(f => "not list");
                     foreach(var fileGroup in fileGroups)
                     {
-                        var groupName = fileGroup.Key;
                         var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
                         var xml = XDocument.Parse(template);
                         xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
@@ -400,11 +397,10 @@ namespace bg3_modders_multitool.Services
                         }
                         else
                         {
-                            xml.Descendants("region").Single().Attribute("id").Value = dir;
+                            xml.Descendants("region").Single().Attribute("id").Value = isList ? fileGroup.Key : dir;
                         }
+
                         var children = xml.Descendants("children").Single();
-
-
                         foreach (var file in fileGroup)
                         {
                             using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
@@ -418,7 +414,9 @@ namespace bg3_modders_multitool.Services
                             }
                             file.Delete();
                         }
-                        xml.Save($"{path}\\{(isList ? groupName : dir)}{(isRootTemplate ? ".lsf" : "")}.lsx");
+                        var fileName = isList ? fileGroup.Key : dir;
+                        fileName = isRootTemplate ? "_merged" : fileName;
+                        xml.Save($"{path}\\{fileName}{(isRootTemplate ? ".lsf" : "")}.lsx");
                     }
 
                     foreach(var delDir in dirInfo.GetDirectories())
