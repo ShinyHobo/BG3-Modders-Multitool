@@ -40,7 +40,6 @@
             if (file == null)
                 return null;
 
-            byte[] output = new byte[0];
             byte[] buffer = new byte[32768];
             try
             {
@@ -48,7 +47,7 @@
                 {
                     lock (file.PackageStream)
                     {
-                        file.PackageStream.Position = 0;
+                        file.PackageStream.Position = (long)file.OffsetInFile;
                         using (Stream ms = file.MakeStream())
                         using (BinaryReader reader = new BinaryReader(ms))
                         {
@@ -77,8 +76,7 @@
                                     lSXWriter.PrettyPrint = conversionParams.PrettyPrint;
                                     conversionParams.ToSerializationSettings(lSXWriter.SerializationSettings);
                                     lSXWriter.Write(resource);
-                                    output = newOutStream.ToArray();
-                                    return output;
+                                    return newOutStream.ToArray();
                                 }
                                 catch (Exception ex)
                                 {
@@ -91,7 +89,7 @@
                         }
                         else
                         {
-                            output = originalStream.ToArray();
+                            return originalStream.ToArray();
                         }
                     }
                 }
@@ -101,7 +99,7 @@
                 file.ReleaseStream();
             }
 
-            return output;
+            return new byte[0];
         }
 
         /// <summary>
