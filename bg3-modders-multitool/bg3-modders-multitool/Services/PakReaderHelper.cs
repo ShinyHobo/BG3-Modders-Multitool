@@ -48,13 +48,12 @@
                 lock (file.PackageStream)
                 {
                     __reset:
-                    
                     file.PackageStream.Position = 0;
                     using (Stream ms = file.MakeStream())
                     using (BinaryReader reader = new BinaryReader(ms))
                     using (MemoryStream msStream = new MemoryStream())
                     {
-                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(Path.GetExtension(file.Name));
+                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(Path.GetExtension(file.Name)) && file.SizeOnDisk != 0;
                         if (convert && canConvertToLsx && !failedToConvert)
                         {
                             try
