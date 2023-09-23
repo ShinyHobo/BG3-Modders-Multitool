@@ -9,6 +9,7 @@
         xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.GOETitle}" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
     <Grid>
         <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="450" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded" Cursor="Hand" IsEnabled="{Binding Loaded}" >

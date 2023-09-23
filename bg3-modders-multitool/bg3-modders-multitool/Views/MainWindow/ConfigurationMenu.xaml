@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
         Height="270" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Grid>
         <Grid Margin="10,0,10,0">

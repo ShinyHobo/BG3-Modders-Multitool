@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:bg3_modders_multitool.Views"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
-        Style="{StaticResource ResourceKey=CustomWindowStyle}"
+        Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.AppTitle}" MinHeight="482" MinWidth="800" Height="482" Width="800">
         <!-- Developed by ShinyHobo -->
         <!-- Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd. -->
@@ -16,7 +16,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <Border BorderBrush="Gray" Background="LightGray" BorderThickness="0,0,0,3">
+            <Border BorderBrush="Gray" BorderThickness="0,0,0,3">
                 <Menu Background="Transparent">
                     <MenuItem Header="{x:Static p:Resources.UtilitiesMenuLabel}" ToolTip="{x:Static p:Resources.MultitoolTools}">
                         <MenuItem Header="{x:Static p:Resources.UnpackModPaks}" ToolTip="{x:Static p:Resources.UnpackModPakTooltip}" Click="UnpackMod_Click" Icon="📦"/>
@@ -94,8 +94,8 @@
             <Grid Grid.Row="0">
                 <StackPanel HorizontalAlignment="Right"  Margin="0,-25,5,0" Visibility="{Binding UpdateVisible}">
                     <TextBlock Text="Update(s) available" Margin="0,5,5,5"/>
-                    <Button Content="🔃" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30" Background="Transparent"  Click="CheckForUpdates_Click"
-                            BorderThickness="0" Cursor="Hand" FontSize="20" Foreground="Green" ToolTip="{x:Static p:Resources.UpdatesFoundButton}"/>
+                    <Button Content="🔃" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30" Click="CheckForUpdates_Click"
+                            BorderThickness="0" Cursor="Hand" FontSize="20" Background="Green"/>
                 </StackPanel>
 
                 <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0">
@@ -106,7 +106,7 @@
                 <Grid Margin="273,10,60,0">
                     <Label x:Name="guidLabel" Content="{x:Static p:Resources.UUIDTitle}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
                     <Button x:Name="guidGenerate" Content="{x:Static p:Resources.GenerateTitle}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
-                    <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Background="White" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
+                    <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
                     <CheckBox x:Name="typeSwitch" Content="{x:Static p:Resources.HandleLabel}" HorizontalAlignment="Left" Margin="390,33,0,0" VerticalAlignment="Top" Cursor="Hand"/>
                 </Grid>
                 <Button x:Name="launchGameButton" HorizontalAlignment="Left" Margin="620,81,0,0" VerticalAlignment="Top" Width="100" Height="100" Click="LaunchGameButton_Click" Cursor="Hand" Panel.ZIndex="10"

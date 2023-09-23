@@ -557,6 +557,28 @@
     <Compile Include="Services\PathHelper.cs" />
     <Compile Include="Services\RenderedModelHelper.cs" />
     <Compile Include="Services\RootTemplateHelper.cs" />
+    <Compile Include="Themes\Attached\CornerHelper.cs" />
+    <Compile Include="Themes\Attached\MenuHelper.cs" />
+    <Compile Include="Themes\Attached\PasswordBoxHelper.cs" />
+    <Compile Include="Themes\Attached\TextBoxAutoSelect.cs" />
+    <Compile Include="Themes\Attached\TextHinting.cs" />
+    <Compile Include="Themes\ColourfulDarkTheme.xaml.cs">
+      <DependentUpon>ColourfulDarkTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\ColourfulLightTheme.xaml.cs">
+      <DependentUpon>ColourfulLightTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\Controls.xaml.cs">
+      <DependentUpon>Controls.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\DarkTheme.xaml.cs">
+      <DependentUpon>DarkTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\LightTheme.xaml.cs">
+      <DependentUpon>LightTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\ThemesController.cs" />
+    <Compile Include="Themes\ThemeType.cs" />
     <Compile Include="ViewModels\MainWindow\DragAndDropBox.cs" />
     <Compile Include="ViewModels\Utilities\AddMissingMetaLsxViewModel.cs" />
     <Compile Include="ViewModels\Utilities\AtlasToolViewModel.cs" />
@@ -600,6 +622,54 @@
     <Compile Include="XAMLHelpers\SelectableTextBlock.cs" />
     <Compile Include="XAMLHelpers\TextBoxFormatter.cs" />
     <Compile Include="XAMLHelpers\TextEditorWrapper.cs" />
+    <Page Include="Themes\ColourDictionaries\DarkGreyTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColourDictionaries\DeepDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColourDictionaries\GreyTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColourDictionaries\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColourDictionaries\RedBlackTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColourDictionaries\SoftDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColourfulDarkTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColourfulLightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ControlColours.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Controls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\DarkTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainWindow\ConfigurationMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -690,6 +760,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Themes\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
