@@ -322,7 +322,7 @@ Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endor
     <comment>file path</comment>
   </data>
   <data name="DecompressFilesButton" xml:space="preserve">
-    <value>Decompress Files</value>
+    <value>Decompress UnpackedData Files</value>
   </data>
   <data name="DecompressionCancelled" xml:space="preserve">
     <value>Decompression cancelled</value>
@@ -393,6 +393,12 @@ Do you wish to continue?</value>
   <data name="Extensionless" xml:space="preserve">
     <value>extensionless</value>
     <comment>for files without an extension</comment>
+  </data>
+  <data name="ExtractFileTooltip" xml:space="preserve">
+    <value>Extract file</value>
+  </data>
+  <data name="ExtractSelectedButton" xml:space="preserve">
+    <value>Extract Selected</value>
   </data>
   <data name="FailedGOE" xml:space="preserve">
     <value>GameObjects failed to load. {0} seconds passed.</value>
@@ -466,6 +472,16 @@ Do you wish to continue?</value>
   <data name="FileDroppingNotSupported" xml:space="preserve">
     <value>File dropping is not yet supported.</value>
   </data>
+  <data name="FileExtractionCanceled" xml:space="preserve">
+    <value>File extraction cancelled.</value>
+  </data>
+  <data name="FileExtractionComplete" xml:space="preserve">
+    <value>File extraction complete!</value>
+  </data>
+  <data name="FileExtractionStarted" xml:space="preserve">
+    <value>Starting extraction of {0} files...</value>
+    <comment>file count</comment>
+  </data>
   <data name="FileListRetrieved" xml:space="preserve">
     <value>File list retrieved.</value>
   </data>
@@ -481,7 +497,7 @@ Do you wish to continue?</value>
     <value>File not found.</value>
   </data>
   <data name="FileOperationsMenu" xml:space="preserve">
-    <value>File Operations</value>
+    <value>Game File Operations</value>
   </data>
   <data name="FileTypeNotSupported" xml:space="preserve">
     <value>File type  {0} not supported!</value>
@@ -863,6 +879,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="PleaseSelectWorkspace" xml:space="preserve">
     <value>Please select your mod workspace directory</value>
   </data>
+  <data name="PreviewConvertedButton" xml:space="preserve">
+    <value>Preview converted file</value>
+  </data>
   <data name="ProblemPlayingAudio" xml:space="preserve">
     <value>Problem playing audio file!!</value>
   </data>
@@ -898,6 +917,10 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="ReportABugTooltip" xml:space="preserve">
     <value>Report a bug or problem to the GitHub issues page</value>
+  </data>
+  <data name="ResourceExtracted" xml:space="preserve">
+    <value>Resource extracted: {0}</value>
+    <comment>file path</comment>
   </data>
   <data name="ResultsHaveBeenFiltered" xml:space="preserve">
     <value>{0} results have been filtered out.</value>
@@ -1020,7 +1043,7 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Pak Unpacking Progress</value>
   </data>
   <data name="UnpackFilesButton" xml:space="preserve">
-    <value>Unpack .pak Files</value>
+    <value>Unpack Game Files</value>
   </data>
   <data name="UnpackingCancelled" xml:space="preserve">
     <value>Unpacking processes cancelled successfully!</value>
@@ -1039,7 +1062,7 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Unpacking processes starting; this could take a while.</value>
   </data>
   <data name="UnpackModPaks" xml:space="preserve">
-    <value>Unpack mod .pak(s)</value>
+    <value>Unpack mod(s)</value>
   </data>
   <data name="UnpackModPakTooltip" xml:space="preserve">
     <value>Unpacks the selected .pak file(s) into the UnpackedMods folder, near the application.</value>

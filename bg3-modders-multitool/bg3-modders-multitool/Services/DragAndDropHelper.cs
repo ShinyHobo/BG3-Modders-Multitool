@@ -199,7 +199,8 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Cleans all the files out of the temp directory used.
         /// </summary>
-        public static void CleanTempDirectory()
+        /// <param name="writeToConsole">Whether or not to write to the console</param>
+        public static void CleanTempDirectory(bool writeToConsole = true)
         {
             // cleanup temp folder
             DirectoryInfo di = new DirectoryInfo(TempFolder);
@@ -207,7 +208,8 @@ namespace bg3_modders_multitool.Services
             foreach (FileInfo file in di.GetFiles()) file.Delete();
             foreach (DirectoryInfo subDirectory in di.GetDirectories()) subDirectory.Delete(true);
 
-            GeneralHelper.WriteToConsole(Properties.Resources.TempFilesCleaned);
+            if(writeToConsole)
+                GeneralHelper.WriteToConsole(Properties.Resources.TempFilesCleaned);
         }
 
         /// <summary>

@@ -649,7 +649,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Decompress Files.
+        ///   Looks up a localized string similar to Decompress UnpackedData Files.
         /// </summary>
         public static string DecompressFilesButton {
             get {
@@ -840,6 +840,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extract file.
+        /// </summary>
+        public static string ExtractFileTooltip {
+            get {
+                return ResourceManager.GetString("ExtractFileTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extract Selected.
+        /// </summary>
+        public static string ExtractSelectedButton {
+            get {
+                return ResourceManager.GetString("ExtractSelectedButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GameObjects failed to load. {0} seconds passed..
         /// </summary>
         public static string FailedGOE {
@@ -1013,6 +1031,33 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File extraction cancelled..
+        /// </summary>
+        public static string FileExtractionCanceled {
+            get {
+                return ResourceManager.GetString("FileExtractionCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File extraction complete!.
+        /// </summary>
+        public static string FileExtractionComplete {
+            get {
+                return ResourceManager.GetString("FileExtractionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting extraction of {0} files....
+        /// </summary>
+        public static string FileExtractionStarted {
+            get {
+                return ResourceManager.GetString("FileExtractionStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File list retrieved..
         /// </summary>
         public static string FileListRetrieved {
@@ -1049,7 +1094,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File Operations.
+        ///   Looks up a localized string similar to Game File Operations.
         /// </summary>
         public static string FileOperationsMenu {
             get {
@@ -2134,6 +2179,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Preview converted file.
+        /// </summary>
+        public static string PreviewConvertedButton {
+            get {
+                return ResourceManager.GetString("PreviewConvertedButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem playing audio file!!.
         /// </summary>
         public static string ProblemPlayingAudio {
@@ -2231,6 +2285,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ReportABugTooltip {
             get {
                 return ResourceManager.GetString("ReportABugTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resource extracted: {0}.
+        /// </summary>
+        public static string ResourceExtracted {
+            get {
+                return ResourceManager.GetString("ResourceExtracted", resourceCulture);
             }
         }
         
@@ -2586,7 +2649,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unpack .pak Files.
+        ///   Looks up a localized string similar to Unpack Game Files.
         /// </summary>
         public static string UnpackFilesButton {
             get {
@@ -2640,7 +2703,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unpack mod .pak(s).
+        ///   Looks up a localized string similar to Unpack mod(s).
         /// </summary>
         public static string UnpackModPaks {
             get {

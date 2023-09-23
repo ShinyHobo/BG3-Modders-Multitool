@@ -106,15 +106,7 @@ namespace bg3_modders_multitool.Services
         {
             return await Task.Run(() => {
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
-                var paks = PakReaderHelper.GetPakList();
-                foreach (var pak in paks)
-                {
-                    var helper = new PakReaderHelper(pak);
-                    if (helper.PackagedFiles != null)
-                    {
-                        PakReaderHelpers.Add(helper);
-                    }
-                }
+                PakReaderHelpers = PakReaderHelper.GetPakHelpers();
 
                 ReadVisualBanks();
                 CloseFileProgress();
@@ -278,7 +270,7 @@ namespace bg3_modders_multitool.Services
                                     if (GameObjectViewModel.LoadingCanceled) loopState.Break();
                                     if (reader.Name == "region")
                                     {
-                                        var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = rootTemplatePath };
+                                        var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileToExist };
 
                                         if (!reader.ReadToDescendant("children"))
                                         {
