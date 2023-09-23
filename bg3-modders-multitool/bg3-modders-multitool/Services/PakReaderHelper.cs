@@ -2,6 +2,7 @@
 {
     using LSLib.LS;
     using LSLib.LS.Enums;
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -82,34 +83,42 @@
                     var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
                     var isConvertableToXml = originalExtension.Contains("loca");
                     var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
-                    if (isConvertableToLsx)
+                    try
                     {
-                        var format = ResourceUtils.ExtensionToResourceFormat(filePath);
-                        var resource = ResourceUtils.LoadResource(file.MakeStream(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
-                        var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
-                        newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
-                        ResourceUtils.SaveResource(resource, newFile, conversionParams);
-                        return newFile;
-                    }
-                    else if (isConvertableToXml)
-                    {
-                        var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
-                        var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
-                        newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
-                        LocaUtils.Save(resource, newFile, LocaFormat.Xml);
-                        return newFile;
-                    }
-                    else
-                    {
-                        var path = FileHelper.GetPath($"{PakName}\\{filePath}");
-                        FileManager.TryToCreateDirectory(path);
-                        var contents = ReadPakFileContents(filePath);
-                        using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
+                        if (isConvertableToLsx && file.SizeOnDisk != 0)
                         {
-                            fileStream.Write(contents, 0, contents.Length);
+                            var format = ResourceUtils.ExtensionToResourceFormat(filePath);
+                            var resource = ResourceUtils.LoadResource(file.MakeStream(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
+                            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
+                            ResourceUtils.SaveResource(resource, newFile, conversionParams);
+                            return newFile;
                         }
-                        return path;
+                        else if (isConvertableToXml && file.SizeOnDisk != 0)
+                        {
+                            var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
+                            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
+                            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
+                            LocaUtils.Save(resource, newFile, LocaFormat.Xml);
+                            return newFile;
+                        }
                     }
+                    catch(Exception ex)
+                    {
+                        if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, isConvertableToLsx ? ".lsx" : ".xml", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        }
+                    }
+
+                    var path = FileHelper.GetPath($"{PakName}\\{filePath}");
+                    FileManager.TryToCreateDirectory(path);
+                    var contents = ReadPakFileContents(filePath);
+                    using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
+                    {
+                        fileStream.Write(contents, 0, contents.Length);
+                    }
+                    return path;
                 }
             }
             return null;
