@@ -41,7 +41,7 @@ namespace bg3_modders_multitool.Services
                 var pakSelection = new Views.PakSelection(files);
                 pakSelection.ShowDialog();
                 pakSelection.Closed += (sender, e) => pakSelection.Dispatcher.InvokeShutdown();
-                var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name).ToList();
+                var selectedPaks = ((PakSelection)pakSelection.DataContext).PakList.Where(pak => pak.IsSelected).Select(pak => pak.Name.Replace("*", "")).ToList();
                 var paks = files.Where(file => selectedPaks.Contains(Path.GetFileName(file))).ToList();
                 return UnpackPakFiles(paks);
             }
