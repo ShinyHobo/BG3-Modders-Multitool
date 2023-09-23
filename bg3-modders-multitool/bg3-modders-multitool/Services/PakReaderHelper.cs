@@ -44,9 +44,9 @@
             byte[] buffer = new byte[32768];
             try
             {
-                var failedToConvert = false;
                 lock (file.PackageStream)
                 {
+                    var failedToConvert = false;
                     __reset:
                     file.PackageStream.Position = 0;
                     using (Stream ms = file.MakeStream())
