@@ -100,7 +100,7 @@ namespace bg3_modders_multitool.Services
                     {
                         // Larian decided to rename the .lsx to .lsbs instead of properly LSF encoding them
                         // These are invalid .lsbs/.lsbc files if this error pops up
-                        if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                        if (!IsSpecialLSFSignature(ex.Message))
                         {
                             GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                         }
@@ -161,6 +161,16 @@ namespace bg3_modders_multitool.Services
             }
             var extension = Path.GetExtension(file);
             return ConvertableLsxResources.Contains(extension);
+        }
+
+        /// <summary>
+        /// Checks if file has specific LSF signature indicating that it is actually LSX instead of the extension they have, ie lsbc
+        /// </summary>
+        /// <param name="message">The error message to check</param>
+        /// <returns>Whether or not the file is actually lsx</returns>
+        public static bool IsSpecialLSFSignature(string message)
+        {
+            return message == "Invalid LSF signature; expected 464F534C, got 200A0D7B";
         }
 
         /// <summary>

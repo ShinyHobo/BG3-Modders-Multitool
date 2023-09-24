@@ -713,7 +713,7 @@ namespace bg3_modders_multitool.Services
 
             // Use fast query first in case user has decompressed all files
             IndexHelper.SearchFiles($"id=\"{searchTerm}\"", false, null, false).ContinueWith(results => {
-                rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsx")));
+                rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsx") || r.EndsWith(".lsf")));
             }).Wait();
 
             // Double check that files exist in index

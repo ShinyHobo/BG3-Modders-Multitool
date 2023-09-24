@@ -152,7 +152,7 @@ namespace bg3_modders_multitool.Services
                 // if file type is excluded, only track file name and path so it can be searched for by name
                 if (!extensionsToExclude.Contains(extension))
                 {
-                    var contents = helper.ReadPakFileContents(file);
+                    var contents = helper.ReadPakFileContents(file, true);
                     doc.Add(new TextField("body", System.Text.Encoding.UTF8.GetString(contents), Field.Store.NO));
                 }
 
