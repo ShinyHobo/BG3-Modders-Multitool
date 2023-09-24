@@ -6,7 +6,6 @@
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
-        MinWidth="250"
         Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.PakSelectionTitle}" Width="165.434" ResizeMode="NoResize">
     <Grid>
