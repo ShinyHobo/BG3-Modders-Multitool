@@ -7,6 +7,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading;
@@ -15,6 +16,9 @@ namespace bg3_modders_multitool.Views
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Threading;
+    using Xceed.Wpf.Toolkit.Primitives;
+    using Xceed.Wpf.Toolkit;
+    using LSLib.LS.Story;
 
     /// <summary>
     /// Interaction logic for IndexingWindow.xaml
@@ -38,8 +42,9 @@ namespace bg3_modders_multitool.Views
             timer.Tick += Timer_Tick;
 
             // TODO - get full list of file types from somewhere
-            fileTypeFilter.ItemsSource = FileHelper.FileTypes;
-            fileTypeFilter.IsSelectAllActive = true;
+            var fileTypes = new List<string>() { "Select All" };
+            fileTypes.AddRange(FileHelper.FileTypes);
+            fileTypeFilter.ItemsSource = fileTypes;
             fileTypeFilter.SelectAll();
 
             ((SearchResults)DataContext).LeadingWildcardDisabled = false;
@@ -158,8 +163,14 @@ namespace bg3_modders_multitool.Views
 
         private CancellationTokenSource UpdateFilterCancellation { get; set; }
 
+        private bool SkipSelectAllChange = false;
+        private bool SelectAllChanging = false;
+
         private void fileTypeFilter_ItemSelectionChanged(object sender, Xceed.Wpf.Toolkit.Primitives.ItemSelectionChangedEventArgs e)
         {
+            if (SelectAllChanging)
+                return;
+
             if (UpdateFilterCancellation != null)
             {
                 UpdateFilterCancellation.Cancel();
@@ -167,7 +178,54 @@ namespace bg3_modders_multitool.Views
             UpdateFilterCancellation = new CancellationTokenSource();
             CancellationToken ct = UpdateFilterCancellation.Token;
 
-            Task.Factory.StartNew(() =>
+            var item = e.Item;
+            if (item.Equals("Select All"))
+            {
+                if (e.IsSelected)
+                {
+                    SelectAllChanging = true;
+                    fileTypeFilter.SelectAll();
+                    SelectAllChanging = false;
+                    SkipSelectAllChange = false;
+                }
+                else if(!SkipSelectAllChange)
+                {
+                    SelectAllChanging = true;
+                    foreach (var data in fileTypeFilter.Items)
+                    {
+                        var selectorItem = fileTypeFilter.ItemContainerGenerator.ContainerFromItem(data) as SelectorItem;
+                        if ((selectorItem != null) && selectorItem.IsSelected == true)
+                        {
+                            fileTypeFilter.SelectedItems.Remove(data);
+                        }
+                    }
+                    SelectAllChanging = false;
+                }
+                else
+                {
+                    fileTypeFilter.SelectedItems.Remove("Select All");
+                    SkipSelectAllChange = false;
+                    return;
+                }
+            }
+            else
+            {
+                if(e.IsSelected)
+                {
+                    var allSelected = fileTypeFilter.SelectedItems.Count == fileTypeFilter.Items.Count - 1;
+                    if(allSelected)
+                    {
+                        fileTypeFilter.SelectedItems.Add("Select All");
+                    }
+                }
+                else
+                {
+                    SkipSelectAllChange = true;
+                    fileTypeFilter.SelectedItems.Remove("Select All");
+                }
+            }
+
+            Task.Run(() =>
             {
                 Application.Current.Dispatcher.Invoke(delegate
                 {
@@ -187,7 +245,7 @@ namespace bg3_modders_multitool.Views
                         SearchResults.Results = new ObservableCollection<SearchResult>(SearchResults.Results.OrderBy(x => x.Path));
                     }
                 });
-            }, ct);
+            });
         }
 
         /// <summary>
