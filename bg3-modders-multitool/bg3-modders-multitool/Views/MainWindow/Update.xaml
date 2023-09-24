@@ -17,8 +17,10 @@
                     <StackPanel Margin="0,7,0,0">
                         <TextBlock Text="{x:Static p:Resources.UpdateWarningLabel}" Margin="20,0,20,0" TextWrapping="Wrap"/>
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="50">
-                            <Button Content="{x:Static p:Resources.UpdateButton}" x:Name="confirm" Margin="5,5,5,5" Width="100" Foreground="White" Background="#FF87C157" Click="Confirm_Click" Cursor="Hand"/>
-                            <Button Content="{x:Static p:Resources.CancelButton}" x:Name="cancel" Margin="5,5,5,5" Width="100" Background="#FFC30505" Foreground="White" Click="Cancel_Click" Cursor="Hand"/>
+                            <Button Content="{x:Static p:Resources.UpdateButton}" x:Name="confirm" Margin="5,5,5,5" Width="100" Background="#FF87C157" Click="Confirm_Click" Cursor="Hand"/>
+                            <Button x:Name="cancel" Margin="5,5,5,5" Width="100" Background="#FFC30505" Click="Cancel_Click" Cursor="Hand">
+                                    <TextBlock Text="{x:Static p:Resources.CancelButton}" Foreground="LightGray"/>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                 </Border>

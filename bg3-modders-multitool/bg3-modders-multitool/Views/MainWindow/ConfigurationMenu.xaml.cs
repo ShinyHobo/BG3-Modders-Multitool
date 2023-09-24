@@ -4,6 +4,9 @@
 namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
+    using bg3_modders_multitool.Themes;
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
 
@@ -24,6 +27,17 @@ namespace bg3_modders_multitool.Views
             var selectedLanguage = ViewModels.MainWindow.GetSelectedLanguage();
             languageSelection.ItemsSource = ViewModels.MainWindow.AvailableLanguages;
             languageSelection.SelectedItem = ViewModels.MainWindow.AvailableLanguages.FirstOrDefault(l => l.Code == selectedLanguage.Code);
+
+            var selectedTheme = (ThemeType)Properties.Settings.Default.theme;
+            var themes = new List<ViewModels.MainWindow.Theme>() {
+                new ViewModels.MainWindow.Theme(ThemeType.LightTheme.GetName(), ThemeType.LightTheme),
+                new ViewModels.MainWindow.Theme(ThemeType.SoftDark.GetName(), ThemeType.SoftDark),
+                new ViewModels.MainWindow.Theme(ThemeType.DeepDark.GetName(), ThemeType.DeepDark),
+                new ViewModels.MainWindow.Theme(ThemeType.RedBlackTheme.GetName(), ThemeType.RedBlackTheme)
+            };
+
+            themeSelection.ItemsSource = themes;
+            themeSelection.SelectedIndex = themes.FindIndex(t => t.Type == selectedTheme);
         }
 
         /// <summary>
@@ -87,6 +101,19 @@ namespace bg3_modders_multitool.Views
             var selectedLanguage = (ViewModels.MainWindow.Language)languageSelection.SelectedItem;
             var vm = DataContext as ViewModels.MainWindow;
             vm.ReloadLanguage(selectedLanguage.Code);
+        }
+
+        /// <summary>
+        /// Selects the theme to use
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void themeSelection_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var selectedTheme = themeSelection.SelectedItem as ViewModels.MainWindow.Theme;
+            Properties.Settings.Default.theme = (int)selectedTheme.Type;
+            Properties.Settings.Default.Save();
+            ThemesController.SetTheme(selectedTheme.Type);
         }
 
         private void UnlockThreads_Checked(object sender, RoutedEventArgs e)

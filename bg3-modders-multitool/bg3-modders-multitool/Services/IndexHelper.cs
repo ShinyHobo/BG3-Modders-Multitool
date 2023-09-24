@@ -510,7 +510,7 @@ namespace bg3_modders_multitool.Services
                 {
                     var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
                     var escapedLine = System.Security.SecurityElement.Escape(line);
-                    escapedLine = escapedLine.Replace(text, $"<Span Background=\"DimGray\">{text}</Span>");
+                    escapedLine = escapedLine.Replace(text, $"<Span Background=\"DimGray\" Foreground=\"White\">{text}</Span>");
                     lines.TryAdd(lineNumber, escapedLine);
                 }
             });

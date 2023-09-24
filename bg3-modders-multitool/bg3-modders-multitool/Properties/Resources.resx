@@ -1006,6 +1006,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="TempFolderMenuTooltip" xml:space="preserve">
     <value>Temp files are stored here</value>
   </data>
+  <data name="ThemeLabel" xml:space="preserve">
+    <value>Theme Selection</value>
+  </data>
   <data name="TranslatedStringHandleLabel" xml:space="preserve">
     <value>TranslatedString handle</value>
   </data>
