@@ -313,10 +313,23 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="path">The mod root path.</param>
         /// <returns>The new mod build directory.</returns>
-        private static string BuildPack(string path)
+        private static (string ModBuild, List<string> MetaFile) BuildPack(string path)
         {
             var modName = new DirectoryInfo(path).Name;
             var modDir = $"{TempFolder}\\{modName}";
+
+            // Create meta if it does not exist
+            var modsPath = Path.Combine(path, "Mods");
+            var pathList = Directory.GetDirectories(modsPath);
+            if (pathList.Length == 0)
+            {
+                var newModsPath = Path.Combine(modsPath, modName);
+                Directory.CreateDirectory(newModsPath);
+                pathList = new string[] { newModsPath };
+            }
+            var metaList = GetMetalsxList(pathList);
+            if (metaList.Count == 0)
+                return (null, null);
 
             CopyWorkingFilesToTempDir(path, modDir);
 
@@ -329,7 +342,7 @@ namespace bg3_modders_multitool.Services
 
             ConvertFiles(modDir);
 
-            return modDir;
+            return (modDir, metaList);
         }
 
         #region Packing Steps
@@ -510,20 +523,12 @@ namespace bg3_modders_multitool.Services
             var destination =  $"{TempFolder}\\{dirName}.pak";
             GeneralHelper.WriteToConsole(Resources.Destination, destination);
             GeneralHelper.WriteToConsole(Resources.AttemptingToPack);
-            var buildDir = BuildPack(path);
-            if(buildDir != null)
+            var build = BuildPack(path);
+            if(build.ModBuild != null)
             {
-                PackMod(buildDir, destination);
-                Directory.Delete(buildDir, true);
-                var modsPath = Path.Combine(path, "Mods");
-                var pathList = Directory.GetDirectories(modsPath);
-                if(pathList.Length == 0)
-                {
-                    var newModsPath = Path.Combine(modsPath, dirName);
-                    Directory.CreateDirectory(newModsPath);
-                    pathList = new string[] { newModsPath };
-                }
-                return GetMetalsxList(pathList);
+                PackMod(build.ModBuild, destination);
+                Directory.Delete(build.ModBuild, true);
+                return build.MetaFile;
             }
             return new List<string>();
         }
