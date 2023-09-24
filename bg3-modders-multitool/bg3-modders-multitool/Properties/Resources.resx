@@ -734,6 +734,9 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Loading {0} from cache...</value>
     <comment>file name</comment>
   </data>
+  <data name="LoadingContents" xml:space="preserve">
+    <value>Loading contents...</value>
+  </data>
   <data name="LoadingLabel" xml:space="preserve">
     <value>Loading...</value>
   </data>

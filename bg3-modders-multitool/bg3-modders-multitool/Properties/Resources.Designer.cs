@@ -1766,6 +1766,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading contents....
+        /// </summary>
+        public static string LoadingContents {
+            get {
+                return ResourceManager.GetString("LoadingContents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loading....
         /// </summary>
         public static string LoadingLabel {

@@ -106,26 +106,37 @@ namespace bg3_modders_multitool.Views
             {
                 if (string.IsNullOrEmpty(SearchResults.SelectedPath)|| hoverFile != FileHelper.GetPath(SearchResults.SelectedPath))
                 {
-                    SearchResults.FileContents = new ObservableCollection<SearchResult>();
-                    SearchResults.SelectedPath = ((TextBlock)pathButton.Content).Text;
-                    var isGr2 = SearchResults.RenderModel();
-                    foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
-                    {
-                        SearchResults.FileContents.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
-                    }
-                    convertAndOpenButton.IsEnabled = true;
-                    if(isGr2)
-                    {
-                        convertAndOpenButton.Content = Properties.Resources.OpenDaeButton;
-                    }
-                    else if(FileHelper.CanConvertToLsx(SearchResults.SelectedPath)|| SearchResults.SelectedPath.EndsWith(".loca"))
-                    {
-                        convertAndOpenButton.Content = Properties.Resources.ConvertAndOpenButton;
-                    }
-                    else
-                    {
-                        convertAndOpenButton.Content = Properties.Resources.OpenButton;
-                    }
+                    var path = ((TextBlock)pathButton.Content).Text;
+                    Task.Run(() => {
+                        SearchResults.AllowInteraction = false;
+                        SearchResults.FileContents = new ObservableCollection<SearchResult>() { new SearchResult { Key = 0, Text = Properties.Resources.LoadingContents } };
+                        SearchResults.SelectedPath = path;
+                        var isGr2 = SearchResults.RenderModel();
+                        var results = new ObservableCollection<SearchResult>();
+                        foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
+                        {
+                            results.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
+                        }
+
+                        Application.Current.Dispatcher.Invoke(delegate
+                        {
+                            SearchResults.FileContents = results;
+                            convertAndOpenButton.IsEnabled = true;
+                            if (isGr2)
+                            {
+                                convertAndOpenButton.Content = Properties.Resources.OpenDaeButton;
+                            }
+                            else if (FileHelper.CanConvertToLsx(SearchResults.SelectedPath) || SearchResults.SelectedPath.EndsWith(".loca"))
+                            {
+                                convertAndOpenButton.Content = Properties.Resources.ConvertAndOpenButton;
+                            }
+                            else
+                            {
+                                convertAndOpenButton.Content = Properties.Resources.OpenButton;
+                            }
+                        });
+                        SearchResults.AllowInteraction = true;
+                    });
                 }
             }
             timer.Stop();
