@@ -3,13 +3,9 @@
 /// </summary>
 namespace bg3_modders_multitool.Views
 {
-    using bg3_modders_multitool.Properties;
-    using Lucene.Net.Store;
     using Ookii.Dialogs.Wpf;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Markup;
-    using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
     /// <summary>
     /// Interaction logic for DragAndDropBox.xaml
@@ -17,12 +13,13 @@ namespace bg3_modders_multitool.Views
     public partial class DragAndDropBox : UserControl
     {
         private bool rectMouseDown = false;
-        private string lastDirectory;
+        private ViewModels.DragAndDropBox vm;
 
         public DragAndDropBox()
         {
             InitializeComponent();
-            DataContext = new ViewModels.DragAndDropBox();
+            vm = new ViewModels.DragAndDropBox();
+            DataContext = vm;
         }
 
         /// <summary>
@@ -31,19 +28,16 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event args.</param>
         protected async override void OnDrop(DragEventArgs e)
         {
-            var vm = DataContext as ViewModels.DragAndDropBox;
             await vm.ProcessDrop(e.Data);
         }
 
         private void Grid_DragEnter(object sender, DragEventArgs e)
         {
-            var vm = DataContext as ViewModels.DragAndDropBox;
             vm.Darken();
         }
 
         private void Grid_DragLeave(object sender, DragEventArgs e)
         {
-            var vm = DataContext as ViewModels.DragAndDropBox;
             vm.Lighten();
         }
 
@@ -58,13 +52,13 @@ namespace bg3_modders_multitool.Views
             var folderDialog = new VistaFolderBrowserDialog()
             {
                 Description = Properties.Resources.PleaseSelectWorkspace,
-                SelectedPath = string.IsNullOrEmpty(lastDirectory) ? Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory() : lastDirectory,
+                SelectedPath = string.IsNullOrEmpty(vm.LastDirectory) ? Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory() : vm.LastDirectory,
                 UseDescriptionForTitle = true
             };
 
             if(folderDialog.ShowDialog() == true)
             {
-                lastDirectory = folderDialog.SelectedPath;
+                vm.LastDirectory = folderDialog.SelectedPath;
                 DataObject data = new DataObject(DataFormats.FileDrop, new string[] { folderDialog.SelectedPath });
                 await vm.ProcessDrop(data);
             }
@@ -72,8 +66,6 @@ namespace bg3_modders_multitool.Views
 
         private void Rectangle_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var vm = DataContext as ViewModels.DragAndDropBox;
-
             if (!vm.PackAllowed)
                 return;
 
@@ -82,8 +74,6 @@ namespace bg3_modders_multitool.Views
 
         private void Rectangle_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var vm = DataContext as ViewModels.DragAndDropBox;
-
             if (!vm.PackAllowed)
                 return;
 

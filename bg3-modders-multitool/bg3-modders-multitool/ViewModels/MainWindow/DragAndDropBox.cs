@@ -12,6 +12,7 @@ namespace bg3_modders_multitool.ViewModels
         {
             PackAllowed = true;
             _packAllowedDrop = PackAllowed;
+            CanRebuild = Visibility.Collapsed;
         }
 
         public async Task ProcessDrop(IDataObject data)
@@ -52,6 +53,25 @@ namespace bg3_modders_multitool.ViewModels
             get { return _descriptionColor; }
             set {
                 _descriptionColor = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _lastDirectory;
+        public string LastDirectory {
+            get { return _lastDirectory; }
+            set {
+                _lastDirectory = value;
+                CanRebuild = !string.IsNullOrEmpty(value) ? Visibility.Visible : Visibility.Collapsed;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private Visibility _canRebuild;
+        public Visibility CanRebuild { 
+            get { return _canRebuild; } 
+            set {
+                _canRebuild = value;
                 OnNotifyPropertyChanged();
             }
         }

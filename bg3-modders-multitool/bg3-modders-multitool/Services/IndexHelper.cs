@@ -460,7 +460,16 @@ namespace bg3_modders_multitool.Services
                     if (!isExcluded)
                     {
                         textFileContents = contents.Length > 0 ? System.Text.Encoding.UTF8.GetString(contents) : textFileContents;
-                        lines = ReadFileContentsForMatches(textFileContents.Split('\n'));
+                        var allLines = new List<string>();
+                        using (System.IO.StringReader reader = new System.IO.StringReader(textFileContents))
+                        {
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                allLines.Add(line);
+                            }
+                        }
+                        lines = ReadFileContentsForMatches(allLines);
                     }
 
                     if (lines.Count == 0)

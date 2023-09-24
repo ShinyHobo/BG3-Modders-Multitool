@@ -269,7 +269,8 @@ Dropping a .pak will unpack it into a nearby directory. </value>
     <value>Color Picker</value>
   </data>
   <data name="ConfigNeededLabel" xml:space="preserve">
-    <value>Configuration needed: missing bg3.exe!</value>
+    <value>Configuration needed:
+missing bg3.exe!</value>
   </data>
   <data name="ConfigurationTitle" xml:space="preserve">
     <value>Configuration</value>
@@ -909,6 +910,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="ReadyToIndexAgainQuestion" xml:space="preserve">
     <value>Ready to index again?</value>
+  </data>
+  <data name="RebuildButton" xml:space="preserve">
+    <value>Rebuild</value>
   </data>
   <data name="ReindexQuestion" xml:space="preserve">
     <value>Careful! This is irreversable!

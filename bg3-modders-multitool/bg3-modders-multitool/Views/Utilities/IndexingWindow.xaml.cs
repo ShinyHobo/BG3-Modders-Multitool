@@ -42,7 +42,7 @@ namespace bg3_modders_multitool.Views
             timer.Tick += Timer_Tick;
 
             // TODO - get full list of file types from somewhere
-            var fileTypes = new List<string>() { "Select All" };
+            var fileTypes = new List<string>() { Properties.Resources.SelectAllButton };
             fileTypes.AddRange(FileHelper.FileTypes);
             fileTypeFilter.ItemsSource = fileTypes;
             fileTypeFilter.SelectAll();
@@ -179,7 +179,7 @@ namespace bg3_modders_multitool.Views
             CancellationToken ct = UpdateFilterCancellation.Token;
 
             var item = e.Item;
-            if (item.Equals("Select All"))
+            if (item.Equals(Properties.Resources.SelectAllButton))
             {
                 if (e.IsSelected)
                 {
@@ -203,7 +203,7 @@ namespace bg3_modders_multitool.Views
                 }
                 else
                 {
-                    fileTypeFilter.SelectedItems.Remove("Select All");
+                    fileTypeFilter.SelectedItems.Remove(Properties.Resources.SelectAllButton);
                     SkipSelectAllChange = false;
                     return;
                 }
@@ -215,13 +215,13 @@ namespace bg3_modders_multitool.Views
                     var allSelected = fileTypeFilter.SelectedItems.Count == fileTypeFilter.Items.Count - 1;
                     if(allSelected)
                     {
-                        fileTypeFilter.SelectedItems.Add("Select All");
+                        fileTypeFilter.SelectedItems.Add(Properties.Resources.SelectAllButton);
                     }
                 }
                 else
                 {
                     SkipSelectAllChange = true;
-                    fileTypeFilter.SelectedItems.Remove("Select All");
+                    fileTypeFilter.SelectedItems.Remove(Properties.Resources.SelectAllButton);
                 }
             }
 
