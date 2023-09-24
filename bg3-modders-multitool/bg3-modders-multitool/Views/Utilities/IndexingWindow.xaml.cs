@@ -111,7 +111,7 @@ namespace bg3_modders_multitool.Views
                         SearchResults.AllowInteraction = false;
                         SearchResults.FileContents = new ObservableCollection<SearchResult>() { new SearchResult { Key = 0, Text = Properties.Resources.LoadingContents } };
                         SearchResults.SelectedPath = path;
-                        var isGr2 = SearchResults.RenderModel();
+
                         var results = new ObservableCollection<SearchResult>();
                         foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
                         {
@@ -120,6 +120,7 @@ namespace bg3_modders_multitool.Views
 
                         Application.Current.Dispatcher.Invoke(delegate
                         {
+                            var isGr2 = SearchResults.RenderModel();
                             SearchResults.FileContents = results;
                             convertAndOpenButton.IsEnabled = true;
                             if (isGr2)
