@@ -192,6 +192,17 @@ namespace bg3_modders_multitool.Views
         {
             GeneralHelper.TogglePakToMods(false);
         }
+
+        /// <summary>
+        /// Rebuilds the selected directory
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void rebuild_Click(object sender, RoutedEventArgs e)
+        {
+            DataObject data = new DataObject(DataFormats.FileDrop, new string[] { MainWindowVM.DragAndDropBox.LastDirectory });
+            await MainWindowVM.DragAndDropBox.ProcessDrop(data);
+        }
         #endregion
 
         #region Shortcuts Tab
