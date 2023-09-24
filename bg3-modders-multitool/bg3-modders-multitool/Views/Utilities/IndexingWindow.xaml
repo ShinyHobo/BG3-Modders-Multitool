@@ -16,7 +16,17 @@
                 VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand" IsEnabled="{Binding AllowInteraction}"/>
         <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="525" KeyDown="Search_KeyDown" IsEnabled="{Binding AllowInteraction}"/>
         <xctk:CheckComboBox x:Name="fileTypeFilter" Height="23" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="635,10,0,0"
-                            SelectedItemsOverride="{Binding SelectedFileTypes}" ItemSelectionChanged="fileTypeFilter_ItemSelectionChanged" IsEnabled="{Binding AllowInteraction}"/>
+                            SelectedItemsOverride="{Binding SelectedFileTypes}" ItemSelectionChanged="fileTypeFilter_ItemSelectionChanged" IsEnabled="{Binding AllowInteraction}" Foreground="Black">
+            <xctk:CheckComboBox.Resources>
+                <Style TargetType="CheckBox">
+                    <Setter Property="Background" Value="Yellow" />
+                    <Setter Property="Foreground" Value="Yellow" />
+                </Style>
+                <Style TargetType="Label">
+                    <Setter Property="Foreground" Value="Red" />
+                </Style>
+            </xctk:CheckComboBox.Resources>
+        </xctk:CheckComboBox>
 
 
         <CheckBox x:Name="leadingWildcardDisabledCheckbox" IsChecked="{Binding LeadingWildcardDisabled}"  Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="738,15,0,0" 

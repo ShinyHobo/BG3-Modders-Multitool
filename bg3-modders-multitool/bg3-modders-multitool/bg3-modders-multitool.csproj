@@ -562,11 +562,11 @@
     <Compile Include="Themes\Attached\PasswordBoxHelper.cs" />
     <Compile Include="Themes\Attached\TextBoxAutoSelect.cs" />
     <Compile Include="Themes\Attached\TextHinting.cs" />
-    <Compile Include="Themes\ColourfulDarkTheme.xaml.cs">
-      <DependentUpon>ColourfulDarkTheme.xaml</DependentUpon>
+    <Compile Include="Themes\ColorfulDarkTheme.xaml.cs">
+      <DependentUpon>ColorfulDarkTheme.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Themes\ColourfulLightTheme.xaml.cs">
-      <DependentUpon>ColourfulLightTheme.xaml</DependentUpon>
+    <Compile Include="Themes\ColorfulLightTheme.xaml.cs">
+      <DependentUpon>ColorfulLightTheme.xaml</DependentUpon>
     </Compile>
     <Compile Include="Themes\Controls.xaml.cs">
       <DependentUpon>Controls.xaml</DependentUpon>
@@ -622,39 +622,35 @@
     <Compile Include="XAMLHelpers\SelectableTextBlock.cs" />
     <Compile Include="XAMLHelpers\TextBoxFormatter.cs" />
     <Compile Include="XAMLHelpers\TextEditorWrapper.cs" />
-    <Page Include="Themes\ColourDictionaries\DarkGreyTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\DarkGreyTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColourDictionaries\DeepDark.xaml">
+    <Page Include="Themes\ColorDictionaries\DeepDark.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColourDictionaries\GreyTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\GreyTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColourDictionaries\LightTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\RedBlackTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColourDictionaries\RedBlackTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\SoftDark.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColourDictionaries\SoftDark.xaml">
+    <Page Include="Themes\ColorfulDarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColourfulDarkTheme.xaml">
+    <Page Include="Themes\ColorfulLightTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColourfulLightTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ControlColours.xaml">
+    <Page Include="Themes\ControlColors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
