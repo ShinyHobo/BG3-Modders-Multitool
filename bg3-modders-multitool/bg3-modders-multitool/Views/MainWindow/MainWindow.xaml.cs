@@ -201,7 +201,9 @@ namespace bg3_modders_multitool.Views
         private async void rebuild_Click(object sender, RoutedEventArgs e)
         {
             DataObject data = new DataObject(DataFormats.FileDrop, new string[] { MainWindowVM.DragAndDropBox.LastDirectory });
+            rebuildBtn.IsEnabled = false;
             await MainWindowVM.DragAndDropBox.ProcessDrop(data);
+            rebuildBtn.IsEnabled = true;
         }
         #endregion
 
