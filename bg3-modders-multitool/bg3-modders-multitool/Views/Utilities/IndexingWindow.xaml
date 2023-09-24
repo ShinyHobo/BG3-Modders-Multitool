@@ -47,16 +47,6 @@
                                     </TextBlock>
                                 </ControlTemplate>
                             </Button.Template>
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Foreground" Value="White" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="true">
-                                            <Setter Property="Foreground" Value="Silver" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
                         </Button>
                     </StackPanel>
                 </DataTemplate>

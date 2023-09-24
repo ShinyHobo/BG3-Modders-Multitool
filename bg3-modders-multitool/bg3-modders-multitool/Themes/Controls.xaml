@@ -60,6 +60,10 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource Button.Static.Foreground}"/>
+    </Style>
+
     <Style TargetType="{x:Type ToggleButton}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Background" Value="{DynamicResource Button.Static.Background}" />
