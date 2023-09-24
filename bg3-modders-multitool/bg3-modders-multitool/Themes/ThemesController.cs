@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace FramePFX.Themes {
+namespace bg3_modders_multitool.Themes {
     public static class ThemesController {
         public static ThemeType CurrentTheme { get; set; }
 
@@ -28,7 +28,7 @@ namespace FramePFX.Themes {
             }
 
             CurrentTheme = theme;
-            ThemeDictionary = new ResourceDictionary() { Source = new Uri($"Themes/ColorDictionaries/{themeName}.xaml", UriKind.Relative) };
+            ThemeDictionary = new ResourceDictionary() { Source = new Uri($"Themes/ColorDictionaries/{themeName.Replace(" ", string.Empty)}.xaml", UriKind.Relative) };
             ControlColours = new ResourceDictionary() { Source = new Uri("Themes/ControlColors.xaml", UriKind.Relative) };
             Controls = new ResourceDictionary() { Source = new Uri("Themes/Controls.xaml", UriKind.Relative) };
         }

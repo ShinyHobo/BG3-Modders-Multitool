@@ -622,27 +622,27 @@
     <Compile Include="XAMLHelpers\SelectableTextBlock.cs" />
     <Compile Include="XAMLHelpers\TextBoxFormatter.cs" />
     <Compile Include="XAMLHelpers\TextEditorWrapper.cs" />
-    <Page Include="Themes\ColorDictionaries\DarkGreyTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\DarkGrey.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\DeepDark.xaml">
+    <Page Include="Themes\ColorDictionaries\Underdark.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\GreyTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\Grey.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\LightTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\BrightLight.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\RedBlackTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\Astarion.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\SoftDark.xaml">
+    <Page Include="Themes\ColorDictionaries\Obscured.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

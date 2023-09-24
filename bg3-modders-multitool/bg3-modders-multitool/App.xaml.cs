@@ -1,6 +1,6 @@
 namespace bg3_modders_multitool
 {
-    using FramePFX.Themes;
+    using bg3_modders_multitool.Themes;
     using System;
     using System.Globalization;
     using System.IO;

@@ -1,8 +1,8 @@
-﻿<ResourceDictionary x:Class="FramePFX.Themes.Controls"
+﻿<ResourceDictionary x:Class="bg3_modders_multitool.Themes.Controls"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
-                    xmlns:ap="clr-namespace:FramePFX.Themes.Attached">
+                    xmlns:ap="clr-namespace:bg3_modders_multitool.Themes.Attached">
     <Style x:Key="FocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>
