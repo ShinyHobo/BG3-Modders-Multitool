@@ -66,8 +66,6 @@
                   Content="{x:Static p:Resources.SelectAllButton}" Click="ToggleSelection_Click" IsEnabled="{Binding AllowInteraction}"/>
         <Button Height="23" Width="102" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="96,0,0,10" Cursor="Hand" x:Name="extractAll" IsEnabled="{Binding AllowInteraction}"
                 Content="{x:Static p:Resources.ExtractSelectedButton}" Click="ExtractSelected_Click"/>
-        <CheckBox Height="23" Width="142" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="620,0,0,10" Cursor="Hand" IsChecked="{Binding PreviewConvertedToggled}" x:Name="previewConverted"
-          Content="{x:Static p:Resources.PreviewConvertedButton}" Click="ToggleSelection_Click" IsEnabled="{Binding AllowInteraction}"/>
 
         <Button Height="23" Width="23" Margin="773,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📤" 
                 ToolTip="{x:Static p:Resources.ExtractFileTooltip}" Click="ExtractFile_Click" IsEnabled="{Binding AllowInteraction}"/>

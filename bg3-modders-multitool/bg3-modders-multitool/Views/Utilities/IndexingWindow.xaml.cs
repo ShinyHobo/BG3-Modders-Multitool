@@ -104,7 +104,7 @@ namespace bg3_modders_multitool.Views
                     SearchResults.FileContents = new ObservableCollection<SearchResult>();
                     SearchResults.SelectedPath = ((TextBlock)pathButton.Content).Text;
                     var isGr2 = SearchResults.RenderModel();
-                    foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile, SearchResults.PreviewConvertedToggled))
+                    foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
                     {
                         SearchResults.FileContents.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
                     }

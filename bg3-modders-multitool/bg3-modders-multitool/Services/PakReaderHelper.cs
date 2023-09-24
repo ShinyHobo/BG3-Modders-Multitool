@@ -59,8 +59,8 @@
                     
                     if(file.SizeOnDisk != 0)
                     {
-                        // TODO check loca
-                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(Path.GetExtension(file.Name));
+                        var ext = Path.GetExtension(file.Name);
+                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(ext);
                         if(convert && canConvertToLsx)
                         {
                             using (MemoryStream newOutStream = new MemoryStream())
@@ -76,6 +76,28 @@
                                     lSXWriter.PrettyPrint = conversionParams.PrettyPrint;
                                     conversionParams.ToSerializationSettings(lSXWriter.SerializationSettings);
                                     lSXWriter.Write(resource);
+                                    return newOutStream.ToArray();
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (!FileHelper.IsSpecialLSFSignature(ex.Message))
+                                    {
+                                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, ".lsf", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                                    }
+                                }
+                            }
+                        }
+                        else if(convert && ext == ".loca")
+                        {
+                            using (MemoryStream newOutStream = new MemoryStream())
+                            {
+                                try
+                                {
+                                    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                                    var format = LocaUtils.ExtensionToFileFormat(filePath);
+                                    originalStream.Position = 0;
+                                    var resource = LocaUtils.Load(originalStream, format);
+                                    new LocaXmlWriter(newOutStream).Write(resource);
                                     return newOutStream.ToArray();
                                 }
                                 catch (Exception ex)

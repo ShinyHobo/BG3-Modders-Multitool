@@ -419,9 +419,8 @@ namespace bg3_modders_multitool.Services
         /// Gets a list of matching lines within a given file.
         /// </summary>
         /// <param name="path">The file path to read from.</param>
-        /// <param name="previewConvertedFile">Whether or not to preview the file as the converted file</param>
         /// <returns>A list of file line and trimmed contents.</returns>
-        public Dictionary<long, string> GetFileContents(string path, bool previewConvertedFile)
+        public Dictionary<long, string> GetFileContents(string path)
         {
             var lines = new Dictionary<long, string>();
             var fileExists = File.Exists(path);
@@ -456,20 +455,7 @@ namespace bg3_modders_multitool.Services
                     var contents = new byte[0];
                     var textFileContents = string.Empty;
 
-                    if (previewConvertedFile && FileHelper.IsConvertable(path))
-                    {
-                        DragAndDropHelper.CleanTempDirectory(false);
-                        var tempForPreview = helper.DecompressPakFile(path, DragAndDropHelper.TempFolder);
-                        using(var reader = new System.IO.StreamReader(tempForPreview))
-                        {
-                            textFileContents = reader.ReadToEnd();
-                        }
-                        DragAndDropHelper.CleanTempDirectory(false);
-                    }
-                    else
-                    {
-                        contents = helper.ReadPakFileContents(path);
-                    }
+                    contents = helper.ReadPakFileContents(path, true);
 
                     if (!isExcluded)
                     {
