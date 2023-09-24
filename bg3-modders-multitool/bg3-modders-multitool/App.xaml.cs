@@ -1,5 +1,6 @@
 namespace bg3_modders_multitool
 {
+    using FramePFX.Themes;
     using System;
     using System.Globalization;
     using System.IO;
@@ -17,6 +18,9 @@ namespace bg3_modders_multitool
             ToolTipService.ShowDurationProperty.OverrideMetadata(
                 typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
             InitializeComponent();
+
+            var theme = (ThemeType)bg3_modders_multitool.Properties.Settings.Default.theme;
+            ThemesController.SetTheme(theme);
         }
 
         public static void Log(string logMessage, TextWriter w)

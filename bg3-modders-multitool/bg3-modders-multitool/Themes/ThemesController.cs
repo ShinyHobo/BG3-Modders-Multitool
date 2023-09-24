@@ -28,8 +28,8 @@ namespace FramePFX.Themes {
             }
 
             CurrentTheme = theme;
-            ThemeDictionary = new ResourceDictionary() { Source = new Uri($"Themes/ColourDictionaries/{themeName}.xaml", UriKind.Relative) };
-            ControlColours = new ResourceDictionary() { Source = new Uri("Themes/ControlColours.xaml", UriKind.Relative) };
+            ThemeDictionary = new ResourceDictionary() { Source = new Uri($"Themes/ColorDictionaries/{themeName}.xaml", UriKind.Relative) };
+            ControlColours = new ResourceDictionary() { Source = new Uri("Themes/ControlColors.xaml", UriKind.Relative) };
             Controls = new ResourceDictionary() { Source = new Uri("Themes/Controls.xaml", UriKind.Relative) };
         }
 
