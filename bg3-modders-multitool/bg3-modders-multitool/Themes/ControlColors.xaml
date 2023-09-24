@@ -132,7 +132,7 @@
     <SolidColorBrush x:Key="ScrollBar.Disabled.Border"              Color="{DynamicResource AColour.Tone5.Border.Disabled}"/>
     <SolidColorBrush x:Key="ScrollBar.MouseOver.Thumb"              Color="{DynamicResource AColour.Tone6.Background.MouseOver}"/>
     <SolidColorBrush x:Key="ScrollBar.Pressed.Thumb"                Color="{DynamicResource AColour.Tone6.Background.MouseDown}"/>
-    <SolidColorBrush x:Key="ScrollBar.Static.Thumb"                 Color="{DynamicResource AColour.Tone6.Background.Static}"/>
+    <SolidColorBrush x:Key="ScrollBar.Static.Thumb"                 Color="Gray"/>
 
     <SolidColorBrush x:Key="RadioButton.Static.Background"          Color="{DynamicResource AColour.Tone5.Background.Static}"/>
     <SolidColorBrush x:Key="RadioButton.Static.Border"              Color="{DynamicResource AColour.Tone5.Border.Static}"/>
