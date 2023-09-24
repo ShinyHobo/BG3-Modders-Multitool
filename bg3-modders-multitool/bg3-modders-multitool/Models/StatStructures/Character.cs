@@ -47,6 +47,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public ObjectSize SoundSize { get; set; }
         public Guid ProficiencyBonusScaling { get; set; }
         public string DifficultyStatuses { get; set; }
+        public Guid DynamicAnimationTag { get; set; }
 
         #region Armor
         [Category("Armor")]
@@ -90,7 +91,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         [Category("Damage Resistance")]
         public ResistanceFlag NecroticResistance { get; set; }
         [Category("Damage Resistance")]
-        public ResistanceFlag PoisonResistance { get; set; }
+        public List<ResistanceFlag> PoisonResistance { get; set; }
         [Category("Damage Resistance")]
         public ResistanceFlag PsychicResistance { get; set; }
         [Category("Damage Resistance")]

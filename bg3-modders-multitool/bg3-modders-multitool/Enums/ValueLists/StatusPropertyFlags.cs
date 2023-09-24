@@ -42,6 +42,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Blind,
         Suffocating,
         LoseControlFriendly,
-        ExcludeFromPortraitRendering
+        ExcludeFromPortraitRendering,
+        IndicateDarkness,
+        DisableCapabilitiesMessage
     }
 }

@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Models.StatStructures
 {
     using bg3_modders_multitool.Enums.ValueLists;
+    using System;
     using System.Collections.Generic;
 
     public class PassiveData : StatStructure
@@ -41,6 +42,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public int PriorityOrder { get; set; }
         public string TooltipConditionalDamage { get; set; }
         public string TooltipPermanentWarnings { get; set; }
+        public Guid DynamicAnimationTag { get; set; }
 
         public override StatStructure Clone()
         {

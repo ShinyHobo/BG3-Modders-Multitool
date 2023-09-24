@@ -18,17 +18,18 @@ namespace bg3_modders_multitool.Services
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Xml;
-    using System.Xml.Linq;
 
     public class RootTemplateHelper
     {
+        #region Properties
         private List<Translation> Translations = new List<Translation>();
-        private readonly string[] Paks = { "Shared","Gustav" };
+        public List<PakReaderHelper> PakReaderHelpers { get; private set; } = new List<PakReaderHelper>();
         private readonly string[] ExcludedData = { "BloodTypes","Data","ItemColor","ItemProgressionNames","ItemProgressionVisuals", "XPData"}; // Not stat structures
         private bool Loaded = false;
         private bool GameObjectsCached = false;
         private ConcurrentBag<GameObject> GameObjectBag = new ConcurrentBag<GameObject>();
         private IndexHelper IndexHelper = new IndexHelper();
+        private ViewModels.GameObjectViewModel GameObjectViewModel;
         public List<GameObject> GameObjects = new List<GameObject>();
         public List<GameObjectType> GameObjectTypes { get; private set; } = new List<GameObjectType>();
         public Dictionary<string, Translation> TranslationLookup;
@@ -41,11 +42,13 @@ namespace bg3_modders_multitool.Services
         public Dictionary<string, string> BodySetVisuals { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> MaterialBanks { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> TextureBanks { get; set; } = new Dictionary<string, string>();
+        #endregion
 
         public RootTemplateHelper(ViewModels.GameObjectViewModel gameObjectViewModel)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.OpeningGOE);
             var start = DateTime.Now;
+            GameObjectViewModel = gameObjectViewModel;
             var rootTemplateTask = LoadRootTemplates();
 
             rootTemplateTask.ContinueWith(t => {
@@ -54,8 +57,7 @@ namespace bg3_modders_multitool.Services
                 GeneralHelper.WriteToConsole(t.Exception.Message);
                 foreach(var ex in t.Exception.InnerExceptions)
                 {
-                    GeneralHelper.WriteToConsole(ex.Message);
-                    GeneralHelper.WriteToConsole(ex.StackTrace);
+                    GeneralHelper.WriteToConsole(ex.ToString());
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
 
@@ -66,14 +68,14 @@ namespace bg3_modders_multitool.Services
                     {
                         GeneralHelper.WriteToConsole(Properties.Resources.NoGameObjectsFound);
                         System.Windows.Application.Current.Dispatcher.Invoke(() => {
-                            gameObjectViewModel.View.Close();
+                            GameObjectViewModel.View.Close();
                         });
                     }
                     else
                     {
                         var timePassed = DateTime.Now.Subtract(start).TotalSeconds;
                         GeneralHelper.WriteToConsole(Properties.Resources.LoadedGOE, timePassed);
-                        gameObjectViewModel.Loaded = true;
+                        GameObjectViewModel.Loaded = true;
                     }
                 }
                 else
@@ -88,12 +90,13 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         public void Clear()
         {
-            GameObjects.Clear();
-            TranslationLookup.Clear();
-            Translations.Clear();
-            Races.Clear();
-            StatStructures.Clear();
-            TextureAtlases.Clear();
+            GameObjects?.Clear();
+            TranslationLookup?.Clear();
+            Translations?.Clear();
+            Races?.Clear();
+            StatStructures?.Clear();
+            TextureAtlases?.Clear();
+            PakReaderHelpers.Clear();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -103,27 +106,30 @@ namespace bg3_modders_multitool.Services
         {
             return await Task.Run(() => {
                 GameObjectTypes = Enum.GetValues(typeof(GameObjectType)).Cast<GameObjectType>().OrderBy(got => got).ToList();
+                PakReaderHelpers = PakReaderHelper.GetPakHelpers();
 
-                // check if Models directory exists
-                if(!Directory.Exists($"{Directory.GetCurrentDirectory()}\\UnpackedData\\Models"))
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindModelsPak);
-                }
-
-                ReadTranslations();
                 ReadVisualBanks();
-                // ReadTextureBanks();
+                CloseFileProgress();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
+                ReadTranslations();
+                CloseFileProgress();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
+                //ReadTextureBanks();
                 ReadRootTemplate();
-                foreach (var pak in Paks)
-                {
-                    ReadData(pak);
-                    ReadIcons(pak);
-                }
-                if (!TextureAtlases.Any(ta => ta.AtlasImage != null)) // no valid textures found
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFindIconsPak);
-                }
+                CloseFileProgress();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
+                ReadData();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
+                ReadIcons();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
                 SortRootTemplate();
+                if (GameObjectViewModel.LoadingCanceled) goto canceled;
+
+                canceled:
+                if (GameObjectViewModel.LoadingCanceled) {
+                    return null;
+                }
+
                 Loaded = true;
                 return string.Join(",", GameObjectAttributes.Values.GroupBy(g => g).Select(g => g.Last()).ToList());
             });
@@ -159,13 +165,25 @@ namespace bg3_modders_multitool.Services
 
             var xmlPath = Path.ChangeExtension(selectedLanguagePath, ".xml");
             var translationFileConverted = FileHelper.GetPath(xmlPath);
+            var pathCheck = translationFileConverted.Replace(".xml", ".loca.xml");
+            if (!File.Exists(translationFileConverted) && File.Exists(pathCheck))
+            {
+                translationFileConverted = pathCheck;
+            } 
+            else if(!File.Exists(translationFileConverted) && !File.Exists(pathCheck))
+            {
+                var helper = PakReaderHelpers.First(h => h.PakName == selectedLanguagePath.Split('\\')[0]);
+                helper.DecompressPakFile(PakReaderHelper.GetPakPath(selectedLanguagePath));
+                translationFileConverted = pathCheck;
+            }
 
             if (!File.Exists(translationFileConverted) && File.Exists(translationFile))
             {
                 using (var fs = File.Open(translationFile, System.IO.FileMode.Open))
                 {
                     var resource = LocaUtils.Load(fs, LocaFormat.Loca);
-                    LocaUtils.Save(resource, translationFileConverted, LocaFormat.Xml);
+                    LocaUtils.Save(resource, pathCheck, LocaFormat.Xml);
+                    translationFileConverted = pathCheck;
                 }
             }
 
@@ -173,6 +191,7 @@ namespace bg3_modders_multitool.Services
             {
                 if (!FileHelper.TryParseXml(translationFileConverted))
                 {
+                    translationFileConverted = translationFileConverted.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
                     GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, translationFileConverted);
                 }
                 else
@@ -206,7 +225,7 @@ namespace bg3_modders_multitool.Services
         private bool ReadRootTemplate()
         {
             var deserializedGameObjects = FileHelper.DeserializeObject<List<GameObject>>("GameObjects");
-            if(deserializedGameObjects != null)
+            if (deserializedGameObjects != null)
             {
                 GameObjects = deserializedGameObjects;
                 GameObjectsCached = true;
@@ -215,90 +234,107 @@ namespace bg3_modders_multitool.Services
 
             GeneralHelper.WriteToConsole(Properties.Resources.ReadingGameObjects);
             var rootTemplates = GetFileList("GameObjects");
+            ShowFileProgress(rootTemplates.Count);
+#if DEBUG
             var typeBag = new ConcurrentBag<string>();
-            #if DEBUG
             var idBag = new ConcurrentBag<string>();
             var classBag = new ConcurrentBag<Tuple<string, string>>();
-            #endif
-            Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, rootTemplate =>
+#endif
+            Parallel.ForEach(rootTemplates, GeneralHelper.ParallelOptions, (rootTemplate, loopState) =>
             {
+                if (GameObjectViewModel.LoadingCanceled) loopState.Break();
+                var fileToExist = rootTemplate;
                 rootTemplate = FileHelper.GetPath(rootTemplate);
-                if (File.Exists(rootTemplate))
+
+                var fileExists = File.Exists(rootTemplate) || File.Exists(rootTemplate + ".lsx");
+                if (!fileExists)
                 {
-                    var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", rootTemplate.Replace(".lsf", ".lsx"));
-                    if(File.Exists(rootTemplatePath))
+                    var helper = PakReaderHelpers.First(h => h.PakName == fileToExist.Split('\\')[0]);
+                    helper.DecompressPakFile(PakReaderHelper.GetPakPath(fileToExist));
+                    fileExists = true;
+                }
+
+                if (fileExists)
+                {
+                    var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", Path.ChangeExtension(rootTemplate, "lsx"));
+                    if (File.Exists(FileHelper.GetPath(rootTemplatePath)))
                     {
-                        var fileLocation = rootTemplatePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
-                        if (!FileHelper.TryParseXml(rootTemplatePath))
+                        try
                         {
-                            GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, fileLocation);
-                            return;
-                        }
-
-                        var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
-                        var stream = File.OpenText(rootTemplatePath);
-
-                        using (var fileStream = stream)
-                        using (var reader = new XmlTextReader(fileStream))
-                        {
-                            reader.Read();
-                            while (!reader.EOF)
+                            var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
+                            using (XmlReader reader = XmlReader.Create(FileHelper.GetPath(rootTemplatePath)))
                             {
-                                if (reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.GetAttribute("id") == "GameObjects")
+                                reader.MoveToContent();
+                                while (!reader.EOF)
                                 {
-                                    var xml = (XElement)XNode.ReadFrom(reader);
-                                    var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileLocation };
-                                    var attributes = xml.Elements("attribute");
-
-                                    foreach (XElement attribute in attributes)
+                                    if (GameObjectViewModel.LoadingCanceled) loopState.Break();
+                                    if (reader.Name == "region")
                                     {
-                                        var id = attribute.Attribute("id").Value;
-                                        var handle = attribute.Attribute("handle")?.Value;
-                                        var value = handle ?? attribute.Attribute("value").Value;
-                                        var type = attribute.Attribute("type").Value;
-                                        if (int.TryParse(type, out int typeInt))
-                                            type = GeneralHelper.LarianTypeEnumConvert(type);
+                                        var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileToExist };
 
-                                        #if DEBUG
-                                        typeBag.Add(type);
-                                        idBag.Add(id);
-                                        classBag.Add(new Tuple<string, string>(id, type));
-                                        #endif
-                                        if (string.IsNullOrEmpty(handle))
+                                        if (!reader.ReadToDescendant("children"))
                                         {
-                                            gameObject.LoadProperty(id, type, value);
+                                            reader.ReadToFollowing("region");
                                         }
-                                        else
+
+                                        reader.ReadToDescendant("node");
+                                        do
                                         {
-                                            gameObject.LoadProperty($"{id}Handle", type, value);
-                                            if(value != null && TranslationLookup.ContainsKey(value))
+                                            reader.ReadToDescendant("attribute");
+                                            do
                                             {
-                                                var translationText = TranslationLookup[value].Value;
-                                                gameObject.LoadProperty(id, type, translationText);
-                                            }
-                                        }
+                                                var id = reader.GetAttribute("id");
+                                                var handle = reader.GetAttribute("handle");
+                                                var value = handle ?? reader.GetAttribute("value");
+                                                var type = reader.GetAttribute("type");
+                                                if (int.TryParse(type, out int typeInt))
+                                                    type = GeneralHelper.LarianTypeEnumConvert(type);
+
+#if DEBUG
+                                                typeBag.Add(type);
+                                                idBag.Add(id);
+                                                classBag.Add(new Tuple<string, string>(id, type));
+#endif
+                                                if (string.IsNullOrEmpty(handle))
+                                                {
+                                                    gameObject.LoadProperty(id, type, value);
+                                                }
+                                                else
+                                                {
+                                                    gameObject.LoadProperty($"{id}Handle", type, value);
+                                                    if (value != null && TranslationLookup.ContainsKey(value))
+                                                    {
+                                                        var translationText = TranslationLookup[value].Value;
+                                                        gameObject.LoadProperty(id, type, translationText);
+                                                    }
+                                                }
+                                            } while (reader.ReadToNextSibling("attribute"));
+                                            if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
+                                                gameObject.ParentTemplateId = gameObject.TemplateName;
+                                            if (string.IsNullOrEmpty(gameObject.Name))
+                                                gameObject.Name = gameObject.DisplayName;
+                                            if (string.IsNullOrEmpty(gameObject.Name))
+                                                gameObject.Name = gameObject.Stats;
+
+                                            GameObjectBag.Add(gameObject);
+                                        } while (reader.ReadToNextSibling("node"));
                                     }
-
-                                    if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
-                                        gameObject.ParentTemplateId = gameObject.TemplateName;
-                                    if (string.IsNullOrEmpty(gameObject.Name))
-                                        gameObject.Name = gameObject.DisplayName;
-                                    if (string.IsNullOrEmpty(gameObject.Name))
-                                        gameObject.Name = gameObject.Stats;
-
-                                    GameObjectBag.Add(gameObject);
-                                    reader.Skip();
-                                }
-                                else
-                                {
-                                    reader.Read();
+                                    reader.ReadToFollowing("region");
                                 }
                             }
-                            reader.Close();
+                        }
+                        catch
+                        {
+                            rootTemplate = rootTemplate.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
+                            GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, rootTemplate);
+                            return;
                         }
                     }
+                    UpdateFileProgress();
                 }
             });
+            CloseFileProgress();
+            if (GameObjectViewModel.LoadingCanceled) return false;
             #if DEBUG
             FileHelper.SerializeObject(typeBag.ToList().Distinct().ToList(), "GameObjectTypes");
             FileHelper.SerializeObject(idBag.ToList().Distinct().ToList(), "GameObjectAttributeIds");
@@ -309,7 +345,7 @@ namespace bg3_modders_multitool.Services
             {
                 return false;
             }
-
+            if (GameObjectViewModel.LoadingCanceled) return false;
             GeneralHelper.WriteToConsole(Properties.Resources.GameObjectsLoaded);
             return true;
         }
@@ -327,11 +363,14 @@ namespace bg3_modders_multitool.Services
             GeneralHelper.WriteToConsole(Properties.Resources.SortingGameObjects);
             GameObjects = GameObjectBag.OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name).ToList();
             var children = GameObjects.Where(go => !string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
-            var orderedChildren = children.AsParallel().WithDegreeOfParallelism(GeneralHelper.ParallelOptions.MaxDegreeOfParallelism).OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name);
+            var degree = GeneralHelper.ParallelOptions.MaxDegreeOfParallelism;
+            degree = degree < 1 ? 4 : degree;
+            var orderedChildren = children.AsParallel().WithDegreeOfParallelism(degree).OrderBy(go => string.IsNullOrEmpty(go.Name)).ThenBy(go => go.Name);
             var lookup = GameObjects.Where(go => !string.IsNullOrEmpty(go.MapKey)).GroupBy(go => go.MapKey).ToDictionary(go => go.Key, go => go.Last());
-            Parallel.ForEach(orderedChildren, GeneralHelper.ParallelOptions, gameObject =>
+            Parallel.ForEach(orderedChildren, GeneralHelper.ParallelOptions, (gameObject, loopState) =>
             {
-                if(lookup.ContainsKey(gameObject.ParentTemplateId))
+                if (GameObjectViewModel.LoadingCanceled) loopState.Break();
+                if (lookup.ContainsKey(gameObject.ParentTemplateId))
                 {
                     var goChildren = lookup[gameObject.ParentTemplateId].Children;
                     if (goChildren != null)
@@ -341,13 +380,16 @@ namespace bg3_modders_multitool.Services
                     }
                 }
             });
+            if (GameObjectViewModel.LoadingCanceled) return false;
             GameObjects = GameObjects.Where(go => string.IsNullOrEmpty(go.ParentTemplateId)).ToList();
             foreach(var gameObject in GameObjects)
             {
+                if (GameObjectViewModel.LoadingCanceled) return false;
                 gameObject.PassOnStats();
             }
+            if (GameObjectViewModel.LoadingCanceled) return false;
             FileHelper.SerializeObject(GameObjects, "GameObjects");
-                
+
             return true;
         }
 
@@ -435,19 +477,25 @@ namespace bg3_modders_multitool.Services
         /// Reads the stats and converts them into a StatStructure list.
         /// Uses reflection to dynamically generate data.
         /// </summary>
-        /// <param name="pak">The pak to search in.</param>
         /// <returns>Whether the stats were read.</returns>
-        private bool ReadData(string pak)
+        private bool ReadData()
         {
-            var dataDir = FileHelper.GetPath($"{pak}\\Public\\{pak}\\Stats\\Generated\\Data");
-            if (Directory.Exists(dataDir))
+            foreach(var pak in PakReaderHelpers)
             {
-                var dataFiles = Directory.EnumerateFiles(dataDir, "*.txt").Where(file => !ExcludedData.Contains(Path.GetFileNameWithoutExtension(file))).ToList();
-                foreach (var file in dataFiles)
+                var files = pak.PackagedFiles.Where(pf => pf.Name.Contains("Stats/Generated/Data"))
+                    .Where(pf => Path.GetExtension(pf.Name) == ".txt" && !ExcludedData.Contains(Path.GetFileNameWithoutExtension(pf.Name)))
+                    .Select(pf => pf.Name);
+
+                foreach (var file in files)
                 {
+                    if (GameObjectViewModel.LoadingCanceled) return false;
                     var fileType = Models.StatStructures.StatStructure.FileType(file);
                     var line = string.Empty;
-                    using(var fileStream = new System.IO.StreamReader(file))
+
+                    var contents = pak.ReadPakFileContents(file);
+
+                    using (var ms = new System.IO.MemoryStream(contents))
+                    using (var fileStream = new System.IO.StreamReader(ms))
                     {
                         while ((line = fileStream.ReadLine()) != null)
                         {
@@ -470,47 +518,24 @@ namespace bg3_modders_multitool.Services
                         }
                     }
                 }
-                return true;
             }
-            return false;
+            return true;
         }
 
         /// <summary>
         /// Reads the texture atlas for icon displays.
         /// </summary>
-        /// <param name="pak">The pak to load texture atlas for.</param>
         /// <returns>Whether the texture atlas was created.</returns>
-        private bool ReadIcons(string pak)
+        private bool ReadIcons()
         {
-            var metaLoc = FileHelper.GetPath($"{pak}\\Mods\\{pak}\\meta.lsx");
-            if (File.Exists(@"\\?\" + metaLoc))
+            var iconFiles = GetFileList("IconUVList");
+            foreach(var iconFile in iconFiles)
             {
-                try
-                {
-                    var meta = DragAndDropHelper.ReadMeta(metaLoc);
-                    var characterIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Generated_{meta.UUID}_Icons.lsx");
-                    if (File.Exists(@"\\?\" + characterIconAtlas))
-                    {
-                        TextureAtlases.Add(TextureAtlas.Read(characterIconAtlas, pak));
-                    }
-                    var objectIconAtlas = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items.lsx");
-                    if (File.Exists(@"\\?\" + objectIconAtlas))
-                    {
-                        TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas, pak));
-                    }
-                    var objectIconAtlas2 = FileHelper.GetPath($"{pak}\\Public\\{pak}\\GUI\\Icons_Items_2.lsx");
-                    if (File.Exists(@"\\?\" + objectIconAtlas2))
-                    {
-                        TextureAtlases.Add(TextureAtlas.Read(objectIconAtlas2, pak));
-                    }
-                    return true;
-                }
-                catch
-                {
-                    GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, metaLoc);
-                }
+                var helper = PakReaderHelpers.First(h => h.PakName == iconFile.Split('\\')[0]);
+                var contents = helper.ReadPakFileContents(PakReaderHelper.GetPakPath(iconFile));
+                TextureAtlases.Add(TextureAtlas.Read(contents, iconFile, new DirectoryInfo(iconFile).Parent.Parent.Name));
             }
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -519,7 +544,8 @@ namespace bg3_modders_multitool.Services
         /// <returns>Whether the visual bank lists were created.</returns>
         private bool ReadVisualBanks()
         {
-            var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string,string>>("CharacterVisualBanks");
+            #region Setup
+            var deserializedCharacterVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("CharacterVisualBanks");
             var deserializedVisualBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("VisualBanks");
             var deserializedBodySetVisuals = FileHelper.DeserializeObject<Dictionary<string, string>>("BodySetVisuals");
             var deserializedMaterialBanks = FileHelper.DeserializeObject<Dictionary<string, string>>("MaterialBanks");
@@ -535,6 +561,8 @@ namespace bg3_modders_multitool.Services
                 return true;
             }
 
+            if (GameObjectViewModel.LoadingCanceled) return false;
+
             GeneralHelper.WriteToConsole(Resources.LoadingBankFiles);
 
             // Lookup CharacterVisualBank file from CharacterVisualResourceID
@@ -543,124 +571,129 @@ namespace bg3_modders_multitool.Services
             var bodySetVisuals = new ConcurrentDictionary<string, string>();
             var materialBanks = new ConcurrentDictionary<string, string>();
             var textureBanks = new ConcurrentDictionary<string, string>();
+            var characterVisualBanksFiles = GetFileList("CharacterVisualBank");
+            if (characterVisualBanksFiles.Count > 0)
+                GeneralHelper.WriteToConsole(Resources.FoundCharacterVisualBanks);
+            if (GameObjectViewModel.LoadingCanceled) return false;
             var visualBankFiles = GetFileList("VisualBank");
-            if(visualBankFiles.Count > 0)
+            if (visualBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundVisualBanks);
+            if (GameObjectViewModel.LoadingCanceled) return false;
             var materialBankFiles = GetFileList("MaterialBank");
-            if(materialBankFiles.Count > 0)
+            if (GameObjectViewModel.LoadingCanceled) return false;
+            if (materialBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundMaterialBanks);
             var textureBankFiles = GetFileList("TextureBank");
-            if(textureBankFiles.Count > 0)
+            if (GameObjectViewModel.LoadingCanceled) return false;
+            if (textureBankFiles.Count > 0)
                 GeneralHelper.WriteToConsole(Resources.FoundTextureBanks);
             visualBankFiles.AddRange(materialBankFiles);
             visualBankFiles.AddRange(textureBankFiles);
+            visualBankFiles.AddRange(characterVisualBanksFiles);
             visualBankFiles = visualBankFiles.Distinct().ToList();
-            if(visualBankFiles.Count > 0)
+            if (visualBankFiles.Count > 0)
+            {
+                ShowFileProgress(visualBankFiles.Count);
                 GeneralHelper.WriteToConsole(Resources.SortingBanksFiles);
-            Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, visualBankFile => {
-                visualBankFile = FileHelper.GetPath(visualBankFile);
-                if (File.Exists(visualBankFile))
+            }
+
+            #endregion
+            Parallel.ForEach(visualBankFiles, GeneralHelper.ParallelOptions, (visualBankFile, loopTask) =>
+            {
+                if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
+                var fileToExist = FileHelper.GetPath(visualBankFile);
+                var fileExists = File.Exists(fileToExist) || File.Exists(fileToExist + ".lsx");
+                if(!fileExists)
                 {
-                    var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", visualBankFile.Replace(".lsf", ".lsx"));
-                    var filePath = visualBankFilePath.Replace($"\\\\?\\{Directory.GetCurrentDirectory()}\\UnpackedData", string.Empty);
+                    var helper = PakReaderHelpers.First(h => h.PakName == visualBankFile.Split('\\')[0]);
+                    helper.DecompressPakFile(PakReaderHelper.GetPakPath(visualBankFile));
+                    fileExists = true;
+                }
 
-                    if (!FileHelper.TryParseXml(filePath))
-                    {
-                        var filePath2 = visualBankFilePath.Replace($"{Directory.GetCurrentDirectory()}\\UnpackedData\\", string.Empty);
-                        GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, filePath2);
-                        return;
-                    }
+                if (fileExists)
+                {
+                    XmlReader reader;
 
-                    var stream = File.OpenText(visualBankFilePath);
-                    using (var fileStream = stream)
-                    using (var reader = new XmlTextReader(fileStream))
+                    var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", Path.ChangeExtension(visualBankFile, "lsx"));
+                    reader = XmlReader.Create(FileHelper.GetPath(visualBankFilePath));
+
+                    try
                     {
-                        reader.Read();
+                        reader.MoveToContent();
                         while (!reader.EOF)
                         {
-                            try
+                            if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
+                            if (reader.Name == "region")
                             {
                                 var sectionId = reader.GetAttribute("id");
-                                var isNode = reader.NodeType == XmlNodeType.Element && reader.IsStartElement() && reader.Name == "node";
-                                if (isNode && (sectionId == "CharacterVisualBank" || sectionId == "VisualBank"))
+                                var isCharacterVisualBank = sectionId == "CharacterVisualBank";
+                                var isVisualBank = sectionId == "VisualBank";
+                                var isMaterialBank = sectionId == "MaterialBank";
+                                var isTextureBank = sectionId == "TextureBank";
+
+                                if (isCharacterVisualBank || isVisualBank || isMaterialBank || isTextureBank)
                                 {
-                                    // read children for resource nodes
-                                    var xml = (XElement)XNode.ReadFrom(reader);
-                                    var children = xml.Element("children");
-                                    if (children != null)
+                                    if (!reader.ReadToDescendant("children"))
                                     {
-                                        var nodes = children.Elements("node");
-                                        foreach (XElement node in nodes)
-                                        {
-                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                            if (sectionId == "CharacterVisualBank")
-                                            {
-                                                characterVisualBanks.TryAdd(id, filePath);
-                                                var bodySetVisual = node.Elements("attribute").Single(a => a.Attribute("id").Value == "BodySetVisual").Attribute("value").Value;
-                                                if (bodySetVisual != null)
-                                                    bodySetVisuals.TryAdd(bodySetVisual, filePath);
-                                            }
-                                            else
-                                            {
-                                                visualBanks.TryAdd(id, filePath);
-                                            }
-                                        }
+                                        reader.ReadToFollowing("region");
                                     }
 
-                                    reader.Skip();
-                                }
-                                else if(isNode && sectionId == "MaterialBank")
-                                {
-                                    var xml = (XElement)XNode.ReadFrom(reader);
-                                    var children = xml.Element("children");
-                                    if (children != null)
+                                    reader.ReadToDescendant("node");
+                                    do
                                     {
-                                        var nodes = children.Elements("node");
-                                        foreach (XElement node in nodes)
+                                        reader.ReadToDescendant("attribute");
+                                        var resourceId = string.Empty;
+                                        var bodySetVisual = string.Empty;
+                                        do
                                         {
-                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                            materialBanks.TryAdd(id, filePath);
-                                        }
-                                    }
-                                    reader.Skip();
-                                }
-                                else if (isNode && sectionId == "TextureBank")
-                                {
-                                    var xml = (XElement)XNode.ReadFrom(reader);
-                                    var children = xml.Element("children");
-                                    if (children != null)
-                                    {
-                                        var nodes = children.Elements("node");
-                                        foreach (XElement node in nodes)
-                                        {
-                                            var id = node.Elements("attribute").Single(a => a.Attribute("id").Value == "ID").Attribute("value").Value;
-                                            textureBanks.TryAdd(id, filePath);
-                                        }
-                                    }
-                                    reader.Skip();
-                                }
-                                else
-                                {
-                                    reader.Read();
+                                            var attributeId = reader.GetAttribute("id");
+                                            if (attributeId == "ID")
+                                            {
+                                                resourceId = reader.GetAttribute("value");
+                                            }
+                                            else if (attributeId == "BodySetVisual")
+                                            {
+                                                bodySetVisual = reader.GetAttribute("value");
+                                                if (!string.IsNullOrEmpty(bodySetVisual))
+                                                    bodySetVisuals.TryAdd(bodySetVisual, visualBankFile + ".lsx");
+                                            }
+                                        } while (reader.ReadToNextSibling("attribute"));
+
+                                        if (isCharacterVisualBank)
+                                            characterVisualBanks.TryAdd(resourceId, visualBankFile + ".lsx");
+                                        else if (isMaterialBank)
+                                            materialBanks.TryAdd(resourceId, visualBankFile + ".lsx");
+                                        else if (isTextureBank)
+                                            textureBanks.TryAdd(resourceId, visualBankFile + ".lsx");
+                                        else if (isVisualBank)
+                                            visualBanks.TryAdd(resourceId, visualBankFile + ".lsx");
+                                    } while (reader.ReadToNextSibling("node"));
                                 }
                             }
-                            catch(Exception ex)
-                            {
-                                GeneralHelper.WriteToConsole(Properties.Resources.FailedToLoadFile, filePath, ex.Message);
-                                break;
-                            }
+                            reader.ReadToFollowing("region");
                         }
-                        reader.Close();
+                    }
+                    catch
+                    {
+                        GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
+                        reader.Dispose();
+                        return;
+                    }
+                    finally
+                    {
+                        reader.Dispose();
+                        UpdateFileProgress();
                     }
                 }
             });
-
+            CloseFileProgress();
+            if (GameObjectViewModel.LoadingCanceled) return false;
             CharacterVisualBanks = characterVisualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             VisualBanks = visualBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             BodySetVisuals = bodySetVisuals.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             MaterialBanks = materialBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             TextureBanks = textureBanks.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
+            if (GameObjectViewModel.LoadingCanceled) return false;
             FileHelper.SerializeObject(CharacterVisualBanks, "CharacterVisualBanks");
             FileHelper.SerializeObject(VisualBanks, "VisualBanks");
             FileHelper.SerializeObject(BodySetVisuals, "BodySetVisuals");
@@ -677,9 +710,19 @@ namespace bg3_modders_multitool.Services
         private List<string> GetFileList(string searchTerm)
         {
             var rtList = new List<string>();
-            IndexHelper.SearchFiles(searchTerm, false).ContinueWith(results => {
-                rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsf")));
+
+            // Use fast query first in case user has decompressed all files
+            IndexHelper.SearchFiles($"id=\"{searchTerm}\"", false, null, false).ContinueWith(results => {
+                rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsx") || r.EndsWith(".lsf")));
             }).Wait();
+
+            // Double check that files exist in index
+            if(rtList.Count == 0)
+            {
+                IndexHelper.SearchFiles(searchTerm, false, null, false).ContinueWith(results => {
+                    rtList.AddRange(results.Result.Matches.Where(r => r.EndsWith(".lsf")));
+                }).Wait();
+            }
             return rtList;
         }
 
@@ -699,7 +742,7 @@ namespace bg3_modders_multitool.Services
 
                     if (result.Equals(System.Windows.Forms.DialogResult.OK))
                     {
-                        Directory.Delete(cacheDirectory);
+                        Directory.Delete(cacheDirectory, true);
                         GeneralHelper.WriteToConsole(Properties.Resources.GOECacheCleared);
                     }
                 }
@@ -714,5 +757,48 @@ namespace bg3_modders_multitool.Services
             }
         }
         #endregion
+
+        /// <summary>
+        /// Displays the file progress bar and initilizes the data fields
+        /// Disables index and file buttons
+        /// </summary>
+        /// <param name="fileCount">The number of files</param>
+        private static void ShowFileProgress(int fileCount)
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                {
+                    dataContext.SearchResults.IsIndexing = true;
+                    dataContext.SearchResults.IndexFileTotal = fileCount;
+                    dataContext.SearchResults.IndexStartTime = DateTime.Now;
+                    dataContext.SearchResults.IndexFileCount = 0;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Updates the file progress bar
+        /// </summary>
+        private static void UpdateFileProgress()
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                    dataContext.SearchResults.IndexFileCount++;
+            });
+        }
+
+        /// <summary>
+        /// Hides the file progress bar and re-enables the buttons
+        /// </summary>
+        private static void CloseFileProgress()
+        {
+            App.Current.Dispatcher.Invoke(() => {
+                var dataContext = (App.Current.MainWindow.DataContext as ViewModels.MainWindow);
+                if (dataContext != null)
+                    dataContext.SearchResults.IsIndexing = false;
+            });
+        }
     }
 }

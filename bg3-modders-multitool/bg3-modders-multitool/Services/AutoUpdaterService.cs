@@ -35,7 +35,8 @@
         public bool UpdateAvailable { get { return _updateAvailable; } 
             set { _updateAvailable = value; _mainWindow.UpdateVisible = value ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden; } 
         }
-        public List<Release> Releases { get; set; }
+        public List<Release> Releases { get; private set; }
+        public bool UnknownVersion { get; private set; }
 
         private readonly string _repoUrl = "https://api.github.com/repositories/305852141/releases";
         private readonly string _exeName = "bg3-modders-multitool";
@@ -53,7 +54,7 @@
             HttpClient.DefaultRequestHeaders.UserAgent.TryParseAdd("BG3-Modders-Multitool");//Set the User Agent
 
             AutoResetEvent = new AutoResetEvent(true);
-            Timer = new Timer(CheckForVersionUpdate, AutoResetEvent, 0, ((int)TimeSpan.FromMinutes(30).TotalMilliseconds));
+            Timer = new Timer(CheckForVersionUpdate, AutoResetEvent, 0, ((int)TimeSpan.FromMinutes(15).TotalMilliseconds));
         }
 
         /// <summary>
@@ -71,48 +72,59 @@
         /// Downloads a new version if one is found
         /// </summary>
         /// <returns>The release check task</returns>
-        public Task CheckForVersionUpdate()
+        public Task CheckForVersionUpdate(bool changelog = false)
         {
             return Task.Run(async () => {
-                var releaseHistory = await HttpClient.GetAsync(_repoUrl);
-                if (releaseHistory.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    var currentVersion = GeneralHelper.GetAppVersion();
-                    string response = await releaseHistory.Content.ReadAsStringAsync();
-                    var releases = JsonConvert.DeserializeObject(response) as Newtonsoft.Json.Linq.JArray;
-                    if (releases != null)
+                    var releaseHistory = await HttpClient.GetAsync(_repoUrl);
+                    if (releaseHistory.StatusCode == HttpStatusCode.OK)
                     {
-                        var newestRelease = releases.First();
-                        if (newestRelease != null)
+                        var currentVersion = GeneralHelper.GetAppVersion();
+                        string response = await releaseHistory.Content.ReadAsStringAsync();
+                        var releases = JsonConvert.DeserializeObject(response) as Newtonsoft.Json.Linq.JArray;
+                        if (releases != null)
                         {
-                            var matchedVersion = releases.FirstOrDefault(r => r["tag_name"].ToString().Remove(0, 1) == currentVersion);
-                            var versionsBehind = releases.IndexOf(matchedVersion);
-                            versionsBehind = versionsBehind == -1 ? releases.Count : versionsBehind;
-                            if (versionsBehind > 0)
+                            var newestRelease = releases.FirstOrDefault();
+                            if (newestRelease != null || changelog)
                             {
-                                UpdateAvailable = true;
-                                Releases.Clear();
-
-                                for (int i = 0; i < versionsBehind; i++)
+                                var matchedVersion = releases.FirstOrDefault(r => r["tag_name"].ToString().Remove(0, 1) == currentVersion);
+                                UnknownVersion = matchedVersion == null;
+                                var versionsBehind = releases.IndexOf(matchedVersion);
+                                versionsBehind = versionsBehind == -1 ? releases.Count : versionsBehind;
+                                if (versionsBehind > 0 || changelog)
                                 {
-                                    var releaseAsset = releases[i];
-                                    var version = releaseAsset["tag_name"].ToString().Remove(0, 1);
-                                    var releaseNotes = releaseAsset["body"].ToString();
-                                    var exeAsset = releaseAsset["assets"].FirstOrDefault(a => a["name"].ToString() == $"{_exeName}.zip");
-                                    var title = releaseAsset["name"].ToString();
-                                    var downloadUrl = exeAsset?["browser_download_url"].ToString();
-                                    var release = new Release(version, title, releaseNotes, downloadUrl);
-                                    Releases.Add(release);
+                                    if(!changelog)
+                                        UpdateAvailable = true;
+                                    Releases.Clear();
+
+                                    versionsBehind = changelog ? releases.Count : versionsBehind;
+
+                                    for (int i = 0; i < versionsBehind; i++)
+                                    {
+                                        var releaseAsset = releases[i];
+                                        var version = releaseAsset["tag_name"].ToString().Remove(0, 1);
+                                        var releaseNotes = releaseAsset["body"].ToString();
+                                        var exeAsset = releaseAsset["assets"].FirstOrDefault(a => a["name"].ToString() == $"{_exeName}.zip");
+                                        var title = releaseAsset["name"].ToString();
+                                        var downloadUrl = exeAsset?["browser_download_url"].ToString();
+                                        var release = new Release(version, title, releaseNotes, downloadUrl);
+                                        Releases.Add(release);
+                                    }
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToFetchUpdates, (int)releaseHistory.StatusCode);
+                    }
+                    return;
                 }
-                else
+                catch (Exception e)
                 {
-                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFetchUpdates, (int)releaseHistory.StatusCode);
+                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToFetchUpdates, e.Message);
                 }
-                return;
             });
         }
 
@@ -175,7 +187,7 @@
             var updateExe = Path.Combine(updatePath, exeName);
             var currentExe = Path.Combine(Directory.GetCurrentDirectory(), exeName);
             var process = new Process();
-            process.StartInfo = new ProcessStartInfo("cmd.exe", $"/c replace {updateExe} {Directory.GetCurrentDirectory()} & rmdir {updatePath} /s /q & del {DragAndDropHelper.TempFolder}\\update.zip & start \"\" \"{currentExe}\"");
+            process.StartInfo = new ProcessStartInfo("cmd.exe", $"/c echo {Properties.Resources.ClosingAppForUpdate} & timeout /T 5 /nobreak & replace /R \"{updateExe}\" \"{Directory.GetCurrentDirectory()}\" & rmdir \"{updatePath}\" /s /q & del \"{DragAndDropHelper.TempFolder}\\update.zip\" & start \"\" \"{currentExe}\"");
             process.Start();
         }
     }

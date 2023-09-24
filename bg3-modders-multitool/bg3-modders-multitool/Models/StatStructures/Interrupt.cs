@@ -15,7 +15,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string ExtraDescription { get; set; }
         public string ExtraDescriptionParams { get; set; }
         public string Icon { get; set; }
-        public InterruptContext InterruptContext { get; set; }
+        public List<InterruptContext> InterruptContext { get; set; }
         public InterruptContextScope InterruptContextScope { get; set; }
         public string Container { get; set; }
         public string Conditions { get; set; }

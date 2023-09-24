@@ -26,17 +26,23 @@ namespace bg3_modders_multitool.Services
         /// <param name="args">The arguments to pass into the text</param>
         public static void WriteToConsole(string resource, params object[] args)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                try
-                {
-                    var message = string.Format(resource, args);
-                    ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
-                }
-                catch
-                {
-                    ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
-                }
-            });
+            if(resource != null)
+            {
+                Application.Current.Dispatcher.Invoke(() => {
+                    try
+                    {
+                        var message = string.Format(resource, args);
+                        ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
+                        } catch { }
+                    }
+                });
+            }
         }
 
         /// <summary>
@@ -336,6 +342,19 @@ namespace bg3_modders_multitool.Services
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             return fvi.FileVersion;
+        }
+
+        /// <summary>
+        /// Toggles whether or not to send new paks to the mods folder instead of zipping them
+        /// </summary>
+        /// <param name="setting">True for pak to mods, false to zip in same directory</param>
+        internal static void TogglePakToMods(bool setting)
+        {
+            if (Properties.Settings.Default.pakToMods != setting)
+            {
+                Properties.Settings.Default.pakToMods = setting;
+                Properties.Settings.Default.Save();
+            }
         }
 
         /// <summary>

@@ -13,20 +13,24 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Text;
-    using System.Threading.Tasks;
 
     public static class FileHelper
     {
-        public static string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
-        public static string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
+        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
+        public static readonly string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
+
+        public static string UnpackedDataPath => $"{Directory.GetCurrentDirectory()}\\UnpackedData";
+        public static string UnpackedModsPath => $"{Directory.GetCurrentDirectory()}\\UnpackedMods";
+        public static string DataDirectory => Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
 
         /// <summary>
         /// List of all known file types used
         /// </summary>
-        public static string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".dae",".dat",
-            ".data",".dds",".div",".fbx",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
+        public static readonly string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".cur",".dae",".dat",
+            ".data",".dds",".div",".fbx",".ffxactor",".ffxbones",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
             ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsfx",".lsj",".lsx",".metal",".ogg",".osi",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
             ".txt",".wav",".wem",".xaml",".xml", Properties.Resources.Extensionless
         };
@@ -45,11 +49,20 @@ namespace bg3_modders_multitool.Services
             }
 
             var originalExtension = Path.GetExtension(file);
-            var newFile = string.IsNullOrEmpty(originalExtension) ? $"{file}.{extension}" : file.Replace(originalExtension, $".{extension}");
+            var newFile = string.IsNullOrEmpty(originalExtension) ? $"{file}.{extension}" : file.Replace(originalExtension, $"{originalExtension}.{extension}");
+
+            if(File.Exists(GetPath(newFile))) {
+                return newFile;
+            }
+
             var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
-            var isConvertableToXml = originalExtension.Contains("loca");
-            var isConvertableToLoca = originalExtension.Contains("xml");
+            var isConvertableToXml = originalExtension.Contains("loca") && extension == "xml";
+            var isConvertableToLoca = originalExtension.Contains("xml") && extension == "loca";
+
             string path;
+
+            // TODO - clean up logic here; should accept directory designation rather than using GetPath
+
             if (string.IsNullOrEmpty(newPath))
             {
                 path = GetPath(file);
@@ -59,63 +72,75 @@ namespace bg3_modders_multitool.Services
             {
                 path = file;
             }
-            if (!File.Exists(newPath) && isConvertableToLsx)
+
+            if(!File.Exists(newPath))
             {
-                if(MustRenameLsxResources.Contains(originalExtension))
+                if (isConvertableToLsx)
                 {
-                    var renamedPath = Path.ChangeExtension(path, originalExtension + ".lsf");
-                    File.Move(path, renamedPath);
-                    path = renamedPath;
-                }
-                var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
-                try
-                {
-                    LSLib.LS.Resource resource = ResourceUtils.LoadResource(path);
-                    ResourceUtils.SaveResource(resource, newPath, conversionParams);
-                }
-                catch (Exception ex)
-                {
-                    // Larian decided to rename the .lsx to .lsbs instead of properly LSF encoding them
-                    // These are invalid .lsbs/.lsbc files if this error pops up
-                    if (ex.Message != "Invalid LSF signature; expected 464F534C, got 200A0D7B")
+                    if (MustRenameLsxResources.Contains(originalExtension))
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                        var renamedPath = Path.ChangeExtension(path, originalExtension + ".lsf");
+                        File.Move(path, renamedPath);
+                        path = renamedPath;
                     }
-                }
-
-                if (MustRenameLsxResources.Contains(originalExtension))
-                {
-                    File.Move(path, Path.ChangeExtension(path, ""));
-                }
-            }
-            else if(!File.Exists(newPath) && isConvertableToXml)
-            {
-                using (var fs = File.Open(file, System.IO.FileMode.Open))
-                {
-
+                    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                     try
                     {
-                        var resource = LocaUtils.Load(fs, LocaFormat.Loca);
-                        LocaUtils.Save(resource, newPath, LocaFormat.Xml);
-                    } 
-                    catch(Exception ex)
-                    {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
-                    }
-                }
-            }
-            else if(!File.Exists(newPath) && isConvertableToLoca)
-            {
-                using (var fs = File.Open(file, System.IO.FileMode.Open))
-                {
-                    try
-                    {
-                        var resource = LocaUtils.Load(fs, LocaFormat.Xml);
-                        LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                        if(File.GetSize(path) == 0)
+                        {
+                            newFile = file;
+                        }
+                        else
+                        {
+                            Resource resource = ResourceUtils.LoadResource(path, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                            ResourceUtils.SaveResource(resource, newPath, conversionParams);
+                        }
                     }
                     catch (Exception ex)
                     {
-                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message);
+                        // Larian decided to rename the .lsx to .lsbs instead of properly LSF encoding them
+                        // These are invalid .lsbs/.lsbc files if this error pops up
+                        if (!IsSpecialLSFSignature(ex.Message))
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        }
+                        newFile = file;
+                    }
+
+                    if (MustRenameLsxResources.Contains(originalExtension))
+                    {
+                        File.Move(path, Path.ChangeExtension(path, ""));
+                    }
+                }
+                else if (isConvertableToXml)
+                {
+                    using (var fs = File.Open(file, System.IO.FileMode.Open))
+                    {
+
+                        try
+                        {
+                            var resource = LocaUtils.Load(fs, LocaFormat.Loca);
+                            LocaUtils.Save(resource, newPath, LocaFormat.Xml);
+                        }
+                        catch (Exception ex)
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        }
+                    }
+                }
+                else if (isConvertableToLoca)
+                {
+                    using (var fs = File.Open(file, System.IO.FileMode.Open))
+                    {
+                        try
+                        {
+                            var resource = LocaUtils.Load(fs, LocaFormat.Xml);
+                            LocaUtils.Save(resource, newPath, LocaFormat.Loca);
+                        }
+                        catch (Exception ex)
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        }
                     }
                 }
             }
@@ -139,81 +164,26 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
-        /// Converts a .wem file to an .ogg file in-place.
+        /// Checks if file has specific LSF signature indicating that it is actually LSX instead of the extension they have, ie lsbc
         /// </summary>
-        /// <param name="file">The file to convert.</param>
-        /// <returns>The new file path.</returns>
-        public static string ConvertToOgg(string file)
+        /// <param name="message">The error message to check</param>
+        /// <returns>Whether or not the file is actually lsx</returns>
+        public static bool IsSpecialLSFSignature(string message)
         {
-            try
-            {
-                if (CanConvertToOgg(file))
-                {
-                    file = GetPath(file);
-                    var newFile = file.Replace(Path.GetExtension(file), ".ogg");
-                    if (File.Exists(newFile))
-                    {
-                        return newFile;
-                    }
-                    var tempFile = Path.GetTempFileName();
-                    using (System.IO.FileStream fs = new System.IO.FileStream(tempFile,
-                        System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None,
-                        4096, System.IO.FileOptions.RandomAccess))
-                    {
-                        WEMSharp.WEMFile wem = new WEMSharp.WEMFile(file, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
-                        var resource = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("bg3_modders_multitool.packed_codebooks_aoTuV_603.bin");
-                        for (int i = 0; i < resource.Length; i++)
-                            fs.WriteByte((byte)resource.ReadByte());
-                        fs.Close();
-
-                        wem.GenerateOGG(newFile, tempFile, false, false);
-                        file = newFile;
-                    }
-                    System.IO.File.Delete(tempFile);
-                }
-            }
-            catch
-            {
-                GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertOgg);
-            }
-            return file;
+            return message == "Invalid LSF signature; expected 464F534C, got 200A0D7B";
         }
 
         /// <summary>
-        /// Checks to see if the file is convertable to ogg.
+        /// Checks if the file is a convertable file
         /// </summary>
-        /// <param name="file">The file to check.</param>
-        /// <returns>Whether or not the file is convertable.</returns>
-        public static bool CanConvertToOgg(string file)
+        /// <param name="file">The file to check</param>
+        /// <returns>Whether or not the file is convertable</returns>
+        public static bool IsConvertable(string file)
         {
-            var extension = Path.GetExtension(file);
-            return extension == ".wem";
-        }
-
-        /// <summary>
-        /// Converts .wem files to .ogg and plays them.
-        /// </summary>
-        /// <param name="file">The file to play.</param>
-        public static void PlayAudio(string file)
-        {
-            file = ConvertToOgg(file);
-
-            try
-            {
-                Task.Run(() => {
-                    using (var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(file))
-                    using (var waveOut = new NAudio.Wave.WaveOutEvent())
-                    {
-                        waveOut.Init(vorbisStream);
-                        waveOut.Play(); // is async
-                        while (waveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped);
-                    }
-                });
-            }
-            catch
-            {
-                GeneralHelper.WriteToConsole(Properties.Resources.ProblemPlayingAudio);
-            }
+            var originalExtension = Path.GetExtension(file);
+            var isConvertableToLsx = CanConvertToLsx(file);
+            var isConvertableToXml = originalExtension.Contains("loca");
+            return isConvertableToLsx || isConvertableToXml;
         }
 
         /// <summary>
@@ -297,9 +267,9 @@ namespace bg3_modders_multitool.Services
         /// <returns>The full file path.</returns>
         public static string GetPath(string file)
         {
-            if(!string.IsNullOrEmpty(file) && file.Contains($"{Directory.GetCurrentDirectory()}\\UnpackedData\\"))
+            if(!string.IsNullOrEmpty(file) && (file.Contains(UnpackedDataPath) || file.Contains(Path.GetTempPath())))
                     return file;
-            return $"{Directory.GetCurrentDirectory()}\\UnpackedData\\{file}";
+            return $"{UnpackedDataPath}\\{file}";
         }
 
         /// <summary>
@@ -430,7 +400,7 @@ namespace bg3_modders_multitool.Services
         /// <param name="setting">Whether to enable or disable the mod.</param>
         public static void CreateDestroyQuickLaunchMod(bool setting)
         {
-            var dataDir = Path.Combine(Directory.GetParent(Properties.Settings.Default.bg3Exe) + "\\", @"..\Data");
+            var dataDir = FileHelper.DataDirectory;
             var modLocation = Path.Combine(dataDir, "Video\\");
             var modFilepath = Path.Combine(modLocation,"Splash_Logo_Larian.bk2");
             if (setting)
@@ -476,6 +446,20 @@ namespace bg3_modders_multitool.Services
             catch
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Loads the file template text from the assembly
+        /// </summary>
+        /// <param name="templateName">The file template name</param>
+        /// <returns>The file template file content string</returns>
+        public static string LoadFileTemplate(string templateName)
+        {
+            using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"bg3_modders_multitool.FileTemplates.{templateName}"))
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(stream))
+            {
+                return reader.ReadToEnd();
             }
         }
 

@@ -9,6 +9,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         Dipping,
         Assisting,
         Throwing,
-        ImprovisedWeapon
+        ImprovisedWeapon,
+        Restrain,
+        Telekinesis,
     }
 }

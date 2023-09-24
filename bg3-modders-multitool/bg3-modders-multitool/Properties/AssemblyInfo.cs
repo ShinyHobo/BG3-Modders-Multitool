@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("bg3-modders-multitool")]
-[assembly: AssemblyCopyright("Copyright © ShinyHobo 2023")]
+[assembly: AssemblyCopyright("Copyright © ShinyHobo 2020-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -50,4 +50,4 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("0.10.0")]
+[assembly: AssemblyFileVersion("0.12.1")]

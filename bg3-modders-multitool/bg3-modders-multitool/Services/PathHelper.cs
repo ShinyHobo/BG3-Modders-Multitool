@@ -45,7 +45,7 @@ namespace bg3_modders_multitool.Services
         /// Initializes the paths for the mods and player profiles folders based on game documents path.
         /// If not defined, it will try to find the game documents path automatically using the default installation location.
         /// </summary>
-        private void InitializePaths()
+        public void InitializePaths()
         {
             // Clear any value that might have been set before...
             ModsFolderPath = string.Empty;

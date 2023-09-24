@@ -12,6 +12,7 @@ namespace bg3_modders_multitool.Enums.ValueLists
         MagicalDamage_Electric,
         MagicalDamage_Psychic,
         MagicalNonDamage,
-        None
+        None,
+        AnimationSetOverride,
     }
 }

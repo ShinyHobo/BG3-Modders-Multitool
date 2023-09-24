@@ -67,6 +67,8 @@ namespace bg3_modders_multitool.Enums.ValueLists
         PotionResistanceLightningCloud,
         PotionResistancePoisonCloud,
         SporePinkCloud,
-        Sentinel
+        Sentinel,
+        BladeBarrier,
+        Hellfire,
     }
 }

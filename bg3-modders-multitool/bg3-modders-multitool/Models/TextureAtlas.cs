@@ -3,8 +3,8 @@
 /// </summary>
 namespace bg3_modders_multitool.Models
 {
-    using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Services;
+    using LSLib.LS;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
@@ -22,7 +22,6 @@ namespace bg3_modders_multitool.Models
         public int Width { get; set; }
         public int IconHeight { get; set; }
         public int IconWidth { get; set; }
-        public byte[] AtlasImage { get; set; }
         public List<IconUV> Icons { get; set; }
 
         /// <summary>
@@ -30,19 +29,34 @@ namespace bg3_modders_multitool.Models
         /// </summary>
         /// <param name="mapKey">The map key of the icon to match.</param>
         /// <returns>The bitmap of the icon.</returns>
-        public BitmapImage GetIcon(string mapKey)
+        public BitmapImage GetIcon(string mapKey, PakReaderHelper pak)
         {
             var icon = Icons.SingleOrDefault(i => i.MapKey == mapKey);
-            if(icon != null && AtlasImage != null)
+
+            if (icon != null)
             {
-                var xPos = (int)(Width * icon.U1);
-                var yPos = (int)(Height * icon.V1);
-                Rectangle cloneRect = new Rectangle(xPos, yPos, IconWidth, IconHeight);
-                using (var ms = new System.IO.MemoryStream(AtlasImage))
+                var contents = pak.ReadPakFileContents(PakReaderHelper.GetPakPath(Path));
+                using (var contentStream = new System.IO.MemoryStream(contents))
+                using (var image = Pfim.Pfimage.FromStream(contentStream))
                 {
-                    var bmp = new Bitmap(ms);
-                    bmp = bmp.Clone(cloneRect, bmp.PixelFormat);
-                    return ConvertBitmapToImage(bmp);
+                    var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                    var original = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
+                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                    {
+                        original.Save(ms, ImageFormat.Png);
+                        original.Dispose();
+
+                        var xPos = (int)(Width * icon.U1);
+                        var yPos = (int)(Height * icon.V1);
+                        Rectangle cloneRect = new Rectangle(xPos, yPos, IconWidth, IconHeight);
+
+                        using (var newStream = new System.IO.MemoryStream(ms.ToArray()))
+                        {
+                            var bmp = new Bitmap(newStream);
+                            bmp = bmp.Clone(cloneRect, bmp.PixelFormat);
+                            return ConvertBitmapToImage(bmp);
+                        }
+                    }
                 }
             }
             return null;
@@ -51,66 +65,49 @@ namespace bg3_modders_multitool.Models
         /// <summary>
         /// Reads a texture atlas and the corresponding .dds file.
         /// </summary>
-        /// <param name="path">The path to the texture atlas.</param>
+        /// 
+        /// <param name="contents">The path to the texture atlas.</param>
         /// <param name="pak">The pak.</param>
         /// <returns>A new texture atlas.</returns>
-        public static TextureAtlas Read(string path, string pak)
+        public static TextureAtlas Read(byte[] contents, string path, string pak)
         {
-            if (!FileHelper.TryParseXml(path))
-            {
-                GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, path);
-                return null;
-            }
-
+            // TODO - memory optimize
             var newTextureAtlas = new TextureAtlas { Path = path, Icons = new List<IconUV>() };
-            XmlDocument doc = new XmlDocument();
-            doc.Load(path);
-            var textureAtlasInfo = doc.SelectSingleNode("//region[@id='TextureAtlasInfo']");
-            textureAtlasInfo = textureAtlasInfo.SelectSingleNode("node[@id='root']");
-            textureAtlasInfo = textureAtlasInfo.SelectSingleNode("children");
-
-            var textureAtlasPath = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasPath']");
-            newTextureAtlas.UUID = textureAtlasPath.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText;
-            newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}".Replace("/", "\\");
-
-            var textureAtlasIconSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasIconSize']");
-            newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
-            newTextureAtlas.IconWidth = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
-
-            var textureAtlasTextureSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasTextureSize']");
-            newTextureAtlas.Height = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
-            newTextureAtlas.Width = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
-
-            var iconUVList = doc.SelectSingleNode("//region[@id='IconUVList']");
-            iconUVList = iconUVList.SelectSingleNode("node[@id='root']");
-            iconUVList = iconUVList.SelectSingleNode("children");
-
-            foreach (XmlElement iconNode in iconUVList.SelectNodes("node[@id='IconUV']"))
+            using(var contentStream = new System.IO.MemoryStream(contents))
             {
-                var icon = new IconUV
-                {
-                    MapKey = iconNode.SelectSingleNode("attribute[@id='MapKey']").Attributes["value"].InnerText,
-                    U1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U1']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
-                    U2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U2']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
-                    V1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='V1']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
-                    V2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='V2']").Attributes["value"].InnerText, CultureInfo.InvariantCulture)
-                };
-                newTextureAtlas.Icons.Add(icon);
-            }
+                XmlDocument doc = new XmlDocument();
+                doc.Load(contentStream);
+                var textureAtlasInfo = doc.SelectSingleNode("//region[@id='TextureAtlasInfo']");
+                textureAtlasInfo = textureAtlasInfo.SelectSingleNode("node[@id='root']");
+                textureAtlasInfo = textureAtlasInfo.SelectSingleNode("children");
 
-            var newTextureAtlasPath = FileHelper.GetPath(newTextureAtlas.Path);
-            if (File.Exists(@"\\?\" + newTextureAtlasPath))
-            {
-                using (var image = Pfim.Pfimage.FromFile(newTextureAtlasPath))
+                var textureAtlasPath = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasPath']");
+                newTextureAtlas.UUID = textureAtlasPath.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText;
+                newTextureAtlas.Path = $"Icons\\Public\\{pak}\\{textureAtlasPath.SelectSingleNode("attribute[@id='Path']").Attributes["value"].InnerText}".Replace("/", "\\");
+
+                var textureAtlasIconSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasIconSize']");
+                newTextureAtlas.IconHeight = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
+                newTextureAtlas.IconWidth = int.Parse(textureAtlasIconSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
+
+                var textureAtlasTextureSize = textureAtlasInfo.SelectSingleNode("node[@id='TextureAtlasTextureSize']");
+                newTextureAtlas.Height = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Height']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
+                newTextureAtlas.Width = int.Parse(textureAtlasTextureSize.SelectSingleNode("attribute[@id='Width']").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
+
+                var iconUVList = doc.SelectSingleNode("//region[@id='IconUVList']");
+                iconUVList = iconUVList.SelectSingleNode("node[@id='root']");
+                iconUVList = iconUVList.SelectSingleNode("children");
+
+                foreach (XmlElement iconNode in iconUVList.SelectNodes("node[@id='IconUV']"))
                 {
-                    var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
-                    var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
-                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                    var icon = new IconUV
                     {
-                        bitmap.Save(ms, ImageFormat.Png);
-                        newTextureAtlas.AtlasImage = ms.ToArray();
-                        bitmap.Dispose();
-                    }
+                        MapKey = iconNode.SelectSingleNode("attribute[@id='MapKey']").Attributes["value"].InnerText,
+                        U1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U1']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
+                        U2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='U2']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
+                        V1 = float.Parse(iconNode.SelectSingleNode("attribute[@id='V1']").Attributes["value"].InnerText, CultureInfo.InvariantCulture),
+                        V2 = float.Parse(iconNode.SelectSingleNode("attribute[@id='V2']").Attributes["value"].InnerText, CultureInfo.InvariantCulture)
+                    };
+                    newTextureAtlas.Icons.Add(icon);
                 }
             }
 
@@ -136,6 +133,36 @@ namespace bg3_modders_multitool.Models
                 img.Freeze();
                 bitmap.Dispose();
                 return img;
+            }
+        }
+
+        /// <summary>
+        /// Converts a dds file into a bitmap image
+        /// </summary>
+        /// <param name="iconInfo">The dds file</param>
+        /// <returns>The bitmap image</returns>
+        public static BitmapImage ConvertDDSToBitmap(PackagedFileInfo iconInfo)
+        {
+            lock(iconInfo.PackageStream)
+            {
+                iconInfo.PackageStream.Position = 0;
+                var iconStream = iconInfo.MakeStream();
+                using (var image = Pfim.Pfimage.FromStream(iconStream))
+                {
+                    var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
+                    var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
+                    iconInfo.ReleaseStream();
+                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                    {
+                        bitmap.Save(ms, ImageFormat.Png);
+
+                        using (var m2 = new System.IO.MemoryStream(ms.ToArray()))
+                        {
+                            var bmp = new Bitmap(ms);
+                            return ConvertBitmapToImage(bmp);
+                        }
+                    }
+                }
             }
         }
     }
