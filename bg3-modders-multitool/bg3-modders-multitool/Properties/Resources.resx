@@ -269,7 +269,8 @@ Dropping a .pak will unpack it into a nearby directory. </value>
     <value>Color Picker</value>
   </data>
   <data name="ConfigNeededLabel" xml:space="preserve">
-    <value>Configuration needed: missing bg3.exe!</value>
+    <value>Configuration needed:
+missing bg3.exe!</value>
   </data>
   <data name="ConfigurationTitle" xml:space="preserve">
     <value>Configuration</value>

@@ -503,7 +503,8 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configuration needed: missing bg3.exe!.
+        ///   Looks up a localized string similar to Configuration needed:
+        ///missing bg3.exe!.
         /// </summary>
         public static string ConfigNeededLabel {
             get {

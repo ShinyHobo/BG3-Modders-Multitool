@@ -125,16 +125,6 @@ namespace bg3_modders_multitool.Views
         {
             GeneralHelper.ToggleUnlockThreads(false);
         }
-
-        private void PakToMods_Checked(object sender, RoutedEventArgs e)
-        {
-            GeneralHelper.TogglePakToMods(true);
-        }
-
-        private void PakToMods_Unchecked(object sender, RoutedEventArgs e)
-        {
-            GeneralHelper.TogglePakToMods(false);
-        }
         #endregion
     }
 }

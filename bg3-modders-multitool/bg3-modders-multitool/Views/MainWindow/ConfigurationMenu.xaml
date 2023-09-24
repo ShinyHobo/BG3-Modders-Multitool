@@ -48,8 +48,6 @@
                 IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Content="{x:Static p:Resources.QuickLaunchLabel}"/>
             <CheckBox ToolTip="{x:Static p:Resources.UnlockThreadsToolTip}" Cursor="Hand" Content="{x:Static p:Resources.UnlockThreadsLabel}" Margin="3"
                 IsChecked="{Binding ThreadsUnlocked}" Checked="UnlockThreads_Checked" Unchecked="UnlockThreads_Unchecked"/>
-            <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" IsEnabled="{Binding ModsFolderLoaded}" Margin="3"
-                IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
         </StackPanel>
     </Grid>
 </Window>
