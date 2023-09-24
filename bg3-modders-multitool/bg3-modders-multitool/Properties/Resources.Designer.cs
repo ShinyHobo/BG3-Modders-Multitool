@@ -2270,6 +2270,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rebuild.
+        /// </summary>
+        public static string RebuildButton {
+            get {
+                return ResourceManager.GetString("RebuildButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Careful! This is irreversable!
         ///
         ///Clicking &quot;OK&quot; will wipe your current index and rebuild it from scratch; this could take some time. Are you sure you wish you continue?.

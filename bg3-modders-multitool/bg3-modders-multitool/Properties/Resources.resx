@@ -911,6 +911,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="ReadyToIndexAgainQuestion" xml:space="preserve">
     <value>Ready to index again?</value>
   </data>
+  <data name="RebuildButton" xml:space="preserve">
+    <value>Rebuild</value>
+  </data>
   <data name="ReindexQuestion" xml:space="preserve">
     <value>Careful! This is irreversable!
 
