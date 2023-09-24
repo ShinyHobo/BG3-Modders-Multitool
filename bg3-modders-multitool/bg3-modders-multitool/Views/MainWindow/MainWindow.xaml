@@ -133,7 +133,7 @@
                     <StackPanel VerticalAlignment="Bottom">
                         <TextBlock Text="{Binding DragAndDropBox.LastDirectory}" Width="350" HorizontalAlignment="Left" TextWrapping="Wrap" Visibility="{Binding DragAndDropBox.CanRebuild}"/>
                         <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="5" Background="Green" Margin="0,5,0,10" Click="rebuild_Click" Visibility="{Binding DragAndDropBox.CanRebuild}">
-                            <TextBlock Text="{x:Static p:Resources.RebuildButton}" Foreground="DimGray"/>
+                            <TextBlock Text="{x:Static p:Resources.RebuildButton}" Foreground="LightGray"/>
                         </Button>
                         <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" IsEnabled="{Binding ModsFolderLoaded}" Margin="0,0,0,0"
                                 IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
