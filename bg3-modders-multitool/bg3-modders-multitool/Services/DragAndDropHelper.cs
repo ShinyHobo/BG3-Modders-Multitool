@@ -383,7 +383,7 @@ namespace bg3_modders_multitool.Services
                 if(dirInfo.Exists)
                 {
                     var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
-                    var fileGroups = isList ? files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First()) : files.GroupBy(f => "not list");
+                    var fileGroups = files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
                     foreach(var fileGroup in fileGroups)
                     {
                         var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
@@ -396,7 +396,7 @@ namespace bg3_modders_multitool.Services
                         }
                         else
                         {
-                            xml.Descendants("region").Single().Attribute("id").Value = isList ? fileGroup.Key : dir;
+                            xml.Descendants("region").Single().Attribute("id").Value = fileGroup.Key;
                         }
 
                         var children = xml.Descendants("children").Single();
@@ -413,8 +413,7 @@ namespace bg3_modders_multitool.Services
                             }
                             file.Delete();
                         }
-                        var fileName = isList ? fileGroup.Key : dir;
-                        fileName = isRootTemplate ? "_merged" : fileName;
+                        var fileName = isRootTemplate ? "_merged" : fileGroup.Key;
                         xml.Save($"{path}\\{fileName}{(isRootTemplate ? ".lsf" : "")}.lsx");
                     }
 
