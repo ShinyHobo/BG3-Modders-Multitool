@@ -102,10 +102,7 @@
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (!FileHelper.IsSpecialLSFSignature(ex.Message))
-                                    {
-                                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, ".lsf", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
-                                    }
+                                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, ".xml", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                                 }
                             }
                         }
