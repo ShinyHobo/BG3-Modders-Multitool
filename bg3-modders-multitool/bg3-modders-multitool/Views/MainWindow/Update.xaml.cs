@@ -1,6 +1,7 @@
 ﻿namespace bg3_modders_multitool.Views
 {
     using System.Windows;
+    using System.Windows.Media;
 
     /// <summary>
     /// Interaction logic for Update.xaml
@@ -19,6 +20,18 @@
             markdownViewer.Markdown = document;
             markdownViewer.Document.PagePadding = new Thickness(10);
             markdownViewer.Height = changelog ? 460 : 380;
+            foreach(var block in markdownViewer.Document.Blocks)
+            {
+                block.Foreground = new SolidColorBrush(Colors.White);
+                var section = block as System.Windows.Documents.Section;
+                if (section != null)
+                {
+                    foreach(var secBlock in section.Blocks)
+                    {
+                        secBlock.Foreground = new SolidColorBrush(Colors.White);
+                    }
+                }
+            }
             Title = changelog ? Properties.Resources.ChangeLogMenu : Properties.Resources.UpdatesFoundButton;
             buttonsBox.Visibility = changelog ? Visibility.Collapsed : Visibility.Visible;
             DataContext = this;

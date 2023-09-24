@@ -273,5 +273,6 @@ namespace bg3_modders_multitool.Enums.ValueLists
         MAG_FEATHER_FALL_RAVEN_CHARM,
         WET,
         MAG_BARBARIAN_HIDE_TECHNICAL,
+        MAG_MYRKULITES_UNDEAD_PRESENCE_TECHNICAL
     }
 }

@@ -9,18 +9,18 @@
         mc:Ignorable="d"
         MinWidth="1250"
         MinHeight="250"
+        Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.IndexSearchTitle}" Height="430" Width="1250" Closing="Window_Closing">
     <Grid>
         <Button x:Name="searchFilesButton" Content="{x:Static p:Resources.SearchFilesButton}" HorizontalAlignment="Left" Margin="535,10,0,0" 
                 VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand" IsEnabled="{Binding AllowInteraction}"/>
         <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="525" KeyDown="Search_KeyDown" IsEnabled="{Binding AllowInteraction}"/>
         <xctk:CheckComboBox x:Name="fileTypeFilter" Height="23" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="635,10,0,0"
-                            SelectedItemsOverride="{Binding SelectedFileTypes}" ItemSelectionChanged="fileTypeFilter_ItemSelectionChanged" IsEnabled="{Binding AllowInteraction}"/>
+                            SelectedItemsOverride="{Binding SelectedFileTypes}" ItemSelectionChanged="fileTypeFilter_ItemSelectionChanged" IsEnabled="{Binding AllowInteraction}" />
 
-
-        <CheckBox x:Name="leadingWildcardDisabledCheckbox" IsChecked="{Binding LeadingWildcardDisabled}"  Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="738,15,0,0" 
+        <CheckBox x:Name="leadingWildcardDisabledCheckbox" IsChecked="{Binding LeadingWildcardDisabled}"  Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="738,10,0,0" 
                   FlowDirection="RightToLeft" Width="30" ToolTip="{x:Static p:Resources.SpeedIndexSearchTooltip}" IsEnabled="{Binding AllowInteraction}">
-            <TextBlock Text="&#x27A0;" FontSize="23" Margin="-10,-4,0,0" FlowDirection="LeftToRight" >
+            <TextBlock Text="&#x27A0;" FontSize="23" Margin="-10,0,0,0" FlowDirection="LeftToRight" >
                 <TextBlock.LayoutTransform>
                     <RotateTransform Angle="90" />
                 </TextBlock.LayoutTransform>
@@ -37,7 +37,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <CheckBox IsChecked="{Binding Selected}"/>
-                        <Button x:Name="path" MouseDoubleClick="Path_MouseDoubleClick" Background="White" BorderBrush="White" HorizontalContentAlignment="Stretch" 
+                        <Button x:Name="path" MouseDoubleClick="Path_MouseDoubleClick" Background="White" BorderBrush="White" HorizontalContentAlignment="Stretch"
                                 VerticalContentAlignment="Stretch" Cursor="Hand" MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave">
                             <TextBlock Text="{Binding Path}" HorizontalAlignment="Stretch"></TextBlock>
                             <Button.Template>
@@ -49,10 +49,10 @@
                             </Button.Template>
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Foreground" Value="White" />
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="true">
-                                            <Setter Property="Foreground" Value="Red" />
+                                            <Setter Property="Foreground" Value="Silver" />
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -62,18 +62,18 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <CheckBox Height="23" Width="72" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,6" Cursor="Hand" IsChecked="{Binding SelectAllToggled}" x:Name="selectAll"
+        <CheckBox Height="23" Width="72" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10" Cursor="Hand" IsChecked="{Binding SelectAllToggled}" x:Name="selectAll"
                   Content="{x:Static p:Resources.SelectAllButton}" Click="ToggleSelection_Click" IsEnabled="{Binding AllowInteraction}"/>
         <Button Height="23" Width="102" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="96,0,0,10" Cursor="Hand" x:Name="extractAll" IsEnabled="{Binding AllowInteraction}"
                 Content="{x:Static p:Resources.ExtractSelectedButton}" Click="ExtractSelected_Click"/>
-        <CheckBox Height="23" Width="142" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="620,0,0,6" Cursor="Hand" IsChecked="{Binding PreviewConvertedToggled}" x:Name="previewConverted"
+        <CheckBox Height="23" Width="142" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="620,0,0,10" Cursor="Hand" IsChecked="{Binding PreviewConvertedToggled}" x:Name="previewConverted"
           Content="{x:Static p:Resources.PreviewConvertedButton}" Click="ToggleSelection_Click" IsEnabled="{Binding AllowInteraction}"/>
 
         <Button Height="23" Width="23" Margin="773,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📤" 
                 ToolTip="{x:Static p:Resources.ExtractFileTooltip}" Click="ExtractFile_Click" IsEnabled="{Binding AllowInteraction}"/>
         <Button Height="23" Width="23" Margin="799,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📂" 
                 ToolTip="{x:Static p:Resources.OpenFolderTooltip}" Click="OpenFolder_Click" IsEnabled="{Binding AllowInteraction}"/>
-        <TextBox IsReadOnly="True" Text="{Binding SelectedPath}"  Margin="825,10,117,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Stretch" Background="Transparent" IsEnabled="{Binding AllowInteraction}"/>
+        <TextBox IsReadOnly="True" Text="{Binding SelectedPath}"  Margin="825,10,117,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Stretch" IsEnabled="{Binding AllowInteraction}"/>
         <Button x:Name="convertAndOpenButton" Content="{x:Static p:Resources.ConvertOpenButton}" Margin="0,10,10,0" Width="102" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Click="ConvertAndOpenButton_Click" IsEnabled="{Binding AllowInteraction}" Cursor="Hand"/>
         <Grid Margin="773,38,10,10">

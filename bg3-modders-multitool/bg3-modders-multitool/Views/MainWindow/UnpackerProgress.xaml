@@ -9,6 +9,7 @@
         Width="350"
         MaxHeight="400"
         ResizeMode="CanMinimize"
+        Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.UnpackerProgressTitle}" >
     <Grid>
         <ListView x:Name="searchResults" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"  ItemsSource="{Binding PakProgressCollection}">

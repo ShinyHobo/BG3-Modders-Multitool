@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
         Height="270" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Grid>
         <Grid Margin="10,0,10,0">
@@ -30,20 +31,13 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </Grid>
-        <Grid Margin="10,155,0,0">
-            <Label x:Name="quickLaunchToggle" Content="{x:Static p:Resources.QuickLaunchLabel}" Margin="12,-4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <CheckBox ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" Margin="0,3,300,48"
-                IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" />
-        </Grid>
-        <Grid Margin="10,175,0,0">
-            <Label x:Name="unlockThreadsToggle" Content="{x:Static p:Resources.UnlockThreadsLabel}" HorizontalAlignment="Left" Margin="12,-3,0,0" VerticalAlignment="Top"/>
-            <CheckBox ToolTip="{x:Static p:Resources.UnlockThreadsToolTip}" Cursor="Hand" Margin="0,3,300,28"
-                IsChecked="{Binding ThreadsUnlocked}" Checked="UnlockThreads_Checked" Unchecked="UnlockThreads_Unchecked" />
-        </Grid>
-        <Grid Margin="10,195,0,0">
-            <Label x:Name="pakToModsToggle" Content="{x:Static p:Resources.PakToModsLabel}" HorizontalAlignment="Left" Margin="12,-3,0,0" VerticalAlignment="Top"/>
-            <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" Margin="0,3,140,18" IsEnabled="{Binding ModsFolderLoaded}"
-                IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" />
-        </Grid>
+        <StackPanel Margin="8,155,00,0">
+            <CheckBox ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" Margin="3"
+                IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Content="{x:Static p:Resources.QuickLaunchLabel}"/>
+            <CheckBox ToolTip="{x:Static p:Resources.UnlockThreadsToolTip}" Cursor="Hand" Content="{x:Static p:Resources.UnlockThreadsLabel}" Margin="3"
+                IsChecked="{Binding ThreadsUnlocked}" Checked="UnlockThreads_Checked" Unchecked="UnlockThreads_Unchecked"/>
+            <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" IsEnabled="{Binding ModsFolderLoaded}" Margin="3"
+                IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
+        </StackPanel>
     </Grid>
 </Window>

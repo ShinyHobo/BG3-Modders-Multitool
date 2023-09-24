@@ -7,6 +7,7 @@
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         ResizeMode="NoResize"
         mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
         Title="{Binding WindowTitle}" Height="185" Width="350">
     <Grid>
         <StackPanel>

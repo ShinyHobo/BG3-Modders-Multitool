@@ -9,9 +9,11 @@
         xmlns:hx="http://helix-toolkit.org/wpf/SharpDX"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.GOETitle}" MinHeight="486" MinWidth="1000" Height="486" Width="1000" Closing="Window_Closing">
     <Grid>
-        <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="450" SelectionChanged="Type_Change" Loaded="TypeComboBox_Loaded" Cursor="Hand" IsEnabled="{Binding Loaded}" >
+        <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="450" SelectionChanged="Type_Change" 
+                  Loaded="TypeComboBox_Loaded" Cursor="Hand" IsEnabled="{Binding Loaded}">
             <ComboBox.ItemsSource>
                 <CompositeCollection>
                     <ComboBoxItem x:Name="defaultType" Content="{x:Static p:Resources.GameObjectSelectionLabel}" Focusable="False" IsHitTestVisible="False" IsEnabled="False"></ComboBoxItem>
@@ -30,7 +32,7 @@
                 <TreeView.Resources>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" Margin="0,0,5,0" Background="Transparent"></TextBlock>
+                            <TextBlock Text="{Binding Name}" Margin="0,0,5,0" Foreground="White"></TextBlock>
                             <Button Background="White" BorderBrush="White" Uid="{Binding MapKey}" Cursor="Hand" Click="ExploreMore_Click" Loaded="ItemSelectionButton_Loaded" >
                                 <TextBlock Text="(+)" HorizontalAlignment="Stretch"></TextBlock>
                                 <Button.Template>
@@ -40,19 +42,6 @@
                                         </TextBlock>
                                     </ControlTemplate>
                                 </Button.Template>
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Foreground" Value="Blue" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="true">
-                                                <Setter Property="Foreground" Value="Red" />
-                                            </Trigger>
-                                            <Trigger Property="IsEnabled" Value="false">
-                                                <Setter Property="Foreground" Value="Gray" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
                             </Button>
                         </StackPanel>
                     </HierarchicalDataTemplate>
@@ -70,42 +59,42 @@
                 <ListBox Margin="0,-1,0,-1" AlternationCount="2" MaxWidth="524"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
                     <WrapPanel>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.PakLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Pak, Mode=OneWay}" Background="Transparent" 
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Pak, Mode=OneWay}"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.NameLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Name, Mode=OneWay}" Background="Transparent" 
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Name, Mode=OneWay}"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.MapKeyLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.MapKey, Mode=OneWay}" Background="Transparent" 
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.MapKey, Mode=OneWay}"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.ParentTemplateIdLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.ParentTemplateId, Mode=OneWay}" Background="Transparent" 
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.ParentTemplateId, Mode=OneWay}"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.DisplayNameHandleLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayNameHandle, Mode=OneWay}" Background="Transparent" 
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayNameHandle, Mode=OneWay}"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.DisplayNameLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayName, Mode=OneWay}" Background="Transparent" 
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DisplayName, Mode=OneWay}"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.DescriptionHandleLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DescriptionHandle, Mode=OneWay}" Background="Transparent" 
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.DescriptionHandle, Mode=OneWay}"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.DescriptionLabel}, StringFormat='{}{0}: '}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Description, Mode=OneWay}" Background="Transparent" 
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Description, Mode=OneWay}"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </WrapPanel>
                 </ListBox>
@@ -118,10 +107,11 @@
             <TabItem Header="{x:Static p:Resources.StatsTabLabel}" Cursor="Hand">
                 <Grid Cursor="Arrow">
                     <Grid Margin="0,20,0,0">
-                        <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" HideInheritedProperties="True" ShowSummary="False" ShowTitle="False" IsVirtualizing="True"/>
+                        <xctk:PropertyGrid SelectedObject="{Binding Stats, Mode=OneWay}" IsReadOnly="True" SelectedObjectChanged="PropertyGrid_SelectedObjectChanged" Foreground="black" Background="DimGray"
+                                           HideInheritedProperties="True" ShowSummary="False" ShowTitle="False" IsVirtualizing="True"/>
                     </Grid>
                     <Grid>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Stats, Mode=OneWay}" Background="Transparent" FontWeight="Bold" Height="20" VerticalAlignment="Top"
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Stats, Mode=OneWay}" FontWeight="Bold" Height="20" VerticalAlignment="Top"
                                                 Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </Grid>
                 </Grid>
@@ -133,7 +123,7 @@
                             <WrapPanel>
                                 <TextBlock Text="{Binding Name}" FontWeight="Bold" />
                                 <TextBlock Text=": " />
-                                <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Value, Mode=OneWay}" Background="Transparent"
+                                <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Value, Mode=OneWay}"
                                                     Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                             </WrapPanel>
                         </DataTemplate>
@@ -148,7 +138,7 @@
                     <Grid Margin="0,0,0,0">
                         <Border BorderBrush="Black" BorderThickness="0 1 0 0" Margin="-3,-1,-3,-1"></Border>
                         <TextBlock Text="{Binding Source={x:Static p:Resources.IconLabel}, StringFormat={}{0}:}" FontWeight="Bold" VerticalAlignment="Top"/>
-                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Icon, Mode=OneWay}" Background="Transparent" Margin="32,0,0,0"
+                        <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Info.Icon, Mode=OneWay}" Margin="32,0,0,0"
                                                  Cursor="IBeam" TextWrapping="Wrap" HorizontalAlignment="Left"></helpers:SelectableTextBlock>
                     </Grid>
                 </StackPanel>
@@ -197,15 +187,6 @@
         </TabControl>
     </Grid>
     <Window.Resources>
-        <Style TargetType="{x:Type ComboBox}">
-            <Style.Triggers>
-                <Trigger Property="IsEnabled"
-                 Value="False">
-                    <Setter Property="Foreground"
-                    Value="Gray"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
         <Style TargetType="ListBoxItem">
             <Setter Property="Template">
                 <Setter.Value>
@@ -218,7 +199,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                    <Setter Property="Background" Value="AliceBlue" />
+                    <Setter Property="Background" Value="DimGray" />
                 </Trigger>
             </Style.Triggers>
         </Style>

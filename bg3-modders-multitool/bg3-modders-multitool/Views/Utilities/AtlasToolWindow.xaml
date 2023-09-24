@@ -7,6 +7,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         ResizeMode="CanMinimize"
         mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.AtlasToolMenuHeader}" Height="356" Width="550">
     <Grid>
         <StackPanel>

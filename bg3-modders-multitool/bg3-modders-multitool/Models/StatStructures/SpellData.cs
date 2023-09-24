@@ -239,6 +239,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string OriginSpellFail { get; set; }
         public string ThrowOrigin { get; set; }
         public string ThrowableSpellProperties { get; set; }
+        public string FollowUpOriginalSpell { get; set; }
 
         public override StatStructure Clone()
         {

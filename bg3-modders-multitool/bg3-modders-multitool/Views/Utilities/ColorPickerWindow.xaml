@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         ResizeMode="CanMinimize"
+        Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.ColorPickerMenu}" Height="190" Width="281">
     <Grid>
         <StackPanel HorizontalAlignment="Left" Margin="5">
