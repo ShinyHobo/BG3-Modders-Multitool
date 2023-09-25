@@ -113,10 +113,14 @@ namespace bg3_modders_multitool.Views
                         SearchResults.SelectedPath = path;
 
                         var results = new ObservableCollection<SearchResult>();
-                        foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
+                        try
                         {
-                            results.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
+                            foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
+                            {
+                                results.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
+                            }
                         }
+                        catch { }
 
                         Application.Current.Dispatcher.Invoke(delegate
                         {

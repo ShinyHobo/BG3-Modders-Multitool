@@ -493,12 +493,14 @@ namespace bg3_modders_multitool.Services
                             var gtsFile = gtpFile.Substring(0, guidIndex - 1);
                             gtsFile = path.Replace(gtpFile, gtsFile).Replace(".gtp", ".gts");
                             var gtsContents = helper.ReadPakFileContents(gtsFile);
+                            Alphaleonis.Win32.Filesystem.Directory.CreateDirectory("dds");
                             using (System.IO.MemoryStream gtsStream = new System.IO.MemoryStream(gtsContents))
                             {
                                 var vts = new LSLib.VirtualTextures.VirtualTileSet(gtsStream);
+                                vts.SingleFileContents = contents;
                                 var vtsIndex = vts.FindPageFile(gtpFile);
                                 var fileInfo = vts.PageFileInfos[vtsIndex];
-
+                                var previewCount = 0;
                                 try
                                 {
                                     for (var layer = 0; layer < vts.TileSetLevels.Length; layer++)
@@ -509,14 +511,34 @@ namespace bg3_modders_multitool.Services
                                         {
                                             do
                                             {
-                                                tex = vts.ExtractPageFileTexture(vtsIndex, level, layer, contents);
+                                                tex = vts.ExtractPageFileTexture(vtsIndex, level, layer);
                                                 level++;
                                             } while (tex == null && level < vts.TileSetLevels.Length);
                                         }
                                         catch { }
                                         if(tex != null)
                                         {
-                                            tex.SaveDDS($"dds\\{layer}_{level}.dds");
+                                            LSLib.VirtualTextures.DDSHeader inStruct = default(LSLib.VirtualTextures.DDSHeader);
+                                            inStruct.dwMagic = 542327876u;
+                                            inStruct.dwSize = 124u;
+                                            inStruct.dwFlags = 4103u;
+                                            inStruct.dwWidth = (uint)tex.Width;
+                                            inStruct.dwHeight = (uint)tex.Height;
+                                            inStruct.dwPitchOrLinearSize = (uint)(tex.Width * tex.Height);
+                                            inStruct.dwDepth = 1u;
+                                            inStruct.dwMipMapCount = 1u;
+                                            inStruct.dwPFSize = 32u;
+                                            inStruct.dwPFFlags = 4u;
+                                            inStruct.dwFourCC = 894720068u;
+                                            inStruct.dwCaps = 4096u;
+                                            using (System.IO.MemoryStream output = new System.IO.MemoryStream())
+                                            using (System.IO.BinaryWriter binaryWriter = new System.IO.BinaryWriter(output))
+                                            {
+                                                LSLib.LS.BinUtils.WriteStruct(binaryWriter, ref inStruct);
+                                                binaryWriter.Write(tex.Data, 0, tex.Data.Length);
+                                                lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{Convert.ToBase64String(output.ToArray())}\" Height=\"250\"></Image></InlineUIContainer>");
+                                                previewCount++;
+                                            }
                                         }
                                     }
                                 }
@@ -528,7 +550,10 @@ namespace bg3_modders_multitool.Services
                                 vts.ReleasePageFiles();
                             }
 
-                            lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
+                            if(lines.Count == 0)
+                            {
+                                lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
+                            }
                         }
                     }
                 }
