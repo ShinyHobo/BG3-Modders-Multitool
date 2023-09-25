@@ -482,7 +482,7 @@ namespace bg3_modders_multitool.Services
                             }
                             else
                             {
-                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{Convert.ToBase64String(contents)}\" Height=\"500\"></Image></InlineUIContainer>");
+                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(contents)}\"></Image></InlineUIContainer>");
                             }
                         }
                         else if(extension == ".gtp") // Virtual texture
@@ -518,7 +518,7 @@ namespace bg3_modders_multitool.Services
                                         catch { }
                                         if(tex != null)
                                         {
-                                            LSLib.VirtualTextures.DDSHeader inStruct = default(LSLib.VirtualTextures.DDSHeader);
+                                            LSLib.VirtualTextures.DDSHeader inStruct = default;
                                             inStruct.dwMagic = 542327876u;
                                             inStruct.dwSize = 124u;
                                             inStruct.dwFlags = 4103u;
@@ -536,16 +536,13 @@ namespace bg3_modders_multitool.Services
                                             {
                                                 LSLib.LS.BinUtils.WriteStruct(binaryWriter, ref inStruct);
                                                 binaryWriter.Write(tex.Data, 0, tex.Data.Length);
-                                                lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{Convert.ToBase64String(output.ToArray())}\" Height=\"250\"></Image></InlineUIContainer>");
+                                                lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(output.ToArray())}\" Height=\"250\"></Image></InlineUIContainer>");
                                                 previewCount++;
                                             }
                                         }
                                     }
                                 }
-                                catch 
-                                {
-                                    
-                                }
+                                catch { }
 
                                 vts.ReleasePageFiles();
                             }
