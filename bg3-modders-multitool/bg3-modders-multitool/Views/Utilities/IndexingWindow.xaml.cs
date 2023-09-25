@@ -17,8 +17,6 @@ namespace bg3_modders_multitool.Views
     using System.Windows.Input;
     using System.Windows.Threading;
     using Xceed.Wpf.Toolkit.Primitives;
-    using Xceed.Wpf.Toolkit;
-    using LSLib.LS.Story;
 
     /// <summary>
     /// Interaction logic for IndexingWindow.xaml
@@ -155,18 +153,33 @@ namespace bg3_modders_multitool.Views
                 var ext = Path.GetExtension(SearchResults.SelectedPath);
                 var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
 
-                PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
-
-                if (ext == ".loca")
+                if (ext == ".gtp")
                 {
-                    var newFile = FileHelper.Convert(selectedPath, "xml");
-                    FileHelper.OpenFile(newFile);
+                    var helper = PakReaderHelper.GetPakHelper(SearchResults.SelectedPath);
+                    var contents = helper.Helper.ReadPakFileContents(helper.Path, true);
+                    var previewCount = 0;
+                    foreach (var file in TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, helper.Helper, contents))
+                    {
+
+                        previewCount++;
+                    }
                 }
                 else
                 {
-                    var newFile = FileHelper.Convert(selectedPath, "lsx");
-                    FileHelper.OpenFile(newFile);
+                    PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+
+                    if (ext == ".loca")
+                    {
+                        var newFile = FileHelper.Convert(selectedPath, "xml");
+                        FileHelper.OpenFile(newFile);
+                    }
+                    else
+                    {
+                        var newFile = FileHelper.Convert(selectedPath, "lsx");
+                        FileHelper.OpenFile(newFile);
+                    }
                 }
+
                 SearchResults.AllowInteraction = true;
             }
         }

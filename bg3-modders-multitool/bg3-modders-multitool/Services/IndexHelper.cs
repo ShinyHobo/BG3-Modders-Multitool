@@ -444,19 +444,14 @@ namespace bg3_modders_multitool.Services
             }
             else
             {
-                var pakPath = path.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
-                var pak = pakPath.Split('\\')[0];
-                path = PakReaderHelper.GetPakPath(pakPath);
-                var paks = PakReaderHelper.GetPakList();
-                pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.EndsWith("\\" + pak + ".pak"));
-                if (pakPath != null)
+                var helper = PakReaderHelper.GetPakHelper(path);
+                if (helper.Path != null)
                 {
                     fileExists = true;
-                    var helper = new PakReaderHelper(pakPath);
                     var contents = new byte[0];
                     var textFileContents = string.Empty;
 
-                    contents = helper.ReadPakFileContents(path, true);
+                    contents = helper.Helper.ReadPakFileContents(helper.Path, true);
 
                     if (!isExcluded)
                     {
@@ -473,36 +468,33 @@ namespace bg3_modders_multitool.Services
                         lines = ReadFileContentsForMatches(allLines);
                     }
 
-                    if (lines.Count == 0 && contents != null)
+                    if (lines.Count == 0)
                     {
-                        if (imageExtensions.Contains(extension)) // Normal texture
+                        if (contents != null)
                         {
-                            lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(contents)}\"></Image></InlineUIContainer>");
-                        }
-                        else if(extension == ".gtp") // Virtual texture
-                        {
-                            var gtpFile = Path.GetFileNameWithoutExtension(path);
-                            var guid = gtpFile.Split('_').Last();
-                            var guidIndex = gtpFile.IndexOf(guid);
-                            var gtsFile = gtpFile.Substring(0, guidIndex - 1);
-                            gtsFile = path.Replace(gtpFile, gtsFile).Replace(".gtp", ".gts");
-                            var gtsContents = helper.ReadPakFileContents(gtsFile);
-                            var previewCount = 0;
-                            foreach(var file in TextureHelper.ExtractGTPContents(gtpFile, contents, gtsContents))
+                            if (imageExtensions.Contains(extension)) // Normal texture
                             {
-                                lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(file)}\" Height=\"250\"></Image></InlineUIContainer>");
-                                previewCount++;
+                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(contents)}\"></Image></InlineUIContainer>");
                             }
+                            else if (extension == ".gtp") // Virtual texture
+                            {
+                                var previewCount = 0;
+                                foreach (var file in TextureHelper.ExtractGTPContents(path, helper.Helper, contents))
+                                {
+                                    lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(file)}\" Height=\"250\"></Image></InlineUIContainer>");
+                                    previewCount++;
+                                }
 
-                            if (lines.Count == 0)
-                            {
-                                lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
+                                if (lines.Count == 0)
+                                {
+                                    lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{helper.Pak}\\{path}"));
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
+                        else
+                        {
+                            lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{helper.Pak}\\{path}"));
+                        }
                     }
                 }
             }

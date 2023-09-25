@@ -9,6 +9,8 @@
     using System.Xml;
     using System.Drawing;
     using System.Drawing.Imaging;
+    using Alphaleonis.Win32.Filesystem;
+    using System.Linq;
 
 
     /// <summary>
@@ -127,14 +129,21 @@
         /// <param name="gtpContents">The GTP contents</param>
         /// <param name="gtsContents">The GTS contents</param>
         /// <returns>The list of image arrays</returns>
-        public static List<byte[]> ExtractGTPContents(string name, byte[] gtpContents, byte[] gtsContents)
+        public static List<byte[]> ExtractGTPContents(string path, PakReaderHelper helper, byte[] gtpContents)
         {
+            var gtpFile = Path.GetFileNameWithoutExtension(path);
+            var guid = gtpFile.Split('_').Last();
+            var guidIndex = gtpFile.IndexOf(guid);
+            var gtsFile = gtpFile.Substring(0, guidIndex - 1);
+            gtsFile = path.Replace(gtpFile, gtsFile).Replace(".gtp", ".gts");
+            var gtsContents = helper.ReadPakFileContents(gtsFile);
+
             var files = new List<byte[]>();
             using (System.IO.MemoryStream gtsStream = new System.IO.MemoryStream(gtsContents))
             {
                 var vts = new LSLib.VirtualTextures.VirtualTileSet(gtsStream);
                 vts.SingleFileContents = gtpContents;
-                var vtsIndex = vts.FindPageFile(name);
+                var vtsIndex = vts.FindPageFile(gtpFile);
                 var fileInfo = vts.PageFileInfos[vtsIndex];
                 try
                 {
@@ -169,7 +178,7 @@
                             using (System.IO.MemoryStream output = new System.IO.MemoryStream())
                             using (System.IO.BinaryWriter binaryWriter = new System.IO.BinaryWriter(output))
                             {
-                                LSLib.LS.BinUtils.WriteStruct(binaryWriter, ref inStruct);
+                                BinUtils.WriteStruct(binaryWriter, ref inStruct);
                                 binaryWriter.Write(tex.Data, 0, tex.Data.Length);
                                 files.Add(output.ToArray());
                             }

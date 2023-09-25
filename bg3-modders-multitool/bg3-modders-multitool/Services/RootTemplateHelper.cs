@@ -533,7 +533,7 @@ namespace bg3_modders_multitool.Services
             {
                 var helper = PakReaderHelpers.First(h => h.PakName == iconFile.Split('\\')[0]);
                 var contents = helper.ReadPakFileContents(PakReaderHelper.GetPakPath(iconFile));
-                TextureAtlases.Add(TextureAtlas.Read(contents, iconFile, new DirectoryInfo(iconFile).Parent.Parent.Name));
+                TextureAtlases.Add(TextureHelper.Read(contents, iconFile, new DirectoryInfo(iconFile).Parent.Parent.Name));
             }
             return true;
         }
