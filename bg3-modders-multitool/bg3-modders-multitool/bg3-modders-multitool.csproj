@@ -557,6 +557,7 @@
     <Compile Include="Services\PathHelper.cs" />
     <Compile Include="Services\RenderedModelHelper.cs" />
     <Compile Include="Services\RootTemplateHelper.cs" />
+    <Compile Include="Services\TextureHelper.cs" />
     <Compile Include="Themes\Attached\CornerHelper.cs" />
     <Compile Include="Themes\Attached\MenuHelper.cs" />
     <Compile Include="Themes\Attached\PasswordBoxHelper.cs" />

@@ -11,15 +11,16 @@
         /// Extracts the dds content stream from individual GTP files
         /// </summary>
         /// <param name="name">The name of the page file</param>
-        /// <param name="contents">The content array</param>
-        /// <returns></returns>
-        public static List<byte[]> ExtractGTPContents(string name, byte[] contents)
+        /// <param name="gtpContents">The GTP contents</param>
+        /// <param name="gtsContents">The GTS contents</param>
+        /// <returns>The list of image arrays</returns>
+        public static List<byte[]> ExtractGTPContents(string name, byte[] gtpContents, byte[] gtsContents)
         {
             var files = new List<byte[]>();
-            using (System.IO.MemoryStream gtsStream = new System.IO.MemoryStream(contents))
+            using (System.IO.MemoryStream gtsStream = new System.IO.MemoryStream(gtsContents))
             {
                 var vts = new LSLib.VirtualTextures.VirtualTileSet(gtsStream);
-                vts.SingleFileContents = contents;
+                vts.SingleFileContents = gtpContents;
                 var vtsIndex = vts.FindPageFile(name);
                 var fileInfo = vts.PageFileInfos[vtsIndex];
                 try

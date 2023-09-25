@@ -473,18 +473,11 @@ namespace bg3_modders_multitool.Services
                         lines = ReadFileContentsForMatches(allLines);
                     }
 
-                    if (lines.Count == 0)
+                    if (lines.Count == 0 && contents != null)
                     {
-                        if (imageExtensions.Contains(extension))
+                        if (imageExtensions.Contains(extension)) // Normal texture
                         {
-                            if(contents == null)
-                            {
-                                lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
-                            }
-                            else
-                            {
-                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(contents)}\"></Image></InlineUIContainer>");
-                            }
+                            lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(contents)}\"></Image></InlineUIContainer>");
                         }
                         else if(extension == ".gtp") // Virtual texture
                         {
@@ -495,7 +488,7 @@ namespace bg3_modders_multitool.Services
                             gtsFile = path.Replace(gtpFile, gtsFile).Replace(".gtp", ".gts");
                             var gtsContents = helper.ReadPakFileContents(gtsFile);
                             var previewCount = 0;
-                            foreach(var file in TextureHelper.ExtractGTPContents(gtpFile, contents))
+                            foreach(var file in TextureHelper.ExtractGTPContents(gtpFile, contents, gtsContents))
                             {
                                 lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(file)}\" Height=\"250\"></Image></InlineUIContainer>");
                                 previewCount++;
@@ -506,6 +499,10 @@ namespace bg3_modders_multitool.Services
                                 lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
                             }
                         }
+                    }
+                    else
+                    {
+                        lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
                     }
                 }
             }
