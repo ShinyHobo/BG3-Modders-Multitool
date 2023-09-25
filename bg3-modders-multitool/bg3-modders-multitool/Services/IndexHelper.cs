@@ -485,6 +485,51 @@ namespace bg3_modders_multitool.Services
                                 lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{Convert.ToBase64String(contents)}\" Height=\"500\"></Image></InlineUIContainer>");
                             }
                         }
+                        else if(extension == ".gtp") // Virtual texture
+                        {
+                            var gtpFile = Path.GetFileNameWithoutExtension(path);
+                            var guid = gtpFile.Split('_').Last();
+                            var guidIndex = gtpFile.IndexOf(guid);
+                            var gtsFile = gtpFile.Substring(0, guidIndex - 1);
+                            gtsFile = path.Replace(gtpFile, gtsFile).Replace(".gtp", ".gts");
+                            var gtsContents = helper.ReadPakFileContents(gtsFile);
+                            using (System.IO.MemoryStream gtsStream = new System.IO.MemoryStream(gtsContents))
+                            {
+                                var vts = new LSLib.VirtualTextures.VirtualTileSet(gtsStream);
+                                var vtsIndex = vts.FindPageFile(gtpFile);
+                                var fileInfo = vts.PageFileInfos[vtsIndex];
+
+                                try
+                                {
+                                    for (var layer = 0; layer < vts.TileSetLevels.Length; layer++)
+                                    {
+                                        LSLib.VirtualTextures.BC5Image tex = null;
+                                        var level = 0;
+                                        try
+                                        {
+                                            do
+                                            {
+                                                tex = vts.ExtractPageFileTexture(vtsIndex, level, layer, contents);
+                                                level++;
+                                            } while (tex == null && level < vts.TileSetLevels.Length);
+                                        }
+                                        catch { }
+                                        if(tex != null)
+                                        {
+                                            tex.SaveDDS($"dds\\{layer}_{level}.dds");
+                                        }
+                                    }
+                                }
+                                catch 
+                                {
+                                    
+                                }
+
+                                vts.ReleasePageFiles();
+                            }
+
+                            lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
+                        }
                     }
                 }
             }
