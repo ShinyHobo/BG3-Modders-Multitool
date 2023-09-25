@@ -479,7 +479,7 @@ namespace bg3_modders_multitool.Services
                             else if (extension == ".gtp") // Virtual texture
                             {
                                 var previewCount = 0;
-                                foreach (var file in TextureHelper.ExtractGTPContents(path, helper.Helper, contents))
+                                foreach (var file in TextureHelper.ExtractGTPContents(helper.Path, helper.Helper, contents))
                                 {
                                     lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(file)}\" Height=\"250\"></Image></InlineUIContainer>");
                                     previewCount++;
