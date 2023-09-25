@@ -22,6 +22,7 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Index.Extensions;
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
+    using SharpDX.DXGI;
 
     public class IndexHelper
     {
@@ -493,61 +494,14 @@ namespace bg3_modders_multitool.Services
                             var gtsFile = gtpFile.Substring(0, guidIndex - 1);
                             gtsFile = path.Replace(gtpFile, gtsFile).Replace(".gtp", ".gts");
                             var gtsContents = helper.ReadPakFileContents(gtsFile);
-                            Alphaleonis.Win32.Filesystem.Directory.CreateDirectory("dds");
-                            using (System.IO.MemoryStream gtsStream = new System.IO.MemoryStream(gtsContents))
+                            var previewCount = 0;
+                            foreach(var file in TextureHelper.ExtractGTPContents(gtpFile, contents))
                             {
-                                var vts = new LSLib.VirtualTextures.VirtualTileSet(gtsStream);
-                                vts.SingleFileContents = contents;
-                                var vtsIndex = vts.FindPageFile(gtpFile);
-                                var fileInfo = vts.PageFileInfos[vtsIndex];
-                                var previewCount = 0;
-                                try
-                                {
-                                    for (var layer = 0; layer < vts.TileSetLevels.Length; layer++)
-                                    {
-                                        LSLib.VirtualTextures.BC5Image tex = null;
-                                        var level = 0;
-                                        try
-                                        {
-                                            do
-                                            {
-                                                tex = vts.ExtractPageFileTexture(vtsIndex, level, layer);
-                                                level++;
-                                            } while (tex == null && level < vts.TileSetLevels.Length);
-                                        }
-                                        catch { }
-                                        if(tex != null)
-                                        {
-                                            LSLib.VirtualTextures.DDSHeader inStruct = default;
-                                            inStruct.dwMagic = 542327876u;
-                                            inStruct.dwSize = 124u;
-                                            inStruct.dwFlags = 4103u;
-                                            inStruct.dwWidth = (uint)tex.Width;
-                                            inStruct.dwHeight = (uint)tex.Height;
-                                            inStruct.dwPitchOrLinearSize = (uint)(tex.Width * tex.Height);
-                                            inStruct.dwDepth = 1u;
-                                            inStruct.dwMipMapCount = 1u;
-                                            inStruct.dwPFSize = 32u;
-                                            inStruct.dwPFFlags = 4u;
-                                            inStruct.dwFourCC = 894720068u;
-                                            inStruct.dwCaps = 4096u;
-                                            using (System.IO.MemoryStream output = new System.IO.MemoryStream())
-                                            using (System.IO.BinaryWriter binaryWriter = new System.IO.BinaryWriter(output))
-                                            {
-                                                LSLib.LS.BinUtils.WriteStruct(binaryWriter, ref inStruct);
-                                                binaryWriter.Write(tex.Data, 0, tex.Data.Length);
-                                                lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(output.ToArray())}\" Height=\"250\"></Image></InlineUIContainer>");
-                                                previewCount++;
-                                            }
-                                        }
-                                    }
-                                }
-                                catch { }
-
-                                vts.ReleasePageFiles();
+                                lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(file)}\" Height=\"250\"></Image></InlineUIContainer>");
+                                previewCount++;
                             }
 
-                            if(lines.Count == 0)
+                            if (lines.Count == 0)
                             {
                                 lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
                             }
