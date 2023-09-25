@@ -474,7 +474,7 @@ namespace bg3_modders_multitool.Services
                         {
                             if (imageExtensions.Contains(extension)) // Normal texture
                             {
-                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(contents)}\"></Image></InlineUIContainer>");
+                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(contents)}\" Height=\"250\"></Image></InlineUIContainer>");
                             }
                             else if (extension == ".gtp") // Virtual texture
                             {
