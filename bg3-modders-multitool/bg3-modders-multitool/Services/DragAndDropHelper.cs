@@ -318,17 +318,8 @@ namespace bg3_modders_multitool.Services
             var modName = new DirectoryInfo(path).Name;
             var modDir = $"{TempFolder}\\{modName}";
 
-            // Create meta if it does not exist
-            var modsPath = Path.Combine(path, "Mods");
-            var pathList = Directory.GetDirectories(modsPath);
-            if (pathList.Length == 0)
-            {
-                var newModsPath = Path.Combine(modsPath, modName);
-                Directory.CreateDirectory(newModsPath);
-                pathList = new string[] { newModsPath };
-            }
-            var metaList = GetMetalsxList(pathList);
-            if (metaList.Count == 0)
+            var metaList = CheckAndCreateMeta(path, modName);
+            if(metaList.Count == 0)
                 return (null, null);
 
             CopyWorkingFilesToTempDir(path, modDir);
@@ -346,6 +337,26 @@ namespace bg3_modders_multitool.Services
         }
 
         #region Packing Steps
+        /// <summary>
+        /// Checks for meta.lsx and asks to create one if one doesn't exist
+        /// </summary>
+        /// <param name="path">The mod path</param>
+        /// <param name="modName">The mod name</param>
+        /// <returns>The list of meta.lsx files found</returns>
+        private static List<string> CheckAndCreateMeta(string path, string modName)
+        {
+            // Create meta if it does not exist
+            var modsPath = Path.Combine(path, "Mods");
+            var pathList = Directory.GetDirectories(modsPath);
+            if (pathList.Length == 0)
+            {
+                var newModsPath = Path.Combine(modsPath, modName);
+                Directory.CreateDirectory(newModsPath);
+                pathList = new string[] { newModsPath };
+            }
+            var metaList = GetMetalsxList(pathList);
+            return metaList;
+        }
         /// <summary>
         /// Copies the working files to the temp directory for merging and conversion
         /// </summary>
