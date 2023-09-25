@@ -125,11 +125,24 @@
         /// <summary>
         /// Extracts the dds content stream from individual GTP files
         /// </summary>
-        /// <param name="name">The name of the page file</param>
-        /// <param name="gtpContents">The GTP contents</param>
-        /// <param name="gtsContents">The GTS contents</param>
+        /// <param name="path">The file path</param>
+        /// <param name="writeToDisk">Whether or not to write the files to disk</param>
         /// <returns>The list of image arrays</returns>
-        public static List<byte[]> ExtractGTPContents(string path, PakReaderHelper helper, byte[] gtpContents)
+        public static List<byte[]> ExtractGTPContents(string path, bool writeToDisk = false)
+        {
+            var helper = PakReaderHelper.GetPakHelper(path);
+            var contents = helper.Helper.ReadPakFileContents(helper.Path, true);
+            return ExtractGTPContents(helper.Path, helper.Helper, contents, writeToDisk);
+        }
+        /// <summary>
+        /// Extracts the dds content stream from individual GTP files
+        /// </summary>
+        /// <param name="path">The file path</param>
+        /// <param name="helper">The pak reader helper that contains the file</param>
+        /// <param name="gtpContents">The GTP contents</param>
+        /// <param name="writeToDisk">Whether or not to write the files to disk</param>
+        /// <returns>The list of image arrays</returns>
+        public static List<byte[]> ExtractGTPContents(string path, PakReaderHelper helper, byte[] gtpContents, bool writeToDisk = false)
         {
             var gtpFile = Path.GetFileNameWithoutExtension(path);
             var guid = gtpFile.Split('_').Last();
@@ -180,7 +193,19 @@
                             {
                                 BinUtils.WriteStruct(binaryWriter, ref inStruct);
                                 binaryWriter.Write(tex.Data, 0, tex.Data.Length);
-                                files.Add(output.ToArray());
+                                if(writeToDisk)
+                                {
+                                    var saveLoc = FileHelper.GetPath($"{helper.PakName}\\{path}") + $"_{layer}.dds";
+                                    Directory.CreateDirectory(Path.GetDirectoryName(saveLoc));
+                                    using (System.IO.FileStream file = new System.IO.FileStream(saveLoc, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                                    {
+                                        output.WriteTo(file);
+                                    }
+                                }
+                                else
+                                {
+                                    files.Add(output.ToArray());
+                                }
                             }
                         }
                     }

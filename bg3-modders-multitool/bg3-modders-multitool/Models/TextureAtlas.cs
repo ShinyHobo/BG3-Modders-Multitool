@@ -7,11 +7,9 @@ namespace bg3_modders_multitool.Models
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
-    using System.Globalization;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Media.Imaging;
-    using System.Xml;
 
     public class TextureAtlas
     {

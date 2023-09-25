@@ -155,14 +155,11 @@ namespace bg3_modders_multitool.Views
 
                 if (ext == ".gtp")
                 {
-                    var helper = PakReaderHelper.GetPakHelper(SearchResults.SelectedPath);
-                    var contents = helper.Helper.ReadPakFileContents(helper.Path, true);
-                    var previewCount = 0;
-                    foreach (var file in TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, helper.Helper, contents))
-                    {
+                    TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, true);
 
-                        previewCount++;
-                    }
+                    var fileLoc = Path.GetDirectoryName(FileHelper.GetPath(SearchResults.SelectedPath));
+                    if (Directory.Exists(fileLoc))
+                        System.Diagnostics.Process.Start("explorer.exe", $"{fileLoc}");
                 }
                 else
                 {
@@ -311,10 +308,17 @@ namespace bg3_modders_multitool.Views
         {
             if (!string.IsNullOrEmpty(SearchResults.SelectedPath))
             {
-                var newFile = PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
-                newFile = newFile ?? FileHelper.GetPath(SearchResults.SelectedPath);
-                if(File.Exists(newFile))
-                    System.Diagnostics.Process.Start("explorer.exe", $"/select,{newFile}");
+                if(Path.GetExtension(SearchResults.SelectedPath) == ".gtp")
+                {
+                    ConvertAndOpenButton_Click(sender, e);
+                }
+                else
+                {
+                    var newFile = PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+                    newFile = newFile ?? FileHelper.GetPath(SearchResults.SelectedPath);
+                    if (File.Exists(newFile))
+                        System.Diagnostics.Process.Start("explorer.exe", $"/select,{newFile}");
+                }
             }
         }
 
@@ -327,7 +331,14 @@ namespace bg3_modders_multitool.Views
         {
             if(!string.IsNullOrEmpty(SearchResults.SelectedPath))
             {
-                PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+                if (Path.GetExtension(SearchResults.SelectedPath) == ".gtp")
+                {
+                    TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, true);
+                }
+                else
+                {
+                    PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+                }
                 GeneralHelper.WriteToConsole(Properties.Resources.ResourceExtracted, SearchResults.SelectedPath);
             }
         }
