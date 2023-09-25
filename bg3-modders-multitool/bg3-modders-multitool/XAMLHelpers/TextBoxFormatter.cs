@@ -60,7 +60,7 @@ namespace bg3_modders_multitool.XAMLHelpers
                         try
                         {
                             Pfim.IImage pfimImage;
-                            if (File.Exists(imageLoc))
+                            if (Alphaleonis.Win32.Filesystem.File.Exists(imageLoc))
                             {
                                 // convert image to something WPF can read
                                 pfimImage = Pfim.Pfimage.FromFile(imageLoc);
