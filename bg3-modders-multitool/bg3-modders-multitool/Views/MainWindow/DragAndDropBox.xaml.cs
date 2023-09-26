@@ -4,6 +4,7 @@
 namespace bg3_modders_multitool.Views
 {
     using Ookii.Dialogs.Wpf;
+    using System.IO;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -29,6 +30,11 @@ namespace bg3_modders_multitool.Views
         protected async override void OnDrop(DragEventArgs e)
         {
             await vm.ProcessDrop(e.Data);
+            var fileDrop = e.Data.GetData(DataFormats.FileDrop, true) as string[];
+            if (Directory.Exists(fileDrop[0]))
+            {
+                vm.LastDirectory = fileDrop[0];
+            }
         }
 
         private void Grid_DragEnter(object sender, DragEventArgs e)

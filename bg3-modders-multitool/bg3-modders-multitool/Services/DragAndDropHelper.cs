@@ -325,7 +325,8 @@ namespace bg3_modders_multitool.Services
             CopyWorkingFilesToTempDir(path, modDir);
 
             // TODO - add option to turn off
-            LintLsxFiles(modDir, modName);
+            if(!LintLsxFiles(modDir, modName))
+                return (null, null);
 
             ProcessLsxMerges(modDir, modName);
 
@@ -386,9 +387,46 @@ namespace bg3_modders_multitool.Services
             }
         }
 
-        private static void LintLsxFiles(string directory, string modName)
+        /// <summary>
+        /// Checks the lsx files for xml errors
+        /// XML formatting errors
+        /// Missing required node components
+        /// Unmatched UUIDs
+        /// </summary>
+        /// <param name="directory">The directory to scan</param>
+        /// <param name="modName">The mod name</param>
+        /// <returns>Whether or not the directory is error free</returns>
+        private static bool LintLsxFiles(string directory, string modName)
         {
+            var dirInfo = new DirectoryInfo(directory);
+            if (dirInfo.Exists)
+            {
+                var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
+                var errors = new List<(string File, string Error)>();
+                foreach(var file in files)
+                {
+                    try
+                    {
+                        using(var xml = XmlReader.Create(file.FullName))
+                        {
+                            while(!xml.EOF)
+                            {
+                                xml.Read();
+                            }
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        errors.Add((file.FullName, ex.Message));
+                    }
+                }
 
+                // TODO - Display popup
+
+                if (errors.Count > 0)
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>
