@@ -153,7 +153,7 @@ namespace bg3_modders_multitool.Views
                 var ext = Path.GetExtension(SearchResults.SelectedPath);
                 var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
 
-                if (ext == ".gtp")
+                if (FileHelper.IsGTP(SearchResults.SelectedPath))
                 {
                     TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, true);
 
@@ -308,7 +308,7 @@ namespace bg3_modders_multitool.Views
         {
             if (!string.IsNullOrEmpty(SearchResults.SelectedPath))
             {
-                if(Path.GetExtension(SearchResults.SelectedPath) == ".gtp")
+                if(FileHelper.IsGTP(SearchResults.SelectedPath))
                 {
                     ConvertAndOpenButton_Click(sender, e);
                 }
@@ -331,7 +331,7 @@ namespace bg3_modders_multitool.Views
         {
             if(!string.IsNullOrEmpty(SearchResults.SelectedPath))
             {
-                if (Path.GetExtension(SearchResults.SelectedPath) == ".gtp")
+                if (FileHelper.IsGTP(SearchResults.SelectedPath))
                 {
                     TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, true);
                 }
@@ -384,7 +384,7 @@ namespace bg3_modders_multitool.Views
                     Parallel.ForEach(filesToExtract, GeneralHelper.ParallelOptions, (file, status) => {
                         if(!SearchResults.Extracting)
                             status.Stop();
-                        if(Path.GetExtension(file.Path) == ".gtp")
+                        if(FileHelper.IsGTP(file.Path))
                         {
                             TextureHelper.ExtractGTPContents(file.Path, true);
                         }
