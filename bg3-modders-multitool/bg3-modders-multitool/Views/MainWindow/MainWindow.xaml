@@ -139,7 +139,7 @@
                                 IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
                     </StackPanel>
                 </Grid>
-                <TextBlock x:Name="configNeeded" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="545,204,0,0" TextAlignment="Center" Visibility="{Binding ConfigNeeded}"/>
+                <TextBlock x:Name="configNeeded" HorizontalAlignment="Left" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="610,204,0,0" TextAlignment="Center" Visibility="{Binding ConfigNeeded}"/>
             </Grid>
             <Grid Grid.Row="1">
                 <ScrollViewer x:Name="ConsoleScroller" MinHeight="150" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged" Margin="5">
