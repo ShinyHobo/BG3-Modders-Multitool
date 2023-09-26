@@ -36,6 +36,18 @@ namespace bg3_modders_multitool.Views
             DataContext = MainWindowVM;
 
             MainWindowVM.SearchResults.AllowIndexing = true;
+
+            // Check for install integrity
+            if (!FileHelper.IsDirectoryWritable(Directory.GetCurrentDirectory()))
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.NoWriteAccess);
+            }
+            #if DEBUG == false
+            if (File.Exists($"{Directory.GetCurrentDirectory()}\\LSLib.dll"))
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.ExternalLSLibFound);
+            }
+            #endif
         }
 
         #region General

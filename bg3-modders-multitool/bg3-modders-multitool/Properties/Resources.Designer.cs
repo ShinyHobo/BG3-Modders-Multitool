@@ -841,6 +841,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to External LSLib.dll found! Please change your installation location..
+        /// </summary>
+        public static string ExternalLSLibFound {
+            get {
+                return ResourceManager.GetString("ExternalLSLibFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extract file.
         /// </summary>
         public static string ExtractFileTooltip {
@@ -2014,6 +2023,15 @@ namespace bg3_modders_multitool.Properties {
         public static string NoUpdatesFound {
             get {
                 return ResourceManager.GetString("NoUpdatesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t write to directory! Please change your installation location..
+        /// </summary>
+        public static string NoWriteAccess {
+            get {
+                return ResourceManager.GetString("NoWriteAccess", resourceCulture);
             }
         }
         

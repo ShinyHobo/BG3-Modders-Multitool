@@ -395,6 +395,9 @@ Do you wish to continue?</value>
     <value>extensionless</value>
     <comment>for files without an extension</comment>
   </data>
+  <data name="ExternalLSLibFound" xml:space="preserve">
+    <value>External LSLib.dll found! Please change your installation location.</value>
+  </data>
   <data name="ExtractFileTooltip" xml:space="preserve">
     <value>Extract file</value>
   </data>
@@ -820,6 +823,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="NoUpdatesFound" xml:space="preserve">
     <value>You are up to date!</value>
+  </data>
+  <data name="NoWriteAccess" xml:space="preserve">
+    <value>Can't write to directory! Please change your installation location.</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>off</value>

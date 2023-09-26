@@ -473,6 +473,24 @@ namespace bg3_modders_multitool.Services
             }
         }
 
+        /// <summary>
+        /// Checks if the appliation can write to the given directory
+        /// </summary>
+        /// <param name="dirPath">The directory to check</param>
+        /// <returns>Whether or not the application can successfully write to the given directory</returns>
+        public static bool IsDirectoryWritable(string dirPath)
+        {
+            try
+            {
+                using (System.IO.FileStream fs = File.Create( Path.Combine( dirPath, Path.GetRandomFileName() ), 1, System.IO.FileOptions.DeleteOnClose)){ }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         #region Process Finder
         [DllImport("shell32.dll")]
         private static extern long FindExecutable(string lpFile, string lpDirectory, [Out] StringBuilder lpResult);
