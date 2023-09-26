@@ -407,7 +407,7 @@ namespace bg3_modders_multitool.Services
                 if(dirInfo.Exists)
                 {
                     var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
-                    var fileGroups = files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
+                    var fileGroups = isRootTemplate ? files.GroupBy(f => dir) : files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
                     foreach(var fileGroup in fileGroups)
                     {
                         var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
@@ -428,8 +428,8 @@ namespace bg3_modders_multitool.Services
                         {
                             using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
                             {
-                                var contents = XDocument.Parse(reader.ReadToEnd());
-                                var contentChildren = contents.Descendants("children").Elements().ToList();
+                                var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
+                                var contentChildren = contents.Descendants("children").First().Elements().ToList();
                                 foreach (var child in contentChildren)
                                 {
                                     children.Add(child);
