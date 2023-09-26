@@ -79,7 +79,7 @@ namespace bg3_modders_multitool.Services
                 }
 
                 var cancelError = "Pak unpacking cancelled";
-                Parallel.ForEach(paks, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, (pak, loopstate) => {
+                Parallel.ForEach(paks, new ParallelOptions() { MaxDegreeOfParallelism = dataFiles ? 3 : 1 }, (pak, loopstate) => {
                     var pakName = Path.GetFileNameWithoutExtension(pak);
                     try
                     {
