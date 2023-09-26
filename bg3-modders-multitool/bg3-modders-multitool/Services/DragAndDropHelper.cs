@@ -19,6 +19,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Views.Utilities;
     using System.Xml.Linq;
     using System.Linq;
+    using bg3_modders_multitool.Views.Other;
 
     public static class DragAndDropHelper
     {
@@ -98,9 +99,9 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Creates the metadata info.json file.
         /// </summary>
-        /// <param name="destination"></param>
         /// <param name="metaList">The list of meta.lsx file paths.</param>
-        public static void GenerateInfoJson(Dictionary<string, List<string>> metaList)
+        /// <returns>Whether or not info.json was generated</returns>
+        public static bool GenerateInfoJson(Dictionary<string, List<string>> metaList)
         {
             var info = new InfoJson {
                 Mods = new List<MetaLsx>()
@@ -118,6 +119,9 @@ namespace bg3_modders_multitool.Services
                 }
                 info.Mods.AddRange(mods);
             }
+
+            if (info.Mods.Count == 0)
+                return false;
 
             // calculate md5 hash of .pak(s)
             using (var md5 = MD5.Create())
@@ -139,6 +143,7 @@ namespace bg3_modders_multitool.Services
             var json = JsonConvert.SerializeObject(info);
             File.WriteAllText(TempFolder + @"\info.json", json);
             GeneralHelper.WriteToConsole(Properties.Resources.InfoGenerated);
+            return true;
         }
 
         public static MetaLsx ReadMeta(string meta, DateTime? created = null, KeyValuePair<string, List<string>>? modGroup = null)
@@ -274,8 +279,8 @@ namespace bg3_modders_multitool.Services
                                     }
                                     else
                                     {
-                                        GenerateInfoJson(metaList);
-                                        GenerateZip(fullPath, dirName);
+                                        if(GenerateInfoJson(metaList))
+                                            GenerateZip(fullPath, dirName);
                                     }
                                     CleanTempDirectory();
                                 }
@@ -402,7 +407,7 @@ namespace bg3_modders_multitool.Services
             if (dirInfo.Exists)
             {
                 var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
-                var errors = new List<(string File, string Error)>();
+                var errors = new List<LintingError>();
                 foreach(var file in files)
                 {
                     try
@@ -417,14 +422,19 @@ namespace bg3_modders_multitool.Services
                     }
                     catch(Exception ex)
                     {
-                        errors.Add((file.FullName, ex.Message));
+                        errors.Add(new LintingError(file.FullName, ex.Message));
                     }
                 }
-
-                // TODO - Display popup
-
                 if (errors.Count > 0)
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.ErrorsFoundPacking);
+                    Application.Current.Dispatcher.Invoke(() => {
+                        var popup = new FileLintingWindow(errors);
+                        return popup.ShowDialog();
+                    });
+
                     return false;
+                }
             }
             return true;
         }

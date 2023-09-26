@@ -384,6 +384,9 @@ Do you wish to continue?</value>
     <value>Error parsing line [{0}] for structure type \"{1}\": {2}</value>
     <comment>line number, type, error message</comment>
   </data>
+  <data name="ErrorsFoundPacking" xml:space="preserve">
+    <value>Errors found in mod workspace. Cancelling process.</value>
+  </data>
   <data name="ErrorUnpacking" xml:space="preserve">
     <value>Error unpacking {0}: {1}</value>
     <comment>pak name, error message</comment>
@@ -790,6 +793,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="ModelFilesTabLabel" xml:space="preserve">
     <value>Model Files</value>
+  </data>
+  <data name="ModErrorsTitle" xml:space="preserve">
+    <value>Errors found in mod workspace</value>
   </data>
   <data name="ModsFolderButton" xml:space="preserve">
     <value>Mods Folder</value>

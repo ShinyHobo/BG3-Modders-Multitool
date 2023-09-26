@@ -814,6 +814,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Errors found in mod workspace. Cancelling process..
+        /// </summary>
+        public static string ErrorsFoundPacking {
+            get {
+                return ResourceManager.GetString("ErrorsFoundPacking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error unpacking {0}: {1}.
         /// </summary>
         public static string ErrorUnpacking {
@@ -1924,6 +1933,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ModelFilesTabLabel {
             get {
                 return ResourceManager.GetString("ModelFilesTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errors found in mod workspace.
+        /// </summary>
+        public static string ModErrorsTitle {
+            get {
+                return ResourceManager.GetString("ModErrorsTitle", resourceCulture);
             }
         }
         
