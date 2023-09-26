@@ -330,12 +330,12 @@ namespace bg3_modders_multitool.Services
             CopyWorkingFilesToTempDir(path, modDir);
 
             // TODO - add option to turn off
-            if(!LintLsxFiles(modDir, modName))
+            if(!LintLsxFiles(modDir))
                 return (null, null);
 
-            ProcessLsxMerges(modDir, modName);
+            ProcessLsxMerges(modDir);
 
-            ProcessStatsGeneratedDataSubfiles(modDir, modName);
+            ProcessStatsGeneratedDataSubfiles(modDir);
 
             ConvertFiles(modDir);
 
@@ -399,9 +399,8 @@ namespace bg3_modders_multitool.Services
         /// Unmatched UUIDs
         /// </summary>
         /// <param name="directory">The directory to scan</param>
-        /// <param name="modName">The mod name</param>
         /// <returns>Whether or not the directory is error free</returns>
-        private static bool LintLsxFiles(string directory, string modName)
+        private static bool LintLsxFiles(string directory)
         {
             var dirInfo = new DirectoryInfo(directory);
             if (dirInfo.Exists)
@@ -473,54 +472,60 @@ namespace bg3_modders_multitool.Services
         /// </summary>
         /// <param name="directory">The mod workspace directory</param>
         /// <param name="modName">The mod name to point the search at</param>
-        private static void ProcessLsxMerges(string directory, string modName)
+        private static void ProcessLsxMerges(string directory)
         {
-            foreach(var dir in new string[] { "Progressions", "Races", "ClassDescriptions", "ActionResourceDefinitions", "Lists", "RootTemplates"})
+            var modNameDirs = new DirectoryInfo(Path.Combine(directory, "Public"));
+            var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
+            foreach(var modName in paths)
             {
-                var isRootTemplate = dir == "RootTemplates";
-                var isList = dir == "Lists";
-                var path = Path.Combine(directory, "Public", modName, dir);
-                var dirInfo = new DirectoryInfo(path);
-                if(dirInfo.Exists)
+                foreach (var dir in new string[] { "Progressions", "Races", "ClassDescriptions", "ActionResourceDefinitions", "Lists", "RootTemplates" })
                 {
-                    var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
-                    var fileGroups = isRootTemplate ? files.GroupBy(f => dir) : files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
-                    foreach(var fileGroup in fileGroups)
-                    {
-                        var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
-                        var xml = XDocument.Parse(template);
-                        xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
-                        if (isRootTemplate)
-                        {
-                            xml.Descendants("region").Single().Attribute("id").Value = "Templates";
-                            xml.Descendants("node").Single().Attribute("id").Value = "Templates";
-                        }
-                        else
-                        {
-                            xml.Descendants("region").Single().Attribute("id").Value = fileGroup.Key;
-                        }
+                    var isRootTemplate = dir == "RootTemplates";
+                    var isList = dir == "Lists";
 
-                        var children = xml.Descendants("children").Single();
-                        foreach (var file in fileGroup)
+                    var path = Path.Combine(directory, "Public", modName.Name, dir);
+                    var dirInfo = new DirectoryInfo(path);
+                    if (dirInfo.Exists)
+                    {
+                        var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
+                        var fileGroups = isRootTemplate ? files.GroupBy(f => dir) : files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
+                        foreach (var fileGroup in fileGroups)
                         {
-                            using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
+                            var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
+                            var xml = XDocument.Parse(template);
+                            xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
+                            if (isRootTemplate)
                             {
-                                var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
-                                var contentChildren = contents.Descendants("children").First().Elements().ToList();
-                                foreach (var child in contentChildren)
-                                {
-                                    children.Add(child);
-                                }
+                                xml.Descendants("region").Single().Attribute("id").Value = "Templates";
+                                xml.Descendants("node").Single().Attribute("id").Value = "Templates";
                             }
-                            file.Delete();
-                        }
-                        var fileName = isRootTemplate ? "_merged" : fileGroup.Key;
-                        xml.Save($"{path}\\{fileName}{(isRootTemplate ? ".lsf" : "")}.lsx");
-                    }
+                            else
+                            {
+                                xml.Descendants("region").Single().Attribute("id").Value = fileGroup.Key;
+                            }
 
-                    foreach(var delDir in dirInfo.GetDirectories())
-                    {
-                        delDir.Delete(true);
+                            var children = xml.Descendants("children").Single();
+                            foreach (var file in fileGroup)
+                            {
+                                using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
+                                {
+                                    var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
+                                    var contentChildren = contents.Descendants("children").First().Elements().ToList();
+                                    foreach (var child in contentChildren)
+                                    {
+                                        children.Add(child);
+                                    }
+                                }
+                                file.Delete();
+                            }
+                            var fileName = isRootTemplate ? "_merged" : fileGroup.Key;
+                            xml.Save($"{path}\\{fileName}{(isRootTemplate ? ".lsf" : "")}.lsx");
+                        }
+
+                        foreach (var delDir in dirInfo.GetDirectories())
+                        {
+                            delDir.Delete(true);
+                        }
                     }
                 }
             }
@@ -530,33 +535,37 @@ namespace bg3_modders_multitool.Services
         /// Concatenate Stats\Generated\Data sub directory files
         /// </summary>
         /// <param name="directory">The mod workspace directory</param>
-        /// <param name="modName">The mod name to point the search at</param>
-        private static void ProcessStatsGeneratedDataSubfiles(string directory, string modName)
+        private static void ProcessStatsGeneratedDataSubfiles(string directory)
         {
-            var statsGeneratedDataDir = $"{directory}\\Public\\{modName}\\Stats\\Generated\\Data";
-            var sgdInfo = new DirectoryInfo(statsGeneratedDataDir);
-            if (sgdInfo.Exists)
+            var modNameDirs = new DirectoryInfo(Path.Combine(directory, "Public"));
+            var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
+            foreach (var modName in paths)
             {
-                var sgdDirs = sgdInfo.GetDirectories();
-                var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                foreach (var dir in sgdDirs)
+                var statsGeneratedDataDir = $"{directory}\\Public\\{modName.Name}\\Stats\\Generated\\Data";
+                var sgdInfo = new DirectoryInfo(statsGeneratedDataDir);
+                if (sgdInfo.Exists)
                 {
-                    var files = dir.GetFiles("*.txt", System.IO.SearchOption.AllDirectories);
-                    var fileName = $"{dir.Parent.FullName}\\__MT_GEN_{dir.Name}_{now}.txt";
-                    using (System.IO.FileStream fs = new System.IO.FileStream(fileName, System.IO.FileMode.Append, System.IO.FileAccess.Write))
-                    using (System.IO.StreamWriter sw = new System.IO.StreamWriter(fs))
+                    var sgdDirs = sgdInfo.GetDirectories();
+                    var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                    foreach (var dir in sgdDirs)
                     {
-                        sw.WriteLine($"// ==== {Properties.Resources.GeneratedWithDisclaimer} ====");
-                        foreach (var file in files)
+                        var files = dir.GetFiles("*.txt", System.IO.SearchOption.AllDirectories);
+                        var fileName = $"{dir.Parent.FullName}\\__MT_GEN_{dir.Name}_{now}.txt";
+                        using (System.IO.FileStream fs = new System.IO.FileStream(fileName, System.IO.FileMode.Append, System.IO.FileAccess.Write))
+                        using (System.IO.StreamWriter sw = new System.IO.StreamWriter(fs))
                         {
-                            sw.WriteLine($"// === {file.Name} ===");
-                            using (var input = new System.IO.StreamReader(file.FullName))
+                            sw.WriteLine($"// ==== {Properties.Resources.GeneratedWithDisclaimer} ====");
+                            foreach (var file in files)
                             {
-                                sw.WriteLine(input.ReadToEnd());
+                                sw.WriteLine($"// === {file.Name} ===");
+                                using (var input = new System.IO.StreamReader(file.FullName))
+                                {
+                                    sw.WriteLine(input.ReadToEnd());
+                                }
                             }
                         }
+                        Directory.Delete(dir.FullName, true);
                     }
-                    Directory.Delete(dir.FullName, true);
                 }
             }
         }
