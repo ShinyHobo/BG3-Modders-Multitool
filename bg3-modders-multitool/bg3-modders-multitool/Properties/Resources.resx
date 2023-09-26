@@ -178,6 +178,11 @@
   <data name="AttemptingToPack" xml:space="preserve">
     <value>Attempting to pack mod.</value>
   </data>
+  <data name="AttributeMissing" xml:space="preserve">
+    <value>Attribute missing {0}
+</value>
+    <comment>attribute name</comment>
+  </data>
   <data name="AttributesTabLabel" xml:space="preserve">
     <value>Attributes</value>
   </data>
@@ -375,6 +380,11 @@ Do you wish to continue?</value>
   </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>
+  </data>
+  <data name="ErrorLine" xml:space="preserve">
+    <value>Error on line {0}
+</value>
+    <comment>line number</comment>
   </data>
   <data name="ErrorParsingProperty" xml:space="preserve">
     <value>Error parsing \"{0}\" for \"{1}\"</value>
@@ -814,6 +824,11 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="NewUpdatesAvailable" xml:space="preserve">
     <value>New Updates Available!</value>
+  </data>
+  <data name="NodeAttributeMissing" xml:space="preserve">
+    <value>Node missing {0}
+</value>
+    <comment>attribute name</comment>
   </data>
   <data name="NoFilesFound" xml:space="preserve">
     <value>No files found!</value>

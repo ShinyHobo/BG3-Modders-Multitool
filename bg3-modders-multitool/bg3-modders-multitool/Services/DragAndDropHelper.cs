@@ -417,12 +417,41 @@ namespace bg3_modders_multitool.Services
                             while(!xml.EOF)
                             {
                                 xml.Read();
+                                IXmlLineInfo xmlInfo = xml as IXmlLineInfo;
+                                var line = xmlInfo?.LineNumber;
+                                var error = string.Empty;
+                                if (xml.Name == "attribute" && xml.NodeType == XmlNodeType.Element)
+                                {
+                                    var id = xml.GetAttribute("id");
+                                    var type = xml.GetAttribute("type");
+                                    var value = xml.GetAttribute("value");
+                                    var handle = xml.GetAttribute("handle");
+                                    if (id == null)
+                                        error += string.Format(Properties.Resources.AttributeMissing, "'id'");
+                                    if (type == null)
+                                        error += string.Format(Properties.Resources.AttributeMissing, "'type'");
+                                    if (value == null && handle == null)
+                                        error += string.Format(Properties.Resources.AttributeMissing, "'value' || 'handle'");
+                                    
+                                }
+                                if(xml.Name == "node" && xml.NodeType == XmlNodeType.Element)
+                                {
+                                    var id = xml.GetAttribute("id");
+                                    if (id == null)
+                                        error += string.Format(Properties.Resources.NodeAttributeMissing, "id");
+                                }
+                                if (!string.IsNullOrEmpty(error))
+                                {
+                                    error = (string.Format(Properties.Resources.ErrorLine, line) + error);
+                                    error = error.Substring(0, error.Length - 2); // remove last next line char
+                                    errors.Add(new LintingError(file.FullName, error, LintingErrorType.AttributeMissing));
+                                }
                             }
                         }
                     }
                     catch(Exception ex)
                     {
-                        errors.Add(new LintingError(file.FullName, ex.Message));
+                        errors.Add(new LintingError(file.FullName, ex.Message, LintingErrorType.Xml));
                     }
                 }
                 if (errors.Count > 0)

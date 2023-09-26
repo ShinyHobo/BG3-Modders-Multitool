@@ -10,13 +10,22 @@
         /// </summary>
         /// <param name="path">The file path</param>
         /// <param name="error">The error</param>
-        public LintingError(string path, string error)
+        /// <param name="lintingErrorType">The error type</param>
+        public LintingError(string path, string error, LintingErrorType lintingErrorType)
         {
             Path = path;
             Error = error;
+            Type = lintingErrorType;
         }
 
         public string Path { get; set; }
         public string Error { get; set; }
+        public LintingErrorType Type { get; set; }
+}
+
+    public enum LintingErrorType
+    {
+        Xml,
+        AttributeMissing
     }
 }

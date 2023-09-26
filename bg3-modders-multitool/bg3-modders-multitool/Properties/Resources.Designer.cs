@@ -241,6 +241,16 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute missing {0}
+        ///.
+        /// </summary>
+        public static string AttributeMissing {
+            get {
+                return ResourceManager.GetString("AttributeMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attributes.
         /// </summary>
         public static string AttributesTabLabel {
@@ -792,6 +802,16 @@ namespace bg3_modders_multitool.Properties {
         public static string EnablingSplashScreen {
             get {
                 return ResourceManager.GetString("EnablingSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error on line {0}
+        ///.
+        /// </summary>
+        public static string ErrorLine {
+            get {
+                return ResourceManager.GetString("ErrorLine", resourceCulture);
             }
         }
         
@@ -1996,6 +2016,16 @@ namespace bg3_modders_multitool.Properties {
         public static string NewUpdatesAvailable {
             get {
                 return ResourceManager.GetString("NewUpdatesAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Node missing {0}
+        ///.
+        /// </summary>
+        public static string NodeAttributeMissing {
+            get {
+                return ResourceManager.GetString("NodeAttributeMissing", resourceCulture);
             }
         }
         
