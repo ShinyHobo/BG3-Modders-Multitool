@@ -444,14 +444,14 @@ namespace bg3_modders_multitool.Services
                                 {
                                     error = (string.Format(Properties.Resources.ErrorLine, line) + error);
                                     error = error.Substring(0, error.Length - 2); // remove last next line char
-                                    errors.Add(new LintingError(file.FullName, error, LintingErrorType.AttributeMissing));
+                                    errors.Add(new LintingError(file.FullName.Replace(TempFolder + "\\", string.Empty), error, LintingErrorType.AttributeMissing));
                                 }
                             }
                         }
                     }
                     catch(Exception ex)
                     {
-                        errors.Add(new LintingError(file.FullName, ex.Message, LintingErrorType.Xml));
+                        errors.Add(new LintingError(file.FullName.Replace(TempFolder + "\\", string.Empty), ex.Message, LintingErrorType.Xml));
                     }
                 }
                 if (errors.Count > 0)
