@@ -384,8 +384,16 @@ namespace bg3_modders_multitool.Views
                     Parallel.ForEach(filesToExtract, GeneralHelper.ParallelOptions, (file, status) => {
                         if(!SearchResults.Extracting)
                             status.Stop();
-                        var helper = helpers.First(h => h.PakName == file.Path.Split('\\')[0]);
-                        helper.DecompressPakFile(PakReaderHelper.GetPakPath(file.Path));
+                        if(Path.GetExtension(file.Path) == ".gtp")
+                        {
+                            TextureHelper.ExtractGTPContents(file.Path, true);
+                        }
+                        else
+                        {
+                            var helper = helpers.First(h => h.PakName == file.Path.Split('\\')[0]);
+                            helper.DecompressPakFile(PakReaderHelper.GetPakPath(file.Path));
+                        }
+
                         file.Selected = false;
                     });
                     if (SearchResults.Extracting)
