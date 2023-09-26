@@ -1,5 +1,6 @@
 ﻿namespace bg3_modders_multitool.Services
 {
+    using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using LSLib.LS.Enums;
     using System;
@@ -247,6 +248,24 @@
                 }
             }
             return pakHelpers;
+        }
+
+        /// <summary>
+        /// Gets the helper and adjusted file path for the given file
+        /// </summary>
+        /// <param name="path">The file path</param>
+        /// <returns>The helper and adjusted pak file path</returns>
+        public static (PakReaderHelper Helper, string Pak, string Path) GetPakHelper(string path)
+        {
+            var pakPath = path.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
+            var pak = pakPath.Split('\\')[0];
+            path = GetPakPath(pakPath);
+            var paks = GetPakList();
+            pakPath = Directory.GetFiles(FileHelper.DataDirectory, "*.pak", SearchOption.AllDirectories).FirstOrDefault(f => f.EndsWith("\\" + pak + ".pak"));
+            if (pakPath == null)
+                return (null, null, null);
+            var helper = new PakReaderHelper(pakPath);
+            return (helper, pak, path);
         }
     }
 }

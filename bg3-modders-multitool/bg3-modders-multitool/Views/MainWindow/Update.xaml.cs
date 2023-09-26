@@ -1,5 +1,6 @@
 ﻿namespace bg3_modders_multitool.Views
 {
+    using bg3_modders_multitool.Themes;
     using System.Windows;
     using System.Windows.Media;
 
@@ -20,6 +21,7 @@
             markdownViewer.Markdown = document;
             markdownViewer.Document.PagePadding = new Thickness(10);
             markdownViewer.Height = changelog ? 460 : 380;
+            if(ThemesController.CurrentTheme != ThemeType.LightTheme)
             foreach(var block in markdownViewer.Document.Blocks)
             {
                 block.Foreground = new SolidColorBrush(Colors.White);

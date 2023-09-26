@@ -17,8 +17,6 @@ namespace bg3_modders_multitool.Views
     using System.Windows.Input;
     using System.Windows.Threading;
     using Xceed.Wpf.Toolkit.Primitives;
-    using Xceed.Wpf.Toolkit;
-    using LSLib.LS.Story;
 
     /// <summary>
     /// Interaction logic for IndexingWindow.xaml
@@ -113,10 +111,14 @@ namespace bg3_modders_multitool.Views
                         SearchResults.SelectedPath = path;
 
                         var results = new ObservableCollection<SearchResult>();
-                        foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
+                        try
                         {
-                            results.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
+                            foreach (var content in SearchResults.IndexHelper.GetFileContents(hoverFile))
+                            {
+                                results.Add(new SearchResult { Key = content.Key + 1, Text = content.Value.Trim() });
+                            }
                         }
+                        catch { }
 
                         Application.Current.Dispatcher.Invoke(delegate
                         {
@@ -151,18 +153,30 @@ namespace bg3_modders_multitool.Views
                 var ext = Path.GetExtension(SearchResults.SelectedPath);
                 var selectedPath = FileHelper.GetPath(SearchResults.SelectedPath);
 
-                PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
-
-                if (ext == ".loca")
+                if (FileHelper.IsGTP(SearchResults.SelectedPath))
                 {
-                    var newFile = FileHelper.Convert(selectedPath, "xml");
-                    FileHelper.OpenFile(newFile);
+                    TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, true);
+
+                    var fileLoc = Path.GetDirectoryName(FileHelper.GetPath(SearchResults.SelectedPath));
+                    if (Directory.Exists(fileLoc))
+                        System.Diagnostics.Process.Start("explorer.exe", $"{fileLoc}");
                 }
                 else
                 {
-                    var newFile = FileHelper.Convert(selectedPath, "lsx");
-                    FileHelper.OpenFile(newFile);
+                    PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+
+                    if (ext == ".loca")
+                    {
+                        var newFile = FileHelper.Convert(selectedPath, "xml");
+                        FileHelper.OpenFile(newFile);
+                    }
+                    else
+                    {
+                        var newFile = FileHelper.Convert(selectedPath, "lsx");
+                        FileHelper.OpenFile(newFile);
+                    }
                 }
+
                 SearchResults.AllowInteraction = true;
             }
         }
@@ -294,10 +308,17 @@ namespace bg3_modders_multitool.Views
         {
             if (!string.IsNullOrEmpty(SearchResults.SelectedPath))
             {
-                var newFile = PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
-                newFile = newFile ?? FileHelper.GetPath(SearchResults.SelectedPath);
-                if(File.Exists(newFile))
-                    System.Diagnostics.Process.Start("explorer.exe", $"/select,{newFile}");
+                if(FileHelper.IsGTP(SearchResults.SelectedPath))
+                {
+                    ConvertAndOpenButton_Click(sender, e);
+                }
+                else
+                {
+                    var newFile = PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+                    newFile = newFile ?? FileHelper.GetPath(SearchResults.SelectedPath);
+                    if (File.Exists(newFile))
+                        System.Diagnostics.Process.Start("explorer.exe", $"/select,{newFile}");
+                }
             }
         }
 
@@ -310,7 +331,14 @@ namespace bg3_modders_multitool.Views
         {
             if(!string.IsNullOrEmpty(SearchResults.SelectedPath))
             {
-                PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+                if (FileHelper.IsGTP(SearchResults.SelectedPath))
+                {
+                    TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, true);
+                }
+                else
+                {
+                    PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
+                }
                 GeneralHelper.WriteToConsole(Properties.Resources.ResourceExtracted, SearchResults.SelectedPath);
             }
         }
@@ -356,8 +384,16 @@ namespace bg3_modders_multitool.Views
                     Parallel.ForEach(filesToExtract, GeneralHelper.ParallelOptions, (file, status) => {
                         if(!SearchResults.Extracting)
                             status.Stop();
-                        var helper = helpers.First(h => h.PakName == file.Path.Split('\\')[0]);
-                        helper.DecompressPakFile(PakReaderHelper.GetPakPath(file.Path));
+                        if(FileHelper.IsGTP(file.Path))
+                        {
+                            TextureHelper.ExtractGTPContents(file.Path, true);
+                        }
+                        else
+                        {
+                            var helper = helpers.First(h => h.PakName == file.Path.Split('\\')[0]);
+                            helper.DecompressPakFile(PakReaderHelper.GetPakPath(file.Path));
+                        }
+
                         file.Selected = false;
                     });
                     if (SearchResults.Extracting)

@@ -48,9 +48,10 @@ namespace bg3_modders_multitool.XAMLHelpers
             {
                 try
                 {
-                    var result = (InlineUIContainer)XamlReader.Parse(formattedText);
+                    var isBase64 = formattedText.IndexOf("Base64") > 0;
+                    var result = isBase64 ? new InlineUIContainer() { Child = new Image() { Height=250 } } : (InlineUIContainer)XamlReader.Parse(formattedText);
                     var image = result.Child as Image;
-                    var source = image.Source;
+                    var source = image?.Source;
                     if(source == null)
                     {
                         // grab image uri
@@ -60,7 +61,7 @@ namespace bg3_modders_multitool.XAMLHelpers
                         try
                         {
                             Pfim.IImage pfimImage;
-                            if (File.Exists(imageLoc))
+                            if (!isBase64 && File.Exists(imageLoc))
                             {
                                 // convert image to something WPF can read
                                 pfimImage = Pfim.Pfimage.FromFile(imageLoc);

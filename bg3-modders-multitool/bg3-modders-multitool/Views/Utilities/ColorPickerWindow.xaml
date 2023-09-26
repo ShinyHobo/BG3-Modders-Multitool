@@ -13,13 +13,13 @@
         <StackPanel HorizontalAlignment="Left" Margin="5">
             <StackPanel>
                 <TextBlock Text="{x:Static p:Resources.HEXLabel}"/>
-                <Button x:Name="hex" Height="30" Padding="5" Background="White" Cursor="Hand" Width="254" ToolTip="{x:Static p:Resources.HEXTooltip}" Click="hex_Click"/>
+                <Button x:Name="hex" Height="30" Padding="5" Cursor="Hand" Width="254" ToolTip="{x:Static p:Resources.HEXTooltip}" Click="hex_Click"/>
                 <TextBlock Text="{x:Static p:Resources.sARGBLabel}"/>
-                <Button x:Name="sRGB" Padding="5" Height="30" Background="White" Cursor="Hand" Margin="0,5" Width="254" ToolTip="{x:Static p:Resources.sARGBTooltip}" Click="sARGB_Click"/>
+                <Button x:Name="sRGB" Padding="5" Height="30" Cursor="Hand" Margin="0,5" Width="254" ToolTip="{x:Static p:Resources.sARGBTooltip}" Click="sARGB_Click"/>
             </StackPanel>
             <TextBlock Text="{x:Static p:Resources.ClickToSelectColorLabel}"/>
             <xctk:ColorPicker x:Name="colorPicker" SelectedColorChanged="colorPicker_SelectedColorChanged" AvailableColorsSortingMode="HueSaturationBrightness" Width="254"
-                  Cursor="Hand" ShowDropDownButton="False" AdvancedTabHeader="{x:Static p:Resources.AdvancedLabel}"
+                  Cursor="Hand" ShowDropDownButton="False" AdvancedTabHeader="{x:Static p:Resources.AdvancedLabel}" IsOpen="True" TabBackground="{DynamicResource TabItem.Static.Background}"
                   StandardColorsHeader="{x:Static p:Resources.StandardLabel}" AvailableColorsHeader="{x:Static p:Resources.AvailableColorsLabel}"/>
         </StackPanel>
     </Grid>

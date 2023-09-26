@@ -209,7 +209,7 @@ namespace bg3_modders_multitool.ViewModels
                                 iconInfo = gustavTexturesPak.PackagedFiles.FirstOrDefault(pf => pf.Name.Equals($"Mods/Gustav/GUI/Assets/Portraits/{_info.Icon}.DDS"));
                             
                             if (iconInfo != null)
-                                Icon = TextureAtlas.ConvertDDSToBitmap(iconInfo);
+                                Icon = TextureHelper.ConvertDDSToBitmap(iconInfo);
                         }
                     }
                 }

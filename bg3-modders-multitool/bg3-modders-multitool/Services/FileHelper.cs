@@ -261,6 +261,16 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Determines if the file path is a .GTP virtual texture file.
+        /// </summary>
+        /// <param name="path">The file path.</param>
+        /// <returns>Whether or not the file is a .GTP file.</returns>
+        public static bool IsGTP(string path)
+        {
+            return Path.GetExtension(path).ToLower() == ".gtp";
+        }
+
+        /// <summary>
         /// Gets a standard path for files.
         /// </summary>
         /// <param name="file">The file to generate a path for.</param>
