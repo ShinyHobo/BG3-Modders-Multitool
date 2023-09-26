@@ -523,6 +523,7 @@
     <Compile Include="Models\GameObjectTypes\TranslatedString.cs" />
     <Compile Include="Models\GameObjectTypes\FixedString.cs" />
     <Compile Include="Models\GameObject.cs" />
+    <Compile Include="Models\LintingError.cs" />
     <Compile Include="Models\MeshGeometry.cs" />
     <Compile Include="Models\MeshGeometry3DObject.cs" />
     <Compile Include="Models\StatStructures\CriticalHitType.cs" />
@@ -595,6 +596,9 @@
     <Compile Include="Views\MainWindow\ConfigurationMenu.xaml.cs">
       <DependentUpon>ConfigurationMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Other\FileLintingWindow.xaml.cs">
+      <DependentUpon>FileLintingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Utilities\AddMissingMetaLsx.xaml.cs">
       <DependentUpon>AddMissingMetaLsx.xaml</DependentUpon>
     </Compile>
@@ -613,10 +617,10 @@
     <Compile Include="Views\Utilities\GameObjectWindow.xaml.cs">
       <DependentUpon>GameObjectWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindow\UnpackerProgress.xaml.cs">
+    <Compile Include="Views\Other\UnpackerProgress.xaml.cs">
       <DependentUpon>UnpackerProgress.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindow\Update.xaml.cs">
+    <Compile Include="Views\Other\Update.xaml.cs">
       <DependentUpon>Update.xaml</DependentUpon>
     </Compile>
     <Compile Include="XAMLHelpers\LocalizationController.cs" />
@@ -679,6 +683,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Other\FileLintingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Utilities\AddMissingMetaLsx.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -718,11 +726,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow\UnpackerProgress.xaml">
+    <Page Include="Views\Other\UnpackerProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow\Update.xaml">
+    <Page Include="Views\Other\Update.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -780,9 +788,7 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\GameObjectTabs\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\icon.ico" />
   </ItemGroup>

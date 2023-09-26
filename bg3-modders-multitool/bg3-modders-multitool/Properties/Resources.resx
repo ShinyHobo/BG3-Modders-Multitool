@@ -178,6 +178,11 @@
   <data name="AttemptingToPack" xml:space="preserve">
     <value>Attempting to pack mod.</value>
   </data>
+  <data name="AttributeMissing" xml:space="preserve">
+    <value>Attribute missing {0}
+</value>
+    <comment>attribute name</comment>
+  </data>
   <data name="AttributesTabLabel" xml:space="preserve">
     <value>Attributes</value>
   </data>
@@ -376,6 +381,11 @@ Do you wish to continue?</value>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>
   </data>
+  <data name="ErrorLine" xml:space="preserve">
+    <value>Error on line {0}
+</value>
+    <comment>line number</comment>
+  </data>
   <data name="ErrorParsingProperty" xml:space="preserve">
     <value>Error parsing \"{0}\" for \"{1}\"</value>
     <comment>value, PropertyType name</comment>
@@ -383,6 +393,9 @@ Do you wish to continue?</value>
   <data name="ErrorParsingStructure" xml:space="preserve">
     <value>Error parsing line [{0}] for structure type \"{1}\": {2}</value>
     <comment>line number, type, error message</comment>
+  </data>
+  <data name="ErrorsFoundPacking" xml:space="preserve">
+    <value>Errors found in mod workspace. Cancelling process.</value>
   </data>
   <data name="ErrorUnpacking" xml:space="preserve">
     <value>Error unpacking {0}: {1}</value>
@@ -791,6 +804,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="ModelFilesTabLabel" xml:space="preserve">
     <value>Model Files</value>
   </data>
+  <data name="ModErrorsTitle" xml:space="preserve">
+    <value>Errors found in mod workspace</value>
+  </data>
   <data name="ModsFolderButton" xml:space="preserve">
     <value>Mods Folder</value>
   </data>
@@ -808,6 +824,11 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="NewUpdatesAvailable" xml:space="preserve">
     <value>New Updates Available!</value>
+  </data>
+  <data name="NodeAttributeMissing" xml:space="preserve">
+    <value>Node missing {0}
+</value>
+    <comment>attribute name</comment>
   </data>
   <data name="NoFilesFound" xml:space="preserve">
     <value>No files found!</value>

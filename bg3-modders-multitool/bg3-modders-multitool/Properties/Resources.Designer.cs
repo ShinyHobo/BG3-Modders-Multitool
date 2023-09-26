@@ -241,6 +241,16 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute missing {0}
+        ///.
+        /// </summary>
+        public static string AttributeMissing {
+            get {
+                return ResourceManager.GetString("AttributeMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attributes.
         /// </summary>
         public static string AttributesTabLabel {
@@ -796,6 +806,16 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error on line {0}
+        ///.
+        /// </summary>
+        public static string ErrorLine {
+            get {
+                return ResourceManager.GetString("ErrorLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error parsing \&quot;{0}\&quot; for \&quot;{1}\&quot;.
         /// </summary>
         public static string ErrorParsingProperty {
@@ -810,6 +830,15 @@ namespace bg3_modders_multitool.Properties {
         public static string ErrorParsingStructure {
             get {
                 return ResourceManager.GetString("ErrorParsingStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errors found in mod workspace. Cancelling process..
+        /// </summary>
+        public static string ErrorsFoundPacking {
+            get {
+                return ResourceManager.GetString("ErrorsFoundPacking", resourceCulture);
             }
         }
         
@@ -1928,6 +1957,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Errors found in mod workspace.
+        /// </summary>
+        public static string ModErrorsTitle {
+            get {
+                return ResourceManager.GetString("ModErrorsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mods Folder.
         /// </summary>
         public static string ModsFolderButton {
@@ -1978,6 +2016,16 @@ namespace bg3_modders_multitool.Properties {
         public static string NewUpdatesAvailable {
             get {
                 return ResourceManager.GetString("NewUpdatesAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Node missing {0}
+        ///.
+        /// </summary>
+        public static string NodeAttributeMissing {
+            get {
+                return ResourceManager.GetString("NodeAttributeMissing", resourceCulture);
             }
         }
         

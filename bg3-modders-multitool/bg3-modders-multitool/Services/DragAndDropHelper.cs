@@ -19,6 +19,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Views.Utilities;
     using System.Xml.Linq;
     using System.Linq;
+    using bg3_modders_multitool.Views.Other;
 
     public static class DragAndDropHelper
     {
@@ -98,9 +99,9 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Creates the metadata info.json file.
         /// </summary>
-        /// <param name="destination"></param>
         /// <param name="metaList">The list of meta.lsx file paths.</param>
-        public static void GenerateInfoJson(Dictionary<string, List<string>> metaList)
+        /// <returns>Whether or not info.json was generated</returns>
+        public static bool GenerateInfoJson(Dictionary<string, List<string>> metaList)
         {
             var info = new InfoJson {
                 Mods = new List<MetaLsx>()
@@ -118,6 +119,9 @@ namespace bg3_modders_multitool.Services
                 }
                 info.Mods.AddRange(mods);
             }
+
+            if (info.Mods.Count == 0)
+                return false;
 
             // calculate md5 hash of .pak(s)
             using (var md5 = MD5.Create())
@@ -139,6 +143,7 @@ namespace bg3_modders_multitool.Services
             var json = JsonConvert.SerializeObject(info);
             File.WriteAllText(TempFolder + @"\info.json", json);
             GeneralHelper.WriteToConsole(Properties.Resources.InfoGenerated);
+            return true;
         }
 
         public static MetaLsx ReadMeta(string meta, DateTime? created = null, KeyValuePair<string, List<string>>? modGroup = null)
@@ -274,8 +279,8 @@ namespace bg3_modders_multitool.Services
                                     }
                                     else
                                     {
-                                        GenerateInfoJson(metaList);
-                                        GenerateZip(fullPath, dirName);
+                                        if(GenerateInfoJson(metaList))
+                                            GenerateZip(fullPath, dirName);
                                     }
                                     CleanTempDirectory();
                                 }
@@ -325,7 +330,8 @@ namespace bg3_modders_multitool.Services
             CopyWorkingFilesToTempDir(path, modDir);
 
             // TODO - add option to turn off
-            LintLsxFiles(modDir, modName);
+            if(!LintLsxFiles(modDir, modName))
+                return (null, null);
 
             ProcessLsxMerges(modDir, modName);
 
@@ -386,9 +392,80 @@ namespace bg3_modders_multitool.Services
             }
         }
 
-        private static void LintLsxFiles(string directory, string modName)
+        /// <summary>
+        /// Checks the lsx files for xml errors
+        /// XML formatting errors
+        /// Missing required node components
+        /// Unmatched UUIDs
+        /// </summary>
+        /// <param name="directory">The directory to scan</param>
+        /// <param name="modName">The mod name</param>
+        /// <returns>Whether or not the directory is error free</returns>
+        private static bool LintLsxFiles(string directory, string modName)
         {
+            var dirInfo = new DirectoryInfo(directory);
+            if (dirInfo.Exists)
+            {
+                var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
+                var errors = new List<LintingError>();
+                foreach(var file in files)
+                {
+                    try
+                    {
+                        using(var xml = XmlReader.Create(file.FullName))
+                        {
+                            while(!xml.EOF)
+                            {
+                                xml.Read();
+                                IXmlLineInfo xmlInfo = xml as IXmlLineInfo;
+                                var line = xmlInfo?.LineNumber;
+                                var error = string.Empty;
+                                if (xml.Name == "attribute" && xml.NodeType == XmlNodeType.Element)
+                                {
+                                    var id = xml.GetAttribute("id");
+                                    var type = xml.GetAttribute("type");
+                                    var value = xml.GetAttribute("value");
+                                    var handle = xml.GetAttribute("handle");
+                                    if (id == null)
+                                        error += string.Format(Properties.Resources.AttributeMissing, "'id'");
+                                    if (type == null)
+                                        error += string.Format(Properties.Resources.AttributeMissing, "'type'");
+                                    if (value == null && handle == null)
+                                        error += string.Format(Properties.Resources.AttributeMissing, "'value' || 'handle'");
+                                    
+                                }
+                                if(xml.Name == "node" && xml.NodeType == XmlNodeType.Element)
+                                {
+                                    var id = xml.GetAttribute("id");
+                                    if (id == null)
+                                        error += string.Format(Properties.Resources.NodeAttributeMissing, "id");
+                                }
+                                if (!string.IsNullOrEmpty(error))
+                                {
+                                    error = (string.Format(Properties.Resources.ErrorLine, line) + error);
+                                    error = error.Substring(0, error.Length - 2); // remove last next line char
+                                    errors.Add(new LintingError(file.FullName, error, LintingErrorType.AttributeMissing));
+                                }
+                            }
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        errors.Add(new LintingError(file.FullName, ex.Message, LintingErrorType.Xml));
+                    }
+                }
+                if (errors.Count > 0)
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.ErrorsFoundPacking);
+                    Application.Current.Dispatcher.Invoke(() => {
+                        var popup = new FileLintingWindow(errors);
+                        return popup.ShowDialog();
+                    });
 
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
