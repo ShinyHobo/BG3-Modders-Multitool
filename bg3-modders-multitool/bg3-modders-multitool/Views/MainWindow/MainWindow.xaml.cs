@@ -174,21 +174,28 @@ namespace bg3_modders_multitool.Views
         private Task IndexFiles(bool directIndex)
         {
             return Task.Run(() => {
-                var result = System.Windows.Forms.DialogResult.OK;
-                if (IndexHelper.IndexDirectoryExists())
-                {
-                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
-                }
-
-                if (result.Equals(System.Windows.Forms.DialogResult.OK))
+                if(directIndex)
                 {
                     Application.Current.Dispatcher.Invoke(async () =>
                     {
-                        if (directIndex)
-                            await MainWindowVM.SearchResults.IndexHelper.IndexDirectly();
-                        else
-                            await MainWindowVM.SearchResults.IndexHelper.Index();
+                        await MainWindowVM.SearchResults.IndexHelper.IndexDirectly();
                     }).Wait();
+                }
+                else
+                {
+                    var result = System.Windows.Forms.DialogResult.OK;
+                    if (IndexHelper.IndexDirectoryExists())
+                    {
+                        result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
+                    }
+
+                    if (result.Equals(System.Windows.Forms.DialogResult.OK))
+                    {
+                        Application.Current.Dispatcher.Invoke(async () =>
+                        {
+                            await MainWindowVM.SearchResults.IndexHelper.Index();
+                        }).Wait();
+                    }
                 }
             });
         }

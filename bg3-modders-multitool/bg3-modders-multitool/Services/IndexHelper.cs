@@ -67,15 +67,18 @@ namespace bg3_modders_multitool.Services
                     DataContext.AllowIndexing = false;
                 });
 
-                // TODO - look up cached paks
-
                 var helpers = new List<PakReaderHelper>();
                 var fileCount = 0;
                 var paks = PakReaderHelper.GetPakList();
 
-                // TODO - filter out cached paks
+                var cachedJson = new List<string>();
+                using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
+                {
+                    var fileContents = reader.ReadToEnd();
+                    cachedJson = JsonConvert.DeserializeObject<List<string>>(fileContents);
+                }
 
-                foreach ( var pak in paks )
+                foreach (var pak in paks.Where(p => !cachedJson.Contains(Path.GetFileNameWithoutExtension(p))))
                 {
                     var helper = new PakReaderHelper(pak);
                     if (helper.PackagedFiles != null)
@@ -83,6 +86,12 @@ namespace bg3_modders_multitool.Services
                         helpers.Add(helper);
                         fileCount += helper.PackagedFiles.Count;
                     }
+                }
+                
+                if(helpers.Count == 0)
+                {
+                    GeneralHelper.WriteToConsole("Index up to date!");
+                    return;
                 }
 
                 // Display total file count being indexed
@@ -95,8 +104,6 @@ namespace bg3_modders_multitool.Services
                     DataContext.IndexFileCount = 0;
                 });
 
-                if (System.IO.Directory.Exists(luceneIndex))
-                    System.IO.Directory.Delete(luceneIndex, true);
                 IndexFilesDirectly(helpers);
             });
         }
@@ -108,40 +115,39 @@ namespace bg3_modders_multitool.Services
         private void IndexFilesDirectly(List<PakReaderHelper> helpers)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
-            // TODO - add indexed pak bag
             var cachedPaks = new ConcurrentBag<string>();
-            //Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 4 }, helper => {
-            //    using (Analyzer a = new CustomAnalyzer())
-            //    {
-            //        IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-            //        using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
-            //        using (IndexWriter writer = new IndexWriter(fSDirectory, config))
-            //        {
-            //            GeneralHelper.WriteToConsole($"Starting index for {helper.PakName}");
-            //            Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
-            //            {
-            //                try
-            //                {
-            //                    IndexLuceneFileDirectly(file.Name, helper, writer);
-            //                }
-            //                catch (OutOfMemoryException)
-            //                {
-            //                    GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
-            //                }
-            //            });
-
-            //            GeneralHelper.WriteToConsole($"Finalizing index for {helper.PakName}");
-            //            writer.Commit();
-            //            cachedPaks.Add(helper.PakName);
-            //        }
-            //    }
-            //});
+            Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 4 }, helper =>
+            {
+                using (Analyzer a = new CustomAnalyzer())
+                {
+                    IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                    using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
+                    using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                    {
+                        Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
+                        {
+                            try
+                            {
+                                IndexLuceneFileDirectly(file.Name, helper, writer);
+                            }
+                            catch (OutOfMemoryException)
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
+                            }
+                        });
+                        writer.Commit();
+                        cachedPaks.Add(helper.PakName);
+                    }
+                }
+            });
 
             var indexedDirs = Alphaleonis.Win32.Filesystem.Directory.GetDirectories(luceneDeltaDirectory);
             foreach ( var dir in indexedDirs )
             {
                 cachedPaks.Add(dir.Replace("\\", string.Empty));
             }
+
+            GeneralHelper.WriteToConsole("Merging indexes...");
 
             // Merge indexes
             using (Analyzer a = new CustomAnalyzer())
@@ -151,7 +157,10 @@ namespace bg3_modders_multitool.Services
                 foreach(var pak in cachedPaks)
                 {
                     var indexDir = Path.Combine(Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory(), luceneDeltaDirectory, pak);
-                    indexes.Add(DirectoryReader.Open(FSDirectory.Open(indexDir)));
+                    if(Alphaleonis.Win32.Filesystem.Directory.Exists(indexDir))
+                    {
+                        indexes.Add(DirectoryReader.Open(FSDirectory.Open(indexDir)));
+                    }
                 }
                 writer.AddIndexes(indexes.ToArray());
                 foreach (IndexReader index in indexes)
@@ -159,6 +168,8 @@ namespace bg3_modders_multitool.Services
                     index.Dispose();
                 }
             }
+
+            Alphaleonis.Win32.Filesystem.Directory.Delete(luceneDeltaDirectory, true);
 
             var cacheInfo = new FileInfo(luceneCacheFile);
             if (!cacheInfo.Exists)
