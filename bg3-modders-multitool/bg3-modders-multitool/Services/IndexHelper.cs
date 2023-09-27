@@ -22,6 +22,7 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Index.Extensions;
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
+    using Newtonsoft.Json;
 
     public class IndexHelper
     {
@@ -33,8 +34,10 @@ namespace bg3_modders_multitool.Services
         private static readonly string[] extensionsToExclude = { ".bin",".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".fbx", ".dae", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd", ".jpg",".gts",".data",".patch",".psd" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga", ".jpg" };
         public static readonly string[] BinaryExtensions = { ".lsf", ".bin", ".loca", ".data", ".patch" };
-        private static readonly string luceneIndex = "lucene/index";
-        private static readonly string luceneDeltaDirectory = "lucene/paks";
+        private static readonly string luceneRoot = "lucene";
+        private static readonly string luceneIndex = $"{luceneRoot}/index";
+        private static readonly string luceneDeltaDirectory = $"{luceneRoot}/paks";
+        private static readonly string luceneCacheFile = $"{luceneRoot}\\cache.json";
         public SearchResults DataContext;
         public string SearchText;
         private readonly FSDirectory mainFSDirectory;
@@ -133,11 +136,41 @@ namespace bg3_modders_multitool.Services
                 }
             });
 
+            var indexedDirs = Alphaleonis.Win32.Filesystem.Directory.GetDirectories(luceneDeltaDirectory);
+            foreach ( var dir in indexedDirs )
+            {
+                cachedPaks.Add(dir.Replace("\\", string.Empty));
+            }
+
             // TODO - merge index here
+
+            var cacheInfo = new FileInfo(luceneCacheFile);
+            if (!cacheInfo.Exists)
+            {
+                File.Create(luceneCacheFile);
+            }
 
             GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
 
-            // TODO - update cache file
+            // Update cache file
+            using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
+            {
+                var fileContents = reader.ReadToEnd();
+                var cachedJson = JsonConvert.DeserializeObject<List<string>>(fileContents);
+                if (cachedJson == null)
+                {
+                    cachedJson = cachedPaks.OrderBy(x => x).ToList();
+                }
+                else
+                {
+                    cachedJson.AddRange(cachedPaks);
+                    cachedJson = cachedJson.OrderBy(x => x).Distinct().ToList();
+                }
+                reader.Close();
+
+                var contentsToWriteToFile = JsonConvert.SerializeObject(cachedJson, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                File.WriteAllText(luceneCacheFile, contentsToWriteToFile);
+            }
 
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
             Application.Current.Dispatcher.Invoke(() => {
