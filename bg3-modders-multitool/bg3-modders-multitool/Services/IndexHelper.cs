@@ -22,7 +22,6 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Index.Extensions;
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
-    using SharpDX.DXGI;
 
     public class IndexHelper
     {
@@ -35,18 +34,19 @@ namespace bg3_modders_multitool.Services
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga", ".jpg" };
         public static readonly string[] BinaryExtensions = { ".lsf", ".bin", ".loca", ".data", ".patch" };
         private static readonly string luceneIndex = "lucene/index";
+        private static readonly string luceneDeltaDirectory = "lucene/paks";
         public SearchResults DataContext;
         public string SearchText;
-        private readonly FSDirectory fSDirectory;
+        private readonly FSDirectory mainFSDirectory;
 
         public IndexHelper()
         {
-            fSDirectory = FSDirectory.Open(luceneIndex);
+            mainFSDirectory = FSDirectory.Open(luceneIndex);
         }
 
         public void Clear()
         {
-            fSDirectory.Dispose();
+            mainFSDirectory.Dispose();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -100,14 +100,16 @@ namespace bg3_modders_multitool.Services
         private void IndexFilesDirectly(List<PakReaderHelper> helpers)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
-            using (Analyzer a = new CustomAnalyzer())
-            {
-                IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                config.SetUseCompoundFile(false);
-                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+            Parallel.ForEach(helpers, GeneralHelper.ParallelOptions, helper => {
+                using (Analyzer a = new CustomAnalyzer())
                 {
-                    Parallel.ForEach(helpers, GeneralHelper.ParallelOptions, helper => {
-                        Parallel.ForEach(helper.PackagedFiles, GeneralHelper.ParallelOptions, file => {
+                    IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                    config.SetUseCompoundFile(false);
+                    using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
+                    using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                    {
+                        Parallel.ForEach(helper.PackagedFiles, GeneralHelper.ParallelOptions, file =>
+                        {
                             try
                             {
                                 IndexLuceneFileDirectly(file.Name, helper, writer);
@@ -117,11 +119,17 @@ namespace bg3_modders_multitool.Services
                                 GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
                             }
                         });
-                    });
-                    GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
-                    writer.Commit();
+
+                        GeneralHelper.WriteToConsole($"Finalizing index for {helper.PakName}");
+                        writer.Commit();
+                    }
                 }
-            }
+            });
+
+            // TODO - merge index here
+
+            GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
+
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
             Application.Current.Dispatcher.Invoke(() => {
                 DataContext.IsIndexing = false;
@@ -213,7 +221,7 @@ namespace bg3_modders_multitool.Services
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
                 config.SetUseCompoundFile(false);
-                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                using (IndexWriter writer = new IndexWriter(mainFSDirectory, config))
                 {
                     Parallel.ForEach(files, GeneralHelper.ParallelOptions, file => {
                         try
@@ -302,7 +310,7 @@ namespace bg3_modders_multitool.Services
             return Task.Run(() => { 
                 var matches = new List<string>();
                 var filteredMatches = new List<string>();
-                if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
+                if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(mainFSDirectory))
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFound);
                     return (Matches: matches, FilteredMatches: filteredMatches);
@@ -310,7 +318,7 @@ namespace bg3_modders_multitool.Services
 
                 try
                 {
-                    using (IndexReader reader = DirectoryReader.Open(fSDirectory))
+                    using (IndexReader reader = DirectoryReader.Open(mainFSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         BooleanQuery query = new BooleanQuery();
