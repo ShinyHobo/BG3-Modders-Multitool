@@ -64,9 +64,14 @@ namespace bg3_modders_multitool.Services
                     DataContext.AllowIndexing = false;
                 });
 
+                // TODO - look up cached paks
+
                 var helpers = new List<PakReaderHelper>();
                 var fileCount = 0;
                 var paks = PakReaderHelper.GetPakList();
+
+                // TODO - filter out cached paks
+
                 foreach ( var pak in paks )
                 {
                     var helper = new PakReaderHelper(pak);
@@ -101,15 +106,15 @@ namespace bg3_modders_multitool.Services
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
             // TODO - add indexed pak bag
-            Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 5 }, helper => {
+            Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 4 }, helper => {
                 using (Analyzer a = new CustomAnalyzer())
                 {
                     IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                    config.SetUseCompoundFile(false);
                     using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
                     using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                     {
-                        Parallel.ForEach(helper.PackagedFiles, GeneralHelper.ParallelOptions, file =>
+                        GeneralHelper.WriteToConsole($"Starting index for {helper.PakName}");
+                        Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
                         {
                             try
                             {
@@ -152,14 +157,14 @@ namespace bg3_modders_multitool.Services
             var path = $"{helper.PakName}\\{file}";
             try
             {
-                var fileName = Path.GetFileName(file);
+                //var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
 
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
                     new TextField("path", path.Replace("/","\\"), Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES)
+                    //new TextField("title", fileName, Field.Store.YES)
                 };
 
                 // if file type is excluded, only track file name and path so it can be searched for by name
@@ -175,8 +180,10 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            lock (DataContext)
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 DataContext.IndexFileCount++;
+            });
         }
         #endregion
 
@@ -257,14 +264,14 @@ namespace bg3_modders_multitool.Services
             var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
             try
             {
-                var fileName = Path.GetFileName(file);
+                //var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
 
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
                     new TextField("path", path, Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES)
+                    //new TextField("title", fileName, Field.Store.YES)
                 };
 
                 // if file type is excluded, only track file name and path so it can be searched for by name
@@ -280,8 +287,10 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            lock(DataContext)
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 DataContext.IndexFileCount++;
+            });
         }
         #endregion
 

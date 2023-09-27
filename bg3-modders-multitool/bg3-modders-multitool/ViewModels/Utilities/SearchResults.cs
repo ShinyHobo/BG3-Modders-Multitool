@@ -61,23 +61,30 @@ namespace bg3_modders_multitool.ViewModels
             get { return _resultTotal; }
             set {
                 _resultTotal = value;
+                _lastUpdate = DateTime.Now;
                 OnNotifyPropertyChanged();
             }
         }
 
+        private DateTime _lastUpdate;
         private int _resultCount;
 
         public int IndexFileCount {
             get { return _resultCount; }
             set {
                 _resultCount = value;
-                var timeTaken = GetTimeTaken();
-                var timeRemaining = ((timeTaken.TotalMinutes / IndexFileCount) * IndexFileTotal) - timeTaken.TotalMinutes;
-                if(timeRemaining < TimeSpan.MaxValue.TotalMinutes)
+                if((DateTime.Now - _lastUpdate).TotalMilliseconds > 100 || _resultCount == IndexFileTotal)
                 {
-                    IndexTimeRemaining = TimeSpan.FromMinutes(timeRemaining);
+                    // TODO - move time remaining calculation to timer thread
+                    var timeTaken = GetTimeTaken();
+                    var timeRemaining = ((timeTaken.TotalMinutes / IndexFileCount) * IndexFileTotal) - timeTaken.TotalMinutes;
+                    if (timeRemaining < TimeSpan.MaxValue.TotalMinutes)
+                    {
+                        IndexTimeRemaining = TimeSpan.FromMinutes(timeRemaining);
+                    }
+                    _lastUpdate = DateTime.Now;
+                    OnNotifyPropertyChanged();
                 }
-                OnNotifyPropertyChanged();
             }
         }
 
