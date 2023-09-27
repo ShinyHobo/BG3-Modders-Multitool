@@ -67,6 +67,9 @@ namespace bg3_modders_multitool.Services
                     DataContext.AllowIndexing = false;
                 });
 
+                if (System.IO.Directory.Exists(luceneIndex) && !File.Exists(luceneCacheFile))
+                    System.IO.Directory.Delete(luceneIndex, true);
+
                 if (System.IO.Directory.Exists(luceneDeltaDirectory))
                     System.IO.Directory.Delete(luceneDeltaDirectory, true);
 
