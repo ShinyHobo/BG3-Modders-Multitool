@@ -263,6 +263,11 @@
   <data name="ClearIndex" xml:space="preserve">
     <value>Clear Index</value>
   </data>
+  <data name="ClearIndexQuestion" xml:space="preserve">
+    <value>Careful! This is irreversable!
+
+Clicking "OK" will wipe your current index; this could take some time. Are you sure you wish you continue?</value>
+  </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
 Dropping a .pak will unpack it into a nearby directory. </value>
@@ -661,6 +666,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="IndexButtonTooltip" xml:space="preserve">
     <value>Click to begin indexing</value>
   </data>
+  <data name="IndexCleared" xml:space="preserve">
+    <value>Index cleared!</value>
+  </data>
   <data name="IndexCorrupt" xml:space="preserve">
     <value>Available index is corrupt. Please rerun the indexer to create a new one.</value>
   </data>
@@ -847,6 +855,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="NoGameObjectsFound" xml:space="preserve">
     <value>No GameObjects found; ensure that you have properly indexed and try again.</value>
+  </data>
+  <data name="NoIndexToRemove" xml:space="preserve">
+    <value>No index to remove.</value>
   </data>
   <data name="NoLinesFound" xml:space="preserve">
     <value>No lines found; search returned filename only.</value>

@@ -619,6 +619,22 @@ namespace bg3_modders_multitool.Services
             });
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
+
+        /// <summary>
+        /// Deletes the index
+        /// </summary>
+        public void DeleteIndex()
+        {
+            if (System.IO.Directory.Exists(luceneRoot))
+            {
+                System.IO.Directory.Delete(luceneRoot, true);
+                GeneralHelper.WriteToConsole(Properties.Resources.IndexCleared);
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.NoIndexToRemove);
+            }
+        }
     }
 
     /// <summary>
