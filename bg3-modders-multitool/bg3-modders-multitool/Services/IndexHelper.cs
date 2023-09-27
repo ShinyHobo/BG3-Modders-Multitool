@@ -100,7 +100,8 @@ namespace bg3_modders_multitool.Services
         private void IndexFilesDirectly(List<PakReaderHelper> helpers)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
-            Parallel.ForEach(helpers, GeneralHelper.ParallelOptions, helper => {
+            // TODO - add indexed pak bag
+            Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 5 }, helper => {
                 using (Analyzer a = new CustomAnalyzer())
                 {
                     IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
@@ -122,6 +123,7 @@ namespace bg3_modders_multitool.Services
 
                         GeneralHelper.WriteToConsole($"Finalizing index for {helper.PakName}");
                         writer.Commit();
+                        // TODO - update indexed bag
                     }
                 }
             });
@@ -129,6 +131,8 @@ namespace bg3_modders_multitool.Services
             // TODO - merge index here
 
             GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
+
+            // TODO - update cache file
 
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
             Application.Current.Dispatcher.Invoke(() => {
