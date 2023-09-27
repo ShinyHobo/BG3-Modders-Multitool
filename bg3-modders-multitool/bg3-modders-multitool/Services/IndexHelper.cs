@@ -109,32 +109,33 @@ namespace bg3_modders_multitool.Services
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
             // TODO - add indexed pak bag
-            Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 4 }, helper => {
-                using (Analyzer a = new CustomAnalyzer())
-                {
-                    IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                    using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
-                    using (IndexWriter writer = new IndexWriter(fSDirectory, config))
-                    {
-                        GeneralHelper.WriteToConsole($"Starting index for {helper.PakName}");
-                        Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
-                        {
-                            try
-                            {
-                                IndexLuceneFileDirectly(file.Name, helper, writer);
-                            }
-                            catch (OutOfMemoryException)
-                            {
-                                GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
-                            }
-                        });
+            var cachedPaks = new ConcurrentBag<string>();
+            //Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 4 }, helper => {
+            //    using (Analyzer a = new CustomAnalyzer())
+            //    {
+            //        IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+            //        using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
+            //        using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+            //        {
+            //            GeneralHelper.WriteToConsole($"Starting index for {helper.PakName}");
+            //            Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
+            //            {
+            //                try
+            //                {
+            //                    IndexLuceneFileDirectly(file.Name, helper, writer);
+            //                }
+            //                catch (OutOfMemoryException)
+            //                {
+            //                    GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
+            //                }
+            //            });
 
-                        GeneralHelper.WriteToConsole($"Finalizing index for {helper.PakName}");
-                        writer.Commit();
-                        // TODO - update indexed bag
-                    }
-                }
-            });
+            //            GeneralHelper.WriteToConsole($"Finalizing index for {helper.PakName}");
+            //            writer.Commit();
+            //            cachedPaks.Add(helper.PakName);
+            //        }
+            //    }
+            //});
 
             var indexedDirs = Alphaleonis.Win32.Filesystem.Directory.GetDirectories(luceneDeltaDirectory);
             foreach ( var dir in indexedDirs )
@@ -142,7 +143,22 @@ namespace bg3_modders_multitool.Services
                 cachedPaks.Add(dir.Replace("\\", string.Empty));
             }
 
-            // TODO - merge index here
+            // Merge indexes
+            using (Analyzer a = new CustomAnalyzer())
+            using (IndexWriter writer = new IndexWriter(mainFSDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, a)))
+            {
+                var indexes = new List<IndexReader>();
+                foreach(var pak in cachedPaks)
+                {
+                    var indexDir = Path.Combine(Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory(), luceneDeltaDirectory, pak);
+                    indexes.Add(DirectoryReader.Open(FSDirectory.Open(indexDir)));
+                }
+                writer.AddIndexes(indexes.ToArray());
+                foreach (IndexReader index in indexes)
+                {
+                    index.Dispose();
+                }
+            }
 
             var cacheInfo = new FileInfo(luceneCacheFile);
             if (!cacheInfo.Exists)
