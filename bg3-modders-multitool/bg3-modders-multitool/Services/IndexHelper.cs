@@ -147,7 +147,7 @@ namespace bg3_modders_multitool.Services
                 cachedPaks.Add(dir.Replace("\\", string.Empty));
             }
 
-            GeneralHelper.WriteToConsole("Merging indexes...");
+            GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
 
             // Merge indexes
             using (Analyzer a = new CustomAnalyzer())
@@ -169,7 +169,9 @@ namespace bg3_modders_multitool.Services
                 }
             }
 
-            Alphaleonis.Win32.Filesystem.Directory.Delete(luceneDeltaDirectory, true);
+            GeneralHelper.WriteToConsole("Deleting temporary indices...");
+            if (System.IO.Directory.Exists(luceneDeltaDirectory))
+                System.IO.Directory.Delete(luceneDeltaDirectory, true);
 
             var cacheInfo = new FileInfo(luceneCacheFile);
             if (!cacheInfo.Exists)
@@ -177,9 +179,7 @@ namespace bg3_modders_multitool.Services
                 File.Create(luceneCacheFile);
             }
 
-            GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
-
-            // Update cache file
+            GeneralHelper.WriteToConsole("Updating indexed pak list...");
             using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
             {
                 var fileContents = reader.ReadToEnd();
