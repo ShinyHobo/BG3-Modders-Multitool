@@ -78,6 +78,7 @@ namespace bg3_modders_multitool.Services
                 var paks = PakReaderHelper.GetPakList();
 
                 var cachedJson = new List<string>();
+                if(File.Exists(luceneCacheFile))
                 using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
                 {
                     var fileContents = reader.ReadToEnd();
