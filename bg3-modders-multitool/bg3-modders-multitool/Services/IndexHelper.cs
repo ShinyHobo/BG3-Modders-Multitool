@@ -180,7 +180,7 @@ namespace bg3_modders_multitool.Services
             var cacheInfo = new FileInfo(luceneCacheFile);
             if (!cacheInfo.Exists)
             {
-                File.Create(luceneCacheFile);
+                File.Create(luceneCacheFile).Dispose();
             }
 
             GeneralHelper.WriteToConsole(Properties.Resources.UpdatingIndexPakList);
