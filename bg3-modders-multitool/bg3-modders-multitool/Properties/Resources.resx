@@ -260,6 +260,9 @@
   <data name="CheckingForUpdates" xml:space="preserve">
     <value>Checking for updates...</value>
   </data>
+  <data name="ClearIndex" xml:space="preserve">
+    <value>Clear Index</value>
+  </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
 Dropping a .pak will unpack it into a nearby directory. </value>
@@ -348,6 +351,9 @@ Do you wish to continue?</value>
   <data name="DeconstructingAtlas" xml:space="preserve">
     <value>Deconstructing atlas sheet to {0}</value>
     <comment>save location</comment>
+  </data>
+  <data name="DeletingTempIndecies" xml:space="preserve">
+    <value>Deleting temporary indices...</value>
   </data>
   <data name="DescriptionHandleLabel" xml:space="preserve">
     <value>DescriptionHandle</value>
@@ -702,6 +708,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="IndexSearchTitle" xml:space="preserve">
     <value>Index Search</value>
   </data>
+  <data name="IndexUpToDate" xml:space="preserve">
+    <value>Index up to date!</value>
+  </data>
   <data name="InfoGenerated" xml:space="preserve">
     <value>info.json generated.</value>
   </data>
@@ -770,6 +779,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="MapKeyLabel" xml:space="preserve">
     <value>MapKey</value>
+  </data>
+  <data name="MergingIndices" xml:space="preserve">
+    <value>Merging indicies...</value>
   </data>
   <data name="MetaAuthorLabel" xml:space="preserve">
     <value>Author</value>
@@ -1122,6 +1134,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="UpdateWarningLabel" xml:space="preserve">
     <value>Clicking 'Update' will immediately close the application. It will re-open automatically after the update is installed. Make sure to finish what you are doing.</value>
+  </data>
+  <data name="UpdatingIndexPakList" xml:space="preserve">
+    <value>Updating indexed pak list...</value>
   </data>
   <data name="UtilitiesMenuLabel" xml:space="preserve">
     <value>Utilities</value>

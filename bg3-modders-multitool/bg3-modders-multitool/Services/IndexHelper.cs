@@ -67,6 +67,9 @@ namespace bg3_modders_multitool.Services
                     DataContext.AllowIndexing = false;
                 });
 
+                if (System.IO.Directory.Exists(luceneDeltaDirectory))
+                    System.IO.Directory.Delete(luceneDeltaDirectory, true);
+
                 var helpers = new List<PakReaderHelper>();
                 var fileCount = 0;
                 var paks = PakReaderHelper.GetPakList();
@@ -90,7 +93,10 @@ namespace bg3_modders_multitool.Services
                 
                 if(helpers.Count == 0)
                 {
-                    GeneralHelper.WriteToConsole("Index up to date!");
+                    GeneralHelper.WriteToConsole(Properties.Resources.IndexUpToDate);
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.AllowIndexing = true;
+                    });
                     return;
                 }
 
@@ -141,13 +147,7 @@ namespace bg3_modders_multitool.Services
                 }
             });
 
-            var indexedDirs = Alphaleonis.Win32.Filesystem.Directory.GetDirectories(luceneDeltaDirectory);
-            foreach ( var dir in indexedDirs )
-            {
-                cachedPaks.Add(dir.Replace("\\", string.Empty));
-            }
-
-            GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
+            GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
 
             // Merge indexes
             using (Analyzer a = new CustomAnalyzer())
@@ -169,7 +169,7 @@ namespace bg3_modders_multitool.Services
                 }
             }
 
-            GeneralHelper.WriteToConsole("Deleting temporary indices...");
+            GeneralHelper.WriteToConsole(Properties.Resources.DeletingTempIndecies);
             if (System.IO.Directory.Exists(luceneDeltaDirectory))
                 System.IO.Directory.Delete(luceneDeltaDirectory, true);
 
@@ -179,7 +179,7 @@ namespace bg3_modders_multitool.Services
                 File.Create(luceneCacheFile);
             }
 
-            GeneralHelper.WriteToConsole("Updating indexed pak list...");
+            GeneralHelper.WriteToConsole(Properties.Resources.UpdatingIndexPakList);
             using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
             {
                 var fileContents = reader.ReadToEnd();
