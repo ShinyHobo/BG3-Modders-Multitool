@@ -1,8 +1,12 @@
 ﻿namespace bg3_modders_multitool.ViewModels.Utilities
 {
     using Alphaleonis.Win32.Filesystem;
+    using BCnEncoder.Shared;
     using bg3_modders_multitool.Services;
+    using Microsoft.Toolkit.HighPerformance;
     using Ookii.Dialogs.Wpf;
+    using SixLabors.ImageSharp.Advanced;
+    using SixLabors.ImageSharp.PixelFormats;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -10,6 +14,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
+    using static Lucene.Net.Store.Lock;
 
     public class AtlasToolViewModel : BaseViewModel
     {
@@ -474,9 +479,41 @@
                     }
                     imgGfx.Dispose();
                     img.Save(OutputFolderSelectionForSheet, ImageFormat.Png);
-                }
 
-                GeneralHelper.WriteToConsole(Properties.Resources.AtlasConstructed);
+                    System.Threading.Tasks.Task.Run(() => {
+                        using (var image = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(OutputFolderSelectionForSheet))
+                        {
+                            var encoder = new BCnEncoder.Encoder.BcEncoder();
+
+                            encoder.OutputOptions.GenerateMipMaps = true;
+                            encoder.OutputOptions.MaxMipMapLevel = 7;
+                            encoder.OutputOptions.Quality = BCnEncoder.Encoder.CompressionQuality.BestQuality;
+                            encoder.OutputOptions.Format = BCnEncoder.Shared.CompressionFormat.Bc7;
+                            encoder.OutputOptions.FileFormat = BCnEncoder.Shared.OutputFileFormat.Dds;
+                            encoder.Options.IsParallel = true;
+                            encoder.Options.TaskCount = GeneralHelper.ParallelOptions.MaxDegreeOfParallelism;
+
+                            using (System.IO.FileStream fs = System.IO.File.OpenWrite(OutputFolderSelectionForSheet.Replace(".png", ".dds")))
+                            {
+                                var pixels = image.GetPixelMemoryGroup()[0];
+                                var colors = new ColorRgba32[image.Width * image.Height];
+                                for (var y = 0; y < image.Height; y++)
+                                {
+                                    var yPixels = image.Frames.RootFrame.PixelBuffer.DangerousGetRowSpan(y);
+                                    var yColors = colors.AsSpan(y * image.Width, image.Width);
+
+                                    MemoryMarshal.Cast<Rgba32, ColorRgba32>(yPixels).CopyTo(yColors);
+                                }
+                                var memory = new Memory2D<ColorRgba32>(colors.AsMemory().ToArray(), image.Height, image.Width);
+
+                                encoder.EncodeToStream(memory, fs);
+                            }
+                        }
+
+
+                        GeneralHelper.WriteToConsole(Properties.Resources.AtlasConstructed);
+                    });
+                }
             }
             catch (Exception ex)
             {
