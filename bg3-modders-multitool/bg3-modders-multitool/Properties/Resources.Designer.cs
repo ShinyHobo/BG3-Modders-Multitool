@@ -476,6 +476,26 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear Index.
+        /// </summary>
+        public static string ClearIndex {
+            get {
+                return ResourceManager.GetString("ClearIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Careful! This is irreversable!
+        ///
+        ///Clicking &quot;OK&quot; will wipe your current index; this could take some time. Are you sure you wish you continue?.
+        /// </summary>
+        public static string ClearIndexQuestion {
+            get {
+                return ResourceManager.GetString("ClearIndexQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
         ///Dropping a .pak will unpack it into a nearby directory. .
         /// </summary>
@@ -712,6 +732,15 @@ namespace bg3_modders_multitool.Properties {
         public static string DeconstructingAtlas {
             get {
                 return ResourceManager.GetString("DeconstructingAtlas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting temporary indices....
+        /// </summary>
+        public static string DeletingTempIndecies {
+            get {
+                return ResourceManager.GetString("DeletingTempIndecies", resourceCulture);
             }
         }
         
@@ -1534,6 +1563,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Index cleared!.
+        /// </summary>
+        public static string IndexCleared {
+            get {
+                return ResourceManager.GetString("IndexCleared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available index is corrupt. Please rerun the indexer to create a new one..
         /// </summary>
         public static string IndexCorrupt {
@@ -1665,6 +1703,15 @@ namespace bg3_modders_multitool.Properties {
         public static string IndexSearchTitle {
             get {
                 return ResourceManager.GetString("IndexSearchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index up to date!.
+        /// </summary>
+        public static string IndexUpToDate {
+            get {
+                return ResourceManager.GetString("IndexUpToDate", resourceCulture);
             }
         }
         
@@ -1867,6 +1914,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Merging indicies....
+        /// </summary>
+        public static string MergingIndices {
+            get {
+                return ResourceManager.GetString("MergingIndices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Author.
         /// </summary>
         public static string MetaAuthorLabel {
@@ -2044,6 +2100,15 @@ namespace bg3_modders_multitool.Properties {
         public static string NoGameObjectsFound {
             get {
                 return ResourceManager.GetString("NoGameObjectsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No index to remove..
+        /// </summary>
+        public static string NoIndexToRemove {
+            get {
+                return ResourceManager.GetString("NoIndexToRemove", resourceCulture);
             }
         }
         
@@ -2865,6 +2930,15 @@ namespace bg3_modders_multitool.Properties {
         public static string UpdateWarningLabel {
             get {
                 return ResourceManager.GetString("UpdateWarningLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating indexed pak list....
+        /// </summary>
+        public static string UpdatingIndexPakList {
+            get {
+                return ResourceManager.GetString("UpdatingIndexPakList", resourceCulture);
             }
         }
         

@@ -260,6 +260,14 @@
   <data name="CheckingForUpdates" xml:space="preserve">
     <value>Checking for updates...</value>
   </data>
+  <data name="ClearIndex" xml:space="preserve">
+    <value>Clear Index</value>
+  </data>
+  <data name="ClearIndexQuestion" xml:space="preserve">
+    <value>Careful! This is irreversable!
+
+Clicking "OK" will wipe your current index; this could take some time. Are you sure you wish you continue?</value>
+  </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
 Dropping a .pak will unpack it into a nearby directory. </value>
@@ -348,6 +356,9 @@ Do you wish to continue?</value>
   <data name="DeconstructingAtlas" xml:space="preserve">
     <value>Deconstructing atlas sheet to {0}</value>
     <comment>save location</comment>
+  </data>
+  <data name="DeletingTempIndecies" xml:space="preserve">
+    <value>Deleting temporary indices...</value>
   </data>
   <data name="DescriptionHandleLabel" xml:space="preserve">
     <value>DescriptionHandle</value>
@@ -655,6 +666,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="IndexButtonTooltip" xml:space="preserve">
     <value>Click to begin indexing</value>
   </data>
+  <data name="IndexCleared" xml:space="preserve">
+    <value>Index cleared!</value>
+  </data>
   <data name="IndexCorrupt" xml:space="preserve">
     <value>Available index is corrupt. Please rerun the indexer to create a new one.</value>
   </data>
@@ -701,6 +715,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="IndexSearchTitle" xml:space="preserve">
     <value>Index Search</value>
+  </data>
+  <data name="IndexUpToDate" xml:space="preserve">
+    <value>Index up to date!</value>
   </data>
   <data name="InfoGenerated" xml:space="preserve">
     <value>info.json generated.</value>
@@ -771,6 +788,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="MapKeyLabel" xml:space="preserve">
     <value>MapKey</value>
   </data>
+  <data name="MergingIndices" xml:space="preserve">
+    <value>Merging indicies...</value>
+  </data>
   <data name="MetaAuthorLabel" xml:space="preserve">
     <value>Author</value>
   </data>
@@ -835,6 +855,9 @@ Are you sure you want to delete the GameObject cache?</value>
   </data>
   <data name="NoGameObjectsFound" xml:space="preserve">
     <value>No GameObjects found; ensure that you have properly indexed and try again.</value>
+  </data>
+  <data name="NoIndexToRemove" xml:space="preserve">
+    <value>No index to remove.</value>
   </data>
   <data name="NoLinesFound" xml:space="preserve">
     <value>No lines found; search returned filename only.</value>
@@ -1122,6 +1145,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="UpdateWarningLabel" xml:space="preserve">
     <value>Clicking 'Update' will immediately close the application. It will re-open automatically after the update is installed. Make sure to finish what you are doing.</value>
+  </data>
+  <data name="UpdatingIndexPakList" xml:space="preserve">
+    <value>Updating indexed pak list...</value>
   </data>
   <data name="UtilitiesMenuLabel" xml:space="preserve">
     <value>Utilities</value>

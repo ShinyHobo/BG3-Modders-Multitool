@@ -22,7 +22,7 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Index.Extensions;
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
-    using SharpDX.DXGI;
+    using Newtonsoft.Json;
 
     public class IndexHelper
     {
@@ -34,19 +34,22 @@ namespace bg3_modders_multitool.Services
         private static readonly string[] extensionsToExclude = { ".bin",".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".fbx", ".dae", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd", ".jpg",".gts",".data",".patch",".psd" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga", ".jpg" };
         public static readonly string[] BinaryExtensions = { ".lsf", ".bin", ".loca", ".data", ".patch" };
-        private static readonly string luceneIndex = "lucene/index";
+        private static readonly string luceneRoot = "lucene";
+        private static readonly string luceneIndex = $"{luceneRoot}/index";
+        private static readonly string luceneDeltaDirectory = $"{luceneRoot}/paks";
+        private static readonly string luceneCacheFile = $"{luceneRoot}\\cache.json";
         public SearchResults DataContext;
         public string SearchText;
-        private readonly FSDirectory fSDirectory;
+        private readonly FSDirectory mainFSDirectory;
 
         public IndexHelper()
         {
-            fSDirectory = FSDirectory.Open(luceneIndex);
+            mainFSDirectory = FSDirectory.Open(luceneIndex);
         }
 
         public void Clear()
         {
-            fSDirectory.Dispose();
+            mainFSDirectory.Dispose();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -64,10 +67,25 @@ namespace bg3_modders_multitool.Services
                     DataContext.AllowIndexing = false;
                 });
 
+                if (System.IO.Directory.Exists(luceneIndex) && !File.Exists(luceneCacheFile))
+                    System.IO.Directory.Delete(luceneIndex, true);
+
+                if (System.IO.Directory.Exists(luceneDeltaDirectory))
+                    System.IO.Directory.Delete(luceneDeltaDirectory, true);
+
                 var helpers = new List<PakReaderHelper>();
                 var fileCount = 0;
                 var paks = PakReaderHelper.GetPakList();
-                foreach ( var pak in paks )
+
+                var cachedJson = new List<string>();
+                if(File.Exists(luceneCacheFile))
+                using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
+                {
+                    var fileContents = reader.ReadToEnd();
+                    cachedJson = JsonConvert.DeserializeObject<List<string>>(fileContents);
+                }
+
+                foreach (var pak in paks.Where(p => !cachedJson.Contains(Path.GetFileNameWithoutExtension(p))))
                 {
                     var helper = new PakReaderHelper(pak);
                     if (helper.PackagedFiles != null)
@@ -75,6 +93,15 @@ namespace bg3_modders_multitool.Services
                         helpers.Add(helper);
                         fileCount += helper.PackagedFiles.Count;
                     }
+                }
+                
+                if(helpers.Count == 0)
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.IndexUpToDate);
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.AllowIndexing = true;
+                    });
+                    return;
                 }
 
                 // Display total file count being indexed
@@ -87,8 +114,6 @@ namespace bg3_modders_multitool.Services
                     DataContext.IndexFileCount = 0;
                 });
 
-                if (System.IO.Directory.Exists(luceneIndex))
-                    System.IO.Directory.Delete(luceneIndex, true);
                 IndexFilesDirectly(helpers);
             });
         }
@@ -100,14 +125,17 @@ namespace bg3_modders_multitool.Services
         private void IndexFilesDirectly(List<PakReaderHelper> helpers)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
-            using (Analyzer a = new CustomAnalyzer())
+            var cachedPaks = new ConcurrentBag<string>();
+            Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 4 }, helper =>
             {
-                IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                config.SetUseCompoundFile(false);
-                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                using (Analyzer a = new CustomAnalyzer())
                 {
-                    Parallel.ForEach(helpers, GeneralHelper.ParallelOptions, helper => {
-                        Parallel.ForEach(helper.PackagedFiles, GeneralHelper.ParallelOptions, file => {
+                    IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                    using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
+                    using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                    {
+                        Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
+                        {
                             try
                             {
                                 IndexLuceneFileDirectly(file.Name, helper, writer);
@@ -117,11 +145,64 @@ namespace bg3_modders_multitool.Services
                                 GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
                             }
                         });
-                    });
-                    GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
-                    writer.Commit();
+                        writer.Commit();
+                        cachedPaks.Add(helper.PakName);
+                    }
+                }
+            });
+
+            GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
+
+            // Merge indexes
+            using (Analyzer a = new CustomAnalyzer())
+            using (IndexWriter writer = new IndexWriter(mainFSDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, a)))
+            {
+                var indexes = new List<IndexReader>();
+                foreach(var pak in cachedPaks)
+                {
+                    var indexDir = Path.Combine(Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory(), luceneDeltaDirectory, pak);
+                    if(Alphaleonis.Win32.Filesystem.Directory.Exists(indexDir))
+                    {
+                        indexes.Add(DirectoryReader.Open(FSDirectory.Open(indexDir)));
+                    }
+                }
+                writer.AddIndexes(indexes.ToArray());
+                foreach (IndexReader index in indexes)
+                {
+                    index.Dispose();
                 }
             }
+
+            GeneralHelper.WriteToConsole(Properties.Resources.DeletingTempIndecies);
+            if (System.IO.Directory.Exists(luceneDeltaDirectory))
+                System.IO.Directory.Delete(luceneDeltaDirectory, true);
+
+            var cacheInfo = new FileInfo(luceneCacheFile);
+            if (!cacheInfo.Exists)
+            {
+                File.Create(luceneCacheFile).Dispose();
+            }
+
+            GeneralHelper.WriteToConsole(Properties.Resources.UpdatingIndexPakList);
+            using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
+            {
+                var fileContents = reader.ReadToEnd();
+                var cachedJson = JsonConvert.DeserializeObject<List<string>>(fileContents);
+                if (cachedJson == null)
+                {
+                    cachedJson = cachedPaks.OrderBy(x => x).ToList();
+                }
+                else
+                {
+                    cachedJson.AddRange(cachedPaks);
+                    cachedJson = cachedJson.OrderBy(x => x).Distinct().ToList();
+                }
+                reader.Close();
+
+                var contentsToWriteToFile = JsonConvert.SerializeObject(cachedJson, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                File.WriteAllText(luceneCacheFile, contentsToWriteToFile);
+            }
+
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
             Application.Current.Dispatcher.Invoke(() => {
                 DataContext.IsIndexing = false;
@@ -140,14 +221,14 @@ namespace bg3_modders_multitool.Services
             var path = $"{helper.PakName}\\{file}";
             try
             {
-                var fileName = Path.GetFileName(file);
+                //var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
 
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
                     new TextField("path", path.Replace("/","\\"), Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES)
+                    //new TextField("title", fileName, Field.Store.YES)
                 };
 
                 // if file type is excluded, only track file name and path so it can be searched for by name
@@ -163,8 +244,10 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            lock (DataContext)
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 DataContext.IndexFileCount++;
+            });
         }
         #endregion
 
@@ -213,7 +296,7 @@ namespace bg3_modders_multitool.Services
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
                 config.SetUseCompoundFile(false);
-                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                using (IndexWriter writer = new IndexWriter(mainFSDirectory, config))
                 {
                     Parallel.ForEach(files, GeneralHelper.ParallelOptions, file => {
                         try
@@ -245,14 +328,14 @@ namespace bg3_modders_multitool.Services
             var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
             try
             {
-                var fileName = Path.GetFileName(file);
+                //var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
 
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
                     new TextField("path", path, Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES)
+                    //new TextField("title", fileName, Field.Store.YES)
                 };
 
                 // if file type is excluded, only track file name and path so it can be searched for by name
@@ -268,8 +351,10 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            lock(DataContext)
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 DataContext.IndexFileCount++;
+            });
         }
         #endregion
 
@@ -302,7 +387,7 @@ namespace bg3_modders_multitool.Services
             return Task.Run(() => { 
                 var matches = new List<string>();
                 var filteredMatches = new List<string>();
-                if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
+                if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(mainFSDirectory))
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFound);
                     return (Matches: matches, FilteredMatches: filteredMatches);
@@ -310,7 +395,7 @@ namespace bg3_modders_multitool.Services
 
                 try
                 {
-                    using (IndexReader reader = DirectoryReader.Open(fSDirectory))
+                    using (IndexReader reader = DirectoryReader.Open(mainFSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         BooleanQuery query = new BooleanQuery();
@@ -534,6 +619,22 @@ namespace bg3_modders_multitool.Services
                 }
             });
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        /// <summary>
+        /// Deletes the index
+        /// </summary>
+        public void DeleteIndex()
+        {
+            if (System.IO.Directory.Exists(luceneRoot))
+            {
+                System.IO.Directory.Delete(luceneRoot, true);
+                GeneralHelper.WriteToConsole(Properties.Resources.IndexCleared);
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.NoIndexToRemove);
+            }
         }
     }
 

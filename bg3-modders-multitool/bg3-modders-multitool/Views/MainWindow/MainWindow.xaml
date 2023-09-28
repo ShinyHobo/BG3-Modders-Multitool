@@ -25,7 +25,9 @@
                                 ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
                             <MenuItem x:Name="indexUnpackedDataFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
                                 ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" />
-                            </MenuItem>
+                            <MenuItem x:Name="deleteIndex" Header="{x:Static p:Resources.ClearIndex}" Click="deleteIndex_Click"
+                                IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="❌" />
+                        </MenuItem>
                         <MenuItem Header="{x:Static p:Resources.GOEButton}" Icon="📚">
                             <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
                                 ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>

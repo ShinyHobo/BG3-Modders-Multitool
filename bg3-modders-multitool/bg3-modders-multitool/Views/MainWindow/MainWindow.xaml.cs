@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
+    using SharpDX.Direct3D9;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -174,21 +175,49 @@ namespace bg3_modders_multitool.Views
         private Task IndexFiles(bool directIndex)
         {
             return Task.Run(() => {
+                if(directIndex)
+                {
+                    Application.Current.Dispatcher.Invoke(async () =>
+                    {
+                        await MainWindowVM.SearchResults.IndexHelper.IndexDirectly();
+                    }).Wait();
+                }
+                else
+                {
+                    var result = System.Windows.Forms.DialogResult.OK;
+                    if (IndexHelper.IndexDirectoryExists())
+                    {
+                        result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
+                    }
+
+                    if (result.Equals(System.Windows.Forms.DialogResult.OK))
+                    {
+                        Application.Current.Dispatcher.Invoke(async () =>
+                        {
+                            await MainWindowVM.SearchResults.IndexHelper.Index();
+                        }).Wait();
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Delete the index
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void deleteIndex_Click(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() => {
                 var result = System.Windows.Forms.DialogResult.OK;
                 if (IndexHelper.IndexDirectoryExists())
                 {
-                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
+                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ClearIndexQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
                 }
 
                 if (result.Equals(System.Windows.Forms.DialogResult.OK))
                 {
-                    Application.Current.Dispatcher.Invoke(async () =>
-                    {
-                        if (directIndex)
-                            await MainWindowVM.SearchResults.IndexHelper.IndexDirectly();
-                        else
-                            await MainWindowVM.SearchResults.IndexHelper.Index();
-                    }).Wait();
+                    MainWindowVM.SearchResults.IndexHelper.DeleteIndex();
                 }
             });
         }
