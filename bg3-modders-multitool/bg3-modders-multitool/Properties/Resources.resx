@@ -133,6 +133,9 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Baldur's Gate 3 Modder's Multitool</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
   <data name="AtlasConstructed" xml:space="preserve">
     <value>Constructed atlas sheet.</value>
   </data>
@@ -266,7 +269,7 @@
   <data name="ClearIndexQuestion" xml:space="preserve">
     <value>Careful! This is irreversable!
 
-Clicking "OK" will wipe your current index; this could take some time. Are you sure you wish you continue?</value>
+Clicking "OK" will wipe your current index and require a re-index. Are you sure you wish you continue?</value>
   </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 

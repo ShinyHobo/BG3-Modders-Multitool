@@ -106,6 +106,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure?.
+        /// </summary>
+        public static string AreYouSure {
+            get {
+                return ResourceManager.GetString("AreYouSure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Constructed atlas sheet..
         /// </summary>
         public static string AtlasConstructed {
@@ -487,7 +496,7 @@ namespace bg3_modders_multitool.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Careful! This is irreversable!
         ///
-        ///Clicking &quot;OK&quot; will wipe your current index; this could take some time. Are you sure you wish you continue?.
+        ///Clicking &quot;OK&quot; will wipe your current index and require a re-index. Are you sure you wish you continue?.
         /// </summary>
         public static string ClearIndexQuestion {
             get {

@@ -212,7 +212,7 @@ namespace bg3_modders_multitool.Views
                 var result = System.Windows.Forms.DialogResult.OK;
                 if (IndexHelper.IndexDirectoryExists())
                 {
-                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ClearIndexQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
+                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ClearIndexQuestion, Properties.Resources.AreYouSure, System.Windows.Forms.MessageBoxButtons.OKCancel);
                 }
 
                 if (result.Equals(System.Windows.Forms.DialogResult.OK))
