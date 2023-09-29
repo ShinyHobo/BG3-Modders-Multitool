@@ -22,13 +22,17 @@ The Modder's Multitool is the Swiss Army Knife of Modding utilities for Baldur's
 - Unpacked and packed file indexers
 - Incremental indexing
 - Index search functionality
-- Individual file extraction
-- File previews  
+- Individual and mass file extraction
+- File previews
+  - DDS
+  - GTP
+  - GR2
+  - Text
 - Open (and automatically convert) files from index searcher  
 - UUID and TranslatedString handle generator  
 - Launch game saves directly
 - GameObject Explorer (stats, attributes, icon, model, and model files)  
-- Mass LSX converter  
+- Mass LSX converter
 - Colada model conversion  
 - Subfolder support
 - File linting
