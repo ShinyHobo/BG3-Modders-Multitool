@@ -971,6 +971,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to extract {0}.
+        /// </summary>
+        public static string FailedToExtractFile {
+            get {
+                return ResourceManager.GetString("FailedToExtractFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to fetch updates (status {0}).
         /// </summary>
         public static string FailedToFetchUpdates {

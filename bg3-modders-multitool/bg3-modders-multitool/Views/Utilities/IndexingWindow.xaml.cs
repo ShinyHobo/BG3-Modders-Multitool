@@ -382,16 +382,24 @@ namespace bg3_modders_multitool.Views
                     GeneralHelper.WriteToConsole(Properties.Resources.FileExtractionStarted, filesToExtract.Count());
                     var helpers = PakReaderHelper.GetPakHelpers();
                     Parallel.ForEach(filesToExtract, GeneralHelper.ParallelOptions, (file, status) => {
-                        if(!SearchResults.Extracting)
+                        if (!SearchResults.Extracting)
                             status.Stop();
-                        if(FileHelper.IsGTP(file.Path))
+
+                        try
                         {
-                            TextureHelper.ExtractGTPContents(file.Path, true);
+                            if (FileHelper.IsGTP(file.Path))
+                            {
+                                TextureHelper.ExtractGTPContents(file.Path, true);
+                            }
+                            else
+                            {
+                                var helper = helpers.First(h => h.PakName == file.Path.Split('\\')[0]);
+                                helper.DecompressPakFile(PakReaderHelper.GetPakPath(file.Path));
+                            }
                         }
-                        else
+                        catch
                         {
-                            var helper = helpers.First(h => h.PakName == file.Path.Split('\\')[0]);
-                            helper.DecompressPakFile(PakReaderHelper.GetPakPath(file.Path));
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToExtractFile, file.Path);
                         }
 
                         file.Selected = false;

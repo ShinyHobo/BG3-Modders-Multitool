@@ -446,6 +446,10 @@ Do you wish to continue?</value>
   <data name="FailedToEnableSplashScreen" xml:space="preserve">
     <value>Failed to enable splash screen...</value>
   </data>
+  <data name="FailedToExtractFile" xml:space="preserve">
+    <value>Failed to extract {0}</value>
+    <comment>file path</comment>
+  </data>
   <data name="FailedToFetchUpdates" xml:space="preserve">
     <value>Failed to fetch updates (status {0})</value>
     <comment>status code int</comment>
