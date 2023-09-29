@@ -492,11 +492,14 @@ namespace bg3_modders_multitool.Services
                             foreach(var file in files)
                             {
                                 var newFile = Path.Combine(path, file.Name);
-                                if (File.Exists(newFile))
+                                if(newFile != file.FullName)
                                 {
-                                    GeneralHelper.WriteToConsole(Properties.Resources.DuplicateFileFoundReplacing, file.Name);
+                                    if (File.Exists(newFile))
+                                    {
+                                        GeneralHelper.WriteToConsole(Properties.Resources.DuplicateFileFoundReplacing, file.Name);
+                                    }
+                                    File.Move(file.FullName, newFile, MoveOptions.ReplaceExisting);
                                 }
-                                File.Move(file.FullName, newFile, MoveOptions.ReplaceExisting);
                             }
 
                             foreach (var delDir in dirInfo.GetDirectories())
