@@ -145,6 +145,11 @@
             </Grid>
             <Grid Grid.Row="1">
                 <ScrollViewer x:Name="ConsoleScroller" MinHeight="150" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged" Margin="5">
+                    <ScrollViewer.Resources>
+                        <Style TargetType="{x:Type ScrollViewer}">
+                            <Setter Property="Background" Value="Black" />
+                        </Style>
+                    </ScrollViewer.Resources>
                     <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,-12" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
                             IsReadOnly="True" Background="Black" Foreground="White"/>
                 </ScrollViewer>

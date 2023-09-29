@@ -8,7 +8,7 @@
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         ResizeMode="CanMinimize"
         Style="{StaticResource CustomWindowStyle}"
-        Title="{x:Static p:Resources.ColorPickerMenu}" Height="190" Width="281">
+        Title="{x:Static p:Resources.ColorPickerMenu}" Height="190" Width="261">
     <Grid>
         <StackPanel HorizontalAlignment="Left" Margin="5">
             <StackPanel>
@@ -19,8 +19,14 @@
             </StackPanel>
             <TextBlock Text="{x:Static p:Resources.ClickToSelectColorLabel}"/>
             <xctk:ColorPicker x:Name="colorPicker" SelectedColorChanged="colorPicker_SelectedColorChanged" AvailableColorsSortingMode="HueSaturationBrightness" Width="254"
-                  Cursor="Hand" ShowDropDownButton="False" AdvancedTabHeader="{x:Static p:Resources.AdvancedLabel}" IsOpen="True" TabBackground="{DynamicResource TabItem.Static.Background}"
-                  StandardColorsHeader="{x:Static p:Resources.StandardLabel}" AvailableColorsHeader="{x:Static p:Resources.AvailableColorsLabel}"/>
+                  Cursor="Hand" ShowDropDownButton="False" AdvancedTabHeader="{x:Static p:Resources.AdvancedLabel}" TabBackground="{DynamicResource TabItem.Static.Background}"
+                  StandardColorsHeader="{x:Static p:Resources.StandardLabel}" AvailableColorsHeader="{x:Static p:Resources.AvailableColorsLabel}"  IsOpen="True">
+                <xctk:ColorPicker.Resources>
+                    <Style TargetType="{x:Type ScrollViewer}">
+                        <Setter Property="Background" Value="{DynamicResource ScrollBarButton.Static.Background}" />
+                    </Style>
+                </xctk:ColorPicker.Resources>
+            </xctk:ColorPicker>
         </StackPanel>
     </Grid>
 </Window>
