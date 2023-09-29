@@ -2140,7 +2140,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Mods folder found. Please add one and try again..
+        ///   Looks up a localized string similar to No Mods folder found; unable to find workspace root! Please add one and try again..
         /// </summary>
         public static string NoModsFolderFound {
             get {
