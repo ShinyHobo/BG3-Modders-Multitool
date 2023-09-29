@@ -23,7 +23,7 @@ The Modder's Multitool is the Swiss Army Knife of Modding utilities for Baldur's
 - Incremental indexing
 - Index search functionality
 - Individual and mass file extraction
-- File previews
+- File previews and text highlights
   - DDS
   - GTP
   - GR2
