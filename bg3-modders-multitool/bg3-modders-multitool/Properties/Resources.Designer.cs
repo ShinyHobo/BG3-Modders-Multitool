@@ -826,6 +826,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate file [{0}] found; replacing....
+        /// </summary>
+        public static string DuplicateFileFoundReplacing {
+            get {
+                return ResourceManager.GetString("DuplicateFileFoundReplacing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enabling splash screen....
         /// </summary>
         public static string EnablingSplashScreen {

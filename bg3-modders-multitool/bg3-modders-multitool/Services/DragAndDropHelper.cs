@@ -43,7 +43,8 @@ namespace bg3_modders_multitool.Services
                     if (Path.GetFileName(file).Equals("meta.lsx"))
                     {
                         metaList.Add(file);
-                        GeneralHelper.WriteToConsole(Properties.Resources.MetaLsxFound, mod);
+                        var modRoot = new FileInfo(file).Directory.Parent.Parent.Parent.FullName;
+                        GeneralHelper.WriteToConsole(Properties.Resources.MetaLsxFound, mod.Replace(modRoot + "\\", string.Empty));
                     }
                 }
             }
@@ -115,7 +116,7 @@ namespace bg3_modders_multitool.Services
                 {
                     var metadata = ReadMeta(meta, created, modGroup);
                     mods.Add(metadata);
-                    GeneralHelper.WriteToConsole(Properties.Resources.MetadataCreated, metadata);
+                    GeneralHelper.WriteToConsole(Properties.Resources.MetadataCreated, metadata.Name);
                 }
                 info.Mods.AddRange(mods);
             }
@@ -244,7 +245,7 @@ namespace bg3_modders_multitool.Services
                                     var metaList = new Dictionary<string, List<string>>();
                                     var dirInfo = new DirectoryInfo(fullPath);
                                     var dirName = dirInfo.Name;
-                                    GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName, dirName);
+                                    //GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName, dirName);
                                     var metaFiles = dirInfo.GetFiles("meta.lsx", System.IO.SearchOption.AllDirectories);
                                     var modsFolders = dirInfo.GetDirectories("Mods", System.IO.SearchOption.AllDirectories);
 
@@ -487,11 +488,15 @@ namespace bg3_modders_multitool.Services
                         var dirInfo = new DirectoryInfo(path);
                         if (dirInfo.Exists)
                         {
-                            var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
+                            var files = dirInfo.GetFiles("*", System.IO.SearchOption.AllDirectories);
                             foreach(var file in files)
                             {
-                                // TODO - alert if matching file name is found
-                                File.Move(file.FullName, Path.Combine(path, file.Name), MoveOptions.ReplaceExisting);
+                                var newFile = Path.Combine(path, file.Name);
+                                if (File.Exists(newFile))
+                                {
+                                    GeneralHelper.WriteToConsole(Properties.Resources.DuplicateFileFoundReplacing, file.Name);
+                                }
+                                File.Move(file.FullName, newFile, MoveOptions.ReplaceExisting);
                             }
 
                             foreach (var delDir in dirInfo.GetDirectories())
@@ -660,7 +665,7 @@ namespace bg3_modders_multitool.Services
 
             // Pack mod
             var destination =  $"{TempFolder}\\{dirName}.pak";
-            GeneralHelper.WriteToConsole(Resources.Destination, destination);
+            //GeneralHelper.WriteToConsole(Resources.Destination, destination);
             GeneralHelper.WriteToConsole(Resources.AttemptingToPack);
             var build = BuildPack(path);
             if(build.ModBuild != null)
