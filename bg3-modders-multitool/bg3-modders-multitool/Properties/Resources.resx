@@ -420,7 +420,7 @@ Do you wish to continue?</value>
     <comment>for files without an extension</comment>
   </data>
   <data name="ExternalLSLibFound" xml:space="preserve">
-    <value>External LSLib.dll found! Please change your installation location.</value>
+    <value>External LSLib.dll found! Please change your Multitool installation directory to avoid conflicts.</value>
   </data>
   <data name="ExtractFileTooltip" xml:space="preserve">
     <value>Extract file</value>

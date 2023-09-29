@@ -187,7 +187,13 @@
             var updateExe = Path.Combine(updatePath, exeName);
             var currentExe = Path.Combine(Directory.GetCurrentDirectory(), exeName);
             var process = new Process();
-            process.StartInfo = new ProcessStartInfo("cmd.exe", $"/c echo {Properties.Resources.ClosingAppForUpdate} & timeout /T 5 /nobreak & replace /R \"{updateExe}\" \"{Directory.GetCurrentDirectory()}\" & rmdir \"{updatePath}\" /s /q & del \"{DragAndDropHelper.TempFolder}\\update.zip\" & start \"\" \"{currentExe}\"");
+            process.StartInfo = new ProcessStartInfo("cmd.exe",
+                $"/c echo {Properties.Resources.ClosingAppForUpdate} " +
+                $"& C:\\Windows\\System32\\ping.exe -4 -n 5 \"\">nul " +
+                $"& copy /b/v/y \"{updateExe}\" \"{Directory.GetCurrentDirectory()}\" " +
+                $"& rmdir \"{updatePath}\" /s /q " +
+                $"& del \"{DragAndDropHelper.TempFolder}\\update.zip\" " +
+                $"& start \"\" \"{currentExe}\"");
             process.Start();
         }
     }

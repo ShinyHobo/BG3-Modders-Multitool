@@ -899,7 +899,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to External LSLib.dll found! Please change your installation location..
+        ///   Looks up a localized string similar to External LSLib.dll found! Please change your Multitool installation directory to avoid conflicts..
         /// </summary>
         public static string ExternalLSLibFound {
             get {
