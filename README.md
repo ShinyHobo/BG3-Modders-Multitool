@@ -14,11 +14,13 @@
 The Modder's Multitool is the Swiss Army Knife of Modding utilities for Baldur's Gate 3. Aiming at making modder's live seasier, the Multitool implements a variety of automated tools to simplify the modding process: From unpacking and searching game files all the way to simplifying the packaging process and enabling more organized workspaces, if you're a modder, you need the Multitool.
 
 ### Features
-- Automatically paks, zips, and generates metadata  
+- Automatically paks, zips, and generates metadata
+- Mod pak unpacking to workspace, with automatic file conversions
 - Automatically converts files named like example.lsf.lsx and example.lsb.lsx to example.lsf and example.lsb, respectively. This means you no longer have to manually convert files and then copy them into their respective directories.  
 - Supports dependencies and multipaks (multiple mods in the same workspace, and multiple workspaces)  
 - Utility for extracting some/all game assets at once. It can take more than an hour for the complete set, but will place all the extracted files in a folder in the same directory as the application  
 - Unpacked and packed file indexers
+- Incremental indexing
 - Index search functionality
 - Individual file extraction
 - File previews  
