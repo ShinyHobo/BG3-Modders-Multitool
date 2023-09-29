@@ -389,6 +389,10 @@ Do you wish to continue?</value>
   <data name="DropModMessage" xml:space="preserve">
     <value>Drop mod workspace folder or a mod .pak here</value>
   </data>
+  <data name="DuplicateFileFoundReplacing" xml:space="preserve">
+    <value>Duplicate file [{0}] found; replacing...</value>
+    <comment>file name</comment>
+  </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>
   </data>
