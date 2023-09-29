@@ -24,13 +24,15 @@ The Modder's Multitool is the Swiss Army Knife of Modding utilities for Baldur's
 - File previews  
 - Open (and automatically convert) files from index searcher  
 - UUID and TranslatedString handle generator  
-- Launch game directly  
+- Launch game saves directly
 - GameObject Explorer (stats, attributes, icon, model, and model files)  
 - Mass LSX converter  
 - Colada model conversion  
-- .wem => .ogg file conversion and playback
 - Subfolder support
 - File linting
+- Color picker
+- Atlas texture splicer and creator
+- Modding resource links
 
 # How do I use these tools?
 Excited to work with the Multitool's help, but unsure how to use it? [See the Wiki](https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki) for more information about the Project and how to use specific features of the Multitool, or look below for the ideal steps to learn the Multitool.
