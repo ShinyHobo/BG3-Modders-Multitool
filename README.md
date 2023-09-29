@@ -18,8 +18,9 @@ The Modder's Multitool is the Swiss Army Knife of Modding utilities for Baldur's
 - Automatically converts files named like example.lsf.lsx and example.lsb.lsx to example.lsf and example.lsb, respectively. This means you no longer have to manually convert files and then copy them into their respective directories.  
 - Supports dependencies and multipaks (multiple mods in the same workspace, and multiple workspaces)  
 - Utility for extracting some/all game assets at once. It can take more than an hour for the complete set, but will place all the extracted files in a folder in the same directory as the application  
-- Unpacked file indexer 
-- Index search functionality  
+- Unpacked and packed file indexers
+- Index search functionality
+- Individual file extraction
 - File previews  
 - Open (and automatically convert) files from index searcher  
 - UUID and TranslatedString handle generator  
