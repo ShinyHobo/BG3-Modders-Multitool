@@ -333,6 +333,8 @@ namespace bg3_modders_multitool.Services
             if(!LintLsxFiles(modDir))
                 return (null, null);
 
+            ConsolidateSubfolders(modDir);
+
             ProcessLsxMerges(modDir);
 
             ProcessStatsGeneratedDataSubfiles(modDir);
@@ -468,10 +470,44 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Moves subfolder files up to the main level
+        /// </summary>
+        /// <param name="directory">The mod workspace directory</param>
+        private static void ConsolidateSubfolders(string directory)
+        {
+            var modNameDirs = new DirectoryInfo(Path.Combine(directory, "Public"));
+            if (modNameDirs.Exists)
+            {
+                var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
+                foreach (var modName in paths)
+                {
+                    foreach (var dir in new string[] { "MultiEffectInfos" })
+                    {
+                        var path = Path.Combine(directory, "Public", modName.Name, dir);
+                        var dirInfo = new DirectoryInfo(path);
+                        if (dirInfo.Exists)
+                        {
+                            var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
+                            foreach(var file in files)
+                            {
+                                // TODO - alert if matching file name is found
+                                File.Move(file.FullName, Path.Combine(path, file.Name), MoveOptions.ReplaceExisting);
+                            }
+
+                            foreach (var delDir in dirInfo.GetDirectories())
+                            {
+                                delDir.Delete(true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Concatenates .lsx files prior to conversion to .lsf
         /// </summary>
         /// <param name="directory">The mod workspace directory</param>
-        /// <param name="modName">The mod name to point the search at</param>
         private static void ProcessLsxMerges(string directory)
         {
             var modNameDirs = new DirectoryInfo(Path.Combine(directory, "Public"));
