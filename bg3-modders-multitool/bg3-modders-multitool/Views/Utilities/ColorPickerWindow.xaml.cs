@@ -1,6 +1,9 @@
 ﻿namespace bg3_modders_multitool.Views.Utilities
 {
     using bg3_modders_multitool.Services;
+    using J2N;
+    using System;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Media;
 
@@ -38,6 +41,26 @@
         {
             System.Windows.Forms.Clipboard.SetDataObject(sRGB.Content, false, 10, 10);
             GeneralHelper.WriteToConsole(Properties.Resources.CopiedToClipboard, sRGB.Content);
+        }
+
+        /// <summary>
+        /// Previews sRGB value that is copied into the text field
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sRGBpreview_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            var bc = new BrushConverter();
+            try
+            {
+                var sRGB = sRGBpreview.Text.Split(' ').Select(p => float.Parse(p)).ToArray();
+                var color = Color.FromScRgb(1, sRGB[0], sRGB[1], sRGB[2]);
+                previewColor.Background = new SolidColorBrush(color);
+            }
+            catch
+            {
+                previewColor.Background = (Brush)bc.ConvertFrom("#FFFFFFFF");
+            }
         }
     }
 }

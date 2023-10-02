@@ -8,7 +8,7 @@
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         ResizeMode="CanMinimize"
         Style="{StaticResource CustomWindowStyle}"
-        Title="{x:Static p:Resources.ColorPickerMenu}" Height="190" Width="261">
+        Title="{x:Static p:Resources.ColorPickerMenu}" Height="240" Width="261">
     <Grid>
         <StackPanel HorizontalAlignment="Left" Margin="5">
             <StackPanel>
@@ -18,15 +18,22 @@
                 <Button x:Name="sRGB" Padding="5" Height="30" Cursor="Hand" Margin="0,5" Width="254" ToolTip="{x:Static p:Resources.sARGBTooltip}" Click="sARGB_Click"/>
             </StackPanel>
             <TextBlock Text="{x:Static p:Resources.ClickToSelectColorLabel}"/>
-            <xctk:ColorPicker x:Name="colorPicker" SelectedColorChanged="colorPicker_SelectedColorChanged" AvailableColorsSortingMode="HueSaturationBrightness" Width="254"
+            <xctk:ColorPicker x:Name="colorPicker" SelectedColorChanged="colorPicker_SelectedColorChanged" AvailableColorsSortingMode="HueSaturationBrightness" Width="247"
                   Cursor="Hand" ShowDropDownButton="False" AdvancedTabHeader="{x:Static p:Resources.AdvancedLabel}" TabBackground="{DynamicResource TabItem.Static.Background}"
-                  StandardColorsHeader="{x:Static p:Resources.StandardLabel}" AvailableColorsHeader="{x:Static p:Resources.AvailableColorsLabel}"  IsOpen="True">
+                  StandardColorsHeader="{x:Static p:Resources.StandardLabel}" AvailableColorsHeader="{x:Static p:Resources.AvailableColorsLabel}">
                 <xctk:ColorPicker.Resources>
                     <Style TargetType="{x:Type ScrollViewer}">
                         <Setter Property="Background" Value="{DynamicResource ScrollBarButton.Static.Background}" />
                     </Style>
                 </xctk:ColorPicker.Resources>
             </xctk:ColorPicker>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <StackPanel>
+                    <TextBlock Text="{x:Static p:Resources.sARGBPreviewLabel}"/>
+                    <TextBox x:Name="sRGBpreview" Padding="5" Height="30" Margin="0,5" Width="214" ToolTip="{x:Static p:Resources.sRGBPreviewTooltip}" TextChanged="sRGBpreview_TextChanged"/>
+                </StackPanel>
+                <TextBlock Height="30" Width="30" x:Name="previewColor" Background="White" Margin="5,15,0,0"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>
