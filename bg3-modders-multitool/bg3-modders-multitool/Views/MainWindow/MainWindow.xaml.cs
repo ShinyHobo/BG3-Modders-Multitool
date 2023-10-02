@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
+    using LSLib.LS;
     using SharpDX.Direct3D9;
     using System.Globalization;
     using System.IO;
@@ -481,6 +482,17 @@ namespace bg3_modders_multitool.Views
         {
             var colorPickerWIndow = new ColorPickerWindow();
             colorPickerWIndow.Show();
+        }
+
+        /// <summary>
+        /// Opens the version generator window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void versionGenerator_Click(object sender, RoutedEventArgs e)
+        {
+            var versionGenerator = new VersionCalculator();
+            versionGenerator.Show();
         }
         #endregion
 

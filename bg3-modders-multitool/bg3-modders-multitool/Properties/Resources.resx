@@ -325,6 +325,9 @@ missing bg3.exe!</value>
     <value>Copied {0} to clipboard!</value>
     <comment>text</comment>
   </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
   <data name="Copyright" xml:space="preserve">
     <value>Copyright © ShinyHobo 2020-2023
 
@@ -823,6 +826,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="MetaLsxNotFound" xml:space="preserve">
     <value>meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.</value>
   </data>
+  <data name="MetaVersionLabel" xml:space="preserve">
+    <value>Version</value>
+  </data>
   <data name="MissingFileTypes" xml:space="preserve">
     <value>File type(s) [{0}] missing from list; please inform ShinyHobo</value>
     <comment>file extension(s)</comment>
@@ -1175,6 +1181,21 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="ValidBg3Selected" xml:space="preserve">
     <value>BG3 executable set.</value>
+  </data>
+  <data name="VersionBuildLabel" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="VersionGenerator" xml:space="preserve">
+    <value>Version Calculator</value>
+  </data>
+  <data name="VersionMajorLabel" xml:space="preserve">
+    <value>Major</value>
+  </data>
+  <data name="VersionMinorLabel" xml:space="preserve">
+    <value>Minor</value>
+  </data>
+  <data name="VersionRevisionLabel" xml:space="preserve">
+    <value>Revision</value>
   </data>
   <data name="ZipCreated" xml:space="preserve">
     <value>{0}.zip created.</value>

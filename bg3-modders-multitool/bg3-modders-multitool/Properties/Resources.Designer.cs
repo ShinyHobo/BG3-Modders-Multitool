@@ -660,6 +660,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copyright © ShinyHobo 2020-2023
         ///
         ///Baldur&apos;s Gate 3 Modder&apos;s Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd..
@@ -2004,6 +2013,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string MetaVersionLabel {
+            get {
+                return ResourceManager.GetString("MetaVersionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File type(s) [{0}] missing from list; please inform ShinyHobo.
         /// </summary>
         public static string MissingFileTypes {
@@ -3011,6 +3029,51 @@ namespace bg3_modders_multitool.Properties {
         public static string ValidBg3Selected {
             get {
                 return ResourceManager.GetString("ValidBg3Selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build.
+        /// </summary>
+        public static string VersionBuildLabel {
+            get {
+                return ResourceManager.GetString("VersionBuildLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version Calculator.
+        /// </summary>
+        public static string VersionGenerator {
+            get {
+                return ResourceManager.GetString("VersionGenerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Major.
+        /// </summary>
+        public static string VersionMajorLabel {
+            get {
+                return ResourceManager.GetString("VersionMajorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minor.
+        /// </summary>
+        public static string VersionMinorLabel {
+            get {
+                return ResourceManager.GetString("VersionMinorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revision.
+        /// </summary>
+        public static string VersionRevisionLabel {
+            get {
+                return ResourceManager.GetString("VersionRevisionLabel", resourceCulture);
             }
         }
         
