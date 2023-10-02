@@ -1,6 +1,6 @@
 ﻿namespace bg3_modders_multitool.Views.Utilities
 {
-    using bg3_modders_multitool.ViewModels.Utilities;
+    using bg3_modders_multitool.Services;
     using LSLib.LS;
     using System.Windows;
 
@@ -37,7 +37,7 @@
                 };
 
                 PackedVersion = packedVersion;
-                int64Version.Text = PackedVersion.ToVersion64().ToString();
+                int64Version.Value = (ulong?)PackedVersion.ToVersion64();
             }
         }
 
@@ -52,6 +52,20 @@
                 build.Value = (int?)PackedVersion.Build;
                 revision.Value = (int?)PackedVersion.Revision;
             }
+        }
+
+        private void CopyPatch_Click(object sender, RoutedEventArgs e)
+        {
+            var version = $"{PackedVersion.Major}.{PackedVersion.Minor}.{PackedVersion.Build}.{PackedVersion.Revision}";
+            System.Windows.Forms.Clipboard.SetDataObject(version, false, 10, 10);
+            GeneralHelper.WriteToConsole(Properties.Resources.CopiedToClipboard, version);
+        }
+
+        private void CopyInt64_Click(object sender, RoutedEventArgs e)
+        {
+            var version = PackedVersion.ToVersion64().ToString();
+            System.Windows.Forms.Clipboard.SetDataObject(version, false, 10, 10);
+            GeneralHelper.WriteToConsole(Properties.Resources.CopiedToClipboard, version);
         }
     }
 }

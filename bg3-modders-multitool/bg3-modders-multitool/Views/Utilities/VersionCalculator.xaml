@@ -11,8 +11,8 @@
         Title="{x:Static p:Resources.VersionGenerator}" Height="125" Width="237">
     <Grid>
         <StackPanel Margin="5">
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <StackPanel Orientation="Horizontal" Margin="23,0,0,0">
+            <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
                     <StackPanel>
                         <Label Content="{x:Static p:Resources.VersionMajorLabel}"/>
                         <xctk:IntegerUpDown x:Name="major" Width="40" Height="20" Minimum="1" ValueChanged="versionSpinner_ValueChanged"/>
@@ -30,11 +30,13 @@
                         <xctk:IntegerUpDown x:Name="revision" Width="40" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
                     </StackPanel>
                 </StackPanel>
+                <Button Content="{x:Static p:Resources.Copy}" Click="CopyPatch_Click" Height="25" Margin="2,18,0,0" Padding="4" Cursor="Hand"/>
             </StackPanel>
-            <StackPanel Margin="5">
+            <StackPanel Margin="5" Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <xctk:ULongUpDown x:Name="int64Version" Width="215" Height="20" ValueChanged="int64Version_ValueChanged" Minimum="36028797018963968"/>
+                    <xctk:ULongUpDown x:Name="int64Version" Width="165" Height="20" ValueChanged="int64Version_ValueChanged" Minimum="36028797018963968"/>
                 </StackPanel>
+                <Button Content="{x:Static p:Resources.Copy}" Click="CopyInt64_Click" Margin="12,-4,0,0" Padding="4" Cursor="Hand"/>
             </StackPanel>
         </StackPanel>
     </Grid>
