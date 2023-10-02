@@ -2709,6 +2709,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spell Generation Assistant.
+        /// </summary>
+        public static string SpellGenAssistant {
+            get {
+                return ResourceManager.GetString("SpellGenAssistant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tool for helping generate template for custom spells.
+        /// </summary>
+        public static string SpellGenAssistantTooltip {
+            get {
+                return ResourceManager.GetString("SpellGenAssistantTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paste sRGB code to preview the color.
         /// </summary>
         public static string sRGBPreviewTooltip {

@@ -378,6 +378,11 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start("https://katiefrogs.github.io/vgmstream-web/");
         }
+
+        private void SpellGenAssistant_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Shimizoki/BG3-Spell-Generation-Assistant");
+        }
         #endregion
 
         private void CheckForUpdates_Click(object sender, RoutedEventArgs e)

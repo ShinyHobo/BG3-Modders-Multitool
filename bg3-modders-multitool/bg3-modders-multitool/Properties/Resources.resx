@@ -1069,6 +1069,12 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="SpeedIndexSearchTooltip" xml:space="preserve">
     <value>Enable to get significantly faster, but less robust results.</value>
   </data>
+  <data name="SpellGenAssistant" xml:space="preserve">
+    <value>Spell Generation Assistant</value>
+  </data>
+  <data name="SpellGenAssistantTooltip" xml:space="preserve">
+    <value>Tool for helping generate template for custom spells</value>
+  </data>
   <data name="sRGBPreviewTooltip" xml:space="preserve">
     <value>Paste sRGB code to preview the color</value>
   </data>

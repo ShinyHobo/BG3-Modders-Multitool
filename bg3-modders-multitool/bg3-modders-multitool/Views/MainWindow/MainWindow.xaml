@@ -75,6 +75,7 @@
                             <MenuItem Header="{x:Static p:Resources.LSLibMenu}" Click="LSLibLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.LSLibMenuTooltip}"/>
                             <Separator />
                             <MenuItem Header="{x:Static p:Resources.ConvertWemMenu}" Click="ConvertWemLink_Click" Icon="🎵"/>
+                            <MenuItem Header="{x:Static p:Resources.SpellGenAssistant}" ToolTip="{x:Static p:Resources.SpellGenAssistantTooltip}" Click="SpellGenAssistant_Click" Icon="✨"/>
                         </MenuItem>
                         <MenuItem Header="{x:Static p:Resources.AboutMenu}" Icon="ℹ️">
                             <MenuItem Header="{x:Static p:Resources.ChangeLogMenu}" ToolTip="{x:Static p:Resources.ChangeLogMenuTooltip}" Icon="✔️" Click="CheckForUpdateMenu_Click"/>
