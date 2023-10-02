@@ -2565,6 +2565,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to sRGB Preview.
+        /// </summary>
+        public static string sARGBPreviewLabel {
+            get {
+                return ResourceManager.GetString("sARGBPreviewLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click to copy the sRGB value to your clipboard.
         /// </summary>
         public static string sARGBTooltip {
@@ -2696,6 +2705,15 @@ namespace bg3_modders_multitool.Properties {
         public static string SpeedIndexSearchTooltip {
             get {
                 return ResourceManager.GetString("SpeedIndexSearchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste sRGB code to preview the color.
+        /// </summary>
+        public static string sRGBPreviewTooltip {
+            get {
+                return ResourceManager.GetString("sRGBPreviewTooltip", resourceCulture);
             }
         }
         
