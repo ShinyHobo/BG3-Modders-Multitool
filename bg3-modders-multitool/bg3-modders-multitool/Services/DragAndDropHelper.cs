@@ -553,13 +553,16 @@ namespace bg3_modders_multitool.Services
                                 var children = xml.Descendants("children").Single();
                                 foreach (var file in fileGroup)
                                 {
-                                    using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
+                                    if(FileHelper.CanConvertToLsx(Path.GetFileNameWithoutExtension(file.Name)) || !isRootTemplate)
                                     {
-                                        var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
-                                        var contentChildren = contents.Descendants("children").First().Elements().ToList();
-                                        foreach (var child in contentChildren)
+                                        using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
                                         {
-                                            children.Add(child);
+                                            var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
+                                            var contentChildren = contents.Descendants("children").First().Elements().ToList();
+                                            foreach (var child in contentChildren)
+                                            {
+                                                children.Add(child);
+                                            }
                                         }
                                     }
                                     file.Delete();
