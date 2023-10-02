@@ -274,8 +274,15 @@ namespace bg3_modders_multitool.Services
                                         var modsFolder = $"{Properties.Settings.Default.gameDocumentsPath}\\Mods";
                                         if(Directory.Exists(modsFolder))
                                         {
-                                            File.Move($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", MoveOptions.ReplaceExisting);
-                                            GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                            try
+                                            {
+                                                File.Move($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", MoveOptions.ReplaceExisting);
+                                                GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                            }
+                                            catch
+                                            {
+                                                GeneralHelper.WriteToConsole(Properties.Resources.FailedToMovePak, dirName);
+                                            }
                                         }
                                     }
                                     else

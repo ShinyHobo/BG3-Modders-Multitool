@@ -1081,6 +1081,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to move {0} pak to Mods folder. Is the game running?.
+        /// </summary>
+        public static string FailedToMovePak {
+            get {
+                return ResourceManager.GetString("FailedToMovePak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to pack mod: {0}.
         /// </summary>
         public static string FailedToPackMod {

@@ -493,6 +493,10 @@ Do you wish to continue?</value>
     <value>Failed to load StatStructure line '{0}'</value>
     <comment>stat structure line</comment>
   </data>
+  <data name="FailedToMovePak" xml:space="preserve">
+    <value>Failed to move {0} pak to Mods folder. Is the game running?</value>
+    <comment>file name</comment>
+  </data>
   <data name="FailedToPackMod" xml:space="preserve">
     <value>Failed to pack mod: {0}</value>
     <comment>error message</comment>
