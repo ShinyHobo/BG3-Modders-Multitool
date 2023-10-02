@@ -3033,6 +3033,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version Calculator.
+        /// </summary>
+        public static string VersionGenerator {
+            get {
+                return ResourceManager.GetString("VersionGenerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Major.
         /// </summary>
         public static string VersionMajorLabel {

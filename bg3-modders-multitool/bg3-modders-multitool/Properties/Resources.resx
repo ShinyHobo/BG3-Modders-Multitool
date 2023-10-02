@@ -1182,6 +1182,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="VersionBuildLabel" xml:space="preserve">
     <value>Build</value>
   </data>
+  <data name="VersionGenerator" xml:space="preserve">
+    <value>Version Calculator</value>
+  </data>
   <data name="VersionMajorLabel" xml:space="preserve">
     <value>Major</value>
   </data>
