@@ -37,7 +37,7 @@ namespace bg3_modders_multitool.ViewModels.Utilities
         /// </summary>
         /// <param name="author">The author name</param>
         /// <param name="description">The mod description</param>
-        public void GenerateMetaLsx(string author, string description)
+        public void GenerateMetaLsx(string author, string description, LSLib.LS.PackedVersion version)
         {
             if(!string.IsNullOrEmpty(author) && !string.IsNullOrEmpty(description))
             {
@@ -48,6 +48,7 @@ namespace bg3_modders_multitool.ViewModels.Utilities
                 xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "Folder").Single().Attribute("value").Value = ModName;
                 xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "Name").Single().Attribute("value").Value = ModName;
                 xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "UUID").Single().Attribute("value").Value = Guid.NewGuid().ToString();
+                xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "Version").ToList().ForEach(n => { n.Attribute("value").Value = version.ToVersion64().ToString(); });
 
                 MetaPath = $"{ModPath}\\meta.lsx";
                 xml.Save(MetaPath);
