@@ -158,6 +158,8 @@ namespace bg3_modders_multitool.Views
                     TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, true);
 
                     var fileLoc = Path.GetDirectoryName(FileHelper.GetPath(SearchResults.SelectedPath));
+                    if(!Directory.Exists(fileLoc))
+                        PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
                     if (Directory.Exists(fileLoc))
                         System.Diagnostics.Process.Start("explorer.exe", $"{fileLoc}");
                 }
@@ -334,6 +336,9 @@ namespace bg3_modders_multitool.Views
                 if (FileHelper.IsGTP(SearchResults.SelectedPath))
                 {
                     TextureHelper.ExtractGTPContents(SearchResults.SelectedPath, true);
+                    var fileLoc = Path.GetDirectoryName(FileHelper.GetPath(SearchResults.SelectedPath));
+                    if (!Directory.Exists(fileLoc))
+                        PakReaderHelper.OpenPakFile(SearchResults.SelectedPath);
                 }
                 else
                 {

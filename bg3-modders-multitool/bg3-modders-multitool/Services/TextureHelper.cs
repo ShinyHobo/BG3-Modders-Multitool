@@ -152,68 +152,72 @@
             var gtsContents = helper.ReadPakFileContents(gtsFile);
 
             var files = new List<byte[]>();
-            using (System.IO.MemoryStream gtsStream = new System.IO.MemoryStream(gtsContents))
+            if (gtsContents != null)
             {
-                var vts = new LSLib.VirtualTextures.VirtualTileSet(gtsStream);
-                vts.SingleFileContents = gtpContents;
-                var vtsIndex = vts.FindPageFile(gtpFile);
-                var fileInfo = vts.PageFileInfos[vtsIndex];
-                try
+                using (System.IO.MemoryStream gtsStream = new System.IO.MemoryStream(gtsContents))
                 {
-                    for (var layer = 0; layer < vts.TileSetLevels.Length; layer++)
+                    var vts = new LSLib.VirtualTextures.VirtualTileSet(gtsStream);
+                    vts.SingleFileContents = gtpContents;
+                    var vtsIndex = vts.FindPageFile(gtpFile);
+                    var fileInfo = vts.PageFileInfos[vtsIndex];
+                    try
                     {
-                        LSLib.VirtualTextures.BC5Image tex = null;
-                        var level = 0;
-                        try
+                        for (var layer = 0; layer < vts.TileSetLevels.Length; layer++)
                         {
-                            do
+                            LSLib.VirtualTextures.BC5Image tex = null;
+                            var level = 0;
+                            try
                             {
-                                tex = vts.ExtractPageFileTexture(vtsIndex, level, layer);
-                                level++;
-                            } while (tex == null && level < vts.TileSetLevels.Length);
-                        }
-                        catch { }
-                        if (tex != null)
-                        {
-                            LSLib.VirtualTextures.DDSHeader inStruct = default;
-                            inStruct.dwMagic = 542327876u;
-                            inStruct.dwSize = 124u;
-                            inStruct.dwFlags = 4103u;
-                            inStruct.dwWidth = (uint)tex.Width;
-                            inStruct.dwHeight = (uint)tex.Height;
-                            inStruct.dwPitchOrLinearSize = (uint)(tex.Width * tex.Height);
-                            inStruct.dwDepth = 1u;
-                            inStruct.dwMipMapCount = 1u;
-                            inStruct.dwPFSize = 32u;
-                            inStruct.dwPFFlags = 4u;
-                            inStruct.dwFourCC = 894720068u;
-                            inStruct.dwCaps = 4096u;
-                            using (System.IO.MemoryStream output = new System.IO.MemoryStream())
-                            using (System.IO.BinaryWriter binaryWriter = new System.IO.BinaryWriter(output))
-                            {
-                                BinUtils.WriteStruct(binaryWriter, ref inStruct);
-                                binaryWriter.Write(tex.Data, 0, tex.Data.Length);
-                                if(writeToDisk)
+                                do
                                 {
-                                    var saveLoc = FileHelper.GetPath($"{helper.PakName}\\{path}") + $"_{layer}.dds";
-                                    Directory.CreateDirectory(Path.GetDirectoryName(saveLoc));
-                                    using (System.IO.FileStream file = new System.IO.FileStream(saveLoc, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                                    tex = vts.ExtractPageFileTexture(vtsIndex, level, layer);
+                                    level++;
+                                } while (tex == null && level < vts.TileSetLevels.Length);
+                            }
+                            catch { }
+                            if (tex != null)
+                            {
+                                LSLib.VirtualTextures.DDSHeader inStruct = default;
+                                inStruct.dwMagic = 542327876u;
+                                inStruct.dwSize = 124u;
+                                inStruct.dwFlags = 4103u;
+                                inStruct.dwWidth = (uint)tex.Width;
+                                inStruct.dwHeight = (uint)tex.Height;
+                                inStruct.dwPitchOrLinearSize = (uint)(tex.Width * tex.Height);
+                                inStruct.dwDepth = 1u;
+                                inStruct.dwMipMapCount = 1u;
+                                inStruct.dwPFSize = 32u;
+                                inStruct.dwPFFlags = 4u;
+                                inStruct.dwFourCC = 894720068u;
+                                inStruct.dwCaps = 4096u;
+                                using (System.IO.MemoryStream output = new System.IO.MemoryStream())
+                                using (System.IO.BinaryWriter binaryWriter = new System.IO.BinaryWriter(output))
+                                {
+                                    BinUtils.WriteStruct(binaryWriter, ref inStruct);
+                                    binaryWriter.Write(tex.Data, 0, tex.Data.Length);
+                                    if (writeToDisk)
                                     {
-                                        output.WriteTo(file);
+                                        var saveLoc = FileHelper.GetPath($"{helper.PakName}\\{path}") + $"_{layer}.dds";
+                                        Directory.CreateDirectory(Path.GetDirectoryName(saveLoc));
+                                        using (System.IO.FileStream file = new System.IO.FileStream(saveLoc, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                                        {
+                                            output.WriteTo(file);
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    files.Add(output.ToArray());
+                                    else
+                                    {
+                                        files.Add(output.ToArray());
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                catch { }
+                    catch { }
 
-                vts.ReleasePageFiles();
+                    vts.ReleasePageFiles();
+                }
             }
+
             return files;
         }
     }

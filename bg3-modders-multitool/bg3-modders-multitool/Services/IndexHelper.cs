@@ -555,7 +555,7 @@ namespace bg3_modders_multitool.Services
 
                     if (lines.Count == 0)
                     {
-                        if (contents != null)
+                        if (contents != null && contents.Length != 0)
                         {
                             if (imageExtensions.Contains(extension)) // Normal texture
                             {
@@ -572,13 +572,13 @@ namespace bg3_modders_multitool.Services
 
                                 if (lines.Count == 0)
                                 {
-                                    lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{helper.Pak}\\{path}"));
+                                    lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{helper.Pak}\\{helper.Path}"));
                                 }
                             }
                         }
                         else
                         {
-                            lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{helper.Pak}\\{path}"));
+                            lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{helper.Pak}\\{helper.Path}"));
                         }
                     }
                 }
