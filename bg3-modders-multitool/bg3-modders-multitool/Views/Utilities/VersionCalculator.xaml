@@ -8,35 +8,35 @@
         ResizeMode="NoResize"
         mc:Ignorable="d"
         Style="{StaticResource CustomWindowStyle}"
-        Title="{x:Static p:Resources.VersionGenerator}" Height="125" Width="237">
+        Title="{x:Static p:Resources.VersionGenerator}" Height="130" MinWidth="265" SizeToContent="Width">
     <Grid>
         <StackPanel Margin="5">
             <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal">
                     <StackPanel>
                         <Label Content="{x:Static p:Resources.VersionMajorLabel}"/>
-                        <xctk:IntegerUpDown x:Name="major" Width="40" Height="20" Minimum="1" ValueChanged="versionSpinner_ValueChanged"/>
+                        <xctk:IntegerUpDown x:Name="major" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
                     </StackPanel>
                     <StackPanel>
                         <Label Content="{x:Static p:Resources.VersionMinorLabel}"/>
-                        <xctk:IntegerUpDown x:Name="minor" Width="40" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                        <xctk:IntegerUpDown x:Name="minor" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
                     </StackPanel>
                     <StackPanel>
                         <Label Content="{x:Static p:Resources.VersionBuildLabel}"/>
-                        <xctk:IntegerUpDown x:Name="build" Width="40" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                        <xctk:IntegerUpDown x:Name="build" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
                     </StackPanel>
                     <StackPanel>
                         <Label Content="{x:Static p:Resources.VersionRevisionLabel}"/>
-                        <xctk:IntegerUpDown x:Name="revision" Width="40" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                        <xctk:IntegerUpDown x:Name="revision" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
                     </StackPanel>
                 </StackPanel>
                 <Button Content="{x:Static p:Resources.Copy}" Click="CopyPatch_Click" Height="25" Margin="2,18,0,0" Padding="4" Cursor="Hand"/>
             </StackPanel>
-            <StackPanel Margin="5" Orientation="Horizontal">
+            <StackPanel Margin="5,5,0,0" Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <xctk:ULongUpDown x:Name="int64Version" Width="165" Height="20" ValueChanged="int64Version_ValueChanged" Minimum="36028797018963968"/>
+                    <xctk:ULongUpDown x:Name="int64Version" Width="202" Height="20" ValueChanged="int64Version_ValueChanged"/>
                 </StackPanel>
-                <Button Content="{x:Static p:Resources.Copy}" Click="CopyInt64_Click" Margin="12,-4,0,0" Padding="4" Cursor="Hand"/>
+                <Button Content="{x:Static p:Resources.Copy}" Click="CopyInt64_Click" Margin="4,-4,0,0" Padding="4" Cursor="Hand"/>
             </StackPanel>
         </StackPanel>
     </Grid>
