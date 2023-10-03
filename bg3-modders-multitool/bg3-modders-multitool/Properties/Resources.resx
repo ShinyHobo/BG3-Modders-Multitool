@@ -934,6 +934,9 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>{0} pak moved to Mods folder!</value>
     <comment>pak name</comment>
   </data>
+  <data name="PakPackingCancelled" xml:space="preserve">
+    <value>Pak packing cancelled; you can find your files in the Temp Folder</value>
+  </data>
   <data name="PakSelectionTitle" xml:space="preserve">
     <value>.pak Selection</value>
   </data>
@@ -950,6 +953,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="PakUnpacking" xml:space="preserve">
     <value>Unpacking {0} to UnpackedMods</value>
     <comment>pak name</comment>
+  </data>
+  <data name="PakUnpackingCancelled" xml:space="preserve">
+    <value>Pak unpacking cancelled</value>
   </data>
   <data name="ParentTemplateIdLabel" xml:space="preserve">
     <value>ParentTemplateId</value>

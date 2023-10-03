@@ -2320,6 +2320,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pak packing cancelled; you can find your files in the Temp Folder.
+        /// </summary>
+        public static string PakPackingCancelled {
+            get {
+                return ResourceManager.GetString("PakPackingCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .pak Selection.
         /// </summary>
         public static string PakSelectionTitle {
@@ -2361,6 +2370,15 @@ namespace bg3_modders_multitool.Properties {
         public static string PakUnpacking {
             get {
                 return ResourceManager.GetString("PakUnpacking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pak unpacking cancelled.
+        /// </summary>
+        public static string PakUnpackingCancelled {
+            get {
+                return ResourceManager.GetString("PakUnpackingCancelled", resourceCulture);
             }
         }
         

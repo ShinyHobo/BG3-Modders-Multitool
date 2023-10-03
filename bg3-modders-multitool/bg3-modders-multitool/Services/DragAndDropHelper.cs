@@ -288,9 +288,11 @@ namespace bg3_modders_multitool.Services
                                     else
                                     {
                                         if(GenerateInfoJson(metaList))
+                                        {
                                             GenerateZip(fullPath, dirName);
+                                            CleanTempDirectory();
+                                        }
                                     }
-                                    CleanTempDirectory();
                                 }
                                 else if(File.Exists(fullPath))
                                 {
@@ -347,7 +349,8 @@ namespace bg3_modders_multitool.Services
 
             ProcessStatsGeneratedDataSubfiles(modDir);
 
-            ConvertFiles(modDir);
+            if(!ConvertFiles(modDir))
+                return (null, null);
 
             return (modDir, metaList);
         }
@@ -634,7 +637,8 @@ namespace bg3_modders_multitool.Services
         /// Converts all convertable files to their compressed version recursively
         /// </summary>
         /// <param name="tempPath">The mod temp path location</param>
-        private static void ConvertFiles(string tempPath)
+        /// <returns>Whether or not all files converted</returns>
+        private static bool ConvertFiles(string tempPath)
         {
             var fileList = Directory.GetFiles(tempPath, "*", System.IO.SearchOption.AllDirectories);
             foreach (var file in fileList)
@@ -650,10 +654,24 @@ namespace bg3_modders_multitool.Services
                 var modParent = new DirectoryInfo(mod).Parent.FullName;
                 if(validExtension)
                 {
-                    FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
-                    File.Delete(file);
+                    try
+                    {
+                        Resource resource = ResourceUtils.LoadResource(file, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                        FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
+                        File.Delete(file);
+                    }
+                    catch(Exception ex)
+                    {
+                        if (!FileHelper.IsSpecialLSFSignature(ex.Message))
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                            GeneralHelper.WriteToConsole(Properties.Resources.PakPackingCancelled);
+                        }
+                        return false;
+                    }
                 }
             }
+            return true;
         }
         #endregion
 
