@@ -648,7 +648,9 @@ namespace bg3_modders_multitool.Services
                 var conversionFile = fileName.Replace(extension, string.Empty);
                 var secondExtension = Path.GetExtension(conversionFile);
 
-                var validExtension = FileHelper.ConvertableLsxResources.Contains(secondExtension) || secondExtension == ".loca";
+                var convertableToLoca = secondExtension == ".loca";
+                var convertableToLsx = FileHelper.ConvertableLsxResources.Contains(secondExtension);
+                var validExtension = convertableToLsx || convertableToLoca;
 
                 var mod = $"{new FileInfo(file).Directory}\\{fileName}";
                 var modParent = new DirectoryInfo(mod).Parent.FullName;
@@ -656,7 +658,15 @@ namespace bg3_modders_multitool.Services
                 {
                     try
                     {
-                        Resource resource = ResourceUtils.LoadResource(file, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                        if(convertableToLoca)
+                        {
+                            LocaUtils.Load(file);
+                        }
+                        else if(convertableToLsx)
+                        {
+                            ResourceUtils.LoadResource(file, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                        }
+                        
                         FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
                         File.Delete(file);
                     }
