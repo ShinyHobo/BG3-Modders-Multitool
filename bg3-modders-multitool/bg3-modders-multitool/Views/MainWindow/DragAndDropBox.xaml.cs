@@ -31,9 +31,12 @@ namespace bg3_modders_multitool.Views
         {
             await vm.ProcessDrop(e.Data);
             var fileDrop = e.Data.GetData(DataFormats.FileDrop, true) as string[];
-            if (Directory.Exists(fileDrop[0]))
+            if(fileDrop != null)
             {
-                vm.LastDirectory = fileDrop[0];
+                if (Directory.Exists(fileDrop[0]))
+                {
+                    vm.LastDirectory = fileDrop[0];
+                }
             }
         }
 

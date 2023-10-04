@@ -19,7 +19,7 @@ namespace bg3_modders_multitool.Services
 
     public static class FileHelper
     {
-        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
+        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc", ".lsj", ".lsfx" };
         public static readonly string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
         public static string UnpackedDataPath => $"{Directory.GetCurrentDirectory()}\\UnpackedData";
