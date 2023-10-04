@@ -22,12 +22,12 @@
                         <xctk:IntegerUpDown x:Name="minor" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
                     </StackPanel>
                     <StackPanel>
-                        <Label Content="{x:Static p:Resources.VersionBuildLabel}"/>
-                        <xctk:IntegerUpDown x:Name="build" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
-                    </StackPanel>
-                    <StackPanel>
                         <Label Content="{x:Static p:Resources.VersionRevisionLabel}"/>
                         <xctk:IntegerUpDown x:Name="revision" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label Content="{x:Static p:Resources.VersionBuildLabel}"/>
+                        <xctk:IntegerUpDown x:Name="build" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
                     </StackPanel>
                 </StackPanel>
                 <Button Content="{x:Static p:Resources.Copy}" Click="CopyPatch_Click" Height="25" Margin="2,18,0,0" Padding="4" Cursor="Hand"/>
