@@ -153,9 +153,10 @@ namespace bg3_modders_multitool.Services
 
             GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
 
+            var originalTime = DataContext.IndexStartTime;
+
             Application.Current.Dispatcher.Invoke(() =>
             {
-
                 DataContext.IndexFileCount = 0;
                 DataContext.IndexStartTime = DateTime.Now;
                 DataContext.IndexFileTotal = cachedPaks.Count;
@@ -210,7 +211,8 @@ namespace bg3_modders_multitool.Services
                 File.WriteAllText(luceneCacheFile, contentsToWriteToFile);
             }
 
-            GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
+            var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(originalTime.Subtract(DataContext.GetTimeTaken())).Ticks);
+            GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, timeTaken.ToString("hh\\:mm\\:ss"));
             Application.Current.Dispatcher.Invoke(() => {
                 DataContext.IsIndexing = false;
                 DataContext.AllowIndexing = true;
