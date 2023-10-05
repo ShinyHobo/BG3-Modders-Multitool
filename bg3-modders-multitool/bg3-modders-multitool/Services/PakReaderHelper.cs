@@ -61,7 +61,7 @@
                     if(file.SizeOnDisk != 0)
                     {
                         var ext = Path.GetExtension(file.Name);
-                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(ext);
+                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(ext) && ext != ".lsj"; // lsj is already readible json
                         if(convert && canConvertToLsx)
                         {
                             using (MemoryStream newOutStream = new MemoryStream())
