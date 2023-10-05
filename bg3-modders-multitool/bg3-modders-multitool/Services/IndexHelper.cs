@@ -153,23 +153,29 @@ namespace bg3_modders_multitool.Services
 
             GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
 
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                DataContext.IndexFileTotal = cachedPaks.Count;
+                DataContext.IndexStartTime = DateTime.Now;
+                DataContext.IndexFileCount = 0;
+            });
+
             // Merge indexes
             using (Analyzer a = new CustomAnalyzer())
             using (IndexWriter writer = new IndexWriter(mainFSDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, a)))
             {
-                var indexes = new List<IndexReader>();
                 foreach(var pak in cachedPaks)
                 {
                     var indexDir = Path.Combine(Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory(), luceneDeltaDirectory, pak);
                     if(Alphaleonis.Win32.Filesystem.Directory.Exists(indexDir))
                     {
-                        indexes.Add(DirectoryReader.Open(FSDirectory.Open(indexDir)));
+                        using (var index = DirectoryReader.Open(FSDirectory.Open(indexDir)))
+                        {
+                            writer.AddIndexes(index);
+                        }
+
+                        Application.Current.Dispatcher.Invoke(() => { DataContext.IndexFileCount++; });
                     }
-                }
-                writer.AddIndexes(indexes.ToArray());
-                foreach (IndexReader index in indexes)
-                {
-                    index.Dispose();
                 }
             }
 
