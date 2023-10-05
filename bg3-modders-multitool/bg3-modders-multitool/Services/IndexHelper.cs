@@ -155,9 +155,10 @@ namespace bg3_modders_multitool.Services
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                DataContext.IndexFileTotal = cachedPaks.Count;
-                DataContext.IndexStartTime = DateTime.Now;
+
                 DataContext.IndexFileCount = 0;
+                DataContext.IndexStartTime = DateTime.Now;
+                DataContext.IndexFileTotal = cachedPaks.Count;
             });
 
             // Merge indexes

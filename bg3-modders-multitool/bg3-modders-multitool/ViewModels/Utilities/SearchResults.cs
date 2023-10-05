@@ -73,7 +73,7 @@ namespace bg3_modders_multitool.ViewModels
             get { return _resultCount; }
             set {
                 _resultCount = value;
-                if((DateTime.Now - _lastUpdate).TotalMilliseconds > 100 || _resultCount == IndexFileTotal)
+                if((DateTime.Now - _lastUpdate).TotalMilliseconds > 100 || _resultCount == IndexFileTotal || _resultCount == 0)
                 {
                     // TODO - move time remaining calculation to timer thread
                     var timeTaken = GetTimeTaken();
