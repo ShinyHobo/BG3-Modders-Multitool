@@ -544,9 +544,15 @@ namespace bg3_modders_multitool.Services
                         if (dirInfo.Exists)
                         {
                             var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
-                            var fileGroups = isRootTemplate ? files.GroupBy(f => dir) : files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
+                            var fileGroups = isRootTemplate ? files.GroupBy(f => Path.GetExtension(Path.GetFileNameWithoutExtension(f.Name))) : files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
                             foreach (var fileGroup in fileGroups)
                             {
+                                // Prioritize .lsf.lsx files
+                                if(isRootTemplate && fileGroups.Count() > 1 && fileGroup.Key != ".lsf")
+                                {
+                                    continue;
+                                }
+
                                 var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
                                 var xml = XDocument.Parse(template);
                                 xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
