@@ -795,7 +795,9 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="FileTemplates\LocaXmlBoilerplate.xml" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon.ico" />
   </ItemGroup>
