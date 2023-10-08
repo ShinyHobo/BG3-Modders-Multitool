@@ -118,5 +118,17 @@ namespace bg3_modders_multitool.Properties {
                 this["theme"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string rebuildLocation {
+            get {
+                return ((string)(this["rebuildLocation"]));
+            }
+            set {
+                this["rebuildLocation"] = value;
+            }
+        }
     }
 }
