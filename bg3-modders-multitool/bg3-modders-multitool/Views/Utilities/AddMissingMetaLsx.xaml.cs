@@ -1,6 +1,7 @@
 ﻿namespace bg3_modders_multitool.Views.Utilities
 {
     using bg3_modders_multitool.ViewModels.Utilities;
+    using LSLib.LS;
     using System.Windows;
 
     /// <summary>
@@ -22,8 +23,15 @@
 
         private void accept_Click(object sender, RoutedEventArgs e)
         {
+            var version = new PackedVersion() {
+                Major = (uint)major.Value,
+                Minor = (uint)minor.Value,
+                Build = (uint)build.Value,
+                Revision = (uint)revision.Value
+            };
+
             var vm = DataContext as AddMissingMetaLsxViewModel;
-            vm.GenerateMetaLsx(author.Text.Trim(), description.Text.Trim());
+            vm.GenerateMetaLsx(author.Text.Trim(), description.Text.Trim(), version);
             MetaPath = vm.MetaPath;
             DialogResult = true;
             Close();

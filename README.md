@@ -8,25 +8,39 @@
 
 # Baldur's Gate 3 Modder's Multitool
 
-![Main Window](https://github.com/ShinyHobo/BG3-Modders-Multitool/assets/6206737/7616e2e1-cb4e-4d0c-8097-3995cca9e30d)
+![Main Window](https://github.com/ShinyHobo/BG3-Modders-Multitool/assets/6206737/78335096-7ba7-4ccc-9e58-e7d13d90f48f)
+
 
 The Modder's Multitool is the Swiss Army Knife of Modding utilities for Baldur's Gate 3. Aiming at making modder's live seasier, the Multitool implements a variety of automated tools to simplify the modding process: From unpacking and searching game files all the way to simplifying the packaging process and enabling more organized workspaces, if you're a modder, you need the Multitool.
 
 ### Features
-- Automatically paks, zips, and generates metadata  
+- Automatically paks, zips, and generates metadata
+- Mod pak unpacking to workspace, with automatic file conversions
 - Automatically converts files named like example.lsf.lsx and example.lsb.lsx to example.lsf and example.lsb, respectively. This means you no longer have to manually convert files and then copy them into their respective directories.  
 - Supports dependencies and multipaks (multiple mods in the same workspace, and multiple workspaces)  
 - Utility for extracting some/all game assets at once. It can take more than an hour for the complete set, but will place all the extracted files in a folder in the same directory as the application  
-- Unpacked file indexer 
-- Index search functionality  
-- File previews  
+- Unpacked and packed file indexers
+- Incremental indexing
+- Index search functionality
+- Individual and mass file extraction
+- File previews and text highlights
+  - DDS
+  - GTP
+  - GR2
+  - Text
 - Open (and automatically convert) files from index searcher  
 - UUID and TranslatedString handle generator  
-- Launch game directly  
+- Launch game saves directly
 - GameObject Explorer (stats, attributes, icon, model, and model files)  
-- Mass LSX converter  
+- Mass LSX converter
 - Colada model conversion  
-- .wem => .ogg file conversion and playback
+- Subfolder support
+- File linting
+- Color picker
+- Atlas texture splicer and creator
+- Modding resource links
+- Shortcuts to common modding directories
+- Automatic updates
 
 # How do I use these tools?
 Excited to work with the Multitool's help, but unsure how to use it? [See the Wiki](https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki) for more information about the Project and how to use specific features of the Multitool, or look below for the ideal steps to learn the Multitool.

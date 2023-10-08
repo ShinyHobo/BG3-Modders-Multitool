@@ -133,6 +133,9 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Baldur's Gate 3 Modder's Multitool</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
   <data name="AtlasConstructed" xml:space="preserve">
     <value>Constructed atlas sheet.</value>
   </data>
@@ -266,7 +269,7 @@
   <data name="ClearIndexQuestion" xml:space="preserve">
     <value>Careful! This is irreversable!
 
-Clicking "OK" will wipe your current index; this could take some time. Are you sure you wish you continue?</value>
+Clicking "OK" will wipe your current index and require a re-index. Are you sure you wish you continue?</value>
   </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
     <value>Dropping a workspace will build and zip it automatically. Click to manually select your mod workspace. 
@@ -321,6 +324,9 @@ missing bg3.exe!</value>
   <data name="CopiedToClipboard" xml:space="preserve">
     <value>Copied {0} to clipboard!</value>
     <comment>text</comment>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
   </data>
   <data name="Copyright" xml:space="preserve">
     <value>Copyright © ShinyHobo 2020-2023
@@ -389,6 +395,10 @@ Do you wish to continue?</value>
   <data name="DropModMessage" xml:space="preserve">
     <value>Drop mod workspace folder or a mod .pak here</value>
   </data>
+  <data name="DuplicateFileFoundReplacing" xml:space="preserve">
+    <value>Duplicate file [{0}] found; replacing...</value>
+    <comment>file name</comment>
+  </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>
   </data>
@@ -420,7 +430,7 @@ Do you wish to continue?</value>
     <comment>for files without an extension</comment>
   </data>
   <data name="ExternalLSLibFound" xml:space="preserve">
-    <value>External LSLib.dll found! Please change your installation location.</value>
+    <value>External LSLib.dll found! Please change your Multitool installation directory to avoid conflicts.</value>
   </data>
   <data name="ExtractFileTooltip" xml:space="preserve">
     <value>Extract file</value>
@@ -441,6 +451,10 @@ Do you wish to continue?</value>
   </data>
   <data name="FailedToEnableSplashScreen" xml:space="preserve">
     <value>Failed to enable splash screen...</value>
+  </data>
+  <data name="FailedToExtractFile" xml:space="preserve">
+    <value>Failed to extract {0}</value>
+    <comment>file path</comment>
   </data>
   <data name="FailedToFetchUpdates" xml:space="preserve">
     <value>Failed to fetch updates (status {0})</value>
@@ -481,6 +495,10 @@ Do you wish to continue?</value>
   <data name="FailedToLoadStatStructure" xml:space="preserve">
     <value>Failed to load StatStructure line '{0}'</value>
     <comment>stat structure line</comment>
+  </data>
+  <data name="FailedToMovePak" xml:space="preserve">
+    <value>Failed to move {0} pak to Mods folder. Is the game running?</value>
+    <comment>file name</comment>
   </data>
   <data name="FailedToPackMod" xml:space="preserve">
     <value>Failed to pack mod: {0}</value>
@@ -808,6 +826,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="MetaLsxNotFound" xml:space="preserve">
     <value>meta.lsx not found in \\Mods\\ModName\\ as expected. Discontinuing process.</value>
   </data>
+  <data name="MetaVersionLabel" xml:space="preserve">
+    <value>Version</value>
+  </data>
   <data name="MissingFileTypes" xml:space="preserve">
     <value>File type(s) [{0}] missing from list; please inform ShinyHobo</value>
     <comment>file extension(s)</comment>
@@ -863,7 +884,7 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>No lines found; search returned filename only.</value>
   </data>
   <data name="NoModsFolderFound" xml:space="preserve">
-    <value>No Mods folder found. Please add one and try again.</value>
+    <value>No Mods folder found; unable to find workspace root! Please add one and try again.</value>
   </data>
   <data name="NoUpdatesFound" xml:space="preserve">
     <value>You are up to date!</value>
@@ -913,6 +934,9 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>{0} pak moved to Mods folder!</value>
     <comment>pak name</comment>
   </data>
+  <data name="PakPackingCancelled" xml:space="preserve">
+    <value>Pak packing cancelled; you can find your files in the Temp Folder</value>
+  </data>
   <data name="PakSelectionTitle" xml:space="preserve">
     <value>.pak Selection</value>
   </data>
@@ -929,6 +953,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="PakUnpacking" xml:space="preserve">
     <value>Unpacking {0} to UnpackedMods</value>
     <comment>pak name</comment>
+  </data>
+  <data name="PakUnpackingCancelled" xml:space="preserve">
+    <value>Pak unpacking cancelled</value>
   </data>
   <data name="ParentTemplateIdLabel" xml:space="preserve">
     <value>ParentTemplateId</value>
@@ -1000,6 +1027,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="sARGBLabel" xml:space="preserve">
     <value>sRGB</value>
   </data>
+  <data name="sARGBPreviewLabel" xml:space="preserve">
+    <value>sRGB Preview</value>
+  </data>
   <data name="sARGBTooltip" xml:space="preserve">
     <value>Click to copy the sRGB value to your clipboard</value>
   </data>
@@ -1044,6 +1074,15 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="SpeedIndexSearchTooltip" xml:space="preserve">
     <value>Enable to get significantly faster, but less robust results.</value>
+  </data>
+  <data name="SpellGenAssistant" xml:space="preserve">
+    <value>Spell Generation Assistant</value>
+  </data>
+  <data name="SpellGenAssistantTooltip" xml:space="preserve">
+    <value>Tool for helping generate template for custom spells</value>
+  </data>
+  <data name="sRGBPreviewTooltip" xml:space="preserve">
+    <value>Paste sRGB code to preview the color</value>
   </data>
   <data name="StandardLabel" xml:space="preserve">
     <value>Standard</value>
@@ -1160,6 +1199,21 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="ValidBg3Selected" xml:space="preserve">
     <value>BG3 executable set.</value>
+  </data>
+  <data name="VersionBuildLabel" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="VersionGenerator" xml:space="preserve">
+    <value>Version Calculator</value>
+  </data>
+  <data name="VersionMajorLabel" xml:space="preserve">
+    <value>Major</value>
+  </data>
+  <data name="VersionMinorLabel" xml:space="preserve">
+    <value>Minor</value>
+  </data>
+  <data name="VersionRevisionLabel" xml:space="preserve">
+    <value>Revision</value>
   </data>
   <data name="ZipCreated" xml:space="preserve">
     <value>{0}.zip created.</value>

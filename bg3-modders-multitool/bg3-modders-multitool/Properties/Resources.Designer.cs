@@ -106,6 +106,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure?.
+        /// </summary>
+        public static string AreYouSure {
+            get {
+                return ResourceManager.GetString("AreYouSure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Constructed atlas sheet..
         /// </summary>
         public static string AtlasConstructed {
@@ -487,7 +496,7 @@ namespace bg3_modders_multitool.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Careful! This is irreversable!
         ///
-        ///Clicking &quot;OK&quot; will wipe your current index; this could take some time. Are you sure you wish you continue?.
+        ///Clicking &quot;OK&quot; will wipe your current index and require a re-index. Are you sure you wish you continue?.
         /// </summary>
         public static string ClearIndexQuestion {
             get {
@@ -647,6 +656,15 @@ namespace bg3_modders_multitool.Properties {
         public static string CopiedToClipboard {
             get {
                 return ResourceManager.GetString("CopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
             }
         }
         
@@ -826,6 +844,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate file [{0}] found; replacing....
+        /// </summary>
+        public static string DuplicateFileFoundReplacing {
+            get {
+                return ResourceManager.GetString("DuplicateFileFoundReplacing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enabling splash screen....
         /// </summary>
         public static string EnablingSplashScreen {
@@ -899,7 +926,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to External LSLib.dll found! Please change your installation location..
+        ///   Looks up a localized string similar to External LSLib.dll found! Please change your Multitool installation directory to avoid conflicts..
         /// </summary>
         public static string ExternalLSLibFound {
             get {
@@ -958,6 +985,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FailedToEnableSplashScreen {
             get {
                 return ResourceManager.GetString("FailedToEnableSplashScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to extract {0}.
+        /// </summary>
+        public static string FailedToExtractFile {
+            get {
+                return ResourceManager.GetString("FailedToExtractFile", resourceCulture);
             }
         }
         
@@ -1050,6 +1086,15 @@ namespace bg3_modders_multitool.Properties {
         public static string FailedToLoadStatStructure {
             get {
                 return ResourceManager.GetString("FailedToLoadStatStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to move {0} pak to Mods folder. Is the game running?.
+        /// </summary>
+        public static string FailedToMovePak {
+            get {
+                return ResourceManager.GetString("FailedToMovePak", resourceCulture);
             }
         }
         
@@ -1968,6 +2013,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string MetaVersionLabel {
+            get {
+                return ResourceManager.GetString("MetaVersionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File type(s) [{0}] missing from list; please inform ShinyHobo.
         /// </summary>
         public static string MissingFileTypes {
@@ -2122,7 +2176,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Mods folder found. Please add one and try again..
+        ///   Looks up a localized string similar to No Mods folder found; unable to find workspace root! Please add one and try again..
         /// </summary>
         public static string NoModsFolderFound {
             get {
@@ -2266,6 +2320,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pak packing cancelled; you can find your files in the Temp Folder.
+        /// </summary>
+        public static string PakPackingCancelled {
+            get {
+                return ResourceManager.GetString("PakPackingCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .pak Selection.
         /// </summary>
         public static string PakSelectionTitle {
@@ -2307,6 +2370,15 @@ namespace bg3_modders_multitool.Properties {
         public static string PakUnpacking {
             get {
                 return ResourceManager.GetString("PakUnpacking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pak unpacking cancelled.
+        /// </summary>
+        public static string PakUnpackingCancelled {
+            get {
+                return ResourceManager.GetString("PakUnpackingCancelled", resourceCulture);
             }
         }
         
@@ -2511,6 +2583,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to sRGB Preview.
+        /// </summary>
+        public static string sARGBPreviewLabel {
+            get {
+                return ResourceManager.GetString("sARGBPreviewLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click to copy the sRGB value to your clipboard.
         /// </summary>
         public static string sARGBTooltip {
@@ -2642,6 +2723,33 @@ namespace bg3_modders_multitool.Properties {
         public static string SpeedIndexSearchTooltip {
             get {
                 return ResourceManager.GetString("SpeedIndexSearchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spell Generation Assistant.
+        /// </summary>
+        public static string SpellGenAssistant {
+            get {
+                return ResourceManager.GetString("SpellGenAssistant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tool for helping generate template for custom spells.
+        /// </summary>
+        public static string SpellGenAssistantTooltip {
+            get {
+                return ResourceManager.GetString("SpellGenAssistantTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste sRGB code to preview the color.
+        /// </summary>
+        public static string sRGBPreviewTooltip {
+            get {
+                return ResourceManager.GetString("sRGBPreviewTooltip", resourceCulture);
             }
         }
         
@@ -2975,6 +3083,51 @@ namespace bg3_modders_multitool.Properties {
         public static string ValidBg3Selected {
             get {
                 return ResourceManager.GetString("ValidBg3Selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build.
+        /// </summary>
+        public static string VersionBuildLabel {
+            get {
+                return ResourceManager.GetString("VersionBuildLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version Calculator.
+        /// </summary>
+        public static string VersionGenerator {
+            get {
+                return ResourceManager.GetString("VersionGenerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Major.
+        /// </summary>
+        public static string VersionMajorLabel {
+            get {
+                return ResourceManager.GetString("VersionMajorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minor.
+        /// </summary>
+        public static string VersionMinorLabel {
+            get {
+                return ResourceManager.GetString("VersionMinorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revision.
+        /// </summary>
+        public static string VersionRevisionLabel {
+            get {
+                return ResourceManager.GetString("VersionRevisionLabel", resourceCulture);
             }
         }
         

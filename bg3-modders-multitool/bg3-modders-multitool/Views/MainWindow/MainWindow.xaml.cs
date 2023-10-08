@@ -6,7 +6,6 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
-    using SharpDX.Direct3D9;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -212,7 +211,7 @@ namespace bg3_modders_multitool.Views
                 var result = System.Windows.Forms.DialogResult.OK;
                 if (IndexHelper.IndexDirectoryExists())
                 {
-                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ClearIndexQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
+                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ClearIndexQuestion, Properties.Resources.AreYouSure, System.Windows.Forms.MessageBoxButtons.OKCancel);
                 }
 
                 if (result.Equals(System.Windows.Forms.DialogResult.OK))
@@ -377,6 +376,11 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start("https://katiefrogs.github.io/vgmstream-web/");
         }
+
+        private void SpellGenAssistant_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Shimizoki/BG3-Spell-Generation-Assistant");
+        }
         #endregion
 
         private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
@@ -481,6 +485,17 @@ namespace bg3_modders_multitool.Views
         {
             var colorPickerWIndow = new ColorPickerWindow();
             colorPickerWIndow.Show();
+        }
+
+        /// <summary>
+        /// Opens the version generator window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void versionGenerator_Click(object sender, RoutedEventArgs e)
+        {
+            var versionGenerator = new VersionCalculator();
+            versionGenerator.Show();
         }
         #endregion
 

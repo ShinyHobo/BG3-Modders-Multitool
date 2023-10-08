@@ -78,7 +78,6 @@ namespace bg3_modders_multitool.Services
                     PakProgressCollection.Add(new PakProgress(Path.GetFileNameWithoutExtension(pak)));
                 }
 
-                var cancelError = "Pak unpacking cancelled";
                 Parallel.ForEach(paks, new ParallelOptions() { MaxDegreeOfParallelism = dataFiles ? 3 : 1 }, (pak, loopstate) => {
                     var pakName = Path.GetFileNameWithoutExtension(pak);
                     try
@@ -88,7 +87,7 @@ namespace bg3_modders_multitool.Services
                         {
                             if (Cancelled)
                             {
-                                throw new Exception(cancelError);
+                                throw new Exception(Properties.Resources.PakUnpackingCancelled);
                             }
                             var newPercent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
                             var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
@@ -120,7 +119,7 @@ namespace bg3_modders_multitool.Services
                     }
                     catch (Exception ex)
                     {
-                        if (ex.Message == cancelError)
+                        if (ex.Message == Properties.Resources.PakUnpackingCancelled)
                         {
                             GeneralHelper.WriteToConsole(Properties.Resources.CanceledUnpackingPak, pakName);
                         }

@@ -505,15 +505,18 @@ namespace bg3_modders_multitool.Services
                             }
                             else if (line.IndexOf("type") == 0)
                             {
-                                StatStructures.Last().Type = fileType;
+                                if (StatStructures.Count != 0)
+                                    StatStructures.Last().Type = fileType;
                             }
                             else if (line.IndexOf("using") == 0)
                             {
-                                StatStructures.Last().InheritProperties(line, StatStructures);
+                                if (StatStructures.Count != 0)
+                                    StatStructures.Last().InheritProperties(line, StatStructures);
                             }
                             else if (!string.IsNullOrEmpty(line))
                             {
-                                StatStructures.Last().LoadProperty(line);
+                                if(StatStructures.Count != 0)
+                                    StatStructures.Last().LoadProperty(line);
                             }
                         }
                     }

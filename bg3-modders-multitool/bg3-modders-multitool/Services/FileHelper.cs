@@ -19,7 +19,7 @@ namespace bg3_modders_multitool.Services
 
     public static class FileHelper
     {
-        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
+        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc", ".lsfx" };
         public static readonly string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
         public static string UnpackedDataPath => $"{Directory.GetCurrentDirectory()}\\UnpackedData";
@@ -58,6 +58,7 @@ namespace bg3_modders_multitool.Services
             var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
             var isConvertableToXml = originalExtension.Contains("loca") && extension == "xml";
             var isConvertableToLoca = originalExtension.Contains("xml") && extension == "loca";
+            var isConvertableToLsj = originalExtension.Contains("lsx") && extension == "lsj";
 
             string path;
 
@@ -75,7 +76,7 @@ namespace bg3_modders_multitool.Services
 
             if(!File.Exists(newPath))
             {
-                if (isConvertableToLsx)
+                if (isConvertableToLsx || isConvertableToLsj)
                 {
                     if (MustRenameLsxResources.Contains(originalExtension))
                     {
@@ -145,7 +146,7 @@ namespace bg3_modders_multitool.Services
                 }
             }
 
-            return isConvertableToLsx || isConvertableToXml || isConvertableToLoca ? newFile : file;
+            return isConvertableToLsx || isConvertableToXml || isConvertableToLoca || isConvertableToLsj ? newFile : file;
         }
 
         /// <summary>

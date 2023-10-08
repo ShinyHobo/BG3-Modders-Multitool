@@ -617,6 +617,9 @@
     <Compile Include="Views\Other\FileLintingWindow.xaml.cs">
       <DependentUpon>FileLintingWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Utilities\VersionCalculator.xaml.cs">
+      <DependentUpon>VersionCalculator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Utilities\AddMissingMetaLsx.xaml.cs">
       <DependentUpon>AddMissingMetaLsx.xaml</DependentUpon>
     </Compile>
@@ -704,6 +707,10 @@
     <Page Include="Views\Other\FileLintingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Utilities\VersionCalculator.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Utilities\AddMissingMetaLsx.xaml">
       <SubType>Designer</SubType>

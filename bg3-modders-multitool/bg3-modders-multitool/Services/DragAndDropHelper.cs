@@ -43,7 +43,8 @@ namespace bg3_modders_multitool.Services
                     if (Path.GetFileName(file).Equals("meta.lsx"))
                     {
                         metaList.Add(file);
-                        GeneralHelper.WriteToConsole(Properties.Resources.MetaLsxFound, mod);
+                        var modRoot = new FileInfo(file).Directory.Parent.Parent.Parent.FullName;
+                        GeneralHelper.WriteToConsole(Properties.Resources.MetaLsxFound, mod.Replace(modRoot + "\\", string.Empty));
                     }
                 }
             }
@@ -115,7 +116,7 @@ namespace bg3_modders_multitool.Services
                 {
                     var metadata = ReadMeta(meta, created, modGroup);
                     mods.Add(metadata);
-                    GeneralHelper.WriteToConsole(Properties.Resources.MetadataCreated, metadata);
+                    GeneralHelper.WriteToConsole(Properties.Resources.MetadataCreated, metadata.Name);
                 }
                 info.Mods.AddRange(mods);
             }
@@ -244,7 +245,7 @@ namespace bg3_modders_multitool.Services
                                     var metaList = new Dictionary<string, List<string>>();
                                     var dirInfo = new DirectoryInfo(fullPath);
                                     var dirName = dirInfo.Name;
-                                    GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName, dirName);
+                                    //GeneralHelper.WriteToConsole(Properties.Resources.DirectoryName, dirName);
                                     var metaFiles = dirInfo.GetFiles("meta.lsx", System.IO.SearchOption.AllDirectories);
                                     var modsFolders = dirInfo.GetDirectories("Mods", System.IO.SearchOption.AllDirectories);
 
@@ -273,16 +274,25 @@ namespace bg3_modders_multitool.Services
                                         var modsFolder = $"{Properties.Settings.Default.gameDocumentsPath}\\Mods";
                                         if(Directory.Exists(modsFolder))
                                         {
-                                            File.Move($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", MoveOptions.ReplaceExisting);
-                                            GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                            try
+                                            {
+                                                File.Move($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", MoveOptions.ReplaceExisting);
+                                                GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                            }
+                                            catch
+                                            {
+                                                GeneralHelper.WriteToConsole(Properties.Resources.FailedToMovePak, dirName);
+                                            }
                                         }
                                     }
                                     else
                                     {
                                         if(GenerateInfoJson(metaList))
+                                        {
                                             GenerateZip(fullPath, dirName);
+                                            CleanTempDirectory();
+                                        }
                                     }
-                                    CleanTempDirectory();
                                 }
                                 else if(File.Exists(fullPath))
                                 {
@@ -333,11 +343,14 @@ namespace bg3_modders_multitool.Services
             if(!LintLsxFiles(modDir))
                 return (null, null);
 
+            ConsolidateSubfolders(modDir);
+
             ProcessLsxMerges(modDir);
 
             ProcessStatsGeneratedDataSubfiles(modDir);
 
-            ConvertFiles(modDir);
+            if(!ConvertFiles(modDir))
+                return (null, null);
 
             return (modDir, metaList);
         }
@@ -468,10 +481,51 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Moves subfolder files up to the main level
+        /// </summary>
+        /// <param name="directory">The mod workspace directory</param>
+        private static void ConsolidateSubfolders(string directory)
+        {
+            var modNameDirs = new DirectoryInfo(Path.Combine(directory, "Public"));
+            if (modNameDirs.Exists)
+            {
+                var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
+                foreach (var modName in paths)
+                {
+                    foreach (var dir in new string[] { "MultiEffectInfos" })
+                    {
+                        var path = Path.Combine(directory, "Public", modName.Name, dir);
+                        var dirInfo = new DirectoryInfo(path);
+                        if (dirInfo.Exists)
+                        {
+                            var files = dirInfo.GetFiles("*", System.IO.SearchOption.AllDirectories);
+                            foreach(var file in files)
+                            {
+                                var newFile = Path.Combine(path, file.Name);
+                                if(newFile != file.FullName)
+                                {
+                                    if (File.Exists(newFile))
+                                    {
+                                        GeneralHelper.WriteToConsole(Properties.Resources.DuplicateFileFoundReplacing, file.Name);
+                                    }
+                                    File.Move(file.FullName, newFile, MoveOptions.ReplaceExisting);
+                                }
+                            }
+
+                            foreach (var delDir in dirInfo.GetDirectories())
+                            {
+                                delDir.Delete(true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Concatenates .lsx files prior to conversion to .lsf
         /// </summary>
         /// <param name="directory">The mod workspace directory</param>
-        /// <param name="modName">The mod name to point the search at</param>
         private static void ProcessLsxMerges(string directory)
         {
             var modNameDirs = new DirectoryInfo(Path.Combine(directory, "Public"));
@@ -490,9 +544,15 @@ namespace bg3_modders_multitool.Services
                         if (dirInfo.Exists)
                         {
                             var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
-                            var fileGroups = isRootTemplate ? files.GroupBy(f => dir) : files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
+                            var fileGroups = isRootTemplate ? files.GroupBy(f => Path.GetExtension(Path.GetFileNameWithoutExtension(f.Name))) : files.GroupBy(f => f.Name.Split('.').Reverse().Skip(1).First());
                             foreach (var fileGroup in fileGroups)
                             {
+                                // Prioritize .lsf.lsx files
+                                if(isRootTemplate && fileGroups.Count() > 1 && fileGroup.Key != ".lsf")
+                                {
+                                    continue;
+                                }
+
                                 var template = FileHelper.LoadFileTemplate("LsxBoilerplate.lsx");
                                 var xml = XDocument.Parse(template);
                                 xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
@@ -580,7 +640,8 @@ namespace bg3_modders_multitool.Services
         /// Converts all convertable files to their compressed version recursively
         /// </summary>
         /// <param name="tempPath">The mod temp path location</param>
-        private static void ConvertFiles(string tempPath)
+        /// <returns>Whether or not all files converted</returns>
+        private static bool ConvertFiles(string tempPath)
         {
             var fileList = Directory.GetFiles(tempPath, "*", System.IO.SearchOption.AllDirectories);
             foreach (var file in fileList)
@@ -590,16 +651,40 @@ namespace bg3_modders_multitool.Services
                 var conversionFile = fileName.Replace(extension, string.Empty);
                 var secondExtension = Path.GetExtension(conversionFile);
 
-                var validExtension = FileHelper.ConvertableLsxResources.Contains(secondExtension) || secondExtension == ".loca";
+                var convertableToLoca = secondExtension == ".loca";
+                var convertableToLsx = FileHelper.ConvertableLsxResources.Contains(secondExtension);
+                var validExtension = convertableToLsx || convertableToLoca;
 
                 var mod = $"{new FileInfo(file).Directory}\\{fileName}";
                 var modParent = new DirectoryInfo(mod).Parent.FullName;
                 if(validExtension)
                 {
-                    FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
-                    File.Delete(file);
+                    try
+                    {
+                        if(convertableToLoca)
+                        {
+                            LocaUtils.Load(file);
+                        }
+                        else if(convertableToLsx)
+                        {
+                            ResourceUtils.LoadResource(file, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                        }
+                        
+                        FileHelper.Convert(file, secondExtension.Remove(0, 1), $"{modParent}\\{conversionFile}");
+                        File.Delete(file);
+                    }
+                    catch(Exception ex)
+                    {
+                        if (!FileHelper.IsSpecialLSFSignature(ex.Message))
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, extension, file.Replace(Directory.GetCurrentDirectory(), string.Empty), ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                            GeneralHelper.WriteToConsole(Properties.Resources.PakPackingCancelled);
+                        }
+                        return false;
+                    }
                 }
             }
+            return true;
         }
         #endregion
 
@@ -624,7 +709,7 @@ namespace bg3_modders_multitool.Services
 
             // Pack mod
             var destination =  $"{TempFolder}\\{dirName}.pak";
-            GeneralHelper.WriteToConsole(Resources.Destination, destination);
+            //GeneralHelper.WriteToConsole(Resources.Destination, destination);
             GeneralHelper.WriteToConsole(Resources.AttemptingToPack);
             var build = BuildPack(path);
             if(build.ModBuild != null)
