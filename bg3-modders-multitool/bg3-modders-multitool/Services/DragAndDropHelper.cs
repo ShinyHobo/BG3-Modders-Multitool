@@ -409,7 +409,7 @@ namespace bg3_modders_multitool.Services
         /// Checks the lsx files for xml errors
         /// XML formatting errors
         /// Missing required node components
-        /// Unmatched UUIDs
+        /// Unmatched UUIDs (incomplete)
         /// </summary>
         /// <param name="directory">The directory to scan</param>
         /// <returns>Whether or not the directory is error free</returns>
@@ -419,7 +419,7 @@ namespace bg3_modders_multitool.Services
             if (dirInfo.Exists)
             {
                 var files = dirInfo.GetFiles("*.lsx", System.IO.SearchOption.AllDirectories);
-                var errors = new List<LintingError>();
+                var errors = LintXmlFiles(directory);
                 foreach(var file in files)
                 {
                     try
@@ -460,6 +460,14 @@ namespace bg3_modders_multitool.Services
                                 }
                             }
                         }
+                        try
+                        {
+                            ResourceUtils.LoadResource(file.FullName, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                        }
+                        catch(Exception ex)
+                        {
+                            errors.Add(new LintingError(file.FullName.Replace(TempFolder + "\\", string.Empty), ex.Message, LintingErrorType.Xml));
+                        }
                     }
                     catch(Exception ex)
                     {
@@ -478,6 +486,72 @@ namespace bg3_modders_multitool.Services
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Checks the loca.xml files for xml errors
+        /// XML formatting errors
+        /// Missing required content components
+        /// </summary>
+        /// <param name="directory">The directory to scan</param>
+        /// <returns>Whether or not the directory is error free</returns>
+        private static List<LintingError> LintXmlFiles(string directory)
+        {
+            var dirInfo = new DirectoryInfo(directory);
+            if (dirInfo.Exists)
+            {
+                var files = dirInfo.GetFiles("*loca.xml", System.IO.SearchOption.AllDirectories);
+                var errors = new List<LintingError>();
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        using (var xml = XmlReader.Create(file.FullName))
+                        {
+                            while (!xml.EOF)
+                            {
+                                xml.Read();
+                                IXmlLineInfo xmlInfo = xml as IXmlLineInfo;
+                                var line = xmlInfo?.LineNumber;
+                                var error = string.Empty;
+                                if (xml.Name == "content" && xml.NodeType == XmlNodeType.Element)
+                                {
+                                    var id = xml.GetAttribute("contentuid");
+                                    var type = xml.GetAttribute("version");
+                                    if (id == null)
+                                        error += string.Format(Properties.Resources.AttributeMissing, "'contentuid'");
+                                    if (type == null)
+                                        error += string.Format(Properties.Resources.AttributeMissing, "'version'");
+
+                                }
+                                if (!string.IsNullOrEmpty(error))
+                                {
+                                    error = (string.Format(Properties.Resources.ErrorLine, line) + error);
+                                    error = error.Substring(0, error.Length - 2); // remove last next line char
+                                    errors.Add(new LintingError(file.FullName.Replace(TempFolder + "\\", string.Empty), error, LintingErrorType.AttributeMissing));
+                                }
+                            }
+                        }
+                        try
+                        {
+                            LocaUtils.Load(file.FullName);
+                        }
+                        catch(Exception ex)
+                        {
+                            errors.Add(new LintingError(file.FullName.Replace(TempFolder + "\\", string.Empty), ex.Message, LintingErrorType.Xml));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        errors.Add(new LintingError(file.FullName.Replace(TempFolder + "\\", string.Empty), ex.Message, LintingErrorType.Xml));
+                    }
+                }
+                if (errors.Count > 0)
+                {
+                    return errors;
+                }
+            }
+            return new List<LintingError>();
         }
 
         /// <summary>
