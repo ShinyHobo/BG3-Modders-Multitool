@@ -883,6 +883,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="NoLinesFound" xml:space="preserve">
     <value>No lines found; search returned filename only.</value>
   </data>
+  <data name="NoModelFoundLabel" xml:space="preserve">
+    <value>No model found</value>
+  </data>
   <data name="NoModsFolderFound" xml:space="preserve">
     <value>No Mods folder found; unable to find workspace root! Please add one and try again.</value>
   </data>
