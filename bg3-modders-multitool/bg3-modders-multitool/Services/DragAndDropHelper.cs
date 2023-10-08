@@ -345,6 +345,8 @@ namespace bg3_modders_multitool.Services
 
             ConsolidateSubfolders(modDir);
 
+            ProcessLocalizationMerge(modDir);
+
             ProcessLsxMerges(modDir);
 
             ProcessStatsGeneratedDataSubfiles(modDir);
@@ -356,6 +358,8 @@ namespace bg3_modders_multitool.Services
         }
 
         #region Packing Steps
+
+        #region Setup
         /// <summary>
         /// Checks for meta.lsx and asks to create one if one doesn't exist
         /// </summary>
@@ -404,7 +408,9 @@ namespace bg3_modders_multitool.Services
                 }
             }
         }
-
+        #endregion
+        
+        #region Linting
         /// <summary>
         /// Checks the lsx files for xml errors
         /// XML formatting errors
@@ -500,7 +506,7 @@ namespace bg3_modders_multitool.Services
         private static List<LintingError> LintXmlFiles(DirectoryInfo dirInfo)
         {
             var errors = new List<LintingError>();
-            var files = dirInfo.GetFiles("*loca.xml", System.IO.SearchOption.AllDirectories);
+            var files = dirInfo.GetFiles("*.loca.xml", System.IO.SearchOption.AllDirectories);
             foreach (var file in files)
             {
                 try
@@ -551,7 +557,9 @@ namespace bg3_modders_multitool.Services
             }
             return new List<LintingError>();
         }
+        #endregion
 
+        #region Subfolder Processing
         /// <summary>
         /// Moves subfolder files up to the main level
         /// </summary>
@@ -564,7 +572,7 @@ namespace bg3_modders_multitool.Services
                 var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
                 foreach (var modName in paths)
                 {
-                    foreach (var dir in new string[] { "MultiEffectInfos" })
+                    foreach (var dir in new string[] { "MultiEffectInfos", "Assets\\Effects\\Effects_Banks" })
                     {
                         var path = Path.Combine(directory, "Public", modName.Name, dir);
                         var dirInfo = new DirectoryInfo(path);
@@ -578,7 +586,7 @@ namespace bg3_modders_multitool.Services
                                 {
                                     if (File.Exists(newFile))
                                     {
-                                        GeneralHelper.WriteToConsole(Properties.Resources.DuplicateFileFoundReplacing, file.Name);
+                                        GeneralHelper.WriteToConsole(Properties.Resources.DuplicateFileFoundReplacing, $"{path.Replace($"{DragAndDropHelper.TempFolder}\\", string.Empty)}\\{file.Name}");
                                     }
                                     File.Move(file.FullName, newFile, MoveOptions.ReplaceExisting);
                                 }
@@ -590,6 +598,46 @@ namespace bg3_modders_multitool.Services
                             }
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Concatenates .xml files prior to conversion to .loca
+        /// </summary>
+        /// <param name="directory">The mod workspace directory</param>
+        private static void ProcessLocalizationMerge(string directory)
+        {
+            var modNameDirs = new DirectoryInfo(Path.Combine(directory, "Localization"));
+            if (modNameDirs.Exists)
+            {
+                var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
+                foreach(var path in paths)
+                {
+                    var template = FileHelper.LoadFileTemplate("LocaXmlBoilerplate.xml");
+                    var xml = XDocument.Parse(template);
+                    xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
+
+                    var files = path.GetFiles("*.loca.xml", System.IO.SearchOption.AllDirectories);
+                    var contentList = xml.Descendants("contentList").Single();
+                    foreach (var file in files)
+                    {
+                        using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
+                        {
+                            var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
+                            var contentChildren = contents.Descendants("contentList").First().Elements().ToList();
+                            foreach (var child in contentChildren)
+                            {
+                                contentList.Add(child);
+                            }
+                        }
+                        file.Delete();
+                    }
+                    xml.Save($"{modNameDirs.FullName}\\__MT_GEN_{modNameDirs.Name}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.loca.xml");
+                }
+                foreach (var delDir in modNameDirs.GetDirectories())
+                {
+                    delDir.Delete(true);
                 }
             }
         }
@@ -707,6 +755,7 @@ namespace bg3_modders_multitool.Services
                 }
             }
         }
+        #endregion
 
         /// <summary>
         /// Converts all convertable files to their compressed version recursively
