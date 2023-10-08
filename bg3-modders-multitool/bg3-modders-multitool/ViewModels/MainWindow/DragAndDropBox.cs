@@ -3,6 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.ViewModels
 {
+    using System.IO;
     using System.Threading.Tasks;
     using System.Windows;
 
@@ -13,6 +14,15 @@ namespace bg3_modders_multitool.ViewModels
             PackAllowed = true;
             _packAllowedDrop = PackAllowed;
             CanRebuild = Visibility.Collapsed;
+            if(Directory.Exists(Properties.Settings.Default.rebuildLocation))
+            {
+                LastDirectory = Properties.Settings.Default.rebuildLocation;
+            }
+            else
+            {
+                Properties.Settings.Default.rebuildLocation = null;
+                Properties.Settings.Default.Save();
+            }
         }
 
         public async Task ProcessDrop(IDataObject data)
@@ -62,6 +72,13 @@ namespace bg3_modders_multitool.ViewModels
             get { return _lastDirectory; }
             set {
                 _lastDirectory = value;
+
+                if(Directory.Exists(value) && value != Properties.Settings.Default.rebuildLocation)
+                {
+                    Properties.Settings.Default.rebuildLocation = value;
+                    Properties.Settings.Default.Save();
+                }
+
                 CanRebuild = !string.IsNullOrEmpty(value) ? Visibility.Visible : Visibility.Collapsed;
                 OnNotifyPropertyChanged();
             }
