@@ -20,7 +20,6 @@ namespace bg3_modders_multitool.Services
     using System.Xml.Linq;
     using System.Linq;
     using bg3_modders_multitool.Views.Other;
-    using Alphaleonis.Win32.Network;
 
     public static class DragAndDropHelper
     {
@@ -587,7 +586,7 @@ namespace bg3_modders_multitool.Services
                                 {
                                     if (File.Exists(newFile))
                                     {
-                                        GeneralHelper.WriteToConsole(Properties.Resources.DuplicateFileFoundReplacing, file.Name);
+                                        GeneralHelper.WriteToConsole(Properties.Resources.DuplicateFileFoundReplacing, $"{path.Replace($"{DragAndDropHelper.TempFolder}\\", string.Empty)}\\{file.Name}");
                                     }
                                     File.Move(file.FullName, newFile, MoveOptions.ReplaceExisting);
                                 }
