@@ -633,11 +633,12 @@ namespace bg3_modders_multitool.Services
                         }
                         file.Delete();
                     }
-                    xml.Save($"{modNameDirs.FullName}\\__MT_GEN_{modNameDirs.Name}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.loca.xml");
-                }
-                foreach (var delDir in modNameDirs.GetDirectories())
-                {
-                    delDir.Delete(true);
+                    xml.Save($"{path}\\__MT_GEN_LOCA_{Guid.NewGuid()}.loca.xml");
+                    
+                    foreach (var delDir in path.GetDirectories())
+                    {
+                        delDir.Delete(true);
+                    }
                 }
             }
         }
