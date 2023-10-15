@@ -2293,6 +2293,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Packing Priority.
+        /// </summary>
+        public static string PackingPriorityLabel {
+            get {
+                return ResourceManager.GetString("PackingPriorityLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Higher priorities allow vanilla node overrides.
+        /// </summary>
+        public static string PackingPriorityTooltip {
+            get {
+                return ResourceManager.GetString("PackingPriorityTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to * .pak already unpacked.
         /// </summary>
         public static string PakAlreadyUnpacked {
