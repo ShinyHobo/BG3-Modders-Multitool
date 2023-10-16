@@ -84,7 +84,7 @@ namespace bg3_modders_multitool.Services
             Directory.CreateDirectory(TempFolder);
             var packageOptions = new PackageCreationOptions() { 
                 Version = Game.BaldursGate3.PAKVersion(),
-                Priority = 21,
+                Priority = (byte)Properties.Settings.Default.packingPriority,
                 Compression = CompressionMethod.LZ4
             };
             try

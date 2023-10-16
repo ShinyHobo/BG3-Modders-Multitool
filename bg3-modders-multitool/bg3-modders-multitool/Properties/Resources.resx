@@ -924,6 +924,12 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Output dimensions: {0}x{1}</value>
     <comment>width, height</comment>
   </data>
+  <data name="PackingPriorityLabel" xml:space="preserve">
+    <value>Packing Priority</value>
+  </data>
+  <data name="PackingPriorityTooltip" xml:space="preserve">
+    <value>Higher priorities allow vanilla node overrides</value>
+  </data>
   <data name="PakAlreadyUnpacked" xml:space="preserve">
     <value>* .pak already unpacked</value>
   </data>

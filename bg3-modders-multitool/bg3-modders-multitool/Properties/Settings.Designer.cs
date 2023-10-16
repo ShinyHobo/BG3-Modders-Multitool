@@ -130,5 +130,17 @@ namespace bg3_modders_multitool.Properties {
                 this["rebuildLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int packingPriority {
+            get {
+                return ((int)(this["packingPriority"]));
+            }
+            set {
+                this["packingPriority"] = value;
+            }
+        }
     }
 }

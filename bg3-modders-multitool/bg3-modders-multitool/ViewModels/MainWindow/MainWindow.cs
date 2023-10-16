@@ -129,7 +129,7 @@ namespace bg3_modders_multitool.ViewModels
         }
         #endregion
 
-        #region Configuration Methods
+        #region Configuration
         /// <summary>
         /// Toggles the quick launch features.
         /// </summary>

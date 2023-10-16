@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Style="{StaticResource CustomWindowStyle}"
         Height="270" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
@@ -20,7 +21,7 @@
             <Button x:Name="gameDocumentPathSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" 
                     Width="75" Height="23" Click="GameDocumentsLocationSelect_Click" Cursor="Hand" ToolTip="{x:Static p:Resources.GameDocsLocationTooltip}"/>
         </Grid>
-        <StackPanel Orientation="Horizontal" Margin="10,103,200,60">
+        <StackPanel Orientation="Horizontal" Margin="10,103,100,60">
             <StackPanel>
                 <Label Content="{x:Static p:Resources.LanguageSelectionLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-5,0,0,0"/>
                 <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Cursor="Hand" Height="22"
@@ -41,6 +42,10 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+            </StackPanel>
+            <StackPanel Margin="10,0,0,0">
+                <Label Content="{x:Static p:Resources.PackingPriorityLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-5,0,0,0"/>
+                <xctk:IntegerUpDown x:Name="packingPriority" Width="50" Height="20" Minimum="21" Maximum="127" ValueChanged="packingPriority_ValueChanged" ToolTip="{x:Static p:Resources.PackingPriorityTooltip}"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Margin="8,155,00,0">

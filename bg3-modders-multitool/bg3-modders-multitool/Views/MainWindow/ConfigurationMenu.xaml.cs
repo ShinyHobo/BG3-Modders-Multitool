@@ -5,7 +5,6 @@ namespace bg3_modders_multitool.Views
 {
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.Themes;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
@@ -15,13 +14,15 @@ namespace bg3_modders_multitool.Views
     /// </summary>
     public partial class ConfigurationMenu : Window
     {
+        private ViewModels.MainWindow vm;
         public ConfigurationMenu(ViewModels.MainWindow mainWindow)
         {
             InitializeComponent();
 
             Title = $"{Properties.Resources.ConfigurationTitle} - {GeneralHelper.GetAppVersion()}";
 
-            DataContext = mainWindow;
+            vm = mainWindow;
+            DataContext = vm;
             ((ViewModels.MainWindow)DataContext).ConfigOpen = true;
 
             var selectedLanguage = ViewModels.MainWindow.GetSelectedLanguage();
@@ -38,6 +39,8 @@ namespace bg3_modders_multitool.Views
 
             themeSelection.ItemsSource = themes;
             themeSelection.SelectedIndex = themes.FindIndex(t => t.Type == selectedTheme);
+
+            packingPriority.Value = Properties.Settings.Default.packingPriority;
         }
 
         /// <summary>
@@ -47,7 +50,6 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void Bg3exeSelect_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
             vm.Bg3ExeLocation = vm.FileLocationDialog("bg3Exe", Properties.Resources.SelectGameLocation);
         }
 
@@ -58,7 +60,6 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void GameDocumentsLocationSelect_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
             vm.GameDocumentsLocation = vm.FolderLocationDialog(nameof(Properties.Settings.gameDocumentsPath), Properties.Resources.SelectGameDocLocation);
         }
 
@@ -69,7 +70,6 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
             vm.ToggleQuickLaunch(true);
         }
 
@@ -80,13 +80,11 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
             vm.ToggleQuickLaunch(false);
         }
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
             vm.ConfigOpen = false;
         }
 
@@ -99,7 +97,6 @@ namespace bg3_modders_multitool.Views
         private void Language_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             var selectedLanguage = (ViewModels.MainWindow.Language)languageSelection.SelectedItem;
-            var vm = DataContext as ViewModels.MainWindow;
             vm.ReloadLanguage(selectedLanguage.Code);
         }
 
@@ -126,5 +123,14 @@ namespace bg3_modders_multitool.Views
             GeneralHelper.ToggleUnlockThreads(false);
         }
         #endregion
+
+        private void packingPriority_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if(Properties.Settings.Default.packingPriority != packingPriority.Value)
+            {
+                Properties.Settings.Default.packingPriority = (int)packingPriority.Value;
+                Properties.Settings.Default.Save();
+            }
+        }
     }
 }
