@@ -1,4 +1,4 @@
-﻿/// <summary>
+/// <summary>
 /// Helper for processing drag and drop events
 /// </summary>
 namespace bg3_modders_multitool.Services
@@ -619,25 +619,28 @@ namespace bg3_modders_multitool.Services
                     xml.AddFirst(new XComment(Properties.Resources.GeneratedWithDisclaimer));
 
                     var files = path.GetFiles("*.loca.xml", System.IO.SearchOption.AllDirectories);
-                    var contentList = xml.Descendants("contentList").Single();
-                    foreach (var file in files)
+                    if (files.Length > 1)
                     {
-                        using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
+                        var contentList = xml.Descendants("contentList").Single();
+                        foreach (var file in files)
                         {
-                            var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
-                            var contentChildren = contents.Descendants("contentList").First().Elements().ToList();
-                            foreach (var child in contentChildren)
+                            using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
                             {
-                                contentList.Add(child);
+                                var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
+                                var contentChildren = contents.Descendants("contentList").First().Elements().ToList();
+                                foreach (var child in contentChildren)
+                                {
+                                    contentList.Add(child);
+                                }
                             }
+                            file.Delete();
                         }
-                        file.Delete();
-                    }
-                    xml.Save($"{path}\\__MT_GEN_LOCA_{Guid.NewGuid()}.loca.xml");
-                    
-                    foreach (var delDir in path.GetDirectories())
-                    {
-                        delDir.Delete(true);
+                        xml.Save($"{path}\\__MT_GEN_LOCA_{Guid.NewGuid()}.loca.xml");
+
+                        foreach (var delDir in path.GetDirectories())
+                        {
+                            delDir.Delete(true);
+                        }
                     }
                 }
             }
