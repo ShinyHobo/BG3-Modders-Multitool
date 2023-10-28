@@ -655,7 +655,7 @@ namespace bg3_modders_multitool.Services
                 var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
                 foreach (var modName in paths)
                 {
-                    foreach (var dir in new string[] { "Progressions", "Races", "ClassDescriptions", "ActionResourceDefinitions", "Lists", "RootTemplates" })
+                    foreach (var dir in new string[] { "Progressions", "ProgressionDescriptions", "Races", "Origins", "ClassDescriptions", "ActionResourceDefinitions", "Lists", "RootTemplates" })
                     {
                         var isRootTemplate = dir == "RootTemplates";
                         var isList = dir == "Lists";
