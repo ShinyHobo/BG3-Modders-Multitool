@@ -701,6 +701,9 @@ namespace bg3_modders_multitool.Services
                                     }
                                     file.Delete();
                                 }
+
+                                xml.DescendantNodes().OfType<XComment>().Remove();
+
                                 var fileName = isRootTemplate ? "_merged" : fileGroup.Key;
                                 xml.Save($"{path}\\{fileName}{(isRootTemplate ? ".lsf" : "")}.lsx");
                             }
