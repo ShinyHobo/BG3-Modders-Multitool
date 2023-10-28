@@ -2745,7 +2745,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enable to get significantly faster, but less robust results..
+        ///   Looks up a localized string similar to Enable to get significantly faster, but less robust results.
         /// </summary>
         public static string SpeedIndexSearchTooltip {
             get {
