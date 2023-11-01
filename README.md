@@ -52,7 +52,12 @@ Excited to work with the Multitool's help, but unsure how to use it? [See the Wi
 ## Linux Users ##
 I have been told that [Bottles](https://github.com/bottlesdevs/Bottles) is a good resource for running this application under Linux
 
-### Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
+## Licensing ##
+Copyright © ShinyHobo 2020-2023
+
+This software is source available, not open source. Redistribution, and modification for private or public use, without express permission from the copyright owner, is prohibited.
+
+Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
 
 [contributors-shield]: https://img.shields.io/github/contributors/ShinyHobo/BG3-Modders-Multitool.svg?style=for-the-badge
 [contributors-url]: https://github.com/ShinyHobo/BG3-Modders-Multitool/graphs/contributors
