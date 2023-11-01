@@ -615,16 +615,15 @@ namespace bg3_modders_multitool.Services
 
                 if (fileExists)
                 {
-                    XmlReader reader;
+                    XmlReader reader = null;
 
                     var visualBankFilePath = FileHelper.Convert(visualBankFile, "lsx", Path.ChangeExtension(visualBankFile, "lsx"));
-                    var visualBankFilePathToRead = FileHelper.GetPath(visualBankFilePath);
-                    if(File.Exists(visualBankFilePathToRead))
-                    {
-                        reader = XmlReader.Create(visualBankFilePathToRead);
 
-                        try
+                    try
+                    {
+                        using (var ms = new System.IO.StreamReader("\\\\?\\"+FileHelper.GetPath(visualBankFilePath)))
                         {
+                            reader = XmlReader.Create(ms);
                             reader.MoveToContent();
                             while (!reader.EOF)
                             {
@@ -679,17 +678,23 @@ namespace bg3_modders_multitool.Services
                                 reader.ReadToFollowing("region");
                             }
                         }
-                        catch
-                        {
-                            GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
-                            reader.Dispose();
-                            return;
-                        }
-                        finally
+                    }
+                    catch
+                    {
+                        GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
+                        if(reader != null)
                         {
                             reader.Dispose();
-                            UpdateFileProgress();
                         }
+                        GameObjectViewModel.LoadingCanceled = true;
+                    }
+                    finally
+                    {
+                        if (reader != null)
+                        {
+                            reader.Dispose();
+                        }
+                        UpdateFileProgress();
                     }
                 }
             });
