@@ -655,7 +655,7 @@ namespace bg3_modders_multitool.Services
                 var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
                 foreach (var modName in paths)
                 {
-                    foreach (var dir in new string[] { "Progressions", "Races", "ClassDescriptions", "ActionResourceDefinitions", "Lists", "RootTemplates" })
+                    foreach (var dir in new string[] { "Progressions", "ProgressionDescriptions", "Races", "Origins", "ClassDescriptions", "ActionResourceDefinitions", "Lists", "RootTemplates" })
                     {
                         var isRootTemplate = dir == "RootTemplates";
                         var isList = dir == "Lists";
@@ -701,6 +701,9 @@ namespace bg3_modders_multitool.Services
                                     }
                                     file.Delete();
                                 }
+
+                                xml.DescendantNodes().OfType<XComment>().Remove();
+
                                 var fileName = isRootTemplate ? "_merged" : fileGroup.Key;
                                 xml.Save($"{path}\\{fileName}{(isRootTemplate ? ".lsf" : "")}.lsx");
                             }
