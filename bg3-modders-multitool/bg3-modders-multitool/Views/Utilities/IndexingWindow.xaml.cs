@@ -81,7 +81,7 @@ namespace bg3_modders_multitool.Views
 
         private void Path_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            FileHelper.OpenFile(((TextBlock)((Button)sender).Content).Text);
+            ConvertAndOpenButton_Click(sender, e);
         }
 
         private void Path_MouseEnter(object sender, MouseEventArgs e)
