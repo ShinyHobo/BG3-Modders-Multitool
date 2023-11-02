@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -61,7 +62,12 @@ namespace bg3_modders_multitool.Views
             var dataDir = FileHelper.DataDirectory;
             if (Directory.Exists(dataDir))
             {
-                System.Diagnostics.Process.Start(MainWindowVM.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
+                var bg3Exe = MainWindowVM.Bg3ExeLocation.Split('\\').Last();
+                Process pr = new Process();
+                pr.StartInfo.WorkingDirectory = MainWindowVM.Bg3ExeLocation.Replace($"\\{bg3Exe}", string.Empty);
+                pr.StartInfo.FileName = bg3Exe;
+                pr.StartInfo.Arguments = Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty;
+                pr.Start();
             }
             else
             {
