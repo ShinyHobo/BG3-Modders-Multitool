@@ -525,6 +525,7 @@ namespace bg3_modders_multitool.Services
             {
                 if (!isExcluded)
                 {
+                    // TODO if lsf, convert first
                     lines = ReadFileContentsForMatches(File.ReadLines(path));
                 }
 
