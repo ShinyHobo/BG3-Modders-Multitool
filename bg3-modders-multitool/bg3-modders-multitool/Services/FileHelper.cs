@@ -303,7 +303,7 @@ namespace bg3_modders_multitool.Services
                         if (fileAssociation.Exists)
                             Process.Start(dae);
                         // open folder
-                        Process.Start("explorer.exe", $"/select,{dae}");
+                        Process.Start("explorer.exe", $"/select,\"{dae}\"");
                     }
                     else
                     {
@@ -314,7 +314,7 @@ namespace bg3_modders_multitool.Services
                             {
                                 StartInfo = {
                                     FileName = exe,
-                                    Arguments = $"{file} -n{line}"
+                                    Arguments = $"\"{file}\" -n{line}"
                                 }
                             };
                             npp.Start();
