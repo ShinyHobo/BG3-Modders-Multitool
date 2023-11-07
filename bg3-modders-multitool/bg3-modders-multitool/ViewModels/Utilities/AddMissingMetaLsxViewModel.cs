@@ -48,7 +48,7 @@ namespace bg3_modders_multitool.ViewModels.Utilities
                 xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "Folder").Single().Attribute("value").Value = ModName;
                 xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "Name").Single().Attribute("value").Value = ModName;
                 xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "UUID").Single().Attribute("value").Value = Guid.NewGuid().ToString();
-                xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "Version").ToList().ForEach(n => { n.Attribute("value").Value = version.ToVersion64().ToString(); });
+                xml.Descendants("attribute").Where(n => n.Attribute("id").Value == "Version64").ToList().ForEach(n => { n.Attribute("value").Value = version.ToVersion64().ToString(); });
 
                 MetaPath = $"{ModPath}\\meta.lsx";
                 xml.Save(MetaPath);
