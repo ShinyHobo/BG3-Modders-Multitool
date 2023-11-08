@@ -1,7 +1,5 @@
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
+
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
 ![Static Badge](https://img.shields.io/badge/wiki-blue?style=for-the-badge&link=https%3A%2F%2Fgithub.com%2FShinyHobo%2FBG3-Modders-Multitool%2Fwiki)
 
 
