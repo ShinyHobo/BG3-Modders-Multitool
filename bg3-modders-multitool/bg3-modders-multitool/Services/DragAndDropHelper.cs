@@ -572,7 +572,7 @@ namespace bg3_modders_multitool.Services
                 var paths = modNameDirs.GetDirectories("*", System.IO.SearchOption.TopDirectoryOnly);
                 foreach (var modName in paths)
                 {
-                    foreach (var dir in new string[] { "MultiEffectInfos", "Assets\\Effects\\Effects_Banks" })
+                    foreach (var dir in new string[] { "MultiEffectInfos" })
                     {
                         var path = Path.Combine(directory, "Public", modName.Name, dir);
                         var dirInfo = new DirectoryInfo(path);
@@ -693,10 +693,13 @@ namespace bg3_modders_multitool.Services
                                     using (System.IO.StreamReader reader = new System.IO.StreamReader(file.FullName))
                                     {
                                         var contents = XDocument.Parse(reader.ReadToEnd(), LoadOptions.PreserveWhitespace);
-                                        var contentChildren = contents.Descendants("children").First().Elements().ToList();
-                                        foreach (var child in contentChildren)
+                                        var contentChildren = contents.Descendants("children").FirstOrDefault()?.Elements().ToList();
+                                        if(contentChildren != null)
                                         {
-                                            children.Add(child);
+                                            foreach (var child in contentChildren)
+                                            {
+                                                children.Add(child);
+                                            }
                                         }
                                     }
                                     file.Delete();
