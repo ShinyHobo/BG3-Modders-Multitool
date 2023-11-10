@@ -236,7 +236,7 @@ namespace bg3_modders_multitool.Services
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
-                    new TextField("path", path.Replace("/","\\"), Field.Store.YES),
+                    new TextField("path", path.Replace("\\","/"), Field.Store.YES),
                     //new TextField("title", fileName, Field.Store.YES)
                 };
 
