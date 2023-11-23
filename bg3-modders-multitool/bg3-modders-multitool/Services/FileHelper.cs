@@ -319,6 +319,17 @@ namespace bg3_modders_multitool.Services
                             };
                             npp.Start();
                         }
+                        else if (exe.Contains("Code") && line.HasValue)
+                        {
+                            var npp = new Process
+                            {
+                                StartInfo = {
+                                   FileName = exe,
+                                   Arguments = $"-g {file}:{line}"
+                               }
+                            };
+                            npp.Start();
+                        }
                         else
                         {
                             Process.Start(path);
