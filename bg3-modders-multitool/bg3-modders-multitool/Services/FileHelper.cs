@@ -319,6 +319,18 @@ namespace bg3_modders_multitool.Services
                             };
                             npp.Start();
                         }
+                        else if(exe.Contains("Microsoft VS Code") && line.HasValue)
+                        {
+                            var code = new Process
+                            {
+                                StartInfo =
+                                {
+                                    FileName = exe,
+                                    Arguments = $"-goto \"{file}:{line}\""
+                                }
+                            };
+                            code.Start();
+                        }
                         else
                         {
                             Process.Start(path);

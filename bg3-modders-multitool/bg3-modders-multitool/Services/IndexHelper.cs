@@ -586,9 +586,9 @@ namespace bg3_modders_multitool.Services
                                 }
                             }
                         }
-                        else
+                        else 
                         {
-                            lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{helper.Pak}\\{helper.Path}"));
+                            lines.Add(0, string.Format(Properties.Resources.EmptyFile, $"{helper.Pak}\\{helper.Path}"));
                         }
                     }
                 }

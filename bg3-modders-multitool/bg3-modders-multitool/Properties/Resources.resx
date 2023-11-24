@@ -399,6 +399,9 @@ Do you wish to continue?</value>
     <value>Duplicate file [{0}] found; replacing...</value>
     <comment>file name</comment>
   </data>
+  <data name="EmptyFile" xml:space="preserve">
+    <value>No file contents found; nothing to display</value>
+  </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
     <value>Enabling splash screen...</value>
   </data>

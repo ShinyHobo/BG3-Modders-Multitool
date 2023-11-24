@@ -533,9 +533,12 @@ namespace bg3_modders_multitool.Services
             var iconFiles = GetFileList("IconUVList");
             foreach(var iconFile in iconFiles)
             {
-                var helper = PakReaderHelpers.First(h => h.PakName == iconFile.Split('\\')[0]);
-                var contents = helper.ReadPakFileContents(PakReaderHelper.GetPakPath(iconFile));
-                TextureAtlases.Add(TextureHelper.Read(contents, iconFile, new DirectoryInfo(iconFile).Parent.Parent.Name));
+                var helper = PakReaderHelpers.FirstOrDefault(h => h.PakName == iconFile.Split('\\')[0]);
+                if (helper != null)
+                {
+                    var contents = helper.ReadPakFileContents(PakReaderHelper.GetPakPath(iconFile));
+                    TextureAtlases.Add(TextureHelper.Read(contents, iconFile, new DirectoryInfo(iconFile).Parent.Parent.Name));
+                }
             }
             return true;
         }
