@@ -230,7 +230,6 @@ namespace bg3_modders_multitool.Views
         #endregion
 
         #region Mod Packing
-        private PackedVersion PackedVersion { get; set; }
 
         private void PakToMods_Checked(object sender, RoutedEventArgs e)
         {
@@ -264,7 +263,7 @@ namespace bg3_modders_multitool.Views
         /// <param name="e"></param>
         private void versionSpinner_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            PackedVersion = new PackedVersion()
+            MainWindowVM.PackedVersion = new PackedVersion()
             {
                 Major = (uint)(major.Value ?? 0),
                 Minor = (uint)(minor.Value ?? 0),

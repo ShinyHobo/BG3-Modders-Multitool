@@ -46,6 +46,30 @@ namespace bg3_modders_multitool.ViewModels
             DescriptionColor = "Black";
         }
 
+        /// <summary>
+        /// Looks up the version of the first meta.lsx found in the workspace directory
+        /// </summary>
+        internal void GetVersion()
+        {
+            if (CanRebuild == Visibility.Visible)
+            {
+                var modsPath = Path.Combine(_lastDirectory, "Mods");
+                var pathList = Directory.GetDirectories(modsPath);
+                if (pathList.Length > 0)
+                {
+                    foreach (string file in Directory.GetFiles(pathList[0]))
+                    {
+                        if (Path.GetFileName(file).Equals("meta.lsx"))
+                        {
+                            // TODO - get version from meta.lsx here
+                            // Version, Version64
+                            // Replace version lines with int64 version
+                        }
+                    }
+                }
+            }
+        }
+
         #region Properties
         private string _packBoxColor;
 
@@ -80,6 +104,9 @@ namespace bg3_modders_multitool.ViewModels
                 }
 
                 CanRebuild = !string.IsNullOrEmpty(value) ? Visibility.Visible : Visibility.Collapsed;
+
+                GetVersion();
+
                 OnNotifyPropertyChanged();
             }
         }
