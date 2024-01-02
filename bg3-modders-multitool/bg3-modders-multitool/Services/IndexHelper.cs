@@ -131,22 +131,30 @@ namespace bg3_modders_multitool.Services
                 using (Analyzer a = new CustomAnalyzer())
                 {
                     IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                    using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
-                    using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                    try
                     {
-                        Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
+                        Alphaleonis.Win32.Filesystem.Directory.CreateDirectory($"{luceneDeltaDirectory}\\{helper.PakName}");
+                        using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
+                        using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                         {
-                            try
+                            Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
                             {
-                                IndexLuceneFileDirectly(file.Name, helper, writer);
-                            }
-                            catch (OutOfMemoryException)
-                            {
-                                GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
-                            }
-                        });
-                        writer.Commit();
-                        cachedPaks.Add(helper.PakName);
+                                try
+                                {
+                                    IndexLuceneFileDirectly(file.Name, helper, writer);
+                                }
+                                catch (OutOfMemoryException)
+                                {
+                                    GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
+                                }
+                            });
+                            writer.Commit();
+                            cachedPaks.Add(helper.PakName);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole(ex.Message);
                     }
                 }
             });
