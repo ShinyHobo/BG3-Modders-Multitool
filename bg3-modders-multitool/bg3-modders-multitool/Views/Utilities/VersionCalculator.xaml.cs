@@ -19,10 +19,10 @@
             int64Version.Value = 36028797018963968; // 1.0.0.0
         }
 
-        private PackedVersion PackedVersion { get; set; }
+        public PackedVersion PackedVersion { get; set; }
         private bool SkipValueChange { get; set; }
 
-        private void versionSpinner_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        public void versionSpinner_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (major != null && major.Value.HasValue &&
                 minor != null &&  minor.Value.HasValue &&

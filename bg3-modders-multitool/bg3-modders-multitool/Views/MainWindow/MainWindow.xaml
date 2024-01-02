@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:views="clr-namespace:bg3_modders_multitool.Views"
         xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
         mc:Ignorable="d"
@@ -136,11 +137,30 @@
                 <Grid Margin="273,110,0,0">
                     <StackPanel VerticalAlignment="Bottom">
                         <TextBlock Text="{Binding DragAndDropBox.LastDirectory}" Width="350" HorizontalAlignment="Left" TextWrapping="Wrap" Visibility="{Binding DragAndDropBox.CanRebuild}"/>
-                        <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="5" Background="Green" Margin="0,5,0,10" Click="rebuild_Click" Visibility="{Binding DragAndDropBox.CanRebuild}" x:Name="rebuildBtn">
-                            <TextBlock Text="{x:Static p:Resources.RebuildButton}" Foreground="LightGray"/>
-                        </Button>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="5" Background="Green" Margin="0,15,10,0" Click="rebuild_Click" Visibility="{Binding DragAndDropBox.CanRebuild}" x:Name="rebuildBtn">
+                                <TextBlock Text="{x:Static p:Resources.RebuildButton}" Foreground="LightGray"/>
+                            </Button>
+                            <StackPanel>
+                                <Label Content="{x:Static p:Resources.VersionMajorLabel}"/>
+                                <xctk:IntegerUpDown x:Name="major" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="{x:Static p:Resources.VersionMinorLabel}"/>
+                                <xctk:IntegerUpDown x:Name="minor" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="{x:Static p:Resources.VersionRevisionLabel}"/>
+                                <xctk:IntegerUpDown x:Name="revision" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="{x:Static p:Resources.VersionBuildLabel}"/>
+                                <xctk:IntegerUpDown x:Name="build" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                            </StackPanel>
+                        </StackPanel>
                         <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" IsEnabled="{Binding ModsFolderLoaded}" Margin="0,0,0,0"
-                                IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
+                            IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
                     </StackPanel>
                 </Grid>
                 <TextBlock x:Name="configNeeded" HorizontalAlignment="Left" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="610,204,0,0" TextAlignment="Center" Visibility="{Binding ConfigNeeded}"/>

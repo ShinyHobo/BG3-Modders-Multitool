@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
+    using LSLib.LS;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -250,6 +251,23 @@ namespace bg3_modders_multitool.Views
             rebuildBtn.IsEnabled = false;
             await MainWindowVM.DragAndDropBox.ProcessDrop(data);
             rebuildBtn.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Updates the value used for the Int64 version in the meta file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void versionSpinner_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            var packedVersion = new PackedVersion()
+            {
+                Major = (uint)(major.Value ?? 0),
+                Minor = (uint)(minor.Value ?? 0),
+                Build = (uint)(build.Value ?? 0),
+                Revision = (uint)(revision.Value ?? 0)
+            };
+            var bler = "";
         }
         #endregion
 
