@@ -230,6 +230,8 @@ namespace bg3_modders_multitool.Views
         #endregion
 
         #region Mod Packing
+        private PackedVersion PackedVersion { get; set; }
+
         private void PakToMods_Checked(object sender, RoutedEventArgs e)
         {
             GeneralHelper.TogglePakToMods(true);
@@ -249,7 +251,9 @@ namespace bg3_modders_multitool.Views
         {
             DataObject data = new DataObject(DataFormats.FileDrop, new string[] { MainWindowVM.DragAndDropBox.LastDirectory });
             rebuildBtn.IsEnabled = false;
+            // TODO - pass version here
             await MainWindowVM.DragAndDropBox.ProcessDrop(data);
+            // TODO - auto increment revision here
             rebuildBtn.IsEnabled = true;
         }
 
@@ -260,14 +264,13 @@ namespace bg3_modders_multitool.Views
         /// <param name="e"></param>
         private void versionSpinner_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            var packedVersion = new PackedVersion()
+            PackedVersion = new PackedVersion()
             {
                 Major = (uint)(major.Value ?? 0),
                 Minor = (uint)(minor.Value ?? 0),
                 Build = (uint)(build.Value ?? 0),
                 Revision = (uint)(revision.Value ?? 0)
             };
-            var bler = "";
         }
         #endregion
 

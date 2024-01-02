@@ -123,6 +123,19 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        private ulong _version;
+        /// <summary>
+        /// The mod version stored in the meta.lsx file as an Int64 value
+        /// </summary>
+        public ulong Version
+        {
+            get { return _version; }
+            set {
+                _version = value;
+                OnNotifyPropertyChanged();
+            }
+        }
         #endregion
     }
 }
