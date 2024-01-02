@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -36,7 +37,64 @@ namespace bg3_modders_multitool.Views
             DataContext = MainWindowVM;
 
             MainWindowVM.SearchResults.AllowIndexing = true;
+
+            // Check for install integrity
+            if (!FileHelper.IsDirectoryWritable(Directory.GetCurrentDirectory()))
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.NoWriteAccess);
+            }
+            #if DEBUG == false
+            if (File.Exists($"{Directory.GetCurrentDirectory()}\\LSLib.dll"))
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.ExternalLSLibFound);
+            }
+            #endif
         }
+
+        #region General
+        /// <summary>
+        /// Launches the game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dataDir = FileHelper.DataDirectory;
+            if (Directory.Exists(dataDir))
+            {
+                var bg3Exe = MainWindowVM.Bg3ExeLocation.Split('\\').Last();
+                Process pr = new Process();
+                pr.StartInfo.WorkingDirectory = MainWindowVM.Bg3ExeLocation.Replace($"\\{bg3Exe}", string.Empty);
+                pr.StartInfo.FileName = bg3Exe;
+                pr.StartInfo.Arguments = Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty;
+                pr.Start();
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.InvalidBg3LocationSelection);
+            }
+        }
+
+        /// <summary>
+        /// Opens the configuration menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void configMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            if (!vm.ConfigOpen)
+            {
+                var config = new ConfigurationMenu(vm);
+                try
+                {
+                    config.Owner = this;
+                    config.Show();
+                }
+                catch { }
+            }
+        }
+        #endregion
 
         #region File Unpacker
         /// <summary>
@@ -122,75 +180,78 @@ namespace bg3_modders_multitool.Views
         private Task IndexFiles(bool directIndex)
         {
             return Task.Run(() => {
+                if(directIndex)
+                {
+                    Application.Current.Dispatcher.Invoke(async () =>
+                    {
+                        await MainWindowVM.SearchResults.IndexHelper.IndexDirectly();
+                    }).Wait();
+                }
+                else
+                {
+                    var result = System.Windows.Forms.DialogResult.OK;
+                    if (IndexHelper.IndexDirectoryExists())
+                    {
+                        result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
+                    }
+
+                    if (result.Equals(System.Windows.Forms.DialogResult.OK))
+                    {
+                        Application.Current.Dispatcher.Invoke(async () =>
+                        {
+                            await MainWindowVM.SearchResults.IndexHelper.Index();
+                        }).Wait();
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Delete the index
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void deleteIndex_Click(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() => {
                 var result = System.Windows.Forms.DialogResult.OK;
                 if (IndexHelper.IndexDirectoryExists())
                 {
-                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ReindexQuestion, Properties.Resources.ReadyToIndexAgainQuestion, System.Windows.Forms.MessageBoxButtons.OKCancel);
+                    result = System.Windows.Forms.MessageBox.Show(Properties.Resources.ClearIndexQuestion, Properties.Resources.AreYouSure, System.Windows.Forms.MessageBoxButtons.OKCancel);
                 }
 
                 if (result.Equals(System.Windows.Forms.DialogResult.OK))
                 {
-                    Application.Current.Dispatcher.Invoke(async () =>
-                    {
-                        if (directIndex)
-                            await MainWindowVM.SearchResults.IndexHelper.IndexDirectly();
-                        else
-                            await MainWindowVM.SearchResults.IndexHelper.Index();
-                    }).Wait();
+                    MainWindowVM.SearchResults.IndexHelper.DeleteIndex();
                 }
             });
         }
         #endregion
 
-        private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
+        #region Mod Packing
+        private void PakToMods_Checked(object sender, RoutedEventArgs e)
         {
-            var dataDir = FileHelper.DataDirectory;
-            if (Directory.Exists(dataDir))
-            {
-                System.Diagnostics.Process.Start(MainWindowVM.Bg3ExeLocation, Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty);
-            }
-            else
-            {
-                GeneralHelper.WriteToConsole(Properties.Resources.InvalidBg3LocationSelection);
-            }
+            GeneralHelper.TogglePakToMods(true);
         }
 
-        private void GameObjectButton_Click(object sender, RoutedEventArgs e)
+        private void PakToMods_Unchecked(object sender, RoutedEventArgs e)
         {
-            new GameObjectWindow().Show();
+            GeneralHelper.TogglePakToMods(false);
         }
 
-        private void Decompress_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Rebuilds the selected directory
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void rebuild_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ViewModels.MainWindow;
-            if(vm.NotDecompressing)
-            {
-                var result = System.Windows.Forms.MessageBox.Show(Properties.Resources.DecompressQuestion, Properties.Resources.DecompressQuestionTitle, System.Windows.Forms.MessageBoxButtons.YesNo);
-                if(result == System.Windows.Forms.DialogResult.Yes)
-                {
-                    vm.NotDecompressing = false;
-                    vm.SearchResults.PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
-                        Application.Current.Dispatcher.Invoke(() => {
-                            vm.NotDecompressing = true;
-                        });
-                    });
-                }
-            }
+            DataObject data = new DataObject(DataFormats.FileDrop, new string[] { MainWindowVM.DragAndDropBox.LastDirectory });
+            rebuildBtn.IsEnabled = false;
+            await MainWindowVM.DragAndDropBox.ProcessDrop(data);
+            rebuildBtn.IsEnabled = true;
         }
-
-        private void configMenu_Click(object sender, RoutedEventArgs e)
-        {
-            var vm = DataContext as ViewModels.MainWindow;
-            if (!vm.ConfigOpen)
-            {
-                var config = new ConfigurationMenu(vm);
-                try
-                {
-                    config.Owner = this;
-                    config.Show();
-                } catch { }
-            }
-        }
+        #endregion
 
         #region Shortcuts Tab
         /// <summary>
@@ -265,11 +326,6 @@ namespace bg3_modders_multitool.Views
         }
         #endregion
 
-        private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)
-        {
-            RootTemplateHelper.ClearGameObjectCache();
-        }
-
         #region Help Tab
         #region Links
         private void BG3WikiLink_Click(object sender, RoutedEventArgs e)
@@ -326,6 +382,11 @@ namespace bg3_modders_multitool.Views
         {
             System.Diagnostics.Process.Start("https://katiefrogs.github.io/vgmstream-web/");
         }
+
+        private void SpellGenAssistant_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Shimizoki/BG3-Spell-Generation-Assistant");
+        }
         #endregion
 
         private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
@@ -344,6 +405,48 @@ namespace bg3_modders_multitool.Views
         #endregion
 
         #region Utilities
+        /// <summary>
+        /// Clears the GameObject Explorer Cache folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void gameObjectCacheClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            RootTemplateHelper.ClearGameObjectCache();
+        }
+
+        /// <summary>
+        /// Opens the GameObject Explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GameObjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            new GameObjectWindow().Show();
+        }
+
+        /// <summary>
+        /// Decompresses the files located in UnpackedData
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Decompress_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainWindow;
+            if (vm.NotDecompressing)
+            {
+                var result = System.Windows.Forms.MessageBox.Show(Properties.Resources.DecompressQuestion, Properties.Resources.DecompressQuestionTitle, System.Windows.Forms.MessageBoxButtons.YesNo);
+                if (result == System.Windows.Forms.DialogResult.Yes)
+                {
+                    vm.NotDecompressing = false;
+                    vm.SearchResults.PakUnpackHelper.DecompressAllConvertableFiles().ContinueWith(delegate {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            vm.NotDecompressing = true;
+                        });
+                    });
+                }
+            }
+        }
         /// <summary>
         /// Opens dialog to select paks to unpack
         /// </summary>
@@ -388,6 +491,17 @@ namespace bg3_modders_multitool.Views
         {
             var colorPickerWIndow = new ColorPickerWindow();
             colorPickerWIndow.Show();
+        }
+
+        /// <summary>
+        /// Opens the version generator window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void versionGenerator_Click(object sender, RoutedEventArgs e)
+        {
+            var versionGenerator = new VersionCalculator();
+            versionGenerator.Show();
         }
         #endregion
 

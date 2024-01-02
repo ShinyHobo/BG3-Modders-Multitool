@@ -22,6 +22,7 @@ namespace bg3_modders_multitool.Services
     using Lucene.Net.Index.Extensions;
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
+    using Newtonsoft.Json;
 
     public class IndexHelper
     {
@@ -33,19 +34,22 @@ namespace bg3_modders_multitool.Services
         private static readonly string[] extensionsToExclude = { ".bin",".png", ".dds", ".DDS", ".ttf", ".gr2", ".GR2", ".fbx", ".dae", ".gtp", ".wem", ".bk2", ".ffxanim", ".tga", ".bshd", ".shd", ".jpg",".gts",".data",".patch",".psd" };
         private static readonly string[] imageExtensions = { ".png", ".dds", ".DDS", ".tga", ".jpg" };
         public static readonly string[] BinaryExtensions = { ".lsf", ".bin", ".loca", ".data", ".patch" };
-        private static readonly string luceneIndex = "lucene/index";
+        private static readonly string luceneRoot = "lucene";
+        private static readonly string luceneIndex = $"{luceneRoot}/index";
+        private static readonly string luceneDeltaDirectory = $"{luceneRoot}/paks";
+        private static readonly string luceneCacheFile = $"{luceneRoot}\\cache.json";
         public SearchResults DataContext;
         public string SearchText;
-        private readonly FSDirectory fSDirectory;
+        private readonly FSDirectory mainFSDirectory;
 
         public IndexHelper()
         {
-            fSDirectory = FSDirectory.Open(luceneIndex);
+            mainFSDirectory = FSDirectory.Open(luceneIndex);
         }
 
         public void Clear()
         {
-            fSDirectory.Dispose();
+            mainFSDirectory.Dispose();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -63,10 +67,25 @@ namespace bg3_modders_multitool.Services
                     DataContext.AllowIndexing = false;
                 });
 
+                if (System.IO.Directory.Exists(luceneIndex) && !File.Exists(luceneCacheFile))
+                    System.IO.Directory.Delete(luceneIndex, true);
+
+                if (System.IO.Directory.Exists(luceneDeltaDirectory))
+                    System.IO.Directory.Delete(luceneDeltaDirectory, true);
+
                 var helpers = new List<PakReaderHelper>();
                 var fileCount = 0;
                 var paks = PakReaderHelper.GetPakList();
-                foreach ( var pak in paks )
+
+                var cachedJson = new List<string>();
+                if(File.Exists(luceneCacheFile))
+                using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
+                {
+                    var fileContents = reader.ReadToEnd();
+                    cachedJson = JsonConvert.DeserializeObject<List<string>>(fileContents);
+                }
+
+                foreach (var pak in paks.Where(p => !cachedJson.Contains(Path.GetFileNameWithoutExtension(p))))
                 {
                     var helper = new PakReaderHelper(pak);
                     if (helper.PackagedFiles != null)
@@ -74,6 +93,15 @@ namespace bg3_modders_multitool.Services
                         helpers.Add(helper);
                         fileCount += helper.PackagedFiles.Count;
                     }
+                }
+                
+                if(helpers.Count == 0)
+                {
+                    GeneralHelper.WriteToConsole(Properties.Resources.IndexUpToDate);
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.AllowIndexing = true;
+                    });
+                    return;
                 }
 
                 // Display total file count being indexed
@@ -86,8 +114,6 @@ namespace bg3_modders_multitool.Services
                     DataContext.IndexFileCount = 0;
                 });
 
-                if (System.IO.Directory.Exists(luceneIndex))
-                    System.IO.Directory.Delete(luceneIndex, true);
                 IndexFilesDirectly(helpers);
             });
         }
@@ -99,14 +125,17 @@ namespace bg3_modders_multitool.Services
         private void IndexFilesDirectly(List<PakReaderHelper> helpers)
         {
             GeneralHelper.WriteToConsole(Properties.Resources.IndexingInProgress);
-            using (Analyzer a = new CustomAnalyzer())
+            var cachedPaks = new ConcurrentBag<string>();
+            Parallel.ForEach(helpers, new ParallelOptions { MaxDegreeOfParallelism = 4 }, helper =>
             {
-                IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                config.SetUseCompoundFile(false);
-                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                using (Analyzer a = new CustomAnalyzer())
                 {
-                    Parallel.ForEach(helpers, GeneralHelper.ParallelOptions, helper => {
-                        Parallel.ForEach(helper.PackagedFiles, GeneralHelper.ParallelOptions, file => {
+                    IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
+                    using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
+                    using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                    {
+                        Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
+                        {
                             try
                             {
                                 IndexLuceneFileDirectly(file.Name, helper, writer);
@@ -116,12 +145,74 @@ namespace bg3_modders_multitool.Services
                                 GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
                             }
                         });
-                    });
-                    GeneralHelper.WriteToConsole(Properties.Resources.FinalizingIndex);
-                    writer.Commit();
+                        writer.Commit();
+                        cachedPaks.Add(helper.PakName);
+                    }
+                }
+            });
+
+            GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
+
+            var originalTime = DataContext.IndexStartTime;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                DataContext.IndexFileCount = 0;
+                DataContext.IndexStartTime = DateTime.Now;
+                DataContext.IndexFileTotal = cachedPaks.Count;
+            });
+
+            // Merge indexes
+            using (Analyzer a = new CustomAnalyzer())
+            using (IndexWriter writer = new IndexWriter(mainFSDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, a)))
+            {
+                foreach(var pak in cachedPaks)
+                {
+                    var indexDir = Path.Combine(Alphaleonis.Win32.Filesystem.Directory.GetCurrentDirectory(), luceneDeltaDirectory, pak);
+                    if(Alphaleonis.Win32.Filesystem.Directory.Exists(indexDir))
+                    {
+                        using (var index = DirectoryReader.Open(FSDirectory.Open(indexDir)))
+                        {
+                            writer.AddIndexes(index);
+                        }
+
+                        Application.Current.Dispatcher.Invoke(() => { DataContext.IndexFileCount++; });
+                    }
                 }
             }
-            GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, DataContext.GetTimeTaken().ToString("hh\\:mm\\:ss"));
+
+            GeneralHelper.WriteToConsole(Properties.Resources.DeletingTempIndecies);
+            if (System.IO.Directory.Exists(luceneDeltaDirectory))
+                System.IO.Directory.Delete(luceneDeltaDirectory, true);
+
+            var cacheInfo = new FileInfo(luceneCacheFile);
+            if (!cacheInfo.Exists)
+            {
+                File.Create(luceneCacheFile).Dispose();
+            }
+
+            GeneralHelper.WriteToConsole(Properties.Resources.UpdatingIndexPakList);
+            using (System.IO.TextReader reader = File.OpenText(luceneCacheFile))
+            {
+                var fileContents = reader.ReadToEnd();
+                var cachedJson = JsonConvert.DeserializeObject<List<string>>(fileContents);
+                if (cachedJson == null)
+                {
+                    cachedJson = cachedPaks.OrderBy(x => x).ToList();
+                }
+                else
+                {
+                    cachedJson.AddRange(cachedPaks);
+                    cachedJson = cachedJson.OrderBy(x => x).Distinct().ToList();
+                }
+                reader.Close();
+
+                var contentsToWriteToFile = JsonConvert.SerializeObject(cachedJson, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                File.WriteAllText(luceneCacheFile, contentsToWriteToFile);
+            }
+
+            var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(originalTime.Add(DataContext.GetTimeTaken())).Ticks);
+            GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, timeTaken.ToString("hh\\:mm\\:ss"));
             Application.Current.Dispatcher.Invoke(() => {
                 DataContext.IsIndexing = false;
                 DataContext.AllowIndexing = true;
@@ -139,14 +230,14 @@ namespace bg3_modders_multitool.Services
             var path = $"{helper.PakName}\\{file}";
             try
             {
-                var fileName = Path.GetFileName(file);
+                //var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
 
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
-                    new TextField("path", path.Replace("/","\\"), Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES)
+                    new TextField("path", path.Replace("\\","/"), Field.Store.YES),
+                    //new TextField("title", fileName, Field.Store.YES)
                 };
 
                 // if file type is excluded, only track file name and path so it can be searched for by name
@@ -162,8 +253,10 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            lock (DataContext)
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 DataContext.IndexFileCount++;
+            });
         }
         #endregion
 
@@ -212,7 +305,7 @@ namespace bg3_modders_multitool.Services
             {
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
                 config.SetUseCompoundFile(false);
-                using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                using (IndexWriter writer = new IndexWriter(mainFSDirectory, config))
                 {
                     Parallel.ForEach(files, GeneralHelper.ParallelOptions, file => {
                         try
@@ -244,14 +337,14 @@ namespace bg3_modders_multitool.Services
             var path = file.Replace(@"\\?\", string.Empty).Replace(@"\\", @"\").Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
             try
             {
-                var fileName = Path.GetFileName(file);
+                //var fileName = Path.GetFileName(file);
                 var extension = Path.GetExtension(file);
 
                 var doc = new Document
                 {
                     //new Int64Field("id", id, Field.Store.YES),
                     new TextField("path", path, Field.Store.YES),
-                    new TextField("title", fileName, Field.Store.YES)
+                    //new TextField("title", fileName, Field.Store.YES)
                 };
 
                 // if file type is excluded, only track file name and path so it can be searched for by name
@@ -267,8 +360,10 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            lock(DataContext)
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 DataContext.IndexFileCount++;
+            });
         }
         #endregion
 
@@ -301,7 +396,7 @@ namespace bg3_modders_multitool.Services
             return Task.Run(() => { 
                 var matches = new List<string>();
                 var filteredMatches = new List<string>();
-                if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(fSDirectory))
+                if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(mainFSDirectory))
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFound);
                     return (Matches: matches, FilteredMatches: filteredMatches);
@@ -309,7 +404,7 @@ namespace bg3_modders_multitool.Services
 
                 try
                 {
-                    using (IndexReader reader = DirectoryReader.Open(fSDirectory))
+                    using (IndexReader reader = DirectoryReader.Open(mainFSDirectory))
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         BooleanQuery query = new BooleanQuery();
@@ -367,10 +462,10 @@ namespace bg3_modders_multitool.Services
                                 int docId = scoreDoc.Doc;
 
                                 Document doc = searcher.Doc(docId);
-                                var path = doc.Get("path");
+                                var path = doc.Get("path").Replace("/", "\\");
                                 var ext = Path.GetExtension(path).ToLower();
                                 ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
-                                if (selectedFileTypes != null && !selectedFileTypes.Contains(ext)) // TODO - add option to turn this off in config
+                                if (selectedFileTypes != null && !selectedFileTypes.Contains(ext))
                                 {
                                     filteredSomeResults++;
                                     if(!FileHelper.FileTypes.Contains(ext))
@@ -430,6 +525,7 @@ namespace bg3_modders_multitool.Services
             {
                 if (!isExcluded)
                 {
+                    // TODO if lsf, convert first
                     lines = ReadFileContentsForMatches(File.ReadLines(path));
                 }
 
@@ -443,38 +539,56 @@ namespace bg3_modders_multitool.Services
             }
             else
             {
-                var pakPath = path.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
-                var pak = pakPath.Split('\\')[0];
-                path = PakReaderHelper.GetPakPath(pakPath);
-                var paks = PakReaderHelper.GetPakList();
-                pakPath = Alphaleonis.Win32.Filesystem.Directory.GetFiles(FileHelper.DataDirectory, "*.pak", System.IO.SearchOption.AllDirectories).FirstOrDefault(f => f.EndsWith("\\" + pak + ".pak"));
-                if (pakPath != null)
+                var helper = PakReaderHelper.GetPakHelper(path);
+                if (helper.Path != null)
                 {
                     fileExists = true;
-                    var helper = new PakReaderHelper(pakPath);
                     var contents = new byte[0];
                     var textFileContents = string.Empty;
 
-                    contents = helper.ReadPakFileContents(path, true);
+                    contents = helper.Helper.ReadPakFileContents(helper.Path, true);
 
                     if (!isExcluded)
                     {
                         textFileContents = contents.Length > 0 ? System.Text.Encoding.UTF8.GetString(contents) : textFileContents;
-                        lines = ReadFileContentsForMatches(textFileContents.Split('\n'));
+                        var allLines = new List<string>();
+                        using (System.IO.StringReader reader = new System.IO.StringReader(textFileContents))
+                        {
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                allLines.Add(line);
+                            }
+                        }
+                        lines = ReadFileContentsForMatches(allLines);
                     }
 
                     if (lines.Count == 0)
                     {
-                        if (imageExtensions.Contains(extension))
+                        if (contents != null && contents.Length != 0)
                         {
-                            if(contents == null)
+                            if (imageExtensions.Contains(extension)) // Normal texture
                             {
-                                lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{pak}\\{path}"));
+                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(contents)}\" Height=\"250\"></Image></InlineUIContainer>");
                             }
-                            else
+                            else if (FileHelper.IsGTP(path)) // Virtual texture
                             {
-                                lines.Add(0, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Source=\"{Convert.ToBase64String(contents)}\" Height=\"500\"></Image></InlineUIContainer>");
+                                var previewCount = 0;
+                                foreach (var file in TextureHelper.ExtractGTPContents(helper.Path, helper.Helper, contents))
+                                {
+                                    lines.Add(previewCount, $"<InlineUIContainer xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><Image Base64 Source=\"{Convert.ToBase64String(file)}\" Height=\"250\"></Image></InlineUIContainer>");
+                                    previewCount++;
+                                }
+
+                                if (lines.Count == 0)
+                                {
+                                    lines.Add(0, string.Format(Properties.Resources.CouldNotLoadImage, $"{helper.Pak}\\{helper.Path}"));
+                                }
                             }
+                        }
+                        else 
+                        {
+                            lines.Add(0, string.Format(Properties.Resources.EmptyFile, $"{helper.Pak}\\{helper.Path}"));
                         }
                     }
                 }
@@ -510,11 +624,27 @@ namespace bg3_modders_multitool.Services
                 {
                     var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
                     var escapedLine = System.Security.SecurityElement.Escape(line);
-                    escapedLine = escapedLine.Replace(text, $"<Span Background=\"DimGray\">{text}</Span>");
+                    escapedLine = escapedLine.Replace(text, $"<Span Background=\"DimGray\" Foreground=\"White\">{text}</Span>");
                     lines.TryAdd(lineNumber, escapedLine);
                 }
             });
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        /// <summary>
+        /// Deletes the index
+        /// </summary>
+        public void DeleteIndex()
+        {
+            if (System.IO.Directory.Exists(luceneRoot))
+            {
+                System.IO.Directory.Delete(luceneRoot, true);
+                GeneralHelper.WriteToConsole(Properties.Resources.IndexCleared);
+            }
+            else
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.NoIndexToRemove);
+            }
         }
     }
 

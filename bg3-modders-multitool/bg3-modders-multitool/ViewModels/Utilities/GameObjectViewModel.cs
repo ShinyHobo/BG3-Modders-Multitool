@@ -127,6 +127,18 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
+        private Visibility _modelNotFound = Visibility.Hidden;
+
+        public Visibility ModelNotFound
+        {
+            get { return _modelNotFound; }
+            set
+            {
+                _modelNotFound = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
         private System.Windows.Media.Media3D.MatrixTransform3D _transform;
 
         public System.Windows.Media.Media3D.MatrixTransform3D Transform {
@@ -209,7 +221,7 @@ namespace bg3_modders_multitool.ViewModels
                                 iconInfo = gustavTexturesPak.PackagedFiles.FirstOrDefault(pf => pf.Name.Equals($"Mods/Gustav/GUI/Assets/Portraits/{_info.Icon}.DDS"));
                             
                             if (iconInfo != null)
-                                Icon = TextureAtlas.ConvertDDSToBitmap(iconInfo);
+                                Icon = TextureHelper.ConvertDDSToBitmap(iconInfo);
                         }
                     }
                 }
@@ -243,6 +255,10 @@ namespace bg3_modders_multitool.ViewModels
                     var slots = RenderedModelHelper.GetMeshes(type, characterVisualResourceId ?? visualTemplate, RootTemplateHelper.CharacterVisualBanks, RootTemplateHelper.VisualBanks, RootTemplateHelper.BodySetVisuals,
                         RootTemplateHelper.MaterialBanks, RootTemplateHelper.TextureBanks);
                     MeshFiles = slots.OrderBy(slot => slot.File).ToList();
+                    if(MeshFiles.Count == 0)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => { ModelNotFound = Visibility.Visible; });
+                    }
                     try
                     {
                         Parallel.ForEach(slots, GeneralHelper.ParallelOptions, lodLevels =>

@@ -19,7 +19,7 @@ namespace bg3_modders_multitool.Services
 
     public static class FileHelper
     {
-        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc" };
+        public static readonly string[] ConvertableLsxResources = { ".lsf", ".lsb", ".lsbs", ".lsbc", ".lsfx" };
         public static readonly string[] MustRenameLsxResources = { ".lsbs", ".lsbc" };
 
         public static string UnpackedDataPath => $"{Directory.GetCurrentDirectory()}\\UnpackedData";
@@ -58,6 +58,7 @@ namespace bg3_modders_multitool.Services
             var isConvertableToLsx = CanConvertToLsx(file) || CanConvertToLsx(newPath);
             var isConvertableToXml = originalExtension.Contains("loca") && extension == "xml";
             var isConvertableToLoca = originalExtension.Contains("xml") && extension == "loca";
+            var isConvertableToLsj = originalExtension.Contains("lsx") && extension == "lsj";
 
             string path;
 
@@ -75,7 +76,7 @@ namespace bg3_modders_multitool.Services
 
             if(!File.Exists(newPath))
             {
-                if (isConvertableToLsx)
+                if (isConvertableToLsx || isConvertableToLsj)
                 {
                     if (MustRenameLsxResources.Contains(originalExtension))
                     {
@@ -145,7 +146,7 @@ namespace bg3_modders_multitool.Services
                 }
             }
 
-            return isConvertableToLsx || isConvertableToXml || isConvertableToLoca ? newFile : file;
+            return isConvertableToLsx || isConvertableToXml || isConvertableToLoca || isConvertableToLsj ? newFile : file;
         }
 
         /// <summary>
@@ -261,6 +262,16 @@ namespace bg3_modders_multitool.Services
         }
 
         /// <summary>
+        /// Determines if the file path is a .GTP virtual texture file.
+        /// </summary>
+        /// <param name="path">The file path.</param>
+        /// <returns>Whether or not the file is a .GTP file.</returns>
+        public static bool IsGTP(string path)
+        {
+            return Path.GetExtension(path).ToLower() == ".gtp";
+        }
+
+        /// <summary>
         /// Gets a standard path for files.
         /// </summary>
         /// <param name="file">The file to generate a path for.</param>
@@ -292,7 +303,7 @@ namespace bg3_modders_multitool.Services
                         if (fileAssociation.Exists)
                             Process.Start(dae);
                         // open folder
-                        Process.Start("explorer.exe", $"/select,{dae}");
+                        Process.Start("explorer.exe", $"/select,\"{dae}\"");
                     }
                     else
                     {
@@ -303,10 +314,22 @@ namespace bg3_modders_multitool.Services
                             {
                                 StartInfo = {
                                     FileName = exe,
-                                    Arguments = $"{file} -n{line}"
+                                    Arguments = $"\"{file}\" -n{line}"
                                 }
                             };
                             npp.Start();
+                        }
+                        else if(exe.Contains("Microsoft VS Code") && line.HasValue)
+                        {
+                            var code = new Process
+                            {
+                                StartInfo =
+                                {
+                                    FileName = exe,
+                                    Arguments = $"-goto \"{file}:{line}\""
+                                }
+                            };
+                            code.Start();
                         }
                         else
                         {
@@ -460,6 +483,24 @@ namespace bg3_modders_multitool.Services
             using (System.IO.StreamReader reader = new System.IO.StreamReader(stream))
             {
                 return reader.ReadToEnd();
+            }
+        }
+
+        /// <summary>
+        /// Checks if the appliation can write to the given directory
+        /// </summary>
+        /// <param name="dirPath">The directory to check</param>
+        /// <returns>Whether or not the application can successfully write to the given directory</returns>
+        public static bool IsDirectoryWritable(string dirPath)
+        {
+            try
+            {
+                using (System.IO.FileStream fs = File.Create( Path.Combine( dirPath, Path.GetRandomFileName() ), 1, System.IO.FileOptions.DeleteOnClose)){ }
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 

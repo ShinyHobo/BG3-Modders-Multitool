@@ -1,5 +1,6 @@
 ﻿namespace bg3_modders_multitool.Services
 {
+    using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using LSLib.LS.Enums;
     using System;
@@ -60,7 +61,7 @@
                     if(file.SizeOnDisk != 0)
                     {
                         var ext = Path.GetExtension(file.Name);
-                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(ext);
+                        var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(ext) && ext != ".lsj"; // lsj is already readible json
                         if(convert && canConvertToLsx)
                         {
                             using (MemoryStream newOutStream = new MemoryStream())
@@ -102,10 +103,7 @@
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (!FileHelper.IsSpecialLSFSignature(ex.Message))
-                                    {
-                                        GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, ".lsf", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
-                                    }
+                                    GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, ".xml", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
                                 }
                             }
                         }
@@ -250,6 +248,24 @@
                 }
             }
             return pakHelpers;
+        }
+
+        /// <summary>
+        /// Gets the helper and adjusted file path for the given file
+        /// </summary>
+        /// <param name="path">The file path</param>
+        /// <returns>The helper and adjusted pak file path</returns>
+        public static (PakReaderHelper Helper, string Pak, string Path) GetPakHelper(string path)
+        {
+            var pakPath = path.Replace(FileHelper.UnpackedDataPath + "\\", string.Empty);
+            var pak = pakPath.Split('\\')[0];
+            path = GetPakPath(pakPath);
+            var paks = GetPakList();
+            pakPath = Directory.GetFiles(FileHelper.DataDirectory, "*.pak", SearchOption.AllDirectories).FirstOrDefault(f => f.EndsWith("\\" + pak + ".pak"));
+            if (pakPath == null)
+                return (null, null, null);
+            var helper = new PakReaderHelper(pakPath);
+            return (helper, pak, path);
         }
     }
 }

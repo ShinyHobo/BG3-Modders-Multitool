@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace FramePFX.Themes {
+namespace bg3_modders_multitool.Themes {
     public partial class Controls {
         private void CloseWindow_Event(object sender, RoutedEventArgs e) {
             if (e.Source != null)

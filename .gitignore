@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 publishes/
 bg3-modders-multitool/bg3-modders-multitool/Costura64/LSLibNative.dll
+bg3-modders-multitool/bg3-modders-multitool/LSLib/LSLib.bak.dll

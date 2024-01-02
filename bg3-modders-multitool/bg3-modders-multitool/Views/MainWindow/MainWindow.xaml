@@ -25,7 +25,9 @@
                                 ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
                             <MenuItem x:Name="indexUnpackedDataFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
                                 ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" />
-                            </MenuItem>
+                            <MenuItem x:Name="deleteIndex" Header="{x:Static p:Resources.ClearIndex}" Click="deleteIndex_Click"
+                                IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="❌" />
+                        </MenuItem>
                         <MenuItem Header="{x:Static p:Resources.GOEButton}" Icon="📚">
                             <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
                                 ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
@@ -40,6 +42,7 @@
                         </MenuItem>
                         <MenuItem x:Name="atlasToolButton" Header="{x:Static p:Resources.AtlasToolMenuHeader}" Icon="🗺️" ToolTip="{x:Static p:Resources.AtlasToolMenuTooltip}" Click="atlasToolButton_Click"/>
                         <MenuItem x:Name="colorPicker" Header="{x:Static p:Resources.ColorPickerMenu}" Icon="🎨" Click="colorPicker_Click"/>
+                        <MenuItem x:Name="versionGenerator" Header="{x:Static p:Resources.VersionGenerator}" Icon="💾" Click="versionGenerator_Click"/>
                     </MenuItem>
                     <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}" ToolTip="{x:Static p:Resources.ShortcutsMenuTooltip}">
                         <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
@@ -72,6 +75,7 @@
                             <MenuItem Header="{x:Static p:Resources.LSLibMenu}" Click="LSLibLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.LSLibMenuTooltip}"/>
                             <Separator />
                             <MenuItem Header="{x:Static p:Resources.ConvertWemMenu}" Click="ConvertWemLink_Click" Icon="🎵"/>
+                            <MenuItem Header="{x:Static p:Resources.SpellGenAssistant}" ToolTip="{x:Static p:Resources.SpellGenAssistantTooltip}" Click="SpellGenAssistant_Click" Icon="✨"/>
                         </MenuItem>
                         <MenuItem Header="{x:Static p:Resources.AboutMenu}" Icon="ℹ️">
                             <MenuItem Header="{x:Static p:Resources.ChangeLogMenu}" ToolTip="{x:Static p:Resources.ChangeLogMenuTooltip}" Icon="✔️" Click="CheckForUpdateMenu_Click"/>
@@ -129,10 +133,25 @@
                     <Button x:Name="searchButton" Content="{x:Static p:Resources.IndexSearchButton}" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
                             ToolTip="{x:Static p:Resources.IndexSearchButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
                 </Grid>
-                <TextBlock x:Name="configNeeded" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="300,244,0,0" Visibility="{Binding ConfigNeeded}"/>
+                <Grid Margin="273,110,0,0">
+                    <StackPanel VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding DragAndDropBox.LastDirectory}" Width="350" HorizontalAlignment="Left" TextWrapping="Wrap" Visibility="{Binding DragAndDropBox.CanRebuild}"/>
+                        <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="5" Background="Green" Margin="0,5,0,10" Click="rebuild_Click" Visibility="{Binding DragAndDropBox.CanRebuild}" x:Name="rebuildBtn">
+                            <TextBlock Text="{x:Static p:Resources.RebuildButton}" Foreground="LightGray"/>
+                        </Button>
+                        <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" IsEnabled="{Binding ModsFolderLoaded}" Margin="0,0,0,0"
+                                IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
+                    </StackPanel>
+                </Grid>
+                <TextBlock x:Name="configNeeded" HorizontalAlignment="Left" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="610,204,0,0" TextAlignment="Center" Visibility="{Binding ConfigNeeded}"/>
             </Grid>
             <Grid Grid.Row="1">
                 <ScrollViewer x:Name="ConsoleScroller" MinHeight="150" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged" Margin="5">
+                    <ScrollViewer.Resources>
+                        <Style TargetType="{x:Type ScrollViewer}">
+                            <Setter Property="Background" Value="Black" />
+                        </Style>
+                    </ScrollViewer.Resources>
                     <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,-12" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
                             IsReadOnly="True" Background="Black" Foreground="White"/>
                 </ScrollViewer>

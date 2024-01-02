@@ -48,36 +48,41 @@ namespace bg3_modders_multitool.XAMLHelpers
             {
                 try
                 {
-                    var result = (InlineUIContainer)XamlReader.Parse(formattedText);
+                    var isBase64 = formattedText.IndexOf("Base64") > 0;
+                    var result = isBase64 ? new InlineUIContainer() { Child = new Image() { Height=250 } } : (InlineUIContainer)XamlReader.Parse(formattedText);
                     var image = result.Child as Image;
-                    var source = image.Source;
+                    var source = image?.Source;
                     if(source == null)
                     {
                         // grab image uri
                         Regex regex = new Regex("Source=\"(.*)\" Height=");
                         var imageLoc = regex.Match(formattedText).Groups[1].ToString();
 
-                        try
+                        if(!string.IsNullOrEmpty(imageLoc))
                         {
-                            Pfim.IImage pfimImage;
-                            if (File.Exists(imageLoc))
+                            try
                             {
-                                // convert image to something WPF can read
-                                pfimImage = Pfim.Pfimage.FromFile(imageLoc);
-                            }
-                            else
-                            {
-                                var imageData = Convert.FromBase64String(imageLoc);
-                                pfimImage = Pfim.Pfimage.FromStream(new MemoryStream(imageData));
-                            }
+                                Pfim.IImage pfimImage;
+                                if (!isBase64 && File.Exists(imageLoc))
+                                {
+                                    // convert image to something WPF can read
+                                    pfimImage = Pfim.Pfimage.FromFile(imageLoc);
+                                }
+                                else
+                                {
+                                    var imageData = Convert.FromBase64String(imageLoc);
+                                    pfimImage = Pfim.Pfimage.FromStream(new MemoryStream(imageData));
+                                }
 
-                            var data = Marshal.UnsafeAddrOfPinnedArrayElement(pfimImage.Data, 0);
-                            var bitmap = new System.Drawing.Bitmap(pfimImage.Width, pfimImage.Height, pfimImage.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
-                            var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                            image.Source = bitmapImage;
-                            pfimImage.Dispose();
-                        } catch { }
-                        textBlock.Inlines.Add(result);
+                                var data = Marshal.UnsafeAddrOfPinnedArrayElement(pfimImage.Data, 0);
+                                var bitmap = new System.Drawing.Bitmap(pfimImage.Width, pfimImage.Height, pfimImage.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
+                                var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                image.Source = bitmapImage;
+                                pfimImage.Dispose();
+                            }
+                            catch { }
+                            textBlock.Inlines.Add(result);
+                        }
                     }
                     else
                     {

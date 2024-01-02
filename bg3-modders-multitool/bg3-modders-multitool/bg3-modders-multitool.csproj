@@ -523,6 +523,7 @@
     <Compile Include="Models\GameObjectTypes\TranslatedString.cs" />
     <Compile Include="Models\GameObjectTypes\FixedString.cs" />
     <Compile Include="Models\GameObject.cs" />
+    <Compile Include="Models\LintingError.cs" />
     <Compile Include="Models\MeshGeometry.cs" />
     <Compile Include="Models\MeshGeometry3DObject.cs" />
     <Compile Include="Models\StatStructures\CriticalHitType.cs" />
@@ -557,6 +558,7 @@
     <Compile Include="Services\PathHelper.cs" />
     <Compile Include="Services\RenderedModelHelper.cs" />
     <Compile Include="Services\RootTemplateHelper.cs" />
+    <Compile Include="Services\TextureHelper.cs" />
     <Compile Include="Themes\Attached\CornerHelper.cs" />
     <Compile Include="Themes\Attached\MenuHelper.cs" />
     <Compile Include="Themes\Attached\PasswordBoxHelper.cs" />
@@ -594,6 +596,12 @@
     <Compile Include="Views\MainWindow\ConfigurationMenu.xaml.cs">
       <DependentUpon>ConfigurationMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Other\FileLintingWindow.xaml.cs">
+      <DependentUpon>FileLintingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Utilities\VersionCalculator.xaml.cs">
+      <DependentUpon>VersionCalculator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Utilities\AddMissingMetaLsx.xaml.cs">
       <DependentUpon>AddMissingMetaLsx.xaml</DependentUpon>
     </Compile>
@@ -612,33 +620,37 @@
     <Compile Include="Views\Utilities\GameObjectWindow.xaml.cs">
       <DependentUpon>GameObjectWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindow\UnpackerProgress.xaml.cs">
+    <Compile Include="Views\Other\UnpackerProgress.xaml.cs">
       <DependentUpon>UnpackerProgress.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindow\Update.xaml.cs">
+    <Compile Include="Views\Other\Update.xaml.cs">
       <DependentUpon>Update.xaml</DependentUpon>
     </Compile>
     <Compile Include="XAMLHelpers\LocalizationController.cs" />
     <Compile Include="XAMLHelpers\SelectableTextBlock.cs" />
     <Compile Include="XAMLHelpers\TextBoxFormatter.cs" />
     <Compile Include="XAMLHelpers\TextEditorWrapper.cs" />
-    <Page Include="Themes\ColorDictionaries\DarkGreyTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\DarkGrey.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\DeepDark.xaml">
+    <Page Include="Themes\ColorDictionaries\Underdark.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\GreyTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\Grey.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\RedBlackTheme.xaml">
+    <Page Include="Themes\ColorDictionaries\BrightLight.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ColorDictionaries\SoftDark.xaml">
+    <Page Include="Themes\ColorDictionaries\Astarion.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColorDictionaries\Obscured.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -673,6 +685,14 @@
     <Page Include="Views\MainWindow\DragAndDropBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Other\FileLintingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Utilities\VersionCalculator.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Utilities\AddMissingMetaLsx.xaml">
       <SubType>Designer</SubType>
@@ -713,11 +733,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow\UnpackerProgress.xaml">
+    <Page Include="Views\Other\UnpackerProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow\Update.xaml">
+    <Page Include="Views\Other\Update.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -756,7 +776,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Themes\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -777,7 +796,7 @@
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\GameObjectTabs\" />
+    <EmbeddedResource Include="FileTemplates\LocaXmlBoilerplate.xml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon.ico" />

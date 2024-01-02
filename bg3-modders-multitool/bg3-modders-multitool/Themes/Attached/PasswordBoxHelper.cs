@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace FramePFX.Themes.Attached {
+namespace bg3_modders_multitool.Themes.Attached {
     public class PasswordBoxHelper {
         public static readonly DependencyProperty ListenToLengthProperty =
             DependencyProperty.RegisterAttached(

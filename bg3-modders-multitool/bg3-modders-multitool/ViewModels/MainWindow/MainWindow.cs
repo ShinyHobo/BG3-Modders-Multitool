@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.ViewModels
 {
     using bg3_modders_multitool.Properties;
     using bg3_modders_multitool.Services;
+    using bg3_modders_multitool.Themes;
     using bg3_modders_multitool.Views;
     using Ookii.Dialogs.Wpf;
     using System;
@@ -128,7 +129,7 @@ namespace bg3_modders_multitool.ViewModels
         }
         #endregion
 
-        #region Configuration Methods
+        #region Configuration
         /// <summary>
         /// Toggles the quick launch features.
         /// </summary>
@@ -475,6 +476,17 @@ namespace bg3_modders_multitool.ViewModels
             public string Name { get; set; }
             public string Code { get; set; }
             public string LocaPath { get; set; }
+        }
+
+        public class Theme
+        {
+            public Theme(string name, ThemeType type)
+            {
+                Name = name;
+                Type = type;
+            }
+            public string Name { get; set; }
+            public ThemeType Type { get; set; }
         }
 
         #endregion

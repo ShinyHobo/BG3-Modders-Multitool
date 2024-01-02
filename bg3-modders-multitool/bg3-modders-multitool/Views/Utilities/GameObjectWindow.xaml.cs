@@ -81,6 +81,7 @@ namespace bg3_modders_multitool.Views
                 if (vm.SelectedButton != null)
                     vm.SelectedButton.IsEnabled = true;
                 vm.ModelLoading = Visibility.Visible;
+                vm.ModelNotFound = Visibility.Hidden;
                 vm.Info = vm.FindGameObject(button.Uid);
                 vm.SelectedKey = button.Uid;
                 vm.SelectedButton = button;

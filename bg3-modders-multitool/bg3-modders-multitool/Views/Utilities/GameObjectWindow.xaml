@@ -32,7 +32,7 @@
                 <TreeView.Resources>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type model:GameObject}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" Margin="0,0,5,0" Foreground="White"></TextBlock>
+                            <TextBlock Text="{Binding Name}" Margin="0,0,5,0"></TextBlock>
                             <Button Background="White" BorderBrush="White" Uid="{Binding MapKey}" Cursor="Hand" Click="ExploreMore_Click" Loaded="ItemSelectionButton_Loaded" >
                                 <TextBlock Text="(+)" HorizontalAlignment="Stretch"></TextBlock>
                                 <Button.Template>
@@ -168,6 +168,9 @@
                     <Grid Background="Black" Visibility="{Binding ModelLoading}" x:Name="modelLoadingScreen">
                         <TextBlock Text="{x:Static p:Resources.LoadingLabel}" TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
                     </Grid>
+                    <Grid Background="Black" Visibility="{Binding ModelNotFound}" x:Name="modelLoadingScreen2">
+                        <TextBlock Text="{x:Static p:Resources.NoModelFoundLabel}" TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="{x:Static p:Resources.ModelFilesTabLabel}" Cursor="Hand">
@@ -197,11 +200,6 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                    <Setter Property="Background" Value="DimGray" />
-                </Trigger>
-            </Style.Triggers>
         </Style>
     </Window.Resources>
 </Window>
