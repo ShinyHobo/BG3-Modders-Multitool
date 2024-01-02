@@ -51,7 +51,7 @@ Excited to work with the Multitool's help, but unsure how to use it? [See the Wi
 I have been told that [Bottles](https://github.com/bottlesdevs/Bottles) is a good resource for running this application under Linux
 
 ## Licensing ##
-Copyright © ShinyHobo 2020-2023
+Copyright © ShinyHobo 2020-2024
 
 This software is source available, not open source. Redistribution, and modification for private or public use, without express permission from the copyright owner, is prohibited.
 
