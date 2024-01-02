@@ -20,13 +20,15 @@
         }
 
         private PackedVersion PackedVersion { get; set; }
+        private bool SkipValueChange { get; set; }
 
         private void versionSpinner_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (major != null && major.Value.HasValue &&
                 minor != null &&  minor.Value.HasValue &&
                 build != null && build.Value.HasValue &&
-                revision != null && revision.Value.HasValue)
+                revision != null && revision.Value.HasValue &&
+                !SkipValueChange)
             {
                 var packedVersion = new PackedVersion()
                 {
@@ -45,12 +47,14 @@
         {
             if(this.int64Version.Value.HasValue)
             {
+                SkipValueChange = true;
                 var int64Version = PackedVersion.FromInt64((long)this.int64Version.Value);
                 PackedVersion = int64Version;
                 major.Value = (int?)PackedVersion.Major;
                 minor.Value = (int?)PackedVersion.Minor;
                 build.Value = (int?)PackedVersion.Build;
                 revision.Value = (int?)PackedVersion.Revision;
+                SkipValueChange = false;
             }
         }
 
