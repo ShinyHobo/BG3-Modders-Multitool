@@ -387,7 +387,8 @@ namespace bg3_modders_multitool.Services
         /// <param name="modDir">The working path directory to copy to</param>
         private static void CopyWorkingFilesToTempDir(string path, string modDir)
         {
-            var fileList = Directory.GetFiles(path, "*", System.IO.SearchOption.AllDirectories);
+            var fileList = Directory.GetFiles(path, "*", System.IO.SearchOption.AllDirectories)
+                .Where(filepath => !filepath.Remove(0, path.Length).Contains("\\.")).ToList();
             foreach (var file in fileList)
             {
                 var fileName = Path.GetFileName(file);
