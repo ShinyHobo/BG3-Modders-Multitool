@@ -137,9 +137,8 @@
                 <Grid Margin="273,110,0,0">
                     <StackPanel VerticalAlignment="Bottom">
                         <TextBlock Text="{Binding DragAndDropBox.LastDirectory}" Width="350" HorizontalAlignment="Left" TextWrapping="Wrap" Visibility="{Binding DragAndDropBox.CanRebuild}"/>
-                        
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="5" Background="Green" Margin="0,15,10,0" Click="rebuild_Click" Visibility="{Binding DragAndDropBox.CanRebuild}" x:Name="rebuildBtn">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Visibility="{Binding DragAndDropBox.CanRebuild}">
+                            <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="5" Background="Green" Margin="0,15,10,0" Click="rebuild_Click" x:Name="rebuildBtn">
                                 <TextBlock Text="{x:Static p:Resources.RebuildButton}" Foreground="LightGray"/>
                             </Button>
                             <StackPanel>
