@@ -53,6 +53,7 @@ namespace bg3_modders_multitool.ViewModels
             DescriptionColor = "Black";
         }
 
+        #region Version Methods
         /// <summary>
         /// Looks up the version of the first meta.lsx found in the workspace directory
         /// </summary>
@@ -143,6 +144,7 @@ namespace bg3_modders_multitool.ViewModels
             xml.Save(file);
             return xml;
         }
+        #endregion
 
         #region Properties
         private string _packBoxColor;
