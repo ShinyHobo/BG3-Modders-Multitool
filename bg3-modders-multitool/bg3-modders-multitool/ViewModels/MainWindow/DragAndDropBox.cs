@@ -34,7 +34,10 @@ namespace bg3_modders_multitool.ViewModels
             PackAllowed = false;
             _packAllowedDrop = false;
 
-            SetVersion(data);
+            if(CanRebuild == Visibility.Collapsed)
+                GetVersion();
+            else
+                SetVersion(data);
 
             await Services.DragAndDropHelper.ProcessDrop(data).ContinueWith(delegate {
                 PackAllowed = true;
