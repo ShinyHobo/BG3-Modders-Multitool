@@ -110,16 +110,21 @@ namespace bg3_modders_multitool.ViewModels
                             var xml = FixVersion(file);
                             var attributes = xml.Descendants("attribute");
 
-                            var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
-                            if (version != null)
+                            foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version64"))
                             {
-                                version.Attribute("value").Value = new PackedVersion()
+                                attribute.Attribute("value").Value = new PackedVersion()
                                 {
                                     Major = (uint)Major,
                                     Minor = (uint)Minor,
                                     Revision = (uint)Revision,
                                     Build = (uint)Build
                                 }.ToVersion64().ToString();
+                            }
+
+                            var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
+                            if (version != null)
+                            {
+                                
                                 xml.Save(file);
                             }
                         }
