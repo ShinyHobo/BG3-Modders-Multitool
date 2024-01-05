@@ -198,9 +198,40 @@ namespace bg3_modders_multitool.Services
             var zip = $"{parentDir}\\{name}.zip";
             if (File.Exists(zip))
             {
-                File.Delete(zip);
+                do
+                {
+                    try
+                    {
+                        File.Delete(zip);
+                    }
+                    catch
+                    {
+                        Task.Delay(1000);
+                    }
+                } while (File.Exists(zip));
             }
-            ZipFile.CreateFromDirectory(TempFolder, zip);
+
+            var tempFolder = new DirectoryInfo(TempFolder);
+            using (var zipArchive = ZipFile.Open(zip, ZipArchiveMode.Update))
+            {
+                foreach (var file in tempFolder.GetFiles())
+                {
+                    var locked = true;
+                    do
+                    {
+                        try
+                        {
+                            zipArchive.CreateEntryFromFile(file.FullName, file.Name);
+                            locked = false;
+                        }
+                        catch
+                        {
+                            Task.Delay(1000);
+                        }
+                    } while (locked);
+                }
+            }
+
             GeneralHelper.WriteToConsole(Properties.Resources.ZipCreated, name);
         }
 
@@ -211,12 +242,47 @@ namespace bg3_modders_multitool.Services
         public static void CleanTempDirectory(bool writeToConsole = true)
         {
             // cleanup temp folder
-            DirectoryInfo di = new DirectoryInfo(TempFolder);
+            var tempFolder = new DirectoryInfo(TempFolder);
+            foreach (FileInfo file in tempFolder.GetFiles())
+            {
+                var loop = true;
+                do
+                {
+                    try
+                    {
+                        file.Delete();
+                        loop = false;
+                    }
+                    catch
+                    {
+                        Task.Delay(1000);
+                    }
+                }
+                while (loop);
+            }
+            foreach (DirectoryInfo dir in tempFolder.GetDirectories())
+            {
+                do
+                {
+                    var loop = true;
+                    do
+                    {
+                        try
+                        {
+                            dir.Delete(true);
+                            loop = false;
+                        }
+                        catch
+                        {
+                            Task.Delay(1000);
+                        }
+                    }
+                    while (loop);
+                }
+                while (dir.Exists);
+            }
 
-            foreach (FileInfo file in di.GetFiles()) file.Delete();
-            foreach (DirectoryInfo subDirectory in di.GetDirectories()) subDirectory.Delete(true);
-
-            if(writeToConsole)
+            if (writeToConsole)
                 GeneralHelper.WriteToConsole(Properties.Resources.TempFilesCleaned);
         }
 
@@ -825,16 +891,7 @@ namespace bg3_modders_multitool.Services
         /// <returns></returns>
         private static List<string> ProcessMod(string path, string dirName)
         {
-            // Clean out temp folder
-            var tempFolder = new DirectoryInfo(TempFolder);
-            foreach (FileInfo file in tempFolder.GetFiles())
-            {
-                file.Delete();
-            }
-            foreach (DirectoryInfo dir in tempFolder.GetDirectories())
-            {
-                dir.Delete(true);
-            }
+            CleanTempDirectory(false);
 
             // Pack mod
             var destination =  $"{TempFolder}\\{dirName}.pak";
@@ -844,7 +901,21 @@ namespace bg3_modders_multitool.Services
             if(build.ModBuild != null)
             {
                 PackMod(build.ModBuild, destination);
-                Directory.Delete(build.ModBuild, true);
+
+                var loopDel = true;
+                do
+                {
+                    try
+                    {
+                        Directory.Delete(build.ModBuild, true);
+                        loopDel = false;
+                    }
+                    catch
+                    {
+                        Task.Delay(500);
+                    }
+                } while (loopDel);
+
                 return build.MetaFile;
             }
             return new List<string>();

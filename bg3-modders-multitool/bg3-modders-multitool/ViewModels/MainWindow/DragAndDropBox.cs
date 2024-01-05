@@ -3,9 +3,13 @@
 /// </summary>
 namespace bg3_modders_multitool.ViewModels
 {
+    using bg3_modders_multitool.Views.Utilities;
+    using LSLib.LS;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Xml.Linq;
 
     public class DragAndDropBox : BaseViewModel
     {
@@ -29,6 +33,9 @@ namespace bg3_modders_multitool.ViewModels
         {
             PackAllowed = false;
             _packAllowedDrop = false;
+
+            SetVersion(data);
+
             await Services.DragAndDropHelper.ProcessDrop(data).ContinueWith(delegate {
                 PackAllowed = true;
             });
@@ -44,6 +51,97 @@ namespace bg3_modders_multitool.ViewModels
         {
             PackBoxColor = "LightBlue";
             DescriptionColor = "Black";
+        }
+
+        /// <summary>
+        /// Looks up the version of the first meta.lsx found in the workspace directory
+        /// </summary>
+        internal void GetVersion()
+        {
+            if (CanRebuild == Visibility.Visible)
+            {
+                var modsPath = Path.Combine(_lastDirectory, "Mods");
+                var pathList = Directory.GetDirectories(modsPath);
+                if (pathList.Length > 0)
+                {
+                    foreach (string file in Directory.GetFiles(pathList[0]))
+                    {
+                        if (Path.GetFileName(file).Equals("meta.lsx"))
+                        {
+                            var xml = FixVersion(file);
+                            var attributes = xml.Descendants("attribute");
+
+                            var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
+                            if(version != null)
+                            {
+                                var ver = PackedVersion.FromInt64(long.Parse(version.Attribute("value").Value));
+                                Major = (int)ver.Major;
+                                Minor = (int)ver.Minor;
+                                Revision = (int)ver.Revision;
+                                Build = (int)ver.Build;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the version selected
+        /// </summary>
+        /// <param name="data">The file drop object data</param>
+        internal void SetVersion(IDataObject data)
+        {
+            if (data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var fileDrop = data.GetData(DataFormats.FileDrop, true);
+                if (fileDrop is string[] filesOrDirectories && filesOrDirectories.Length > 0)
+                {
+                    var modsPath = Path.Combine(filesOrDirectories[0], "Mods");
+                    var pathList = Directory.GetDirectories(modsPath);
+                    foreach (string file in Directory.GetFiles(pathList[0]))
+                    {
+                        if (Path.GetFileName(file).Equals("meta.lsx"))
+                        {
+                            var xml = FixVersion(file);
+                            var attributes = xml.Descendants("attribute");
+
+                            var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
+                            if (version != null)
+                            {
+                                version.Attribute("value").Value = new PackedVersion()
+                                {
+                                    Major = (uint)Major,
+                                    Minor = (uint)Minor,
+                                    Revision = (uint)Revision,
+                                    Build = (uint)Build
+                                }.ToVersion64().ToString();
+                                xml.Save(file);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fixes the version from int32 to int64
+        /// </summary>
+        /// <param name="file">The meta.lsx file path</param>
+        /// <returns>The meta.lsx xml object</returns>
+        internal XDocument FixVersion(string file)
+        {
+            var xml = XDocument.Load(file);
+            var attributes = xml.Descendants("attribute");
+            foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version"))
+            {
+                attribute.Attribute("id").Value = "Version64";
+                attribute.Attribute("type").Value = "int64";
+                var valid = int.TryParse(attribute.Attribute("value").Value, out int ver);
+                attribute.Attribute("value").Value = valid ? PackedVersion.FromInt32(ver).ToVersion64().ToString() : VersionCalculator.DefaultVersion.ToString();
+            }
+            xml.Save(file);
+            return xml;
         }
 
         #region Properties
@@ -80,6 +178,9 @@ namespace bg3_modders_multitool.ViewModels
                 }
 
                 CanRebuild = !string.IsNullOrEmpty(value) ? Visibility.Visible : Visibility.Collapsed;
+
+                GetVersion();
+
                 OnNotifyPropertyChanged();
             }
         }
@@ -123,6 +224,50 @@ namespace bg3_modders_multitool.ViewModels
                 OnNotifyPropertyChanged();
             }
         }
+
+        #region Version
+        private int _major;
+        public int Major { 
+            get { return _major; } 
+            set {
+                _major = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _minor;
+        public int Minor
+        {
+            get { return _minor; }
+            set
+            {
+                _minor = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _build;
+        public int Build
+        {
+            get { return _build; }
+            set
+            {
+                _build = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _revision;
+        public int Revision
+        {
+            get { return _revision; }
+            set
+            {
+                _revision = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        #endregion
         #endregion
     }
 }

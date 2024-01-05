@@ -6,6 +6,7 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
+    using LSLib.LS;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -229,6 +230,7 @@ namespace bg3_modders_multitool.Views
         #endregion
 
         #region Mod Packing
+
         private void PakToMods_Checked(object sender, RoutedEventArgs e)
         {
             GeneralHelper.TogglePakToMods(true);
@@ -248,7 +250,9 @@ namespace bg3_modders_multitool.Views
         {
             DataObject data = new DataObject(DataFormats.FileDrop, new string[] { MainWindowVM.DragAndDropBox.LastDirectory });
             rebuildBtn.IsEnabled = false;
+            // TODO - pass version here
             await MainWindowVM.DragAndDropBox.ProcessDrop(data);
+            // TODO - auto increment revision here
             rebuildBtn.IsEnabled = true;
         }
         #endregion

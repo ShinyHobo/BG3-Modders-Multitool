@@ -26,6 +26,7 @@ namespace bg3_modders_multitool.ViewModels
             ThreadsUnlocked = Properties.Settings.Default.unlockThreads;
             PakToMods = Properties.Settings.Default.pakToMods;
             AutoUpdater = new AutoUpdaterService(this);
+            PackingPriority = Properties.Settings.Default.packingPriority;
         }
 
         #region File Selection Methods
@@ -341,6 +342,20 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
         #endregion
+
+        private int _packingPriority;
+        public int PackingPriority { 
+            get { return _packingPriority; }
+            set {
+                _packingPriority = value;
+                if (Properties.Settings.Default.packingPriority != value)
+                {
+                    Properties.Settings.Default.packingPriority = (int)value;
+                    Properties.Settings.Default.Save();
+                }
+                OnNotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Auxiliary Methods
