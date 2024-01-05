@@ -3,9 +3,13 @@
 /// </summary>
 namespace bg3_modders_multitool.ViewModels
 {
+    using bg3_modders_multitool.Views.Utilities;
+    using LSLib.LS;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Xml.Linq;
 
     public class DragAndDropBox : BaseViewModel
     {
@@ -61,9 +65,23 @@ namespace bg3_modders_multitool.ViewModels
                     {
                         if (Path.GetFileName(file).Equals("meta.lsx"))
                         {
-                            // TODO - get version from meta.lsx here
                             // Version, Version64
                             // Replace version lines with int64 version
+                            var xml = XDocument.Load(file);
+                            var attributes = xml.Descendants("attribute");
+                            foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version"))
+                            {
+                                attribute.Attribute("id").Value = "Version64";
+                                attribute.Attribute("type").Value = "int64";
+                                var valid = int.TryParse(attribute.Attribute("value").Value, out int ver);
+                                attribute.Attribute("value").Value = valid ? PackedVersion.FromInt32(ver).ToVersion64().ToString() : VersionCalculator.DefaultVersion.ToString();
+                            }
+                            xml.Save(file);
+                            var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
+                            if(version != null)
+                            {
+                                Version = ulong.Parse(version.Attribute("value").Value);
+                            }
                         }
                     }
                 }

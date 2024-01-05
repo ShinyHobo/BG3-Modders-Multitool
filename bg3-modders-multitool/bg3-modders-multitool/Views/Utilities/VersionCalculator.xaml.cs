@@ -9,6 +9,8 @@
     /// </summary>
     public partial class VersionCalculator : Window
     {
+        public static readonly ulong DefaultVersion = 36028797018963968; // 1.0.0.0
+
         /// <summary>
         /// Popup for adding missing meta.lsx information
         /// </summary>
@@ -16,7 +18,7 @@
         public VersionCalculator()
         {
             InitializeComponent();
-            int64Version.Value = 36028797018963968; // 1.0.0.0
+            int64Version.Value = DefaultVersion;
         }
 
         public PackedVersion PackedVersion { get; set; }
