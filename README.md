@@ -48,7 +48,7 @@ Excited to work with the Multitool's help, but unsure how to use it? [See the Wi
 4. [Updating the Multitool](https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki/Updating)
 
 ## Linux Users ##
-I have been told that [Bottles](https://github.com/bottlesdevs/Bottles) is a good resource for running this application under Linux
+You should be able to use most functions using [Bottles (Wiki Guide)](https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki/Running-on-Linux) if running Linux
 
 ## Licensing ##
 Copyright © ShinyHobo 2020-2024
