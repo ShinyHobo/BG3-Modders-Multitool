@@ -39,8 +39,6 @@ namespace bg3_modders_multitool.Views
 
             themeSelection.ItemsSource = themes;
             themeSelection.SelectedIndex = themes.FindIndex(t => t.Type == selectedTheme);
-
-            packingPriority.Value = Properties.Settings.Default.packingPriority;
         }
 
         /// <summary>
@@ -123,14 +121,5 @@ namespace bg3_modders_multitool.Views
             GeneralHelper.ToggleUnlockThreads(false);
         }
         #endregion
-
-        private void packingPriority_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if(Properties.Settings.Default.packingPriority != packingPriority.Value)
-            {
-                Properties.Settings.Default.packingPriority = (int)packingPriority.Value;
-                Properties.Settings.Default.Save();
-            }
-        }
     }
 }

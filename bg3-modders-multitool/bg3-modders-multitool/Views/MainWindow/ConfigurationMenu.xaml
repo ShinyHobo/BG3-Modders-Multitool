@@ -43,10 +43,6 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
             </StackPanel>
-            <StackPanel Margin="10,0,0,0">
-                <Label Content="{x:Static p:Resources.PackingPriorityLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-5,0,0,0"/>
-                <xctk:IntegerUpDown x:Name="packingPriority" Width="50" Height="20" Minimum="21" Maximum="127" ValueChanged="packingPriority_ValueChanged" ToolTip="{x:Static p:Resources.PackingPriorityTooltip}"/>
-            </StackPanel>
         </StackPanel>
         <StackPanel Margin="8,155,00,0">
             <CheckBox ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" Margin="3"

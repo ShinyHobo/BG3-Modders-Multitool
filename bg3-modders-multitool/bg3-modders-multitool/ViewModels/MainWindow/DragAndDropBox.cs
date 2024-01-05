@@ -33,6 +33,9 @@ namespace bg3_modders_multitool.ViewModels
         {
             PackAllowed = false;
             _packAllowedDrop = false;
+
+            SetVersion(data);
+
             await Services.DragAndDropHelper.ProcessDrop(data).ContinueWith(delegate {
                 PackAllowed = true;
             });
@@ -65,18 +68,9 @@ namespace bg3_modders_multitool.ViewModels
                     {
                         if (Path.GetFileName(file).Equals("meta.lsx"))
                         {
-                            // Version, Version64
-                            // Replace version lines with int64 version
-                            var xml = XDocument.Load(file);
+                            var xml = FixVersion(file);
                             var attributes = xml.Descendants("attribute");
-                            foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version"))
-                            {
-                                attribute.Attribute("id").Value = "Version64";
-                                attribute.Attribute("type").Value = "int64";
-                                var valid = int.TryParse(attribute.Attribute("value").Value, out int ver);
-                                attribute.Attribute("value").Value = valid ? PackedVersion.FromInt32(ver).ToVersion64().ToString() : VersionCalculator.DefaultVersion.ToString();
-                            }
-                            xml.Save(file);
+
                             var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
                             if(version != null)
                             {
@@ -90,6 +84,64 @@ namespace bg3_modders_multitool.ViewModels
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the version selected
+        /// </summary>
+        /// <param name="data">The file drop object data</param>
+        internal void SetVersion(IDataObject data)
+        {
+            if (data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var fileDrop = data.GetData(DataFormats.FileDrop, true);
+                if (fileDrop is string[] filesOrDirectories && filesOrDirectories.Length > 0)
+                {
+                    var modsPath = Path.Combine(filesOrDirectories[0], "Mods");
+                    var pathList = Directory.GetDirectories(modsPath);
+                    foreach (string file in Directory.GetFiles(pathList[0]))
+                    {
+                        if (Path.GetFileName(file).Equals("meta.lsx"))
+                        {
+                            var xml = FixVersion(file);
+                            var attributes = xml.Descendants("attribute");
+
+                            var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
+                            if (version != null)
+                            {
+                                version.Attribute("value").Value = new PackedVersion()
+                                {
+                                    Major = (uint)Major,
+                                    Minor = (uint)Minor,
+                                    Revision = (uint)Revision,
+                                    Build = (uint)Build
+                                }.ToVersion64().ToString();
+                                xml.Save(file);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fixes the version from int32 to int64
+        /// </summary>
+        /// <param name="file">The meta.lsx file path</param>
+        /// <returns>The meta.lsx xml object</returns>
+        internal XDocument FixVersion(string file)
+        {
+            var xml = XDocument.Load(file);
+            var attributes = xml.Descendants("attribute");
+            foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version"))
+            {
+                attribute.Attribute("id").Value = "Version64";
+                attribute.Attribute("type").Value = "int64";
+                var valid = int.TryParse(attribute.Attribute("value").Value, out int ver);
+                attribute.Attribute("value").Value = valid ? PackedVersion.FromInt32(ver).ToVersion64().ToString() : VersionCalculator.DefaultVersion.ToString();
+            }
+            xml.Save(file);
+            return xml;
         }
 
         #region Properties
