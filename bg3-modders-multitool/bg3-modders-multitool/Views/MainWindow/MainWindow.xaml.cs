@@ -255,22 +255,6 @@ namespace bg3_modders_multitool.Views
             // TODO - auto increment revision here
             rebuildBtn.IsEnabled = true;
         }
-
-        /// <summary>
-        /// Updates the value used for the Int64 version in the meta file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void versionSpinner_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            MainWindowVM.PackedVersion = new PackedVersion()
-            {
-                Major = (uint)(major.Value ?? 0),
-                Minor = (uint)(minor.Value ?? 0),
-                Build = (uint)(build.Value ?? 0),
-                Revision = (uint)(revision.Value ?? 0)
-            };
-        }
         #endregion
 
         #region Shortcuts Tab

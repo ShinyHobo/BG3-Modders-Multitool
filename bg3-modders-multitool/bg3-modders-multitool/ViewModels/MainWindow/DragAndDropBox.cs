@@ -80,7 +80,11 @@ namespace bg3_modders_multitool.ViewModels
                             var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
                             if(version != null)
                             {
-                                Version = ulong.Parse(version.Attribute("value").Value);
+                                var ver = PackedVersion.FromInt64(long.Parse(version.Attribute("value").Value));
+                                Major = (int)ver.Major;
+                                Minor = (int)ver.Minor;
+                                Revision = (int)ver.Revision;
+                                Build = (int)ver.Build;
                             }
                         }
                     }
@@ -169,18 +173,49 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private ulong _version;
-        /// <summary>
-        /// The mod version stored in the meta.lsx file as an Int64 value
-        /// </summary>
-        public ulong Version
-        {
-            get { return _version; }
+        #region Version
+        private int _major;
+        public int Major { 
+            get { return _major; } 
             set {
-                _version = value;
+                _major = value;
                 OnNotifyPropertyChanged();
             }
         }
+
+        private int _minor;
+        public int Minor
+        {
+            get { return _minor; }
+            set
+            {
+                _minor = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _build;
+        public int Build
+        {
+            get { return _build; }
+            set
+            {
+                _build = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private int _revision;
+        public int Revision
+        {
+            get { return _revision; }
+            set
+            {
+                _revision = value;
+                OnNotifyPropertyChanged();
+            }
+        }
+        #endregion
         #endregion
     }
 }

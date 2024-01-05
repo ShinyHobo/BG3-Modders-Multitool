@@ -7,7 +7,6 @@ namespace bg3_modders_multitool.ViewModels
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.Themes;
     using bg3_modders_multitool.Views;
-    using LSLib.LS;
     using Ookii.Dialogs.Wpf;
     using System;
     using System.Collections.Generic;
@@ -338,19 +337,6 @@ namespace bg3_modders_multitool.ViewModels
             get { return _handleText; }
             set {
                 _handleText = value;
-                OnNotifyPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region Mod Rebuild Properties
-
-        private PackedVersion _packedVersion;
-        public PackedVersion PackedVersion
-        {
-            get { return _packedVersion; }
-            set {
-                _packedVersion = value;
                 OnNotifyPropertyChanged();
             }
         }

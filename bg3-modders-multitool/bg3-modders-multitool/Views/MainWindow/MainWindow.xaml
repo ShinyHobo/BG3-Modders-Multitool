@@ -138,24 +138,24 @@
                     <StackPanel VerticalAlignment="Bottom">
                         <TextBlock Text="{Binding DragAndDropBox.LastDirectory}" Width="350" HorizontalAlignment="Left" TextWrapping="Wrap" Visibility="{Binding DragAndDropBox.CanRebuild}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Visibility="{Binding DragAndDropBox.CanRebuild}">
-                            <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="5" Background="Green" Margin="0,15,10,0" Click="rebuild_Click" x:Name="rebuildBtn">
+                            <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="7" Background="Green" Margin="0,15,10,0" Click="rebuild_Click" x:Name="rebuildBtn">
                                 <TextBlock Text="{x:Static p:Resources.RebuildButton}" Foreground="LightGray"/>
                             </Button>
                             <StackPanel>
                                 <Label Content="{x:Static p:Resources.VersionMajorLabel}"/>
-                                <xctk:IntegerUpDown x:Name="major" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                                <xctk:IntegerUpDown x:Name="major" MinWidth="50" Height="20" Minimum="0" Value="{Binding DragAndDropBox.Major}"/>
                             </StackPanel>
                             <StackPanel>
                                 <Label Content="{x:Static p:Resources.VersionMinorLabel}"/>
-                                <xctk:IntegerUpDown x:Name="minor" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                                <xctk:IntegerUpDown x:Name="minor" MinWidth="50" Height="20" Minimum="0" Value="{Binding DragAndDropBox.Minor}"/>
                             </StackPanel>
                             <StackPanel>
                                 <Label Content="{x:Static p:Resources.VersionRevisionLabel}"/>
-                                <xctk:IntegerUpDown x:Name="revision" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                                <xctk:IntegerUpDown x:Name="revision" MinWidth="50" Height="20" Minimum="0" Value="{Binding DragAndDropBox.Revision}"/>
                             </StackPanel>
                             <StackPanel>
                                 <Label Content="{x:Static p:Resources.VersionBuildLabel}"/>
-                                <xctk:IntegerUpDown x:Name="build" MinWidth="50" Height="20" Minimum="0" ValueChanged="versionSpinner_ValueChanged"/>
+                                <xctk:IntegerUpDown x:Name="build" MinWidth="50" Height="20" Minimum="0" Value="{Binding DragAndDropBox.Build}"/>
                             </StackPanel>
                         </StackPanel>
                         <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" IsEnabled="{Binding ModsFolderLoaded}" Margin="0,0,0,0"
