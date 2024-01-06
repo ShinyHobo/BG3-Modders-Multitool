@@ -262,24 +262,20 @@ namespace bg3_modders_multitool.Services
             }
             foreach (DirectoryInfo dir in tempFolder.GetDirectories())
             {
+                var loop = true;
                 do
                 {
-                    var loop = true;
-                    do
+                    try
                     {
-                        try
-                        {
-                            dir.Delete(true);
-                            loop = false;
-                        }
-                        catch
-                        {
-                            Task.Delay(1000);
-                        }
+                        dir.Delete(true);
+                        loop = false;
                     }
-                    while (loop);
+                    catch
+                    {
+                        Task.Delay(1000);
+                    }
                 }
-                while (dir.Exists);
+                while (loop);
             }
 
             if (writeToConsole)
