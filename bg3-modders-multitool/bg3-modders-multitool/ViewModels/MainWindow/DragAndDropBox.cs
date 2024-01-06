@@ -34,7 +34,18 @@ namespace bg3_modders_multitool.ViewModels
             PackAllowed = false;
             _packAllowedDrop = false;
 
-            if(CanRebuild == Visibility.Collapsed)
+            var differentWorkspace = false;
+            if (data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var fileDrop = data.GetData(DataFormats.FileDrop, true);
+                if (fileDrop is string[] filesOrDirectories && filesOrDirectories.Length > 0)
+                {
+                    var workspace = filesOrDirectories[0];
+                    differentWorkspace = workspace != LastDirectory;
+                }
+            }
+
+            if (CanRebuild == Visibility.Collapsed || differentWorkspace)
                 GetVersion();
             else
                 SetVersion(data);
