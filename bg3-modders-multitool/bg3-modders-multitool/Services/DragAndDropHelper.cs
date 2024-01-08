@@ -206,6 +206,7 @@ namespace bg3_modders_multitool.Services
                     }
                     catch
                     {
+                        GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, zip);
                         Task.Delay(1000);
                     }
                 } while (File.Exists(zip));
@@ -224,8 +225,9 @@ namespace bg3_modders_multitool.Services
                             zipArchive.CreateEntryFromFile(file.FullName, file.Name);
                             locked = false;
                         }
-                        catch
+                        catch(Exception ex)
                         {
+                            GeneralHelper.WriteToConsole(ex.Message);
                             Task.Delay(1000);
                         }
                     } while (locked);
@@ -245,37 +247,35 @@ namespace bg3_modders_multitool.Services
             var tempFolder = new DirectoryInfo(TempFolder);
             foreach (FileInfo file in tempFolder.GetFiles())
             {
-                var loop = true;
                 do
                 {
                     try
                     {
                         file.Delete();
-                        loop = false;
                     }
                     catch
                     {
+                        GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, file.FullName);
                         Task.Delay(1000);
                     }
                 }
-                while (loop);
+                while (File.Exists(file.FullName));
             }
             foreach (DirectoryInfo dir in tempFolder.GetDirectories())
             {
-                var loop = true;
                 do
                 {
                     try
                     {
                         dir.Delete(true);
-                        loop = false;
                     }
                     catch
                     {
+                        GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, dir.FullName);
                         Task.Delay(1000);
                     }
                 }
-                while (loop);
+                while (Directory.Exists(dir.FullName));
             }
 
             if (writeToConsole)
@@ -898,19 +898,18 @@ namespace bg3_modders_multitool.Services
             {
                 PackMod(build.ModBuild, destination);
 
-                var loopDel = true;
                 do
                 {
                     try
                     {
                         Directory.Delete(build.ModBuild, true);
-                        loopDel = false;
                     }
                     catch
                     {
-                        Task.Delay(500);
+                        GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, build.ModBuild);
+                        Task.Delay(1000);
                     }
-                } while (loopDel);
+                } while (Directory.Exists(build.ModBuild));
 
                 return build.MetaFile;
             }
