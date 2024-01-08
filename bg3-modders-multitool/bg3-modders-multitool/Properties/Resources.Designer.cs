@@ -440,6 +440,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cant&apos;t delete {0}; is it open? Retrying....
+        /// </summary>
+        public static string CantDeleteResource {
+            get {
+                return ResourceManager.GetString("CantDeleteResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog.
         /// </summary>
         public static string ChangeLogMenu {

@@ -248,6 +248,10 @@
   <data name="CancelUnpackingButton" xml:space="preserve">
     <value>Cancel Unpacking</value>
   </data>
+  <data name="CantDeleteResource" xml:space="preserve">
+    <value>Cant't delete {0}; is it open? Retrying...</value>
+    <comment>file/directory name</comment>
+  </data>
   <data name="ChangeLogMenu" xml:space="preserve">
     <value>Changelog</value>
   </data>
