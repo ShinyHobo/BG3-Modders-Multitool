@@ -198,7 +198,7 @@ namespace bg3_modders_multitool.Services
             var zip = $"{parentDir}\\{name}.zip";
             if (File.Exists(zip))
             {
-                do
+                while (File.Exists(zip))
                 {
                     try
                     {
@@ -209,7 +209,7 @@ namespace bg3_modders_multitool.Services
                         GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, zip);
                         Task.Delay(1000);
                     }
-                } while (File.Exists(zip));
+                }
             }
 
             var tempFolder = new DirectoryInfo(TempFolder);
@@ -247,7 +247,7 @@ namespace bg3_modders_multitool.Services
             var tempFolder = new DirectoryInfo(TempFolder);
             foreach (FileInfo file in tempFolder.GetFiles())
             {
-                do
+                while (File.Exists(file.FullName))
                 {
                     try
                     {
@@ -259,11 +259,10 @@ namespace bg3_modders_multitool.Services
                         Task.Delay(1000);
                     }
                 }
-                while (File.Exists(file.FullName));
             }
             foreach (DirectoryInfo dir in tempFolder.GetDirectories())
             {
-                do
+                while (Directory.Exists(dir.FullName))
                 {
                     try
                     {
@@ -275,7 +274,6 @@ namespace bg3_modders_multitool.Services
                         Task.Delay(1000);
                     }
                 }
-                while (Directory.Exists(dir.FullName));
             }
 
             if (writeToConsole)
@@ -898,7 +896,7 @@ namespace bg3_modders_multitool.Services
             {
                 PackMod(build.ModBuild, destination);
 
-                do
+                while (Directory.Exists(build.ModBuild))
                 {
                     try
                     {
@@ -909,7 +907,7 @@ namespace bg3_modders_multitool.Services
                         GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, build.ModBuild);
                         Task.Delay(1000);
                     }
-                } while (Directory.Exists(build.ModBuild));
+                }
 
                 return build.MetaFile;
             }
