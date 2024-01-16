@@ -39,7 +39,7 @@
                 </CheckBox>
             </Grid>
             
-            <ListView x:Name="searchResults" Margin="10,38,0,37" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Left" HorizontalAlignment="Left" MinWidth="758" ItemsSource="{Binding Results}" IsEnabled="{Binding AllowInteraction}">
+            <ListView x:Name="searchResults" Margin="10,38,5,37" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" MinWidth="758" ItemsSource="{Binding Results}" IsEnabled="{Binding AllowInteraction}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
