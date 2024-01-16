@@ -339,9 +339,9 @@ namespace bg3_modders_multitool.Services
                                                 File.Move($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", MoveOptions.ReplaceExisting);
                                                 GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
                                             }
-                                            catch
+                                            catch(Exception ex)
                                             {
-                                                GeneralHelper.WriteToConsole(Properties.Resources.FailedToMovePak, dirName);
+                                                GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.InnerException);
                                             }
                                         }
                                     }
