@@ -12,103 +12,115 @@
         Style="{StaticResource CustomWindowStyle}"
         Title="{x:Static p:Resources.IndexSearchTitle}" Height="430" Width="1250" Closing="Window_Closing">
     <Grid>
-        <Button x:Name="searchFilesButton" Content="{x:Static p:Resources.SearchFilesButton}" HorizontalAlignment="Left" Margin="535,10,0,0" 
-                VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand" IsEnabled="{Binding AllowInteraction}"/>
-        <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="525" KeyDown="Search_KeyDown" IsEnabled="{Binding AllowInteraction}"/>
-        <xctk:CheckComboBox x:Name="fileTypeFilter" Height="23" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="635,10,0,0"
-                            SelectedItemsOverride="{Binding SelectedFileTypes}" ItemSelectionChanged="fileTypeFilter_ItemSelectionChanged" IsEnabled="{Binding AllowInteraction}" />
-
-        <CheckBox x:Name="leadingWildcardDisabledCheckbox" IsChecked="{Binding LeadingWildcardDisabled}"  Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="738,10,0,0" 
-                  FlowDirection="RightToLeft" Width="30" ToolTip="{x:Static p:Resources.SpeedIndexSearchTooltip}" IsEnabled="{Binding AllowInteraction}">
-            <TextBlock Text="&#x27A0;" FontSize="23" Margin="-10,0,0,0" FlowDirection="LeftToRight" >
-                <TextBlock.LayoutTransform>
-                    <RotateTransform Angle="90" />
-                </TextBlock.LayoutTransform>
-            </TextBlock>
-            <CheckBox.Resources>
-                <Style TargetType="{x:Type Path}">
-                    <Setter Property="FlowDirection" Value="LeftToRight"/>
-                </Style>
-            </CheckBox.Resources>
-        </CheckBox>
-
-        <ListView x:Name="searchResults" Margin="10,38,0,37" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Left" HorizontalAlignment="Left" MinWidth="758" Width="758" ItemsSource="{Binding Results}" IsEnabled="{Binding AllowInteraction}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding Selected}"/>
-                        <Button x:Name="path" MouseDoubleClick="Path_MouseDoubleClick" Background="White" BorderBrush="White" HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Stretch" Cursor="Hand" MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave">
-                            <TextBlock Text="{Binding Path}" HorizontalAlignment="Stretch"></TextBlock>
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <TextBlock TextDecorations="Underline">
-                                        <ContentPresenter />
-                                    </TextBlock>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <CheckBox Height="23" Width="72" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10" Cursor="Hand" IsChecked="{Binding SelectAllToggled}" x:Name="selectAll"
-                  Content="{x:Static p:Resources.SelectAllButton}" Click="ToggleSelection_Click" IsEnabled="{Binding AllowInteraction}"/>
-        <Button Height="23" Width="102" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="96,0,0,10" Cursor="Hand" x:Name="extractAll" IsEnabled="{Binding AllowInteraction}"
-                Content="{x:Static p:Resources.ExtractSelectedButton}" Click="ExtractSelected_Click"/>
-
-        <Button Height="23" Width="23" Margin="773,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📤" 
-                ToolTip="{x:Static p:Resources.ExtractFileTooltip}" Click="ExtractFile_Click" IsEnabled="{Binding AllowInteraction}"/>
-        <Button Height="23" Width="23" Margin="799,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📂" 
-                ToolTip="{x:Static p:Resources.OpenFolderTooltip}" Click="OpenFolder_Click" IsEnabled="{Binding AllowInteraction}"/>
-        <TextBox IsReadOnly="True" Text="{Binding SelectedPath}"  Margin="825,10,117,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Stretch" IsEnabled="{Binding AllowInteraction}"/>
-        <Button x:Name="convertAndOpenButton" Content="{x:Static p:Resources.ConvertOpenButton}" Margin="0,10,10,0" Width="102" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                Click="ConvertAndOpenButton_Click" IsEnabled="{Binding AllowInteraction}" Cursor="Hand"/>
-        <Grid Margin="773,38,10,10">
-            <ListView ItemsSource="{Binding FileContents}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="773" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid>
+                <Button x:Name="searchFilesButton" Content="{x:Static p:Resources.SearchFilesButton}" HorizontalAlignment="Left" Margin="535,10,0,0" 
+                    VerticalAlignment="Top" Width="100" Height="23" Click="SearchFiles_Click" Cursor="Hand" IsEnabled="{Binding AllowInteraction}"/>
+                <TextBox x:Name="search" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="525" KeyDown="Search_KeyDown" IsEnabled="{Binding AllowInteraction}"/>
+                <xctk:CheckComboBox x:Name="fileTypeFilter" Height="23" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="635,10,0,0"
+                    SelectedItemsOverride="{Binding SelectedFileTypes}" ItemSelectionChanged="fileTypeFilter_ItemSelectionChanged" IsEnabled="{Binding AllowInteraction}" />
+                <CheckBox x:Name="leadingWildcardDisabledCheckbox" IsChecked="{Binding LeadingWildcardDisabled}"  Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="738,10,0,0" 
+                    FlowDirection="RightToLeft" Width="30" ToolTip="{x:Static p:Resources.SpeedIndexSearchTooltip}" IsEnabled="{Binding AllowInteraction}">
+                    <TextBlock Text="&#x27A0;" FontSize="23" Margin="-10,0,0,0" FlowDirection="LeftToRight" >
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90" />
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                    <CheckBox.Resources>
+                        <Style TargetType="{x:Type Path}">
+                            <Setter Property="FlowDirection" Value="LeftToRight"/>
+                        </Style>
+                    </CheckBox.Resources>
+                </CheckBox>
+            </Grid>
+            
+            <ListView x:Name="searchResults" Margin="10,38,0,37" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Left" HorizontalAlignment="Left" MinWidth="758" ItemsSource="{Binding Results}" IsEnabled="{Binding AllowInteraction}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Name="stack">
-                            <Button x:Name="lineNumberButton" FontWeight="Bold" MinWidth="40" Cursor="Hand" BorderThickness="0" Background="Transparent" Margin="0,0,3,0" Click="lineNumberButton_Click">
-                                <TextBlock Text="{Binding Key, StringFormat={}{0}:}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Selected}"/>
+                            <Button x:Name="path" MouseDoubleClick="Path_MouseDoubleClick" Background="White" BorderBrush="White" HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch" Cursor="Hand" MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave">
+                                <TextBlock Text="{Binding Path}" HorizontalAlignment="Stretch"></TextBlock>
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <TextBlock TextDecorations="Underline">
+                                        <ContentPresenter />
+                                        </TextBlock>
+                                    </ControlTemplate>
+                                </Button.Template>
                             </Button>
-                            <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Text, Mode=OneWay}" Background="Transparent" Cursor="IBeam"></helpers:SelectableTextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                    <ContentPresenter />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
             </ListView>
-            <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" IsMoveEnabled="True" UseDefaultGestures="False"
-                            IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black" Visibility="{Binding ModelVisible}" PanCursor="Cross">
-                <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
-                <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
-                <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
-                <hx:Viewport3DX.InputBindings>
-                    <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
-                    <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
-                    <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
-                    <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
-                    <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
-                    <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
-                    <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
-                    <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
-                    <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
-                    <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
-                </hx:Viewport3DX.InputBindings>
-            </hx:Viewport3DX>
-            <Grid Background="Black" Visibility="{Binding ModelLoading}" x:Name="modelLoadingScreen">
-                <TextBlock Text="{x:Static p:Resources.LoadingLabel}" TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
+            <Grid>
+                <CheckBox Height="23" Width="72" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,10" Cursor="Hand" IsChecked="{Binding SelectAllToggled}" x:Name="selectAll"
+                    Content="{x:Static p:Resources.SelectAllButton}" Click="ToggleSelection_Click" IsEnabled="{Binding AllowInteraction}"/>
+                <Button Height="23" Width="102" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="96,0,0,10" Cursor="Hand" x:Name="extractAll" IsEnabled="{Binding AllowInteraction}"
+                    Content="{x:Static p:Resources.ExtractSelectedButton}" Click="ExtractSelected_Click"/>
+            </Grid>
+        </Grid>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+        <Grid Grid.Column="2">
+            <Button Height="23" Width="23" Margin="5,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📤" 
+                ToolTip="{x:Static p:Resources.ExtractFileTooltip}" Click="ExtractFile_Click" IsEnabled="{Binding AllowInteraction}"/>
+            <Button Height="23" Width="23" Margin="31,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" Content="📂" 
+                ToolTip="{x:Static p:Resources.OpenFolderTooltip}" Click="OpenFolder_Click" IsEnabled="{Binding AllowInteraction}"/>
+            <TextBox IsReadOnly="True" Text="{Binding SelectedPath}"  Margin="57,10,117,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Stretch" IsEnabled="{Binding AllowInteraction}"/>
+            <Button x:Name="convertAndOpenButton" Content="{x:Static p:Resources.ConvertOpenButton}" Margin="0,10,10,0" Width="102" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Click="ConvertAndOpenButton_Click" IsEnabled="{Binding AllowInteraction}" Cursor="Hand"/>
+            <Grid Margin="5,38,10,10">
+                <ListView ItemsSource="{Binding FileContents}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Name="stack">
+                                <Button x:Name="lineNumberButton" FontWeight="Bold" MinWidth="40" Cursor="Hand" BorderThickness="0" Background="Transparent" Margin="0,0,3,0" Click="lineNumberButton_Click">
+                                    <TextBlock Text="{Binding Key, StringFormat={}{0}:}"/>
+                                </Button>
+                                <helpers:SelectableTextBlock helpers:TextBlockFormatter.FormattedText="{Binding Text, Mode=OneWay}" Background="Transparent" Cursor="IBeam"></helpers:SelectableTextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+                <hx:Viewport3DX x:Name="viewport" Camera="{Binding Camera}" EffectsManager="{Binding EffectsManager}" ZoomExtentsWhenLoaded="True" IsMoveEnabled="True" UseDefaultGestures="False"
+                    IsPanEnabled="True" MSAA="Eight" EnableSSAO="True" BackgroundColor="Black" Visibility="{Binding ModelVisible}" PanCursor="Cross">
+                    <hx:AmbientLight3D x:Name="ambLight" Color="LightGoldenrodYellow"/>
+                    <hx:PointLight3D x:Name="pointLight" Color="White" Position="0,100,0"/>
+                    <hx:PointLight3D x:Name="pointLight2" Color="LightBlue" />
+                    <hx:Viewport3DX.InputBindings>
+                        <KeyBinding Key="B" Command="hx:ViewportCommands.BackView" />
+                        <KeyBinding Key="F" Command="hx:ViewportCommands.FrontView" />
+                        <KeyBinding Key="U" Command="hx:ViewportCommands.TopView" />
+                        <KeyBinding Key="D" Command="hx:ViewportCommands.BottomView" />
+                        <KeyBinding Key="L" Command="hx:ViewportCommands.LeftView" />
+                        <KeyBinding Key="R" Command="hx:ViewportCommands.RightView" />
+                        <KeyBinding Command="hx:ViewportCommands.ZoomExtents" Gesture="Control+E" />
+                        <MouseBinding Command="hx:ViewportCommands.Rotate" Gesture="RightClick" />
+                        <MouseBinding Command="hx:ViewportCommands.Zoom" Gesture="MiddleClick" />
+                        <MouseBinding Command="hx:ViewportCommands.Pan" Gesture="LeftClick" />
+                    </hx:Viewport3DX.InputBindings>
+                </hx:Viewport3DX>
+                <Grid Background="Black" Visibility="{Binding ModelLoading}" x:Name="modelLoadingScreen">
+                    <TextBlock Text="{x:Static p:Resources.LoadingLabel}" TextAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="40"/>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>
