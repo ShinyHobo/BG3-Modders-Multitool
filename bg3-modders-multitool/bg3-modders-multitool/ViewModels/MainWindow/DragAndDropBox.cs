@@ -88,16 +88,19 @@ namespace bg3_modders_multitool.ViewModels
                             if (Path.GetFileName(file).Equals("meta.lsx"))
                             {
                                 var xml = FixVersion(file);
-                                var attributes = xml.Descendants("attribute");
-
-                                var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
-                                if (version != null)
+                                if (xml != null)
                                 {
-                                    var ver = PackedVersion.FromInt64(long.Parse(version.Attribute("value").Value));
-                                    Major = (int)ver.Major;
-                                    Minor = (int)ver.Minor;
-                                    Revision = (int)ver.Revision;
-                                    Build = (int)ver.Build;
+                                    var attributes = xml.Descendants("attribute");
+
+                                    var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
+                                    if (version != null)
+                                    {
+                                        var ver = PackedVersion.FromInt64(long.Parse(version.Attribute("value").Value));
+                                        Major = (int)ver.Major;
+                                        Minor = (int)ver.Minor;
+                                        Revision = (int)ver.Revision;
+                                        Build = (int)ver.Build;
+                                    }
                                 }
                             }
                         }
@@ -133,24 +136,27 @@ namespace bg3_modders_multitool.ViewModels
                             if (Path.GetFileName(file).Equals("meta.lsx"))
                             {
                                 var xml = FixVersion(file);
-                                var attributes = xml.Descendants("attribute");
-
-                                foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version64"))
+                                if (xml != null)
                                 {
-                                    attribute.Attribute("value").Value = new PackedVersion()
+                                    var attributes = xml.Descendants("attribute");
+
+                                    foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version64"))
                                     {
-                                        Major = (uint)Major,
-                                        Minor = (uint)Minor,
-                                        Revision = (uint)Revision,
-                                        Build = (uint)Build
-                                    }.ToVersion64().ToString();
-                                }
+                                        attribute.Attribute("value").Value = new PackedVersion()
+                                        {
+                                            Major = (uint)Major,
+                                            Minor = (uint)Minor,
+                                            Revision = (uint)Revision,
+                                            Build = (uint)Build
+                                        }.ToVersion64().ToString();
+                                    }
 
-                                var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
-                                if (version != null)
-                                {
+                                    var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
+                                    if (version != null)
+                                    {
 
-                                    xml.Save(file);
+                                        xml.Save(file);
+                                    }
                                 }
                             }
                         }
@@ -166,17 +172,24 @@ namespace bg3_modders_multitool.ViewModels
         /// <returns>The meta.lsx xml object</returns>
         internal XDocument FixVersion(string file)
         {
-            var xml = XDocument.Load(file);
-            var attributes = xml.Descendants("attribute");
-            foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version"))
+            try
             {
-                attribute.Attribute("id").Value = "Version64";
-                attribute.Attribute("type").Value = "int64";
-                var valid = int.TryParse(attribute.Attribute("value").Value, out int ver);
-                attribute.Attribute("value").Value = valid ? PackedVersion.FromInt32(ver).ToVersion64().ToString() : VersionCalculator.DefaultVersion.ToString();
+                var xml = XDocument.Load(file);
+                var attributes = xml.Descendants("attribute");
+                foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version"))
+                {
+                    attribute.Attribute("id").Value = "Version64";
+                    attribute.Attribute("type").Value = "int64";
+                    var valid = int.TryParse(attribute.Attribute("value").Value, out int ver);
+                    attribute.Attribute("value").Value = valid ? PackedVersion.FromInt32(ver).ToVersion64().ToString() : VersionCalculator.DefaultVersion.ToString();
+                }
+                xml.Save(file);
+                return xml;
             }
-            xml.Save(file);
-            return xml;
+            catch
+            {
+                return null;
+            }
         }
         #endregion
 

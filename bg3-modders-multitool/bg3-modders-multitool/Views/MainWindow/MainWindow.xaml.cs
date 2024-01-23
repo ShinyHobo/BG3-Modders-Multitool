@@ -6,7 +6,6 @@ namespace bg3_modders_multitool.Views
     using bg3_modders_multitool.Services;
     using bg3_modders_multitool.ViewModels;
     using bg3_modders_multitool.Views.Utilities;
-    using LSLib.LS;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
