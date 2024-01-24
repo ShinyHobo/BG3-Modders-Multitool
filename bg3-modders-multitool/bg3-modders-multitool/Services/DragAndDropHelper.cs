@@ -245,39 +245,46 @@ namespace bg3_modders_multitool.Services
         {
             // cleanup temp folder
             var tempFolder = new DirectoryInfo(TempFolder);
-            foreach (FileInfo file in tempFolder.GetFiles())
+            if(tempFolder.Exists)
             {
-                while (File.Exists(file.FullName))
+                foreach (FileInfo file in tempFolder.GetFiles())
                 {
-                    try
+                    while (File.Exists(file.FullName))
                     {
-                        file.Delete();
-                    }
-                    catch
-                    {
-                        GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, file.FullName);
-                        Task.Delay(1000);
+                        try
+                        {
+                            file.Delete();
+                        }
+                        catch
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, file.FullName);
+                            Task.Delay(1000);
+                        }
                     }
                 }
-            }
-            foreach (DirectoryInfo dir in tempFolder.GetDirectories())
-            {
-                while (Directory.Exists(dir.FullName))
+                foreach (DirectoryInfo dir in tempFolder.GetDirectories())
                 {
-                    try
+                    while (Directory.Exists(dir.FullName))
                     {
-                        dir.Delete(true);
-                    }
-                    catch
-                    {
-                        GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, dir.FullName);
-                        Task.Delay(1000);
+                        try
+                        {
+                            dir.Delete(true);
+                        }
+                        catch
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, dir.FullName);
+                            Task.Delay(1000);
+                        }
                     }
                 }
-            }
 
-            if (writeToConsole)
-                GeneralHelper.WriteToConsole(Properties.Resources.TempFilesCleaned);
+                if (writeToConsole)
+                    GeneralHelper.WriteToConsole(Properties.Resources.TempFilesCleaned);
+            }
+            else
+            {
+                tempFolder.Create();
+            }
         }
 
         /// <summary>
