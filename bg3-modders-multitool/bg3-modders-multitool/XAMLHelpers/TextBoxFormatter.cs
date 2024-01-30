@@ -62,23 +62,25 @@ namespace bg3_modders_multitool.XAMLHelpers
                         {
                             try
                             {
-                                Pfim.IImage pfimImage;
-                                if (!isBase64 && File.Exists(imageLoc))
+                                var imageExists = !isBase64 && File.Exists(imageLoc);
+                                using (Pfim.IImage pfimImage = imageExists ? Pfim.Pfimage.FromFile(imageLoc) : Pfim.Pfimage.FromStream(new MemoryStream(Convert.FromBase64String(imageLoc))))
                                 {
-                                    // convert image to something WPF can read
-                                    pfimImage = Pfim.Pfimage.FromFile(imageLoc);
-                                }
-                                else
-                                {
-                                    var imageData = Convert.FromBase64String(imageLoc);
-                                    pfimImage = Pfim.Pfimage.FromStream(new MemoryStream(imageData));
-                                }
+                                    // pin image data to prevent AccessViolationException do to GC
+                                    var handle = GCHandle.Alloc(pfimImage.Data, GCHandleType.Pinned);
 
-                                var data = Marshal.UnsafeAddrOfPinnedArrayElement(pfimImage.Data, 0);
-                                var bitmap = new System.Drawing.Bitmap(pfimImage.Width, pfimImage.Height, pfimImage.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
-                                var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                                image.Source = bitmapImage;
-                                pfimImage.Dispose();
+                                    try
+                                    {
+                                        var data = Marshal.UnsafeAddrOfPinnedArrayElement(pfimImage.Data, 0);
+                                        var bitmap = new System.Drawing.Bitmap(pfimImage.Width, pfimImage.Height, pfimImage.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
+                                        var hBitmap = bitmap.GetHbitmap();
+                                        var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                        image.Source = bitmapImage;
+                                    }
+                                    finally
+                                    {
+                                        handle.Free();
+                                    }
+                                }
                             }
                             catch { }
                             textBlock.Inlines.Add(result);
