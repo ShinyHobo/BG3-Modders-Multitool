@@ -698,6 +698,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not display image; extract and open externally!.
+        /// </summary>
+        public static string CouldNotDisplayImage {
+            get {
+                return ResourceManager.GetString("CouldNotDisplayImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not load image: {0}.
         /// </summary>
         public static string CouldNotLoadImage {

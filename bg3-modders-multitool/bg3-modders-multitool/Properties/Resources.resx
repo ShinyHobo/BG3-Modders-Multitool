@@ -341,6 +341,9 @@ Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endor
     <value>{0} appears to be corrupt or missing. Skipping file...</value>
     <comment>file path</comment>
   </data>
+  <data name="CouldNotDisplayImage" xml:space="preserve">
+    <value>Could not display image; extract and open externally!</value>
+  </data>
   <data name="CouldNotLoadImage" xml:space="preserve">
     <value>Could not load image: {0}</value>
     <comment>file path</comment>
