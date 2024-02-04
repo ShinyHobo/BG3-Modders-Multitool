@@ -23,6 +23,7 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
     using Newtonsoft.Json;
+    using static Lucene.Net.Documents.Field;
 
     public class IndexHelper
     {
@@ -402,12 +403,12 @@ namespace bg3_modders_multitool.Services
         {
             SearchText = search;
             return Task.Run(() => { 
-                var matches = new List<string>();
-                var filteredMatches = new List<string>();
+                var matches = new ConcurrentBag<string>();
+                var filteredMatches = new ConcurrentBag<string>();
                 if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(mainFSDirectory))
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFound);
-                    return (Matches: matches, FilteredMatches: filteredMatches);
+                    return (Matches: matches.ToList(), FilteredMatches: filteredMatches.ToList());
                 }
 
                 try
@@ -416,39 +417,43 @@ namespace bg3_modders_multitool.Services
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         BooleanQuery query = new BooleanQuery();
-                        var wildCardChar = enableLeadingWildCard ? "*" : string.Empty;
-                        var pathQuery = new WildcardQuery(new Term("path", wildCardChar + QueryParserBase.Escape(search.ToLower().Trim()) + '*'));
-                        query.Add(pathQuery, Occur.SHOULD);
 
-                        var searchTerms = search.Trim().ToLower().Split(' ');
-                        if(searchTerms.Length > 1)
+                        if(!string.IsNullOrEmpty(search))
                         {
-                            var spanQueries = new List<SpanQuery>();
-                            for (int i = 0; i < searchTerms.Length; i++)
+                            var wildCardChar = enableLeadingWildCard ? "*" : string.Empty;
+                            var pathQuery = new WildcardQuery(new Term("path", wildCardChar + QueryParserBase.Escape(search.ToLower().Trim()) + '*'));
+                            query.Add(pathQuery, Occur.SHOULD);
+
+                            var searchTerms = search.Trim().ToLower().Split(' ');
+                            if (searchTerms.Length > 1)
                             {
-                                var term = searchTerms[i];
-                                if (i == 0)
+                                var spanQueries = new List<SpanQuery>();
+                                for (int i = 0; i < searchTerms.Length; i++)
                                 {
-                                    WildcardQuery wildcard = new WildcardQuery(new Term("body", wildCardChar + term));
-                                    SpanQuery spanWildcard = new SpanMultiTermQueryWrapper<WildcardQuery>(wildcard);
-                                    spanQueries.Add(spanWildcard);
+                                    var term = searchTerms[i];
+                                    if (i == 0)
+                                    {
+                                        WildcardQuery wildcard = new WildcardQuery(new Term("body", wildCardChar + term));
+                                        SpanQuery spanWildcard = new SpanMultiTermQueryWrapper<WildcardQuery>(wildcard);
+                                        spanQueries.Add(spanWildcard);
+                                    }
+                                    else if (i == searchTerms.Length - 1)
+                                    {
+                                        SpanQuery last = new SpanMultiTermQueryWrapper<PrefixQuery>(new PrefixQuery(new Term("body", term)));
+                                        spanQueries.Add(last);
+                                    }
+                                    else
+                                    {
+                                        SpanQuery mid = new SpanTermQuery(new Term("body", term));
+                                        spanQueries.Add(mid);
+                                    }
                                 }
-                                else if (i == searchTerms.Length - 1)
-                                {
-                                    SpanQuery last = new SpanMultiTermQueryWrapper<PrefixQuery>(new PrefixQuery(new Term("body", term)));
-                                    spanQueries.Add(last);
-                                }
-                                else
-                                {
-                                    SpanQuery mid = new SpanTermQuery(new Term("body", term));
-                                    spanQueries.Add(mid);
-                                }
+                                query.Add(new SpanNearQuery(spanQueries.ToArray(), 0, true), Occur.SHOULD);
                             }
-                            query.Add(new SpanNearQuery(spanQueries.ToArray(), 0, true), Occur.SHOULD);
-                        }
-                        else
-                        {
-                            query.Add(new WildcardQuery(new Term("body", wildCardChar + searchTerms[0] + '*')), Occur.SHOULD);
+                            else
+                            {
+                                query.Add(new WildcardQuery(new Term("body", wildCardChar + searchTerms[0] + '*')), Occur.SHOULD);
+                            }
                         }
 
                         if (reader.MaxDoc != 0)
@@ -458,34 +463,34 @@ namespace bg3_modders_multitool.Services
                                 GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchStarted);
 
                             // perform search
-                            TopDocs topDocs = searcher.Search(query, reader.MaxDoc);
+                            TopDocs topDocs = string.IsNullOrEmpty(search) ? searcher.Search(new MatchAllDocsQuery(), reader.MaxDoc) : searcher.Search(query, reader.MaxDoc);
 
                             var filteredSomeResults = 0;
                             var missingExtensions = new List<string>();
 
                             // display results
-                            foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
-                            {
+                            var pathSet = new HashSet<string> { "path" };
+                            Parallel.ForEach(topDocs.ScoreDocs, GeneralHelper.ParallelOptions, scoreDoc => {
                                 float score = scoreDoc.Score;
                                 int docId = scoreDoc.Doc;
 
-                                Document doc = searcher.Doc(docId);
+                                Document doc = searcher.Doc(docId, pathSet);
                                 var path = doc.Get("path").Replace("/", "\\");
                                 var ext = Path.GetExtension(path).ToLower();
                                 ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
                                 if (selectedFileTypes != null && !selectedFileTypes.Contains(ext))
                                 {
                                     filteredSomeResults++;
-                                    if(!FileHelper.FileTypes.Contains(ext))
+                                    if (!FileHelper.FileTypes.Contains(ext))
                                     {
                                         missingExtensions.Add(ext);
                                     }
                                     filteredMatches.Add(path);
-                                    continue;
+                                    return;
                                 }
 
                                 matches.Add(path);
-                            }
+                            });
 
                             if(missingExtensions.Count > 0)
                             {
@@ -513,7 +518,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexCorrupt);
                 }
 
-                return (Matches: matches, FilteredMatches: filteredMatches);
+                return (Matches: matches.ToList(), FilteredMatches: filteredMatches.ToList());
             });
         }
         #endregion
@@ -627,14 +632,24 @@ namespace bg3_modders_multitool.Services
             var lines = new ConcurrentDictionary<long, string>();
             Parallel.ForEach(contents, GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
             {
-                var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
-                if (index >= 0)
+                if(string.IsNullOrEmpty(SearchText))
                 {
-                    var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
+                    var text = System.Security.SecurityElement.Escape(line);
                     var escapedLine = System.Security.SecurityElement.Escape(line);
-                    escapedLine = escapedLine.Replace(text, $"<Span Background=\"DimGray\" Foreground=\"White\">{text}</Span>");
                     lines.TryAdd(lineNumber, escapedLine);
                 }
+                else
+                {
+                    var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
+                    if (index >= 0)
+                    {
+                        var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
+                        var escapedLine = System.Security.SecurityElement.Escape(line);
+                        escapedLine = escapedLine.Replace(text, $"<Span Background=\"DimGray\" Foreground=\"White\">{text}</Span>");
+                        lines.TryAdd(lineNumber, escapedLine);
+                    }
+                }
+                
             });
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }

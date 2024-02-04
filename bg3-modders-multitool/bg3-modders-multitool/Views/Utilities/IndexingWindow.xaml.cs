@@ -50,7 +50,7 @@ namespace bg3_modders_multitool.Views
 
         private async void SearchFiles_Click(object sender, RoutedEventArgs e)
         {
-            if(!string.IsNullOrEmpty(search.Text) && fileTypeFilter.SelectedItems.Count > 0)
+            if(fileTypeFilter.SelectedItems.Count > 0)
             {
                 SearchResults.AllowInteraction = false;
                 SearchResults.SelectedPath = string.Empty;
