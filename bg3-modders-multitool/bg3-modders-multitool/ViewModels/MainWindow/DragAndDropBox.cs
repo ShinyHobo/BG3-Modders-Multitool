@@ -95,7 +95,8 @@ namespace bg3_modders_multitool.ViewModels
                                     var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
                                     if (version != null)
                                     {
-                                        var ver = PackedVersion.FromInt64(long.Parse(version.Attribute("value").Value));
+                                        long.TryParse(version.Attribute("value").Value, out long versionValue);
+                                        var ver = PackedVersion.FromInt64(versionValue);
                                         Major = (int)ver.Major;
                                         Minor = (int)ver.Minor;
                                         Revision = (int)ver.Revision;
