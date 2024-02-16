@@ -9,6 +9,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Properties;
+    using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
@@ -608,7 +609,9 @@ namespace bg3_modders_multitool.Services
                 if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
                 var fileToExist = FileHelper.GetPath(visualBankFile);
                 var fileExists = File.Exists(fileToExist) || File.Exists(fileToExist + ".lsx");
-                if(!fileExists)
+                var triedToFix = false;
+                CorruptXML:
+                if (!fileExists)
                 {
                     var helper = PakReaderHelpers.First(h => h.PakName == visualBankFile.Split('\\')[0]);
                     helper.DecompressPakFile(PakReaderHelper.GetPakPath(visualBankFile));
@@ -683,12 +686,20 @@ namespace bg3_modders_multitool.Services
                     }
                     catch
                     {
-                        GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
-                        if(reader != null)
+                        if (reader != null)
                         {
                             reader.Dispose();
                         }
-                        GameObjectViewModel.LoadingCanceled = true;
+                        if (triedToFix)
+                        {
+                            GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
+                            GameObjectViewModel.LoadingCanceled = true;
+                        }
+                        else
+                        {
+                            fileExists = false;
+                            goto CorruptXML;
+                        }
                     }
                     finally
                     {
