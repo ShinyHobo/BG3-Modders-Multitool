@@ -248,6 +248,8 @@ namespace bg3_modders_multitool.Services
                 rootTemplate = FileHelper.GetPath(rootTemplate);
 
                 var fileExists = File.Exists(rootTemplate) || File.Exists(rootTemplate + ".lsx");
+                var triedToFix = false;
+                RootTemplateCorruptXML:
                 if (!fileExists)
                 {
                     var helper = PakReaderHelpers.First(h => h.PakName == fileToExist.Split('\\')[0]);
@@ -260,10 +262,11 @@ namespace bg3_modders_multitool.Services
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", Path.ChangeExtension(rootTemplate, "lsx"));
                     if (File.Exists(FileHelper.GetPath(rootTemplatePath)))
                     {
+                        XmlReader reader = null;
                         try
                         {
                             var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
-                            using (XmlReader reader = XmlReader.Create(FileHelper.GetPath(rootTemplatePath)))
+                            using (reader = XmlReader.Create(FileHelper.GetPath(rootTemplatePath)))
                             {
                                 reader.MoveToContent();
                                 while (!reader.EOF)
@@ -325,9 +328,28 @@ namespace bg3_modders_multitool.Services
                         }
                         catch
                         {
-                            rootTemplate = rootTemplate.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
-                            GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, rootTemplate);
-                            return;
+                            if (reader != null)
+                            {
+                                reader.Dispose();
+                            }
+                            if (triedToFix)
+                            {
+                                GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, rootTemplate.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty));
+                                GameObjectViewModel.LoadingCanceled = true;
+                                return;
+                            }
+                            else
+                            {
+                                fileExists = false;
+                                goto RootTemplateCorruptXML;
+                            }
+                        }
+                        finally
+                        {
+                            if (reader != null)
+                            {
+                                reader.Dispose();
+                            }
                         }
                     }
                     UpdateFileProgress();
@@ -610,7 +632,7 @@ namespace bg3_modders_multitool.Services
                 var fileToExist = FileHelper.GetPath(visualBankFile);
                 var fileExists = File.Exists(fileToExist) || File.Exists(fileToExist + ".lsx");
                 var triedToFix = false;
-                CorruptXML:
+                VisualBankCorruptXML:
                 if (!fileExists)
                 {
                     var helper = PakReaderHelpers.First(h => h.PakName == visualBankFile.Split('\\')[0]);
@@ -698,7 +720,7 @@ namespace bg3_modders_multitool.Services
                         else
                         {
                             fileExists = false;
-                            goto CorruptXML;
+                            goto VisualBankCorruptXML;
                         }
                     }
                     finally
