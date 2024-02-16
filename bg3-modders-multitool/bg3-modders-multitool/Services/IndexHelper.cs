@@ -23,7 +23,6 @@ namespace bg3_modders_multitool.Services
     using System.Collections.Concurrent;
     using Lucene.Net.Search.Spans;
     using Newtonsoft.Json;
-    using static Lucene.Net.Documents.Field;
 
     public class IndexHelper
     {

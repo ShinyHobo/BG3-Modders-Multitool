@@ -423,8 +423,14 @@ namespace bg3_modders_multitool.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GameObjectButton_Click(object sender, RoutedEventArgs e)
+        private async void GameObjectButton_Click(object sender, RoutedEventArgs e)
         {
+
+            if (!IndexHelper.IndexDirectoryExists())
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFoundGenerating);
+                await IndexFiles(true);
+            }
             new GameObjectWindow().Show();
         }
 
