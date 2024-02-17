@@ -699,13 +699,35 @@ namespace bg3_modders_multitool.Services
                                 contentList.Add(child);
                             }
                         }
-                        file.Delete();
+                        while (File.Exists(file.FullName))
+                        {
+                            try
+                            {
+                                file.Delete();
+                            }
+                            catch
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, file.FullName);
+                                Task.Delay(1000);
+                            }
+                        }
                     }
                     xml.Save($"{path}\\__MT_GEN_LOCA_{Guid.NewGuid()}.loca.xml");
                     
-                    foreach (var delDir in path.GetDirectories())
+                    foreach (var dir in path.GetDirectories())
                     {
-                        delDir.Delete(true);
+                        while (Directory.Exists(dir.FullName))
+                        {
+                            try
+                            {
+                                dir.Delete(true);
+                            }
+                            catch
+                            {
+                                GeneralHelper.WriteToConsole(Properties.Resources.CantDeleteResource, dir.FullName);
+                                Task.Delay(1000);
+                            }
+                        }
                     }
                 }
             }
