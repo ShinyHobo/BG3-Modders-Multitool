@@ -17,6 +17,7 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string Icon { get; set; }
         public List<InterruptContext> InterruptContext { get; set; }
         public InterruptContextScope InterruptContextScope { get; set; }
+        public string InterruptFlags { get; set; }
         public string Container { get; set; }
         public string Conditions { get; set; }
         public List<string> Properties { get; set; }
@@ -25,10 +26,14 @@ namespace bg3_modders_multitool.Models.StatStructures
         public string Stack { get; set; }
         public string Roll { get; set; }
         public string Success { get; set; }
+        public string TooltipAttackSave { get; set; }
+        public string TooltipDamageList { get; set; }
+        public string TooltipStatusApply { get; set; }
         public string Failure { get; set; }
         public string EnableCondition { get; set; }
         public string EnableContext { get; set; }
         public CooldownType Cooldown { get; set; }
+        
 
         public override StatStructure Clone()
         {
