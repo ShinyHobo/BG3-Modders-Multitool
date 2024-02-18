@@ -43,7 +43,7 @@ namespace bg3_modders_multitool
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Process unhandled exception
-            using (StreamWriter w = File.AppendText("log.txt"))
+            using (StreamWriter w = File.AppendText("crash_log.txt"))
             {
                 Log($"An Error occured:\nStack Trace:\n{e.Exception.StackTrace}\n\nMessage: {e.Exception.Message}", w);
             }

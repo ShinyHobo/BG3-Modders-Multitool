@@ -117,17 +117,115 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="3DModelTabLabel" xml:space="preserve">
+    <value>3D 模型</value>
+  </data>
+  <data name="AboutMenu" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="AddMissingMetaLsxTitle" xml:space="preserve">
+    <value>为{0}添加Meta 文件</value>
+    <comment>mod root folder</comment>
+  </data>
+  <data name="AdvancedLabel" xml:space="preserve">
+    <value>高级功能</value>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>博德之门3 模组作者 多功能工具</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>你确定吗?</value>
+  </data>
+  <data name="AtlasConstructed" xml:space="preserve">
+    <value>构建图集表</value>
+  </data>
+  <data name="AtlasConvert" xml:space="preserve">
+    <value>转换</value>
+  </data>
+  <data name="AtlasDeconstructed" xml:space="preserve">
+    <value>图集拆解</value>
+  </data>
+  <data name="AtlasDeconstructionSelectionTitle" xml:space="preserve">
+    <value>选择要拆解的图集表</value>
+  </data>
+  <data name="AtlasFileSaveTitle" xml:space="preserve">
+    <value>选择保存图集文件的位置</value>
+  </data>
+  <data name="AtlasFramesSaveTitle" xml:space="preserve">
+    <value>选择保存图集帧的文件夹</value>
+  </data>
+  <data name="AtlasFramesSelectTitle" xml:space="preserve">
+    <value>选择要用于生成图集表的帧数</value>
+  </data>
+  <data name="AtlasHorizontalFrames" xml:space="preserve">
+    <value>水平帧</value>
+  </data>
+  <data name="AtlasSelectFile" xml:space="preserve">
+    <value>选择文件</value>
+  </data>
+  <data name="AtlasSelectFiles" xml:space="preserve">
+    <value>选择多个文件</value>
+  </data>
+  <data name="AtlasSelectOutput" xml:space="preserve">
+    <value>选择输出</value>
+  </data>
+  <data name="AtlasToolMenuHeader" xml:space="preserve">
+    <value>图集转换器</value>
+  </data>
+  <data name="AtlasToolMenuTooltip" xml:space="preserve">
+    <value>生成和拆解 .dds 图集文件</value>
+  </data>
+  <data name="AtlasVerticalFrames" xml:space="preserve">
+    <value>垂直帧</value>
   </data>
   <data name="AttemptingToPack" xml:space="preserve">
     <value>尝试打包Mod。</value>
   </data>
+  <data name="AttributeMissing" xml:space="preserve">
+    <value>属性缺失{0}\r\n</value>
+    <comment>attribute name</comment>
+  </data>
+  <data name="AttributesTabLabel" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="AvailableColorsLabel" xml:space="preserve">
+    <value>可用颜色</value>
+  </data>
   <data name="BadTranslation" xml:space="preserve">
     <value>Bad translation</value>
   </data>
+  <data name="BG3CommunityLibrary" xml:space="preserve">
+    <value>BG3社区资源库</value>
+  </data>
+  <data name="BG3CommWikiTooltip" xml:space="preserve">
+    <value>一个协作社区资源，包含指南和示例mod</value>
+  </data>
   <data name="BG3ExeLabel" xml:space="preserve">
     <value>bg3.exe 位置</value>
+  </data>
+  <data name="BG3ModdingWiki" xml:space="preserve">
+    <value>BG3模组制作维基资源</value>
+  </data>
+  <data name="BG3ScriptExtender" xml:space="preserve">
+    <value>BG3 脚本扩展器（SE）</value>
+  </data>
+  <data name="BG3ScriptExtenderAPI" xml:space="preserve">
+    <value>BG3 脚本扩展器（SE） API</value>
+  </data>
+  <data name="BG3ScriptExtenderSampleMod" xml:space="preserve">
+    <value>BG3 脚本扩展器（SE） 示例模组</value>
+  </data>
+  <data name="BG3SEAPITooltip" xml:space="preserve">
+    <value>脚本扩展器（SE）Lua API文档</value>
+  </data>
+  <data name="BG3SESampleTooltip" xml:space="preserve">
+    <value>脚本扩展器（SE）示例模组</value>
+  </data>
+  <data name="BG3SETooltip" xml:space="preserve">
+    <value>脚本扩展器（SE）的最新版本</value>
+  </data>
+  <data name="BG3WikiTooltip" xml:space="preserve">
+    <value>BG3维基模组资源页面</value>
   </data>
   <data name="CachingFile" xml:space="preserve">
     <value>{0}缓存中...</value>
@@ -135,6 +233,10 @@
   </data>
   <data name="CancelButton" xml:space="preserve">
     <value>取消</value>
+  </data>
+  <data name="CanceledUnpackingPak" xml:space="preserve">
+    <value>{0} 解包取消。</value>
+    <comment>pak name</comment>
   </data>
   <data name="CancelledGOE" xml:space="preserve">
     <value>取消加载游戏对象。</value>
@@ -145,11 +247,40 @@
   <data name="CancelUnpackingButton" xml:space="preserve">
     <value>取消解包</value>
   </data>
+  <data name="ChangeLogMenu" xml:space="preserve">
+    <value>更新日志</value>
+  </data>
+  <data name="ChangeLogMenuTooltip" xml:space="preserve">
+    <value>每次更新的更改列表</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>检查更新</value>
+  </data>
+  <data name="CheckForUpdatesTooltip" xml:space="preserve">
+    <value>检查并应用可用的更新</value>
+  </data>
+  <data name="CheckingForUpdates" xml:space="preserve">
+    <value>正在检查更新...</value>
+  </data>
+  <data name="ClearIndex" xml:space="preserve">
+    <value>清除索引</value>
+  </data>
+  <data name="ClearIndexQuestion" xml:space="preserve">
+    <value>小心！这是不可逆的！\r\n\r\n点击“确定”将清除您当前的索引并需要重新建立索引。您确定要继续吗？</value>
+  </data>
   <data name="ClickOrDropModPacker" xml:space="preserve">
     <value>将Mod工作空间拖动到这里或点击来选择它。这将自动处理和打包你的mod。</value>
   </data>
   <data name="ConfigButtonTooltip" xml:space="preserve">
     <value>必须要配置的一些选项</value>
+  <data name="ClickToSelectColorLabel" xml:space="preserve">
+    <value>点击选择颜色：</value>
+  </data>
+  <data name="ClosingAppForUpdate" xml:space="preserve">
+    <value>正在等待应用程序完全关闭以进行更新...</value>
+  </data>
+  <data name="ColorPickerMenu" xml:space="preserve">
+    <value>颜色选择器</value>
   </data>
   <data name="ConfigNeededLabel" xml:space="preserve">
     <value>需要设置</value>
@@ -157,8 +288,23 @@
   <data name="ConfigurationTitle" xml:space="preserve">
     <value>配置</value>
   </data>
+  <data name="ConfigureMenuTooltip" xml:space="preserve">
+    <value>配置应用程序</value>
+  </data>
   <data name="ConfirmButton" xml:space="preserve">
     <value>确定</value>
+  </data>
+  <data name="ConstructingAtlas" xml:space="preserve">
+    <value>从所选帧构建图集...</value>
+  </data>
+  <data name="ConvertAndOpenButton" xml:space="preserve">
+    <value>转换并打开</value>
+  </data>
+  <data name="ConvertFromAtlasToFrames" xml:space="preserve">
+    <value>从图集表转换到帧</value>
+  </data>
+  <data name="ConvertFromFramesToAtlas" xml:space="preserve">
+    <value>从帧转换为图集表</value>
   </data>
   <data name="ConvertingModelDae" xml:space="preserve">
     <value>将模型转换为.dae进行渲染...</value>
@@ -169,16 +315,49 @@
   <data name="ConvertOpenButtonTooltip" xml:space="preserve">
     <value>转换所有可转换的文件，解包为.lsx</value>
   </data>
+  <data name="ConvertWemMenu" xml:space="preserve">
+    <value>WEM格式转换器</value>
+  </data>
+  <data name="CopiedToClipboard" xml:space="preserve">
+    <value>已复制 {0} 到剪贴板！</value>
+    <comment>text</comment>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>版权所有 © ShinyHobo 2020-2023\r\n\r\nBaldur's Gate 3 Modder's Multitool 为非官方粉丝内容，未经Larian Studios批准/认可。部分材料的所有权属于Wizards of the Coast LLC和Larian Studios Games ltd。</value>
+  </data>
   <data name="CorruptXmlFile" xml:space="preserve">
     <value>{0}似乎已经损坏或丢失。 删除并解压，然后重试。文件跳过...</value>
+    <comment>file path</comment>
+  </data>
+  <data name="CouldNotLoadImage" xml:space="preserve">
+    <value>无法加载图像：{0}</value>
     <comment>file path</comment>
   </data>
   <data name="DecompressFilesButton" xml:space="preserve">
     <value>解压文件</value>
   </data>
+  <data name="DecompressionCancelled" xml:space="preserve">
+    <value>解压已取消</value>
+  </data>
   <data name="DecompressionComplete" xml:space="preserve">
     <value>解压耗时：{0}。</value>
     <comment>elapsed time</comment>
+  </data>
+  <data name="DecompressQuestion" xml:space="preserve">
+    <value>该过程将所有解包的文件转换为可读状态（例如，从lsf到lsx和从loca到xml），并删除原始文件。这可能需要相当长的时间，如果您已经有一个索引，您可能希望之后重新建立索引。\r\n\r\n您想要继续吗？</value>
+  </data>
+  <data name="DecompressQuestionTitle" xml:space="preserve">
+    <value>准备好解压您的文件了吗？</value>
+  </data>
+  <data name="DeconstructingAtlas" xml:space="preserve">
+    <value>将图集表拆解为 {0}</value>
+    <comment>save location</comment>
+  </data>
+  <data name="DeletingTempIndecies" xml:space="preserve">
+    <value>正在删除临时索引...</value>
   </data>
   <data name="DescriptionHandleLabel" xml:space="preserve">
     <value>描述句柄</value>
@@ -211,206 +390,358 @@
 Mod工作空间
 文件夹</value>
   </data>
+  <data name="DuplicateFileFoundReplacing" xml:space="preserve">
+    <value>发现重复文件 [{0}]；正在替换...</value>
+    <comment>file name</comment>
+  </data>
+  <data name="EmptyFile" xml:space="preserve">
+    <value>找不到文件内容；没有要显示的内容</value>
+  </data>
   <data name="EnablingSplashScreen" xml:space="preserve">
-    <value>开启启动画面...</value>
+    <value>启用启动画面...</value>
+  </data>
+  <data name="ErrorLine" xml:space="preserve">
+    <value>在第 {0} 行出现错误\r\n</value>
+    <comment>line number</comment>
   </data>
   <data name="ErrorParsingProperty" xml:space="preserve">
-    <value>将"{0}"解析为"{1}"时出错</value>
+    <value>解析 \"{0}\" 时出现错误，用于 \"{1}\"</value>
     <comment>value, PropertyType name</comment>
   </data>
   <data name="ErrorParsingStructure" xml:space="preserve">
-    <value>解析结构类型"{1}"的行 [{0}] 时出错：{2}</value>
+    <value>解析结构类型 \"{1}\" 的第 [{0}] 行时出现错误：{2}</value>
     <comment>line number, type, error message</comment>
   </data>
+  <data name="ErrorsFoundPacking" xml:space="preserve">
+    <value>在mod工作区发现错误。取消进程。</value>
+  </data>
+  <data name="ErrorUnpacking" xml:space="preserve">
+    <value>解包出错 {0}：{1}</value>
+    <comment>pak name, error message</comment>
+  </data>
   <data name="EstimateLabel" xml:space="preserve">
-    <value>预计</value>
+    <value>估计</value>
   </data>
   <data name="Extensionless" xml:space="preserve">
-    <value>无拓展名文件</value>
+    <value>没有扩展名</value>
     <comment>for files without an extension</comment>
   </data>
+  <data name="ExternalLSLibFound" xml:space="preserve">
+    <value>发现外部LSLib.dll！请更改您的Multitool安装目录以避免冲突。</value>
+  </data>
+  <data name="ExtractFileTooltip" xml:space="preserve">
+    <value>提取文件</value>
+  </data>
+  <data name="ExtractSelectedButton" xml:space="preserve">
+    <value>提取所选项</value>
+  </data>
   <data name="FailedGOE" xml:space="preserve">
-    <value>游戏对象加载失败。耗时{0}秒。</value>
+    <value>游戏对象加载失败。已经过了 {0} 秒。</value>
     <comment>seconds</comment>
   </data>
   <data name="FailedToConvertOgg" xml:space="preserve">
-    <value>将输入文件转换为.ogg时出现问题!</value>
+    <value>转换输入文件为 .ogg 时出现问题！</value>
   </data>
   <data name="FailedToConvertResource" xml:space="preserve">
-    <value>资源转换为 {0} 时失败 ({1})，错误信息: {2}</value>
+    <value>未能将资源转换为 {0} ({1})：{2}</value>
     <comment>extension, file, error message</comment>
   </data>
   <data name="FailedToEnableSplashScreen" xml:space="preserve">
-    <value>开启启动画面失败...</value>
+    <value>无法启用启动画面...</value>
+  </data>
+  <data name="FailedToExtractFile" xml:space="preserve">
+    <value>提取 {0} 失败</value>
+    <comment>file path</comment>
+  </data>
+  <data name="FailedToFetchUpdates" xml:space="preserve">
+    <value>无法获取更新（状态 {0}）</value>
+    <comment>status code int</comment>
   </data>
   <data name="FailedToFindIconsPak" xml:space="preserve">
-    <value>未找到有效的纹理图集。 解压 Icons.pak 以生成图标。 跳过...</value>
+    <value>未发现有效的纹理图集。解压 Icons.pak 以生成图标。跳过...</value>
   </data>
   <data name="FailedToFindModelsPak" xml:space="preserve">
-    <value>未找到模型目录。 请解压 Models.pak 以查看模型。</value>
+    <value>未能找到Models目录。请解压Models.pak以查看模型。</value>
+  </data>
+  <data name="FailedToFindTranslationPak" xml:space="preserve">
+    <value>无法加载 {0}。请解包 {1}.pak 以生成翻译。跳过...</value>
+    <comment>loca filename, pak name</comment>
   </data>
   <data name="FailedToIndexFile" xml:space="preserve">
-    <value>索引文件[{0}]失败:
-{1}</value>
+    <value>索引文件失败 [{0}]：\r\n{1}</value>
     <comment>file path, error message</comment>
   </data>
   <data name="FailedToLoadDae" xml:space="preserve">
-    <value>加载.dae时出错:{0}。内部异常:{1}</value>
+    <value>加载 .dae 出错：{0}。内部异常：{1}</value>
     <comment>error message, inner error message</comment>
   </data>
   <data name="FailedToLoadFile" xml:space="preserve">
-    <value>无法加载{0}:
-{1}</value>
+    <value>无法加载 {0}:\r\n{1}</value>
     <comment>file path, error message</comment>
   </data>
   <data name="FailedToLoadModel" xml:space="preserve">
-    <value>无法加载模型:{0}</value>
+    <value>无法加载模型：{0}</value>
     <comment>file name</comment>
   </data>
   <data name="FailedToLoadRaces" xml:space="preserve">
-    <value>加载 {0}.pak 的 Races.lsx文件失败。</value>
+    <value>无法加载 Races.lsx 以用于 {0}.pak。</value>
     <comment>pak name</comment>
   </data>
+  <data name="FailedToLoadStatStructure" xml:space="preserve">
+    <value>无法加载 StatStructure 行 '{0}'</value>
+    <comment>stat structure line</comment>
+  </data>
+  <data name="FailedToMovePak" xml:space="preserve">
+    <value>无法将 {0} pak 移动到 Mods 文件夹。游戏是否正在运行？</value>
+    <comment>file name</comment>
+  </data>
   <data name="FailedToPackMod" xml:space="preserve">
-    <value>打包mod失败:{0}</value>
+    <value>打包模组失败：{0}</value>
     <comment>error message</comment>
   </data>
+  <data name="FailedToProcessWorkspace" xml:space="preserve">
+    <value>无法打开文件/文件夹。</value>
+  </data>
+  <data name="FailedToReadData" xml:space="preserve">
+    <value>无法加载 {0} pak 的数据。游戏对象继承将不完整。</value>
+    <comment>pak name</comment>
+  </data>
   <data name="FailedToReadDirectory" xml:space="preserve">
-    <value>无法从目录中读取:{0}</value>
+    <value>无法读取目录：{0}</value>
     <comment>directory</comment>
   </data>
   <data name="FileDroppingNotSupported" xml:space="preserve">
-    <value>暂不支持文件删除。</value>
+    <value>暂不支持文件拖放。</value>
+  </data>
+  <data name="FileExtractionCanceled" xml:space="preserve">
+    <value>文件提取已取消。</value>
+  </data>
+  <data name="FileExtractionComplete" xml:space="preserve">
+    <value>文件提取完成！</value>
+  </data>
+  <data name="FileExtractionStarted" xml:space="preserve">
+    <value>开始提取 {0} 个文件...</value>
+    <comment>file count</comment>
   </data>
   <data name="FileListRetrieved" xml:space="preserve">
-    <value>检索到的文件列表。</value>
+    <value>文件列表已检索。</value>
+  </data>
+  <data name="FileMissingExtensionError" xml:space="preserve">
+    <value>{0} 缺少文件扩展名！请更正后重试。取消打包。</value>
+    <comment>file path</comment>
   </data>
   <data name="FileNoExist" xml:space="preserve">
-    <value>文件在给定路径上不存在。({0}).</value>
+    <value>指定路径的文件不存在 ({0})。</value>
     <comment>file path</comment>
   </data>
   <data name="FileNotFound" xml:space="preserve">
     <value>未找到文件。</value>
   </data>
+  <data name="FileOperationsMenu" xml:space="preserve">
+    <value>游戏文件操作</value>
+  </data>
+  <data name="FileTypeNotSupported" xml:space="preserve">
+    <value>文件类型 {0} 不受支持！</value>
+    <comment>file extension</comment>
+  </data>
+  <data name="FinalizingIndex" xml:space="preserve">
+    <value>正在完成索引...</value>
+  </data>
   <data name="FixingVerticies" xml:space="preserve">
     <value>修复顶点...</value>
   </data>
+  <data name="FoundCharacterVisualBanks" xml:space="preserve">
+    <value>找到角色视觉素材库</value>
+  </data>
   <data name="FoundMaterialBanks" xml:space="preserve">
-    <value>查找材质库...</value>
+    <value>找到材料素材库</value>
   </data>
   <data name="FoundTextureBanks" xml:space="preserve">
-    <value>查找纹理库...</value>
+    <value>找到纹理库...</value>
   </data>
   <data name="FoundVisualBanks" xml:space="preserve">
-    <value>查找视觉资产库...</value>
+    <value>找到视觉素材库...</value>
+  </data>
+  <data name="GameDataMenu" xml:space="preserve">
+    <value>游戏数据</value>
+  </data>
+  <data name="GameDataMenuTooltip" xml:space="preserve">
+    <value>游戏.pak 文件的存放位置</value>
   </data>
   <data name="GameDocsLocationLabel" xml:space="preserve">
-    <value>游戏的文档文件夹位置</value>
+    <value>游戏文档文件夹的位置</value>
   </data>
   <data name="GameDocsLocationTooltip" xml:space="preserve">
-    <value>请选择您游戏的文档文件夹。(例如: ...\AppData\Local\Larian Studios\Baldur's Gate 3)</value>
+    <value>请选取您游戏的文档文件夹。(例如: ...\AppData\Local\Larian Studios\Baldur's Gate 3)</value>
+  </data>
+  <data name="GameExeLocationTooltip" xml:space="preserve">
+    <value>请选择您的 BG3 游戏可执行文件的位置。</value>
   </data>
   <data name="GameObjectSelectionLabel" xml:space="preserve">
     <value>请选择游戏对象类型</value>
   </data>
   <data name="GameObjectsLoaded" xml:space="preserve">
-    <value>加载游戏对象...</value>
+    <value>游戏对象已加载...</value>
   </data>
   <data name="GameObjectUncovered" xml:space="preserve">
-    <value>未涵盖 GameObject 属性类型 [{0}]。</value>
+    <value>未涵盖游戏对象属性类型 [{0}]。</value>
     <comment>type</comment>
+  </data>
+  <data name="GamePaksInstructions" xml:space="preserve">
+    <value>选择您想解包的游戏 .paks 文件：</value>
+  </data>
+  <data name="GeneralError" xml:space="preserve">
+    <value>错误: {0}\r\n{1}</value>
+    <comment>error message, stack trace</comment>
+  </data>
+  <data name="GeneratedWithDisclaimer" xml:space="preserve">
+    <value>使用 ShinyHobo 的 BG3 Modder's Multitool 生成</value>
   </data>
   <data name="GenerateTitle" xml:space="preserve">
     <value>生成</value>
   </data>
   <data name="GOEButton" xml:space="preserve">
-    <value>游戏对象浏览器</value>
+    <value>游戏对象资源管理器</value>
   </data>
   <data name="GOEButtonTooltip" xml:space="preserve">
-    <value>允许可视化导航浏览已解压的游戏对象，包括角色、物品等</value>
+    <value>允许您以图形方式浏览未打包的游戏对象，包括角色、物品等。</value>
   </data>
   <data name="GOECacheCleared" xml:space="preserve">
-    <value>游戏对象缓存清理成功。</value>
+    <value>游戏对象缓存成功清除。</value>
   </data>
   <data name="GOECacheClearFailed" xml:space="preserve">
-    <value>清理游戏对象缓存失败。确保没有正在使用。</value>
+    <value>删除游戏对象缓存失败。确保它没有被使用。</value>
   </data>
   <data name="GOEClearCacheButton" xml:space="preserve">
-    <value>清理缓存</value>
+    <value>清除缓存</value>
   </data>
   <data name="GOEClearCacheToolTip" xml:space="preserve">
-    <value>清除 GOE 缓存（如果存在）</value>
+    <value>清除 GOE 缓存，如果存在</value>
   </data>
   <data name="GOEDeleteQuestion" xml:space="preserve">
-    <value>小心！ 此操作不可逆！
-
-您确定要删除游戏对象缓存吗？</value>
+    <value>小心！这是不可逆的！\r\n\r\n您确定要删除游戏对象缓存吗？</value>
+  </data>
+  <data name="GOEMenuTooltip" xml:space="preserve">
+    <value>用于快速搜索游戏对象并查看它们的属性。包括模型查看器。</value>
   </data>
   <data name="GOENoCache" xml:space="preserve">
-    <value>没有可清理的游戏对象缓存。</value>
+    <value>没有游戏对象缓存可清除。</value>
   </data>
   <data name="GOETitle" xml:space="preserve">
-    <value>游戏对象浏览器</value>
+    <value>游戏对象资源管理器</value>
+  </data>
+  <data name="Granny2Error" xml:space="preserve">
+    <value>需要 granny2.dll 以将 GR2 文件转换为 dae。请获取该文件的副本并将其放置在与该应用程序相同的目录中。</value>
   </data>
   <data name="GUIDCopied" xml:space="preserve">
-    <value>{0} [{1}] 已复制到剪切版!</value>
+    <value>{0} [{1}] 已复制到剪贴板！</value>
     <comment>uuid/guid type, guid/uuid text</comment>
   </data>
   <data name="GUIDCopyFailed" xml:space="preserve">
-    <value>无法复制到剪贴板（{0} 程序阻塞）：
-错误信息：{1}
-堆栈跟踪：{2}</value>
+    <value>复制到剪贴板失败（{0} 阻止）：\r\n{1}\r\n{2}</value>
     <comment>process name, error message, stack trace</comment>
   </data>
   <data name="HandleLabel" xml:space="preserve">
-    <value>句柄</value>
+    <value>句柄（Handle）</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="HelpMenuTooltip" xml:space="preserve">
+    <value>一系列的修改资源和支持链接</value>
+  </data>
+  <data name="HEXLabel" xml:space="preserve">
+    <value>HEX</value>
+  </data>
+  <data name="HEXTooltip" xml:space="preserve">
+    <value>点击以将十六进制值复制到剪贴板</value>
+  </data>
+  <data name="HowToUseMenu" xml:space="preserve">
+    <value>如何使用</value>
+  </data>
+  <data name="HowToUseMenuTooltip" xml:space="preserve">
+    <value>打开工具维基页面</value>
   </data>
   <data name="IconLabel" xml:space="preserve">
-    <value>图标</value>
+    <value>Icon</value>
+  </data>
+  <data name="IconTabLabel" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+  <data name="ImageFilesFilter" xml:space="preserve">
+    <value>图像文件</value>
   </data>
   <data name="IndexButtonTooltip" xml:space="preserve">
-    <value>单击开始构建索引</value>
+    <value>点击开始索引</value>
+  </data>
+  <data name="IndexCleared" xml:space="preserve">
+    <value>索引已清空！</value>
   </data>
   <data name="IndexCorrupt" xml:space="preserve">
-    <value>索引损坏。请重新构建索引以创建新的索引器。</value>
+    <value>可用索引已损坏。请重新运行索引程序以创建新的索引。</value>
   </data>
   <data name="IndexFilesButton" xml:space="preserve">
-    <value>索引文件</value>
+    <value>索引已解包的数据文件（旧版）</value>
   </data>
   <data name="IndexFinished" xml:space="preserve">
-    <value>构建索引进程在{0}完成。</value>
+    <value>索引进程在 {0} 内完成。</value>
     <comment>formatted time</comment>
   </data>
   <data name="IndexingInProgress" xml:space="preserve">
-    <value>构建索引正在进行中...</value>
+    <value>索引正在进行中...</value>
   </data>
   <data name="IndexMenu" xml:space="preserve">
     <value>索引</value>
   </data>
+  <data name="IndexMenuTooltip" xml:space="preserve">
+    <value>用于快速创建和搜索解包游戏文件索引</value>
+  </data>
   <data name="IndexNotFound" xml:space="preserve">
-    <value>没有可用的索引!请解包游戏资产并构建索引。</value>
+    <value>没有可用的索引！点击“实用工具”=&gt;“索引”，然后选择一个选项来生成索引。</value>
+  </data>
+  <data name="IndexNotFoundGenerating" xml:space="preserve">
+    <value>没有可用的索引！现在正在生成索引...</value>
+  </data>
+  <data name="IndexPakFilesButton" xml:space="preserve">
+    <value>索引 Pak 文件</value>
   </data>
   <data name="IndexSearchButton" xml:space="preserve">
-    <value>索引搜索</value>
+    <value>搜索索引</value>
   </data>
   <data name="IndexSearchButtonTooltip" xml:space="preserve">
-    <value>点击搜索解压后的文件数据</value>
+    <value>点击以搜索解包文件数据</value>
   </data>
   <data name="IndexSearchNoDocuments" xml:space="preserve">
-    <value>无可用文件。 请重新生成索引。</value>
+    <value>没有可用的文档。请重新生成索引。</value>
   </data>
   <data name="IndexSearchReturned" xml:space="preserve">
-    <value>搜索在 {1} ms内返回了 {0} 个有效结果</value>
+    <value>搜索返回 {0} 个有效结果，耗时 {1} 毫秒</value>
     <comment>results count, time in milliseconds</comment>
   </data>
   <data name="IndexSearchStarted" xml:space="preserve">
-    <value>搜索开始。</value>
+    <value>搜索已开始。</value>
   </data>
   <data name="IndexSearchTitle" xml:space="preserve">
     <value>索引搜索</value>
   </data>
+  <data name="IndexUpToDate" xml:space="preserve">
+    <value>索引已更新！</value>
+  </data>
   <data name="InfoGenerated" xml:space="preserve">
     <value>info.json 已生成。</value>
+  </data>
+  <data name="InputImageDimensions" xml:space="preserve">
+    <value>输入尺寸: {0}x{1}</value>
+    <comment>width, height</comment>
+  </data>
+  <data name="InvalidBg3Location" xml:space="preserve">
+    <value>找不到 Data 目录。确保您选择的 bg3.exe 是正确的。</value>
+  </data>
+  <data name="InvalidBg3LocationSelection" xml:space="preserve">
+    <value>无法访问所选的游戏可执行文件。请确保您选择的 bg3.exe 文件是正确的。</value>
+  </data>
+  <data name="KofiTooltip" xml:space="preserve">
+    <value>在 KoFi 上支持 ShinyHobo</value>
   </data>
   <data name="LangChinese" xml:space="preserve">
     <value>中文</value>
@@ -430,6 +761,9 @@ Mod工作空间
   <data name="LaunchGameButtonTooltip" xml:space="preserve">
     <value>运行游戏</value>
   </data>
+  <data name="LegalMenu" xml:space="preserve">
+    <value>法律信息</value>
+  </data>
   <data name="LoadedGOE" xml:space="preserve">
     <value>游戏对象在 {0} 秒内加载。</value>
     <comment>seconds</comment>
@@ -441,29 +775,68 @@ Mod工作空间
     <value>正在从缓存加载 {0}...</value>
     <comment>file name</comment>
   </data>
+  <data name="LoadingContents" xml:space="preserve">
+    <value>正在加载内容...</value>
+  </data>
   <data name="LoadingLabel" xml:space="preserve">
     <value>加载中...</value>
   </data>
+  <data name="LSLibMenu" xml:space="preserve">
+    <value>LSLib</value>
+  </data>
+  <data name="LSLibMenuTooltip" xml:space="preserve">
+    <value>Norbyte的LSLib应用程序，用于对文件转换进行精细控制（fuyunai13也进行了这个工具的汉化）</value>
+  </data>
+  <data name="LuaSetup" xml:space="preserve">
+    <value>Lua 设置</value>
+  </data>
+  <data name="LuaSetupTooltip" xml:space="preserve">
+    <value>如何使用 Lua 制作扩展脚本mod的教程</value>
+  </data>
   <data name="MapKeyLabel" xml:space="preserve">
     <value>MapKey</value>
+  </data>
+  <data name="MergingIndices" xml:space="preserve">
+    <value>正在合并索引...</value>
+  </data>
+  <data name="MetaAuthorLabel" xml:space="preserve">
+    <value>作者</value>
   </data>
   <data name="MetadataCreated" xml:space="preserve">
     <value>已创建元数据：{0}。</value>
     <comment>metadata name</comment>
   </data>
-  <data name="MetaLsxNotFound1" xml:space="preserve">
+  <data name="MetaDescriptionLabel" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="MetaLsxFound" xml:space="preserve">
     <value>在 {0} 中找到 meta.lsx 文件。</value>
     <comment>mod name</comment>
   </data>
   <data name="MetaLsxNotFound2" xml:space="preserve">
     <value>在预期的\Mods\ModName\ 中找不到 meta.lsx。 中止进程。</value>
   </data>
+  <data name="MetaVersionLabel" xml:space="preserve">
+    <value>版本</value>
+  </data>
   <data name="MissingFileTypes" xml:space="preserve">
     <value>列表中缺少文件类型 [{0}]； 请告知ShinyHobo(软件作者)</value>
     <comment>file extension(s)</comment>
   </data>
+  <data name="ModdingResources" xml:space="preserve">
+    <value>制作模组资源</value>
+  </data>
+  <data name="ModdingTutorial" xml:space="preserve">
+    <value>制作模组教程</value>
+  </data>
   <data name="ModelConversionComplete" xml:space="preserve">
     <value>模型转换完成!</value>
+  </data>
+  <data name="ModelFilesTabLabel" xml:space="preserve">
+    <value>模型文件</value>
+  </data>
+  <data name="ModErrorsTitle" xml:space="preserve">
+    <value>在模组工作区中发现错误</value>
   </data>
   <data name="ModsFolderButton" xml:space="preserve">
     <value>Mods文件夹</value>
@@ -471,8 +844,21 @@ Mod工作空间
   <data name="ModsFolderButtonTooltip" xml:space="preserve">
     <value>打开 Mods 文件夹的快捷方式</value>
   </data>
+  <data name="ModTutTooltip" xml:space="preserve">
+    <value>一个关于创建武器mod的详细指南</value>
+  </data>
+  <data name="MultitoolTools" xml:space="preserve">
+    <value>多合一工具的工具</value>
+  </data>
   <data name="NameLabel" xml:space="preserve">
     <value>名称</value>
+  </data>
+  <data name="NewUpdatesAvailable" xml:space="preserve">
+    <value>有新更新可用！</value>
+  </data>
+  <data name="NodeAttributeMissing" xml:space="preserve">
+    <value>缺少节点 {0}\r\n</value>
+    <comment>attribute name</comment>
   </data>
   <data name="NoFilesFound" xml:space="preserve">
     <value>找不到文件！</value>
@@ -480,14 +866,38 @@ Mod工作空间
   <data name="NoGameObjectsFound" xml:space="preserve">
     <value>未找到游戏对象； 确保您已正确建立索引并重试。</value>
   </data>
+  <data name="NoIndexToRemove" xml:space="preserve">
+    <value>没有索引可供移除。</value>
+  </data>
   <data name="NoLinesFound" xml:space="preserve">
     <value>未找到行目； 搜索仅返回文件名。</value>
+  </data>
+  <data name="NoModelFoundLabel" xml:space="preserve">
+    <value>未找到模型</value>
+  </data>
+  <data name="NoModsFolderFound" xml:space="preserve">
+    <value>未找到 Mods 文件夹；无法找到工作区根目录！请添加一个然后重试。</value>
+  </data>
+  <data name="NoUpdatesFound" xml:space="preserve">
+    <value>已是最新版本！</value>
+  </data>
+  <data name="NoWriteAccess" xml:space="preserve">
+    <value>无法写入目录！请更改您的安装位置。</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>关闭</value>
   </data>
   <data name="On" xml:space="preserve">
     <value>开启</value>
+  </data>
+  <data name="OpenButton" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="OpenDaeButton" xml:space="preserve">
+    <value>打开 .dae</value>
+  </data>
+  <data name="OpenFolderTooltip" xml:space="preserve">
+    <value>打开文件夹</value>
   </data>
   <data name="OpeningGOE" xml:space="preserve">
     <value>打开GameObject资源管理器。这可能需要一段时间。</value>
@@ -499,14 +909,60 @@ Mod工作空间
     <value>OOME：无法为 {0} 生成索引</value>
     <comment>file path</comment>
   </data>
+  <data name="OutputImageDimensions" xml:space="preserve">
+    <value>输出尺寸: {0}x{1}</value>
+    <comment>width, height</comment>
+  </data>
+  <data name="PackingPriorityLabel" xml:space="preserve">
+    <value>打包优先级</value>
+  </data>
+  <data name="PackingPriorityTooltip" xml:space="preserve">
+    <value>更高的优先级允许覆盖原始节点</value>
+  </data>
+  <data name="PakAlreadyUnpacked" xml:space="preserve">
+    <value>* .pak 已经解包</value>
+  </data>
+  <data name="PakFileDescription" xml:space="preserve">
+    <value>Mod Pak</value>
+  </data>
   <data name="PakLabel" xml:space="preserve">
     <value>Pak</value>
+  </data>
+  <data name="PakModedToMods" xml:space="preserve">
+    <value>{0} pak 已移动到Mods文件夹！</value>
+    <comment>pak name</comment>
+  </data>
+  <data name="PakPackingCancelled" xml:space="preserve">
+    <value>Pak打包已取消；您可以在临时文件夹中找到您的文件</value>
   </data>
   <data name="PakSelectionTitle" xml:space="preserve">
     <value>.pak 选择</value>
   </data>
+  <data name="PakToModsLabel" xml:space="preserve">
+    <value>将 .pak 文件打包到Mods文件夹，而不是压缩文件。</value>
+  </data>
+  <data name="PakToModsTooltip" xml:space="preserve">
+    <value>将新建的MOD发送到Mods文件夹（确保游戏的文档文件夹已配置）</value>
+  </data>
+  <data name="PakUnpacked" xml:space="preserve">
+    <value>{0} 已解压缩！</value>
+    <comment>pak name</comment>
+  </data>
+  <data name="PakUnpacking" xml:space="preserve">
+    <value>将 {0} 解压缩到 已解压的模组</value>
+    <comment>pak name</comment>
+  </data>
+  <data name="PakUnpackingCancelled" xml:space="preserve">
+    <value>Pak解压缩已取消</value>
+  </data>
   <data name="ParentTemplateIdLabel" xml:space="preserve">
     <value>父模板 ID</value>
+  </data>
+  <data name="PleaseSelectWorkspace" xml:space="preserve">
+    <value>请选择您的模组工作区域目录</value>
+  </data>
+  <data name="PreviewConvertedButton" xml:space="preserve">
+    <value>预览转换后的文件</value>
   </data>
   <data name="ProblemPlayingAudio" xml:space="preserve">
     <value>播放音频文件时出现问题！！</value>
@@ -533,10 +989,23 @@ Mod工作空间
   <data name="ReadyToIndexAgainQuestion" xml:space="preserve">
     <value>准备重建索引么？</value>
   </data>
+  <data name="RebuildButton" xml:space="preserve">
+    <value>重建</value>
+  </data>
   <data name="ReindexQuestion" xml:space="preserve">
     <value>小心！ 此操作不可逆！
 
 单击“确定”将擦除当前索引并开始重建； 这可能需要一些时间。 您确定希望继续吗？</value>
+  </data>
+  <data name="ReportABug" xml:space="preserve">
+    <value>报告一个bug</value>
+  </data>
+  <data name="ReportABugTooltip" xml:space="preserve">
+    <value>向GitHub的问题页面报告一个bug或问题</value>
+  </data>
+  <data name="ResourceExtracted" xml:space="preserve">
+    <value>资源已提取：{0}</value>
+    <comment>file path</comment>
   </data>
   <data name="ResultsHaveBeenFiltered" xml:space="preserve">
     <value>{0} 个结果已被过滤。</value>
@@ -544,11 +1013,23 @@ Mod工作空间
   <data name="RetrievedFileListDecompression" xml:space="preserve">
     <value>检索文件列表。 开始解压； 这可能需要一段时间。</value>
   </data>
+  <data name="RetrievedFileListDecompressionAlt" xml:space="preserve">
+    <value>已检索文件列表。正在检查文件…</value>
+  </data>
   <data name="RetrievingFileList" xml:space="preserve">
     <value>检索文件列表。</value>
   </data>
   <data name="RetrievingFileListDecompression" xml:space="preserve">
     <value>检索文件列表以进行解压。</value>
+  </data>
+  <data name="sARGBLabel" xml:space="preserve">
+    <value>sRGB</value>
+  </data>
+  <data name="sARGBPreviewLabel" xml:space="preserve">
+    <value>sRGB 预览</value>
+  </data>
+  <data name="sARGBTooltip" xml:space="preserve">
+    <value>点击以将sRGB值复制到剪贴板</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>搜索</value>
@@ -579,14 +1060,50 @@ divine.exe
   <data name="ShortcutsMenu" xml:space="preserve">
     <value>快捷方式</value>
   </data>
+  <data name="ShortcutsMenuTooltip" xml:space="preserve">
+    <value>重要文件夹位置的快捷方式</value>
+  </data>
   <data name="SortingBanksFiles" xml:space="preserve">
     <value>正在整理资产库行文件...</value>
   </data>
   <data name="SortingGameObjects" xml:space="preserve">
     <value>正在对游戏对象进行排序...</value>
   </data>
+  <data name="SourceFramesAreNotUniform" xml:space="preserve">
+    <value>源帧不统一！</value>
+  </data>
+  <data name="SpeedIndexSearchTooltip" xml:space="preserve">
+    <value>启用后可以获得明显更快但不太稳定的结果。</value>
+  </data>
+  <data name="SpellGenAssistant" xml:space="preserve">
+    <value>法术生成助手</value>
+  </data>
+  <data name="SpellGenAssistantTooltip" xml:space="preserve">
+    <value>用于帮助生成自定义法术模板的工具</value>
+  </data>
+  <data name="sRGBPreviewTooltip" xml:space="preserve">
+    <value>粘贴 sRGB 代码以预览颜色</value>
+  </data>
+  <data name="StandardLabel" xml:space="preserve">
+    <value>标准</value>
+  </data>
+  <data name="StatsTabLabel" xml:space="preserve">
+    <value>统计</value>
+  </data>
+  <data name="SupportMe" xml:space="preserve">
+    <value>请我喝一杯？</value>
+  </data>
   <data name="TempFilesCleaned" xml:space="preserve">
     <value>临时文件已清理。</value>
+  </data>
+  <data name="TempFolderMenu" xml:space="preserve">
+    <value>临时文件夹</value>
+  </data>
+  <data name="TempFolderMenuTooltip" xml:space="preserve">
+    <value>临时文件存储在这里</value>
+  </data>
+  <data name="ThemeLabel" xml:space="preserve">
+    <value>主题选择</value>
   </data>
   <data name="TranslatedStringHandleLabel" xml:space="preserve">
     <value>本地化字符串 句柄</value>
@@ -604,6 +1121,9 @@ divine.exe
   </data>
   <data name="UnpackButtonTooltip" xml:space="preserve">
     <value>允许您选择要解压的游戏包</value>
+  <data name="UnlockThreadsLabel" xml:space="preserve">
+    <value>解锁线程</value>
+    <comment>Use as many cpu threads as possible</comment>
   </data>
   <data name="UnpackFilesButton" xml:space="preserve">
     <value>解包 .pak 文件</value>
@@ -695,5 +1215,11 @@ divine.exe
   </data>
   <data name="ModelFilesTabLabel" xml:space="preserve">
     <value>模型文件</value>
+  <data name="VersionRevisionLabel" xml:space="preserve">
+    <value>修订版本</value>
+  </data>
+  <data name="ZipCreated" xml:space="preserve">
+    <value>已创建 {0}.zip。</value>
+    <comment>file name</comment>
   </data>
 </root>
