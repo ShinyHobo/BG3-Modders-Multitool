@@ -273,6 +273,7 @@
   </data>
   <data name="ConfigButtonTooltip" xml:space="preserve">
     <value>必须要配置的一些选项</value>
+  </data>
   <data name="ClickToSelectColorLabel" xml:space="preserve">
     <value>点击选择颜色：</value>
   </data>
@@ -1121,6 +1122,7 @@ divine.exe
   </data>
   <data name="UnpackButtonTooltip" xml:space="preserve">
     <value>允许您选择要解压的游戏包</value>
+  </data>
   <data name="UnlockThreadsLabel" xml:space="preserve">
     <value>解锁线程</value>
     <comment>Use as many cpu threads as possible</comment>
@@ -1215,6 +1217,7 @@ divine.exe
   </data>
   <data name="ModelFilesTabLabel" xml:space="preserve">
     <value>模型文件</value>
+  </data>
   <data name="VersionRevisionLabel" xml:space="preserve">
     <value>修订版本</value>
   </data>
