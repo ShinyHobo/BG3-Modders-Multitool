@@ -934,6 +934,12 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Output dimensions: {0}x{1}</value>
     <comment>width, height</comment>
   </data>
+  <data name="PackingCompressionLabel" xml:space="preserve">
+    <value>Use compression</value>
+  </data>
+  <data name="PackingCompressionTooltip" xml:space="preserve">
+    <value>Whether or not to use LZ4 compression</value>
+  </data>
   <data name="PackingPriorityLabel" xml:space="preserve">
     <value>Packing Priority</value>
   </data>

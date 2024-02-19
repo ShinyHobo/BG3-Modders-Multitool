@@ -85,7 +85,7 @@ namespace bg3_modders_multitool.Services
             var packageOptions = new PackageCreationOptions() { 
                 Version = Game.BaldursGate3.PAKVersion(),
                 Priority = (byte)Properties.Settings.Default.packingPriority,
-                Compression = CompressionMethod.LZ4
+                Compression = Properties.Settings.Default.packingCompression ? CompressionMethod.LZ4 : CompressionMethod.None
             };
             try
             {

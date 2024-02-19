@@ -2320,6 +2320,24 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use compression.
+        /// </summary>
+        public static string PackingCompressionLabel {
+            get {
+                return ResourceManager.GetString("PackingCompressionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whether or not to use LZ4 compression.
+        /// </summary>
+        public static string PackingCompressionTooltip {
+            get {
+                return ResourceManager.GetString("PackingCompressionTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Packing Priority.
         /// </summary>
         public static string PackingPriorityLabel {

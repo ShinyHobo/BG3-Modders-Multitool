@@ -27,6 +27,7 @@ namespace bg3_modders_multitool.ViewModels
             PakToMods = Properties.Settings.Default.pakToMods;
             AutoUpdater = new AutoUpdaterService(this);
             PackingPriority = Properties.Settings.Default.packingPriority;
+            PackingCompression = Properties.Settings.Default.packingCompression;
         }
 
         #region File Selection Methods
@@ -351,6 +352,22 @@ namespace bg3_modders_multitool.ViewModels
                 if (Properties.Settings.Default.packingPriority != value)
                 {
                     Properties.Settings.Default.packingPriority = (int)value;
+                    Properties.Settings.Default.Save();
+                }
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private bool _packingCompression;
+        public bool PackingCompression
+        {
+            get { return _packingCompression; }
+            set
+            {
+                _packingCompression = value;
+                if (Properties.Settings.Default.packingCompression != value)
+                {
+                    Properties.Settings.Default.packingCompression = value;
                     Properties.Settings.Default.Save();
                 }
                 OnNotifyPropertyChanged();
