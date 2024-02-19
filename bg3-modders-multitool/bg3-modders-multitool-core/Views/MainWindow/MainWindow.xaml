@@ -1,0 +1,187 @@
+﻿<Window x:Class="bg3_modders_multitool.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:views="clr-namespace:bg3_modders_multitool.Views"
+        xmlns:p = "clr-namespace:bg3_modders_multitool.Properties"
+        mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
+        Title="{x:Static p:Resources.AppTitle}" MinHeight="482" MinWidth="800" Height="482" Width="800">
+        <!-- Developed by ShinyHobo -->
+        <!-- Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd. -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Border BorderBrush="Gray" BorderThickness="0,0,0,3">
+                <Menu Background="Transparent">
+                    <MenuItem Header="{x:Static p:Resources.UtilitiesMenuLabel}" ToolTip="{x:Static p:Resources.MultitoolTools}">
+                        <MenuItem Header="{x:Static p:Resources.UnpackModPaks}" ToolTip="{x:Static p:Resources.UnpackModPakTooltip}" Click="UnpackMod_Click" Icon="📦"/>
+                        <MenuItem Header="{x:Static p:Resources.IndexMenu}" Icon="📇">
+                            <MenuItem x:Name="indexPakFiles" Header="{x:Static p:Resources.IndexPakFilesButton}" Click="indexPakFiles_Click" Icon="🔎"
+                                ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
+                            <MenuItem x:Name="indexUnpackedDataFiles" Header="{x:Static p:Resources.IndexFilesButton}" Click="IndexFiles_Click"
+                                ToolTip="{x:Static p:Resources.IndexButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="🔎" />
+                            <MenuItem x:Name="deleteIndex" Header="{x:Static p:Resources.ClearIndex}" Click="deleteIndex_Click"
+                                IsEnabled="{Binding SearchResults.AllowIndexing}" Icon="❌" />
+                        </MenuItem>
+                        <MenuItem Header="{x:Static p:Resources.GOEButton}" Icon="📚">
+                            <MenuItem x:Name="gameObjectButton" Header="{x:Static p:Resources.OpenMenu}" Click="GameObjectButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
+                                ToolTip="{x:Static p:Resources.GOEButtonTooltip}" Icon="📖"/>
+                            <MenuItem x:Name="gameObjectCacheClearButton" Header="{x:Static p:Resources.GOEClearCacheButton}" Click="gameObjectCacheClearButton_Click" IsEnabled="{Binding SearchResults.AllowIndexing}"
+                                ToolTip="{x:Static p:Resources.GOEClearCacheToolTip}" Icon="❌"/>
+                        </MenuItem>
+                        <MenuItem Header="{x:Static p:Resources.FileOperationsMenu}" Icon="🗃️">
+                            <MenuItem Header="{x:Static p:Resources.UnpackFilesButton}" Click="Unpack_Click" Icon="🗜️"
+                                      IsEnabled="{Binding UnpackAllowed}" ToolTip="{x:Static p:Resources.UnpackButtonTooltip}"/>
+                            <MenuItem Header="{x:Static p:Resources.DecompressFilesButton}" Click="Decompress_Click" Icon="🎈"
+                                      IsEnabled="{Binding SearchResults.AllowIndexing}" ToolTip="{x:Static p:Resources.ConvertOpenButtonTooltip}"/>
+                        </MenuItem>
+                        <MenuItem x:Name="atlasToolButton" Header="{x:Static p:Resources.AtlasToolMenuHeader}" Icon="🗺️" ToolTip="{x:Static p:Resources.AtlasToolMenuTooltip}" Click="atlasToolButton_Click"/>
+                        <MenuItem x:Name="colorPicker" Header="{x:Static p:Resources.ColorPickerMenu}" Icon="🎨" Click="colorPicker_Click"/>
+                        <MenuItem x:Name="versionGenerator" Header="{x:Static p:Resources.VersionGenerator}" Icon="💾" Click="versionGenerator_Click"/>
+                    </MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.ShortcutsMenu}" ToolTip="{x:Static p:Resources.ShortcutsMenuTooltip}">
+                        <MenuItem x:Name="modFolderButton" Header="{x:Static p:Resources.ModsFolderButton}" Click="OpenModsFolderButton_Click" IsEnabled="{Binding ModsFolderLoaded}"
+                            ToolTip="{x:Static p:Resources.ModsFolderButtonTooltip}" Icon="📂"/>
+                        <MenuItem x:Name="profilesFolderButton" Header="{x:Static p:Resources.ProfilesFolderButton}" Click="OpenProfilesFolderButton_Click" IsEnabled="{Binding ProfilesFolderLoaded}"
+                            ToolTip="{x:Static p:Resources.ProfilesFolderButtonTooltip}" Icon="📂"/>
+                        <Separator />
+                        <MenuItem x:Name="tempFolderButton" Header="{x:Static p:Resources.TempFolderMenu}" Click="TempFolderButton_Click"
+                            ToolTip="{x:Static p:Resources.TempFolderMenuTooltip}" Icon="📂"/>
+                        <MenuItem x:Name="gameDataFolderButton" Header="{x:Static p:Resources.GameDataMenu}" Click="gameDataFolderButton_Click" Icon="📂" IsEnabled="{Binding LaunchGameAllowed}"
+                            ToolTip="{x:Static p:Resources.GameDataMenuTooltip}"/>
+                        <Separator />
+                        <MenuItem x:Name="unpackedDataFolderButton" Header="{x:Static p:Resources.UnpackedDataMenu}" Click="unpackedDataFolderButton_Click"
+                            ToolTip="{x:Static p:Resources.UnpackedDataMenuTooltip}" Icon="📂"/>
+                        <MenuItem x:Name="unpackedModsFolderButton" Header="{x:Static p:Resources.UnpackedModsMenu}" Click="unpackedModsFolderButton_Click"
+                            ToolTip="{x:Static p:Resources.UnpackedModsMenuTooltip}" Icon="📂"/>
+                    </MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.Help}" ToolTip="{x:Static p:Resources.HelpMenuTooltip}">
+                        <MenuItem Header="{x:Static p:Resources.ModdingResources}" Icon="📚">
+                            <MenuItem Header="{x:Static p:Resources.BG3CommunityLibrary}" Click="BG3CommWikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3CommWikiTooltip}"/>
+                            <MenuItem Header="{x:Static p:Resources.BG3ModdingWiki}" Click="BG3WikiLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3WikiTooltip}"/>
+                            <Separator />
+                            <MenuItem Header="{x:Static p:Resources.ModdingTutorial}" Click="ModTutLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.ModTutTooltip}"/>
+                            <Separator />
+                            <MenuItem Header="{x:Static p:Resources.BG3ScriptExtender}" Click="BG3SELink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3SETooltip}"/>
+                            <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderAPI}" Click="BG3SEAPILink_Click" Icon="📗" ToolTip="{x:Static p:Resources.BG3SEAPITooltip}"/>
+                            <MenuItem Header="{x:Static p:Resources.BG3ScriptExtenderSampleMod}" Click="BG3SESampleLinkClick" Icon="📗" ToolTip="{x:Static p:Resources.BG3SESampleTooltip}"/>
+                            <MenuItem Header="{x:Static p:Resources.LuaSetup}" Click="LuaSetupLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.LuaSetupTooltip}"/>
+                            <Separator />
+                            <MenuItem Header="{x:Static p:Resources.LSLibMenu}" Click="LSLibLink_Click" Icon="📗" ToolTip="{x:Static p:Resources.LSLibMenuTooltip}"/>
+                            <Separator />
+                            <MenuItem Header="{x:Static p:Resources.ConvertWemMenu}" Click="ConvertWemLink_Click" Icon="🎵"/>
+                            <MenuItem Header="{x:Static p:Resources.SpellGenAssistant}" ToolTip="{x:Static p:Resources.SpellGenAssistantTooltip}" Click="SpellGenAssistant_Click" Icon="✨"/>
+                        </MenuItem>
+                        <MenuItem Header="{x:Static p:Resources.AboutMenu}" Icon="ℹ️">
+                            <MenuItem Header="{x:Static p:Resources.ChangeLogMenu}" ToolTip="{x:Static p:Resources.ChangeLogMenuTooltip}" Icon="✔️" Click="CheckForUpdateMenu_Click"/>
+                            <MenuItem Header="{x:Static p:Resources.LegalMenu}" Icon="⚖️" Click="LegalMenu_Click"/>
+                        </MenuItem>
+                        <MenuItem Header="{x:Static p:Resources.CheckForUpdates}" Click="CheckForUpdates_Click" Icon="🔃" ToolTip="{x:Static p:Resources.CheckForUpdatesTooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.HowToUseMenu}" Click="HowToUse_Click" Icon=" ❓" ToolTip="{x:Static p:Resources.HowToUseMenuTooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.ReportABug}" Click="ReportABugLink_Click" Icon="🐞" ToolTip="{x:Static p:Resources.ReportABugTooltip}"/>
+                        <MenuItem Header="{x:Static p:Resources.SupportMe}" Click="KofiLink_Click" Icon="☕" ToolTip="{x:Static p:Resources.KofiTooltip}"/>
+                    </MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.ConfigurationTitle}" Click="configMenu_Click" ToolTip="{x:Static p:Resources.ConfigureMenuTooltip}"/>
+                </Menu>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="260"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <StackPanel HorizontalAlignment="Right"  Margin="0,-25,5,0" Visibility="{Binding UpdateVisible}">
+                    <TextBlock Text="Update(s) available" Margin="0,5,5,5"/>
+                    <Button Content="🔃" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30" Click="CheckForUpdates_Click"
+                            BorderThickness="0" Cursor="Hand" FontSize="20" Background="Green"/>
+                </StackPanel>
+
+                <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0">
+                    <Viewbox Height="255" Width="255">
+                        <views:DragAndDropBox x:Name="dragAndDropBox"/>
+                    </Viewbox>
+                </Grid>
+                <Grid Margin="273,10,60,0">
+                    <Label x:Name="guidLabel" Content="{x:Static p:Resources.UUIDTitle}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="guidGenerate" Content="{x:Static p:Resources.GenerateTitle}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="GuidGenerate_Click" Cursor="Hand"/>
+                    <Button x:Name="guidText" HorizontalAlignment="Left" Margin="0,28,0,0" VerticalAlignment="Top" Width="310" Height="23" Click="GuidText_Click" Cursor="Hand" Content="{Binding GuidText}"/>
+                    <CheckBox x:Name="typeSwitch" Content="{x:Static p:Resources.HandleLabel}" HorizontalAlignment="Left" Margin="390,33,0,0" VerticalAlignment="Top" Cursor="Hand"/>
+                </Grid>
+                <Button x:Name="launchGameButton" HorizontalAlignment="Left" Margin="620,81,0,0" VerticalAlignment="Top" Width="100" Height="100" Click="LaunchGameButton_Click" Cursor="Hand" Panel.ZIndex="10"
+                        IsEnabled="{Binding LaunchGameAllowed}" ToolTip="{x:Static p:Resources.LaunchGameButtonTooltip}" BorderThickness="0" Background="Transparent">
+                    <Grid>
+                        <Image Source="..\..\Images\bg3_icon.ico" Margin="0,0,0,10"/>
+                        <TextBlock Text="{x:Static p:Resources.LaunchGameButton}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="DemiBold"/>
+                    </Grid>
+                </Button>
+                <Grid Margin="273,65,60,0">
+                    <Grid Visibility="{Binding SearchResults.IndexingVisibility}" Grid.ColumnSpan="2" Margin="210,10,0,0">
+                        <ProgressBar Minimum="0" Maximum="{Binding SearchResults.IndexFileTotal}" Value="{Binding SearchResults.IndexFileCount}" Width="125" HorizontalAlignment="Left" Height="23" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                        <TextBlock Margin="15,4,0,0" FontWeight="Bold">
+                            <Run Text="{Binding SearchResults.IndexFileCount, Mode=OneWay}"/> /
+                            <Run Text="{Binding SearchResults.IndexFileTotal, Mode=OneWay}"/>
+                        </TextBlock>
+                        <TextBlock Margin="0,25,0,-34" Text="{Binding Source={x:Static p:Resources.EstimateLabel}, StringFormat='{}{0}: '}"></TextBlock>
+                        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="50,25,0,-34" TextWrapping="Wrap" Text="{Binding SearchResults.IndexTimeRemaining, StringFormat=hh\\:mm\\:ss}" VerticalAlignment="Top" Width="71" Height="21"/>
+                    </Grid>
+                    <Button x:Name="searchButton" Content="{x:Static p:Resources.IndexSearchButton}" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Click="SearchButton_Click" Cursor="Hand" Height="23"
+                            ToolTip="{x:Static p:Resources.IndexSearchButtonTooltip}" IsEnabled="{Binding SearchResults.AllowIndexing}"/>
+                </Grid>
+                <Grid Margin="273,110,0,0">
+                    <StackPanel VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding DragAndDropBox.LastDirectory}" Width="350" HorizontalAlignment="Left" TextWrapping="Wrap" Visibility="{Binding DragAndDropBox.CanRebuild}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Visibility="{Binding DragAndDropBox.CanRebuild}">
+                            <Button Width="60" HorizontalAlignment="Left" Cursor="Hand" Padding="7" Background="Green" Margin="0,15,10,0" Click="rebuild_Click" x:Name="rebuildBtn">
+                                <TextBlock Text="{x:Static p:Resources.RebuildButton}" Foreground="LightGray"/>
+                            </Button>
+                            <StackPanel>
+                                <Label Content="{x:Static p:Resources.VersionMajorLabel}"/>
+                                <xctk:IntegerUpDown x:Name="major" MinWidth="50" Height="20" Minimum="0" Value="{Binding DragAndDropBox.Major}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="{x:Static p:Resources.VersionMinorLabel}"/>
+                                <xctk:IntegerUpDown x:Name="minor" MinWidth="50" Height="20" Minimum="0" Value="{Binding DragAndDropBox.Minor}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="{x:Static p:Resources.VersionRevisionLabel}"/>
+                                <xctk:IntegerUpDown x:Name="revision" MinWidth="50" Height="20" Minimum="0" Value="{Binding DragAndDropBox.Revision}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="{x:Static p:Resources.VersionBuildLabel}"/>
+                                <xctk:IntegerUpDown x:Name="build" MinWidth="50" Height="20" Minimum="0" Value="{Binding DragAndDropBox.Build}"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
+                            <Label Content="{x:Static p:Resources.PackingPriorityLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-5,0,0,0"/>
+                            <xctk:IntegerUpDown x:Name="packingPriority" Width="50" Height="20" Minimum="21" Maximum="127" Value="{Binding PackingPriority}"
+                                ToolTip="{x:Static p:Resources.PackingPriorityTooltip}"/>
+                            <CheckBox ToolTip="{x:Static p:Resources.PackingCompressionTooltip}" Cursor="Hand" Margin="10,0,0,0"
+                                IsChecked="{Binding PackingCompression}" Content="{x:Static p:Resources.PackingCompressionLabel}"/>
+                        </StackPanel>
+                        <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" IsEnabled="{Binding ModsFolderLoaded}" Margin="0,0,0,0"
+                            IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
+                    </StackPanel>
+                </Grid>
+                <TextBlock x:Name="configNeeded" HorizontalAlignment="Left" Text="{x:Static p:Resources.ConfigNeededLabel}" Margin="610,204,0,0" TextAlignment="Center" Visibility="{Binding ConfigNeeded}"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <ScrollViewer x:Name="ConsoleScroller" MinHeight="150" VerticalScrollBarVisibility="Auto" ScrollChanged="ConsoleScroller_ScrollChanged" Margin="5">
+                    <ScrollViewer.Resources>
+                        <Style TargetType="{x:Type ScrollViewer}">
+                            <Setter Property="Background" Value="Black" />
+                        </Style>
+                    </ScrollViewer.Resources>
+                    <TextBox VerticalAlignment="Stretch"  Margin="0,0,0,-12" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding ConsoleOutput}" 
+                            IsReadOnly="True" Background="Black" Foreground="White"/>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

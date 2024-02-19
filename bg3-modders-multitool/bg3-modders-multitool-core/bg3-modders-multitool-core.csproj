@@ -1,0 +1,188 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>bg3_modders_multitool</RootNamespace>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>G:\BG3\bg3-modders-multitool\publishes\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>D6F259B59CB6EB5424335430571DC96508DB9823</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>bg3-modders-multitool_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>LocalizationController</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LSLib">
+      <HintPath>LSLib\LSLib.dll</HintPath>
+    </Reference>
+    <Reference Include="LSLibNative, Version=1.0.8399.21114, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Costura64\LSLibNative.dll</HintPath>
+    </Reference>
+    <Reference Include="LZ4">
+      <HintPath>LSLib\LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="PresentationFramework.Aero2" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FileTemplates\meta.lsx" />
+    <EmbeddedResource Include="FileTemplates\LsxBoilerplate.lsx" />
+    <None Include="manifest.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FileTemplates\LocaXmlBoilerplate.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Costura64\assimp.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bg3_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Costura64\LSLibNative.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Lucene.Net.4.8.0-beta00016\analyzers\dotnet\cs\Lucene.Net.CodeAnalysis.CSharp.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Costura64\OpenTK.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AlphaFS" Version="2.2.6" />
+    <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
+    <PackageReference Include="AvalonEdit" Version="6.0.0" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0" />
+    <PackageReference Include="Cyotek.Drawing.BitmapFont" Version="2.0.4" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+    <PackageReference Include="FileAssociation" Version="1.0.0" />
+    <PackageReference Include="Fody" Version="6.8.0" />
+    <PackageReference Include="HelixToolkit" Version="2.24.0" />
+    <PackageReference Include="HelixToolkit.SharpDX.Assimp" Version="2.24.0" />
+    <PackageReference Include="HelixToolkit.Wpf.SharpDX" Version="2.24.0" />
+    <PackageReference Include="J2N" Version="2.0.0" />
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Queries" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Sandbox" Version="4.8.0-beta00016" />
+    <PackageReference Include="MdXaml" Version="1.21.0" />
+    <PackageReference Include="MdXaml.Plugins" Version="1.21.0" />
+    <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+    <PackageReference Include="Pfim" Version="0.11.2" />
+    <PackageReference Include="Prism.Core" Version="7.2.0.1422" />
+    <PackageReference Include="Resource.Embedder" Version="2.2.0" />
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+    <PackageReference Include="zlib.net" Version="1.0.4.0" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="8.0.0-preview.7.23375.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+  </ItemGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <PreBuildEvent>set ASMINFO=$(ProjectDir)Properties\AssemblyInfo.cs
+FINDSTR /C:"[assembly: AssemblyFileVersion(" %25ASMINFO%25 | sed.exe "s/\[assembly: AssemblyFileVersion(\"/SET CURRENT_VERSION=/g;s/\")\]//g;s/\.\*//g" &gt;SetCurrVer.cmd
+CALL SetCurrVer.cmd
+DEL SetCurrVer.cmd
+
+mkdir = "$(ProjectDir)$(OutDir)app.publish"
+
+xcopy /y "$(ProjectDir)Images\icon.png" "$(ProjectDir)$(OutDir)app.publish"
+xcopy /y "$(SolutionDir)\..\README.md" "$(ProjectDir)$(OutDir)app.publish"
+
+@echo on
+echo { &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "name": "BG3_Modders_Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "version_number": "%25CURRENT_VERSION%25",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "website_url": "https://github.com/ShinyHobo/BG3-Modders-Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "description": "Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace, among other useful features.",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo "dependencies": [] &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
+echo }   &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json</PreBuildEvent>
+  </PropertyGroup>
+</Project>
