@@ -3,7 +3,7 @@
 /// </summary>
 namespace bg3_modders_multitool.Models
 {
-    using HelixToolkit.Wpf.SharpDX;
+    using HelixToolkit.SharpDX.Core;
 
     public class MeshGeometry3DObject
     {

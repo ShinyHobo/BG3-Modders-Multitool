@@ -164,6 +164,11 @@
     <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
   <PropertyGroup />
   <PropertyGroup>
     <PreBuildEvent>set ASMINFO=$(ProjectDir)Properties\AssemblyInfo.cs

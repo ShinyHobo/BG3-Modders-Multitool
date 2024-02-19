@@ -5,9 +5,9 @@ namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Models;
-    using HelixToolkit.Wpf.SharpDX;
-    using HelixToolkit.Wpf.SharpDX.Assimp;
-    using HelixToolkit.Wpf.SharpDX.Model.Scene;
+    using HelixToolkit.SharpDX.Core;
+    using HelixToolkit.SharpDX.Core.Assimp;
+    using HelixToolkit.SharpDX.Core.Model.Scene;
     using System;
     using System.Collections.Generic;
     using System.Linq;

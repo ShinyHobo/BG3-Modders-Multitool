@@ -1,6 +1,5 @@
 ﻿namespace bg3_modders_multitool.Services
 {
-    using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using LSLib.LS.Enums;
     using System;
@@ -20,14 +19,14 @@
         public List<PackagedFileInfo> PackagedFiles { get; private set; }
 
         public PakReaderHelper(string pakPath) {
-            PackageReader = new PackageReader(pakPath);
-            PakName = Path.GetFileNameWithoutExtension(pakPath);
-            try
-            {
-                Package = PackageReader.Read();
-                PackagedFiles = Package.Files.Select(f => f as PackagedFileInfo).ToList();
-            }
-            catch(NotAPackageException) { }
+            //PackageReader = new PackageReader(pakPath);
+            //PakName = Path.GetFileNameWithoutExtension(pakPath);
+            //try
+            //{
+            //    Package = PackageReader.Read();
+            //    PackagedFiles = Package.Files.Select(f => f as PackagedFileInfo).ToList();
+            //}
+            //catch(NotAPackageException) { }
         }
 
         /// <summary>
@@ -46,17 +45,17 @@
             {
                 using (MemoryStream originalStream = new MemoryStream())
                 {
-                    lock (file.PackageStream)
-                    {
-                        file.PackageStream.Position = (long)file.OffsetInFile;
-                        using (Stream ms = file.MakeStream())
-                        using (BinaryReader reader = new BinaryReader(ms))
-                        {
-                            int count;
-                            while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
-                                originalStream.Write(buffer, 0, count);
-                        }
-                    }
+                    //lock (file.PackageStream)
+                    //{
+                    //    file.PackageStream.Position = (long)file.OffsetInFile;
+                    //    using (Stream ms = file.MakeStream())
+                    //    using (BinaryReader reader = new BinaryReader(ms))
+                    //    {
+                    //        int count;
+                    //        while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+                    //            originalStream.Write(buffer, 0, count);
+                    //    }
+                    //}
                     
                     if(file.SizeOnDisk != 0)
                     {
@@ -116,7 +115,7 @@
             }
             finally
             {
-                file.ReleaseStream();
+                //file.ReleaseStream();
             }
 
             return new byte[0];
@@ -132,50 +131,50 @@
             var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
             if (file != null)
             {
-                lock(file.PackageStream)
-                {
-                    file.PackageStream.Position = 0;
-                    var originalExtension = Path.GetExtension(filePath);
-                    var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
-                    var isConvertableToXml = originalExtension.Contains("loca");
-                    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
-                    try
-                    {
-                        if (isConvertableToLsx && file.SizeOnDisk != 0)
-                        {
-                            var format = ResourceUtils.ExtensionToResourceFormat(filePath);
-                            var resource = ResourceUtils.LoadResource(file.MakeStream(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
-                            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
-                            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
-                            ResourceUtils.SaveResource(resource, newFile, conversionParams);
-                            return newFile;
-                        }
-                        else if (isConvertableToXml && file.SizeOnDisk != 0)
-                        {
-                            var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
-                            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
-                            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
-                            LocaUtils.Save(resource, newFile, LocaFormat.Xml);
-                            return newFile;
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        if (FileHelper.IsSpecialLSFSignature(ex.Message))
-                        {
-                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, isConvertableToLsx ? ".lsx" : ".xml", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
-                        }
-                    }
+                //lock(file.PackageStream)
+                //{
+                //    file.PackageStream.Position = 0;
+                //    var originalExtension = Path.GetExtension(filePath);
+                //    var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
+                //    var isConvertableToXml = originalExtension.Contains("loca");
+                //    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                //    try
+                //    {
+                //        if (isConvertableToLsx && file.SizeOnDisk != 0)
+                //        {
+                //            var format = ResourceUtils.ExtensionToResourceFormat(filePath);
+                //            var resource = ResourceUtils.LoadResource(file.MakeStream(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                //            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
+                //            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
+                //            ResourceUtils.SaveResource(resource, newFile, conversionParams);
+                //            return newFile;
+                //        }
+                //        else if (isConvertableToXml && file.SizeOnDisk != 0)
+                //        {
+                //            var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
+                //            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
+                //            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
+                //            LocaUtils.Save(resource, newFile, LocaFormat.Xml);
+                //            return newFile;
+                //        }
+                //    }
+                //    catch(Exception ex)
+                //    {
+                //        if (FileHelper.IsSpecialLSFSignature(ex.Message))
+                //        {
+                //            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, isConvertableToLsx ? ".lsx" : ".xml", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                //        }
+                //    }
 
-                    var path = FileHelper.GetPath($"{PakName}\\{filePath}");
-                    FileManager.TryToCreateDirectory(path);
-                    var contents = ReadPakFileContents(filePath);
-                    using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
-                    {
-                        fileStream.Write(contents, 0, contents.Length);
-                    }
-                    return path;
-                }
+                //    var path = FileHelper.GetPath($"{PakName}\\{filePath}");
+                //    FileManager.TryToCreateDirectory(path);
+                //    var contents = ReadPakFileContents(filePath);
+                //    using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
+                //    {
+                //        fileStream.Write(contents, 0, contents.Length);
+                //    }
+                //    return path;
+                //}
             }
             return null;
         }

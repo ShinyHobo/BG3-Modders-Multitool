@@ -35,7 +35,7 @@ namespace bg3_modders_multitool.Views
             DataContext = SearchResults;
 
             ((SearchResults)DataContext).IndexHelper.DataContext = (SearchResults)DataContext;
-            ((SearchResults)DataContext).ViewPort = viewport;
+            //((SearchResults)DataContext).ViewPort = viewport;
             timer.Interval = TimeSpan.FromMilliseconds(400);
             timer.Tick += Timer_Tick;
 

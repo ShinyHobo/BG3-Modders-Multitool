@@ -83,17 +83,17 @@ namespace bg3_modders_multitool.Services
                     try
                     {
                         var packager = new Packager();
-                        packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
-                        {
-                            if (Cancelled)
-                            {
-                                throw new Exception(Properties.Resources.PakUnpackingCancelled);
-                            }
-                            var newPercent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
-                            var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
-                            lock (pakProgress)
-                                pakProgress.Percent = newPercent;
-                        };
+                        //packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
+                        //{
+                        //    if (Cancelled)
+                        //    {
+                        //        throw new Exception(Properties.Resources.PakUnpackingCancelled);
+                        //    }
+                        //    var newPercent = denominator == 0 ? 0 : (int)(numerator * 100 / denominator);
+                        //    var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
+                        //    lock (pakProgress)
+                        //        pakProgress.Percent = newPercent;
+                        //};
 
                         if(dataFiles)
                         {

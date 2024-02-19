@@ -82,7 +82,7 @@ namespace bg3_modders_multitool.Services
         public static void PackMod(string fullpath, string destination)
         {
             Directory.CreateDirectory(TempFolder);
-            var packageOptions = new PackageCreationOptions() { 
+            var packageOptions = new PackageBuildData() { 
                 Version = Game.BaldursGate3.PAKVersion(),
                 Priority = (byte)Properties.Settings.Default.packingPriority,
                 Compression = Properties.Settings.Default.packingCompression ? CompressionMethod.LZ4 : CompressionMethod.None
