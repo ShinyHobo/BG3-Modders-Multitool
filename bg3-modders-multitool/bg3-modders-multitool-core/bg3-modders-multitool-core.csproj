@@ -170,24 +170,8 @@
     </Compile>
   </ItemGroup>
   <PropertyGroup />
-  <PropertyGroup>
-    <PreBuildEvent>set ASMINFO=$(ProjectDir)Properties\AssemblyInfo.cs
-FINDSTR /C:"[assembly: AssemblyFileVersion(" %25ASMINFO%25 | sed.exe "s/\[assembly: AssemblyFileVersion(\"/SET CURRENT_VERSION=/g;s/\")\]//g;s/\.\*//g" &gt;SetCurrVer.cmd
-CALL SetCurrVer.cmd
-DEL SetCurrVer.cmd
-
-mkdir = "$(ProjectDir)$(OutDir)app.publish"
-
-xcopy /y "$(ProjectDir)Images\icon.png" "$(ProjectDir)$(OutDir)app.publish"
-xcopy /y "$(SolutionDir)\..\README.md" "$(ProjectDir)$(OutDir)app.publish"
-
-@echo on
-echo { &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "name": "BG3_Modders_Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "version_number": "%25CURRENT_VERSION%25",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "website_url": "https://github.com/ShinyHobo/BG3-Modders-Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "description": "Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace, among other useful features.",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "dependencies": [] &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo }   &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json</PreBuildEvent>
-  </PropertyGroup>
+  <PropertyGroup />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="set ASMINFO=$(ProjectDir)Properties\AssemblyInfo.cs&#xD;&#xA;FINDSTR /C:&quot;[assembly: AssemblyFileVersion(&quot; %2525ASMINFO%2525 | sed.exe &quot;s/\[assembly: AssemblyFileVersion(\&quot;/SET CURRENT_VERSION=/g;s/\&quot;)\]//g;s/\.\*//g&quot; &gt;SetCurrVer.cmd&#xD;&#xA;CALL SetCurrVer.cmd&#xD;&#xA;DEL SetCurrVer.cmd&#xD;&#xA;&#xD;&#xA;mkdir = &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;&#xD;&#xA;xcopy /y &quot;$(ProjectDir)Images\icon.png&quot; &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;xcopy /y &quot;$(SolutionDir)\..\README.md&quot; &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;echo f | xcopy /f /y &quot;$(ProjectDir)$(OutDir)\bg3-modders-multitool-core.exe&quot; &quot;$(ProjectDir)$(OutDir)app.publish\bg3-modders-multitool.exe&quot;&#xD;&#xA;&#xD;&#xA;del /f $(ProjectDir)$(OutDir)app.publish\manifest.json&#xD;&#xA;&#xD;&#xA;@echo on&#xD;&#xA;echo { &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;name&quot;: &quot;BG3_Modders_Multitool&quot;, &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;version_number&quot;: &quot;%2525CURRENT_VERSION%2525&quot;,  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;website_url&quot;: &quot;https://github.com/ShinyHobo/BG3-Modders-Multitool&quot;, &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;description&quot;: &quot;Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace, among other useful features.&quot;,  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;dependencies&quot;: [] &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo }   &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json" />
+  </Target>
 </Project>
