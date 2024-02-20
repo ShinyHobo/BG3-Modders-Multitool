@@ -19,14 +19,15 @@
         public List<PackagedFileInfo> PackagedFiles { get; private set; }
 
         public PakReaderHelper(string pakPath) {
-            //PackageReader = new PackageReader(pakPath);
-            //PakName = Path.GetFileNameWithoutExtension(pakPath);
-            //try
-            //{
-            //    Package = PackageReader.Read();
-            //    PackagedFiles = Package.Files.Select(f => f as PackagedFileInfo).ToList();
-            //}
-            //catch(NotAPackageException) { }
+            PackageReader = new PackageReader();
+            PakName = Path.GetFileNameWithoutExtension(pakPath);
+            try
+            {
+                Package = PackageReader.Read(pakPath);
+                PackagedFiles = Package.Files.Select(f => f as PackagedFileInfo).ToList();
+            }
+            catch (NotAPackageException) { }
+            catch (InvalidDataException) { }
         }
 
         /// <summary>
@@ -45,23 +46,23 @@
             {
                 using (MemoryStream originalStream = new MemoryStream())
                 {
-                    //lock (file.PackageStream)
-                    //{
-                    //    file.PackageStream.Position = (long)file.OffsetInFile;
-                    //    using (Stream ms = file.MakeStream())
-                    //    using (BinaryReader reader = new BinaryReader(ms))
-                    //    {
-                    //        int count;
-                    //        while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
-                    //            originalStream.Write(buffer, 0, count);
-                    //    }
-                    //}
-                    
-                    if(file.SizeOnDisk != 0)
+                    lock (file)
+                    {
+                        //file.SolidStream.Position = (long)file.OffsetInFile;
+                        using (Stream ms = file.CreateContentReader())
+                        using (BinaryReader reader = new BinaryReader(ms))
+                        {
+                            int count;
+                            while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+                                originalStream.Write(buffer, 0, count);
+                        }
+                    }
+
+                    if (file.SizeOnDisk != 0)
                     {
                         var ext = Path.GetExtension(file.Name);
                         var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(ext) && ext != ".lsj"; // lsj is already readible json
-                        if(convert && canConvertToLsx)
+                        if (convert && canConvertToLsx)
                         {
                             using (MemoryStream newOutStream = new MemoryStream())
                             {
@@ -87,7 +88,7 @@
                                 }
                             }
                         }
-                        else if(convert && ext == ".loca")
+                        else if (convert && ext == ".loca")
                         {
                             using (MemoryStream newOutStream = new MemoryStream())
                             {
@@ -113,10 +114,7 @@
                     }
                 }
             }
-            finally
-            {
-                //file.ReleaseStream();
-            }
+            catch (Exception) { } // LZBlock is corrupted
 
             return new byte[0];
         }

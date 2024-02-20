@@ -67,6 +67,9 @@
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="ZstdSharp">
+      <HintPath>LSLib\ZstdSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FileTemplates\meta.lsx" />
