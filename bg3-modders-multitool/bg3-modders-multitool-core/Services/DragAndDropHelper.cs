@@ -89,7 +89,8 @@ namespace bg3_modders_multitool.Services
             };
             try
             {
-                new Packager().CreatePackage(destination, fullpath, packageOptions);
+                var packager = new Packager();
+                packager.CreatePackage(destination, fullpath, packageOptions).Wait();
             }
             catch (Exception ex)
             {

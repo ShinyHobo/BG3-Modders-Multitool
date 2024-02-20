@@ -67,6 +67,9 @@
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="System.IO.Hashing">
+      <HintPath>LSLib\System.IO.Hashing.dll</HintPath>
+    </Reference>
     <Reference Include="ZstdSharp">
       <HintPath>LSLib\ZstdSharp.dll</HintPath>
     </Reference>
