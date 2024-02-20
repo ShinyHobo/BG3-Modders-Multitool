@@ -237,8 +237,8 @@ namespace bg3_modders_multitool.ViewModels
                             {
                                 Application.Current.Dispatcher.Invoke(() =>
                                 {
-                                    //var meshGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
-                                    //ViewPort.Items.Add(meshGeometry);
+                                    var meshGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                                    ViewPort.Items.Add(meshGeometry);
                                 });
                             }
                             ModelVisible = Visibility.Visible;

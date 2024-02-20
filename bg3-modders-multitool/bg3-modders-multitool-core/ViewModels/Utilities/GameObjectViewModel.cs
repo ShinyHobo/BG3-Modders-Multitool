@@ -13,7 +13,6 @@ namespace bg3_modders_multitool.ViewModels
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -298,8 +297,8 @@ namespace bg3_modders_multitool.ViewModels
                                                     //GeneralHelper.DDSToTextureStream(model.HMVYMap),
                                                     //GeneralHelper.DDSToTextureStream(model.CLEAMap)
                                                 };
-                                                //var mesh = new HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform, FrontCounterClockwise = false };
-                                                //ViewPort.Items.Add(mesh);
+                                                var mesh = new HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = map, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform, FrontCounterClockwise = false };
+                                                ViewPort.Items.Add(mesh);
                                             }
                                             catch (System.Exception ex)
                                             {
