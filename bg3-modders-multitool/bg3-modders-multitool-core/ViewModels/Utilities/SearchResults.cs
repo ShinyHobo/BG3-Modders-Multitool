@@ -24,8 +24,8 @@ namespace bg3_modders_multitool.ViewModels
             PakUnpackHelper = new PakUnpackHelper { DataContext = this };
             IsIndexing = false;
             EffectsManager = new DefaultEffectsManager();
-            //Camera = new HelixToolkit.Wpf.SharpDX.PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
-            //Material = HelixToolkit.Wpf.SharpDX.PhongMaterials.LightGray;
+            Camera = new HelixToolkit.Wpf.SharpDX.PerspectiveCamera() { FarPlaneDistance = 3000, FieldOfView = 75 };
+            Material = HelixToolkit.Wpf.SharpDX.PhongMaterials.LightGray;
             var matrix = new System.Windows.Media.Media3D.MatrixTransform3D(new System.Windows.Media.Media3D.Matrix3D()).Value;
             matrix.Translate(new System.Windows.Media.Media3D.Vector3D(0, 0, 0));
             matrix.Rotate(new System.Windows.Media.Media3D.Quaternion(new System.Windows.Media.Media3D.Vector3D(0, 1, 0), 180));
@@ -218,33 +218,34 @@ namespace bg3_modders_multitool.ViewModels
             if (FileHelper.IsGR2(SelectedPath))
             {
                 ModelLoading = Visibility.Visible;
-                //var modelsToRemove = ViewPort.Items.Where(i => i as MeshGeometryModel3D != null).ToList();
-                //foreach (var model in modelsToRemove)
-                //{
-                //    ViewPort.Items.Remove(model);
-                //}
+                var modelsToRemove = ViewPort.Items.Where(i => i as HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D != null).ToList();
+                foreach (var model in modelsToRemove)
+                {
+                    ViewPort.Items.Remove(model);
+                }
 
-                //Task.Run(() => {
-                //    var mesh = RenderedModelHelper.GetMesh(Path.ChangeExtension(FileHelper.GetPath(SelectedPath), null), new Dictionary<string, Tuple<string, string>>(),
-                //        new Dictionary<string, string>(), new Dictionary<string, string>(), new Dictionary<string, string>()); // skipping materials to speed load times for searches
-                //    if (mesh != null && mesh.Any())
-                //    {
-                //        var lod = mesh.First().Value;
-                //        if (lod.Any())
-                //        {
-                //            foreach (var model in lod)
-                //            {
-                //                Application.Current.Dispatcher.Invoke(() =>
-                //                {
-                //                    var meshGeometry = new MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
-                //                    ViewPort.Items.Add(meshGeometry);
-                //                });
-                //            }
-                //            ModelVisible = Visibility.Visible;
-                //        }
-                //    }
-                //    ModelLoading = Visibility.Hidden;
-                //});
+                Task.Run(() =>
+                {
+                    var mesh = RenderedModelHelper.GetMesh(Path.ChangeExtension(FileHelper.GetPath(SelectedPath), null), new Dictionary<string, Tuple<string, string>>(),
+                        new Dictionary<string, string>(), new Dictionary<string, string>(), new Dictionary<string, string>()); // skipping materials to speed load times for searches
+                    if (mesh != null && mesh.Any())
+                    {
+                        var lod = mesh.First().Value;
+                        if (lod.Any())
+                        {
+                            foreach (var model in lod)
+                            {
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    //var meshGeometry = new HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D() { Geometry = model.MeshGeometry3D, Material = Material, CullMode = SharpDX.Direct3D11.CullMode.Back, Transform = Transform };
+                                    //ViewPort.Items.Add(meshGeometry);
+                                });
+                            }
+                            ModelVisible = Visibility.Visible;
+                        }
+                    }
+                    ModelLoading = Visibility.Hidden;
+                });
                 return true;
             }
             return false;
@@ -270,19 +271,19 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        //public Viewport3DX ViewPort { get; internal set; }
+        public HelixToolkit.Wpf.SharpDX.Viewport3DX ViewPort { get; internal set; }
         public EffectsManager EffectsManager { get; }
-        //public Camera Camera { get; }
+        public HelixToolkit.Wpf.SharpDX.Camera Camera { get; }
 
-        //private Material _material;
-
-        //public Material Material {
-        //    get { return _material; }
-        //    set {
-        //        _material = value;
-        //        OnNotifyPropertyChanged();
-        //    }
-        //}
+        private HelixToolkit.Wpf.SharpDX.Material _material;
+        public HelixToolkit.Wpf.SharpDX.Material Material {
+            get { return _material; }
+            set
+            {
+                _material = value;
+                OnNotifyPropertyChanged();
+            }
+        }
 
         private System.Windows.Media.Media3D.MatrixTransform3D _transform;
 

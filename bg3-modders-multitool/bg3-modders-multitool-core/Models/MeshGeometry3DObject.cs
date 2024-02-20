@@ -19,7 +19,7 @@ namespace bg3_modders_multitool.Models
 
         public string NormalMap { get; set; }
 
-        public MeshGeometry3D MeshGeometry3D { get; set; }
+        public Geometry3D MeshGeometry3D { get; set; }
 
         public string MRAOMaterialId { get; set; }
 
