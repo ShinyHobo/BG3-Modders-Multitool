@@ -68,6 +68,9 @@
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="StatParser">
+      <HintPath>LSLib\StatParser.dll</HintPath>
+    </Reference>
     <Reference Include="System.IO.Hashing">
       <HintPath>LSLib\System.IO.Hashing.dll</HintPath>
       <Private>True</Private>
