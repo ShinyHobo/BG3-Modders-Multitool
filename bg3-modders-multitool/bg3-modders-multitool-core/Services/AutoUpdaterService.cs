@@ -149,6 +149,9 @@
                 Directory.CreateDirectory(updateDirectory);
                 File.Delete(tempZip);
                 File.Delete(Path.Combine(updateDirectory, _exeName + ".exe"));
+                File.Delete(Path.Combine(updateDirectory, _exeName + ".runtimeconfig.json"));
+                File.Delete(Path.Combine(updateDirectory, _exeName + ".dll"));
+                File.Delete(Path.Combine(updateDirectory, _exeName + ".dll.config"));
 
                 using (var client = new WebClient())
                 {
@@ -182,15 +185,20 @@
         /// </summary>
         private void ReplaceApplicationWithNewVersion()
         {
-            var exeName = "bg3-modders-multitool.exe";
             var updatePath = $"{DragAndDropHelper.TempFolder}\\Update";
-            var updateExe = Path.Combine(updatePath, exeName);
-            var currentExe = Path.Combine(Directory.GetCurrentDirectory(), exeName);
+            var updateExe = Path.Combine(updatePath, _exeName + ".exe");
+            var updateDll = Path.Combine(updatePath, _exeName + ".dll");
+            var updateDllConfig = Path.Combine(updatePath, _exeName + ".dll.config");
+            var updateRuntimeConfig = Path.Combine(updatePath, _exeName + ".runtimeconfig.json");
+            var currentExe = Path.Combine(Directory.GetCurrentDirectory(), _exeName + ".exe");
             var process = new Process();
             process.StartInfo = new ProcessStartInfo("cmd.exe",
                 $"/c echo {Properties.Resources.ClosingAppForUpdate} " +
                 $"& C:\\Windows\\System32\\ping.exe -4 -n 5 \"\">nul " +
                 $"& copy /b/v/y \"{updateExe}\" \"{Directory.GetCurrentDirectory()}\" " +
+                $"& copy /b/v/y \"{updateDll}\" \"{Directory.GetCurrentDirectory()}\" " +
+                $"& copy /b/v/y \"{updateDllConfig}\" \"{Directory.GetCurrentDirectory()}\" " +
+                $"& copy /b/v/y \"{updateRuntimeConfig}\" \"{Directory.GetCurrentDirectory()}\" " +
                 $"& rmdir \"{updatePath}\" /s /q " +
                 $"& del \"{DragAndDropHelper.TempFolder}\\update.zip\" " +
                 $"& start \"\" \"{currentExe}\"");
