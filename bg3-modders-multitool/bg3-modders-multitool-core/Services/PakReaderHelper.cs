@@ -129,50 +129,49 @@
             var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
             if (file != null)
             {
-                //lock(file.PackageStream)
-                //{
-                //    file.PackageStream.Position = 0;
-                //    var originalExtension = Path.GetExtension(filePath);
-                //    var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
-                //    var isConvertableToXml = originalExtension.Contains("loca");
-                //    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
-                //    try
-                //    {
-                //        if (isConvertableToLsx && file.SizeOnDisk != 0)
-                //        {
-                //            var format = ResourceUtils.ExtensionToResourceFormat(filePath);
-                //            var resource = ResourceUtils.LoadResource(file.MakeStream(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
-                //            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
-                //            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
-                //            ResourceUtils.SaveResource(resource, newFile, conversionParams);
-                //            return newFile;
-                //        }
-                //        else if (isConvertableToXml && file.SizeOnDisk != 0)
-                //        {
-                //            var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
-                //            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
-                //            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
-                //            LocaUtils.Save(resource, newFile, LocaFormat.Xml);
-                //            return newFile;
-                //        }
-                //    }
-                //    catch(Exception ex)
-                //    {
-                //        if (FileHelper.IsSpecialLSFSignature(ex.Message))
-                //        {
-                //            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, isConvertableToLsx ? ".lsx" : ".xml", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
-                //        }
-                //    }
+                lock(file)
+                {
+                    var originalExtension = Path.GetExtension(filePath);
+                    var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
+                    var isConvertableToXml = originalExtension.Contains("loca");
+                    var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
+                    try
+                    {
+                        if (isConvertableToLsx && file.SizeOnDisk != 0)
+                        {
+                            var format = ResourceUtils.ExtensionToResourceFormat(filePath);
+                            var resource = ResourceUtils.LoadResource(file.CreateContentReader(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
+                            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
+                            ResourceUtils.SaveResource(resource, newFile, conversionParams);
+                            return newFile;
+                        }
+                        else if (isConvertableToXml && file.SizeOnDisk != 0)
+                        {
+                            var resource = LocaUtils.Load(file.CreateContentReader(), LocaFormat.Loca);
+                            var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
+                            newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
+                            LocaUtils.Save(resource, newFile, LocaFormat.Xml);
+                            return newFile;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (FileHelper.IsSpecialLSFSignature(ex.Message))
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.FailedToConvertResource, isConvertableToLsx ? ".lsx" : ".xml", file.Name, ex.Message.Replace(Directory.GetCurrentDirectory(), string.Empty));
+                        }
+                    }
 
-                //    var path = FileHelper.GetPath($"{PakName}\\{filePath}");
-                //    FileManager.TryToCreateDirectory(path);
-                //    var contents = ReadPakFileContents(filePath);
-                //    using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
-                //    {
-                //        fileStream.Write(contents, 0, contents.Length);
-                //    }
-                //    return path;
-                //}
+                    var path = FileHelper.GetPath($"{PakName}\\{filePath}");
+                    FileManager.TryToCreateDirectory(path);
+                    var contents = ReadPakFileContents(filePath);
+                    using (FileStream fileStream = Alphaleonis.Win32.Filesystem.File.Open(path, FileMode.Create, FileAccess.Write))
+                    {
+                        fileStream.Write(contents, 0, contents.Length);
+                    }
+                    return path;
+                }
             }
             return null;
         }
