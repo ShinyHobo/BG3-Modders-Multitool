@@ -264,7 +264,7 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void OpenModsFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(PathHelper.ModsFolderPath);
+            FileHelper.ProcessStart(PathHelper.ModsFolderPath);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void OpenProfilesFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(PathHelper.PlayerProfilesFolderPath);
+            FileHelper.ProcessStart(PathHelper.PlayerProfilesFolderPath);
         }
 
         /// <summary>
@@ -285,12 +285,7 @@ namespace bg3_modders_multitool.Views
         private void TempFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(DragAndDropHelper.TempFolder);
-            var psi = new ProcessStartInfo()
-            {
-                FileName = DragAndDropHelper.TempFolder,
-                UseShellExecute = true
-            };
-            Process.Start(psi);
+            FileHelper.ProcessStart(DragAndDropHelper.TempFolder);
         }
 
         /// <summary>
@@ -301,12 +296,7 @@ namespace bg3_modders_multitool.Views
         private void unpackedModsFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(FileHelper.UnpackedModsPath);
-            var psi = new ProcessStartInfo()
-            {
-                FileName = FileHelper.UnpackedModsPath,
-                UseShellExecute = true
-            };
-            Process.Start(psi);
+            FileHelper.ProcessStart(FileHelper.UnpackedModsPath);
         }
 
         /// <summary>
@@ -317,12 +307,7 @@ namespace bg3_modders_multitool.Views
         private void unpackedDataFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(FileHelper.UnpackedDataPath);
-            var psi = new ProcessStartInfo()
-            {
-                FileName = FileHelper.UnpackedDataPath,
-                UseShellExecute = true
-            };
-            Process.Start(psi);
+            FileHelper.ProcessStart(FileHelper.UnpackedDataPath);
         }
 
         /// <summary>
@@ -335,12 +320,7 @@ namespace bg3_modders_multitool.Views
             var dataDir = FileHelper.DataDirectory;
             if (Directory.Exists(dataDir))
             {
-                var psi = new ProcessStartInfo()
-                {
-                    FileName = dataDir,
-                    UseShellExecute = true
-                };
-                Process.Start(psi);
+                FileHelper.ProcessStart(dataDir);
             }
             else
             {
@@ -353,62 +333,62 @@ namespace bg3_modders_multitool.Views
         #region Links
         private void BG3WikiLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://bg3.wiki/wiki/Modding_Resources");
+            FileHelper.ProcessStart("https://bg3.wiki/wiki/Modding_Resources");
         }
 
         private void BG3CommWikiLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/BG3-Community-Library-Team/BG3-Community-Library/wiki");
+            FileHelper.ProcessStart("https://github.com/BG3-Community-Library-Team/BG3-Community-Library/wiki");
         }
 
         private void ModTutLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.nexusmods.com/baldursgate3/mods/1514");
+            FileHelper.ProcessStart("https://www.nexusmods.com/baldursgate3/mods/1514");
         }
 
         private void BG3SELink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/releases");
+            FileHelper.ProcessStart("https://github.com/Norbyte/bg3se/releases");
         }
 
         private void BG3SEAPILink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/blob/main/Docs/API.md");
+            FileHelper.ProcessStart("https://github.com/Norbyte/bg3se/blob/main/Docs/API.md");
         }
 
         private void BG3SESampleLinkClick(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/tree/main/SampleMod");
+            FileHelper.ProcessStart("https://github.com/Norbyte/bg3se/tree/main/SampleMod");
         }
 
         private void LuaSetupLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/LaughingLeader/BG3ModdingTools/wiki/Script-Extender-Lua-Setup");
+            FileHelper.ProcessStart("https://github.com/LaughingLeader/BG3ModdingTools/wiki/Script-Extender-Lua-Setup");
         }
 
         private void ReportABugLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/ShinyHobo/BG3-Modders-Multitool/issues");
+            FileHelper.ProcessStart("https://github.com/ShinyHobo/BG3-Modders-Multitool/issues");
         }
 
         private void KofiLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://ko-fi.com/shinyhobo");
+            FileHelper.ProcessStart("https://ko-fi.com/shinyhobo");
         }
 
         private void LSLibLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Norbyte/lslib/releases");
+            FileHelper.ProcessStart("https://github.com/Norbyte/lslib/releases");
         }
 
         private void ConvertWemLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://katiefrogs.github.io/vgmstream-web/");
+            FileHelper.ProcessStart("https://katiefrogs.github.io/vgmstream-web/");
         }
 
         private void SpellGenAssistant_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Shimizoki/BG3-Spell-Generation-Assistant");
+            FileHelper.ProcessStart("https://github.com/Shimizoki/BG3-Spell-Generation-Assistant");
         }
         #endregion
 
@@ -423,7 +403,7 @@ namespace bg3_modders_multitool.Views
         /// </summary>
         private void HowToUse_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki");
+            FileHelper.ProcessStart("https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki");
         }
         #endregion
 
