@@ -214,8 +214,8 @@ namespace bg3_modders_multitool.Services
                 {
                     var exporter = new LSLib.Granny.Model.Exporter();
                     exporter.Options = new ExporterOptions { InputFormat = ExportFormat.GR2, OutputFormat = ExportFormat.DAE };
-                    var original = LSLib.Granny.GR2Utils.LoadModel("\\\\?\\" + gr2, exporter.Options);
-                    LSLib.Granny.GR2Utils.SaveModel(original, "\\\\?\\"+dae, exporter);
+                    var original = LSLib.Granny.GR2Utils.LoadModel("\\\\?\\" + gr2.Replace("/", "\\"), exporter.Options);
+                    LSLib.Granny.GR2Utils.SaveModel(original, "\\\\?\\"+dae.Replace("/", "\\"), exporter);
                 }
                 catch (Exception ex)
                 {
