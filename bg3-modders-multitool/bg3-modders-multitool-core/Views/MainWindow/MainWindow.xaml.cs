@@ -264,7 +264,7 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void OpenModsFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(PathHelper.ModsFolderPath);
+            Process.Start(PathHelper.ModsFolderPath);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void OpenProfilesFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
+            Process.Start(PathHelper.PlayerProfilesFolderPath);
         }
 
         /// <summary>
@@ -285,7 +285,12 @@ namespace bg3_modders_multitool.Views
         private void TempFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(DragAndDropHelper.TempFolder);
-            System.Diagnostics.Process.Start(DragAndDropHelper.TempFolder);
+            var psi = new ProcessStartInfo()
+            {
+                FileName = DragAndDropHelper.TempFolder,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         /// <summary>
@@ -296,7 +301,12 @@ namespace bg3_modders_multitool.Views
         private void unpackedModsFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(FileHelper.UnpackedModsPath);
-            System.Diagnostics.Process.Start(FileHelper.UnpackedModsPath);
+            var psi = new ProcessStartInfo()
+            {
+                FileName = FileHelper.UnpackedModsPath,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         /// <summary>
@@ -307,7 +317,12 @@ namespace bg3_modders_multitool.Views
         private void unpackedDataFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(FileHelper.UnpackedDataPath);
-            System.Diagnostics.Process.Start(FileHelper.UnpackedDataPath);
+            var psi = new ProcessStartInfo()
+            {
+                FileName = FileHelper.UnpackedDataPath,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         /// <summary>
@@ -320,7 +335,12 @@ namespace bg3_modders_multitool.Views
             var dataDir = FileHelper.DataDirectory;
             if (Directory.Exists(dataDir))
             {
-                System.Diagnostics.Process.Start(dataDir);
+                var psi = new ProcessStartInfo()
+                {
+                    FileName = dataDir,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
             }
             else
             {
