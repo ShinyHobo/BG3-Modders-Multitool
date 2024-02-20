@@ -87,7 +87,7 @@ namespace bg3_modders_multitool.Services
                     var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                     try
                     {
-                        if(File.GetSize(path) == 0)
+                        if(!File.Exists(path) || File.GetSize(path) == 0)
                         {
                             newFile = file;
                         }
