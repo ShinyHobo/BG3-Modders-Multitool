@@ -770,6 +770,10 @@
     <None Include="bg3-modders-multipack_TemporaryKey.pfx" />
     <EmbeddedResource Include="FileTemplates\meta.lsx" />
     <EmbeddedResource Include="FileTemplates\LsxBoilerplate.lsx" />
+    <None Include="Licenses\ASSIMP" />
+    <None Include="Licenses\LSLIB" />
+    <None Include="Licenses\LUCENENET" />
+    <None Include="Licenses\OPENTK" />
     <None Include="manifest.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
