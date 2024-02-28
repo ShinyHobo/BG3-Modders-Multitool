@@ -57,6 +57,8 @@ This software is source available, not open source. Redistribution, and modifica
 
 Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
 
+LSLib is owned by Norbyte and utilized under the MIT license.
+
 [contributors-shield]: https://img.shields.io/github/contributors/ShinyHobo/BG3-Modders-Multitool.svg?style=for-the-badge
 [contributors-url]: https://github.com/ShinyHobo/BG3-Modders-Multitool/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/ShinyHobo/BG3-Modders-Multitool.svg?style=for-the-badge
