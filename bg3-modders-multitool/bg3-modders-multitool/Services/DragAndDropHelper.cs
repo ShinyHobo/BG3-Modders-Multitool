@@ -159,7 +159,7 @@ namespace bg3_modders_multitool.Services
                 Author = moduleInfo.SelectSingleNode("attribute[@id='Author']")?.Attributes["value"].InnerText,
                 Name = moduleInfo.SelectSingleNode("attribute[@id='Name']")?.Attributes["value"].InnerText,
                 Description = moduleInfo.SelectSingleNode("attribute[@id='Description']")?.Attributes["value"].InnerText,
-                Version = moduleInfo.SelectSingleNode("attribute[@id='Version']")?.Attributes["value"].InnerText,
+                Version = moduleInfo.SelectSingleNode("attribute[@id='Version']")?.Attributes["value"].InnerText ?? moduleInfo.SelectSingleNode("attribute[@id='Version64']")?.Attributes["value"].InnerText,
                 Folder = moduleInfo.SelectSingleNode("attribute[@id='Folder']")?.Attributes["value"].InnerText,
                 UUID = moduleInfo.SelectSingleNode("attribute[@id='UUID']")?.Attributes["value"].InnerText,
                 Created = created,
@@ -176,7 +176,7 @@ namespace bg3_modders_multitool.Services
                     var depInfo = new ModuleShortDesc
                     {
                         Name = moduleDescription.SelectSingleNode("attribute[@id='Name']").Attributes["value"].InnerText,
-                        Version = moduleDescription.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText,
+                        Version = moduleDescription.SelectSingleNode("attribute[@id='Version']").Attributes["value"].InnerText ?? moduleDescription.SelectSingleNode("attribute[@id='Version64']").Attributes["value"].InnerText,
                         Folder = moduleDescription.SelectSingleNode("attribute[@id='Folder']").Attributes["value"].InnerText,
                         UUID = moduleDescription.SelectSingleNode("attribute[@id='UUID']").Attributes["value"].InnerText
                     };

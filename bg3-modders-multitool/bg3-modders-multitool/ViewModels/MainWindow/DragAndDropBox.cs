@@ -155,7 +155,6 @@ namespace bg3_modders_multitool.ViewModels
                                     var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
                                     if (version != null)
                                     {
-
                                         xml.Save(file);
                                     }
                                 }
