@@ -135,7 +135,7 @@ namespace bg3_modders_multitool.ViewModels
                             {
                                 var attributes = xml.Descendants("attribute");
 
-                                foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version64"))
+                                foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value != "ModuleShortDesc"))
                                 {
                                     attribute.Attribute("value").Value = new PackedVersion()
                                     {
