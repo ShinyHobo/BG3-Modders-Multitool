@@ -935,13 +935,13 @@ Are you sure you want to delete the GameObject cache?</value>
     <comment>width, height</comment>
   </data>
   <data name="PackingCompressionLabel" xml:space="preserve">
-    <value>Use compression</value>
+    <value>Compression:</value>
   </data>
   <data name="PackingCompressionTooltip" xml:space="preserve">
-    <value>Whether or not to use LZ4 compression</value>
+    <value>The type of compression to use when packing</value>
   </data>
   <data name="PackingPriorityLabel" xml:space="preserve">
-    <value>Packing Priority</value>
+    <value>Packing Priority:</value>
   </data>
   <data name="PackingPriorityTooltip" xml:space="preserve">
     <value>Higher priorities allow vanilla node overrides</value>

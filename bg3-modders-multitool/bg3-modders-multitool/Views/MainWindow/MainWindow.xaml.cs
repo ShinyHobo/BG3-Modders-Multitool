@@ -49,6 +49,9 @@ namespace bg3_modders_multitool.Views
                 GeneralHelper.WriteToConsole(Properties.Resources.ExternalLSLibFound);
             }
             #endif
+
+            CompressionOption.ItemsSource = ViewModels.MainWindow.AvailableCompressionTypes;
+            CompressionOption.SelectedIndex = Properties.Settings.Default.packingCompressionOption;
         }
 
         #region General

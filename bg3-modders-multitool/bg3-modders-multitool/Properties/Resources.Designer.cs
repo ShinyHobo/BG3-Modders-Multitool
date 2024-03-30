@@ -2320,7 +2320,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use compression.
+        ///   Looks up a localized string similar to Compression:.
         /// </summary>
         public static string PackingCompressionLabel {
             get {
@@ -2329,7 +2329,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Whether or not to use LZ4 compression.
+        ///   Looks up a localized string similar to The type of compression to use when packing.
         /// </summary>
         public static string PackingCompressionTooltip {
             get {
@@ -2338,7 +2338,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Packing Priority.
+        ///   Looks up a localized string similar to Packing Priority:.
         /// </summary>
         public static string PackingPriorityLabel {
             get {

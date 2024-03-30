@@ -81,11 +81,39 @@ namespace bg3_modders_multitool.Services
         /// <param name="destination">The destination path and mod name.</param>
         public static void PackMod(string fullpath, string destination)
         {
+            var compression = CompressionMethod.None;
+            var fastCompression = true;
+            switch(Properties.Settings.Default.packingCompressionOption)
+            {
+                case 1: // Zlib Fast
+                    compression = CompressionMethod.Zlib;
+                    break;
+                case 2: // Zlib Optimal
+                    compression = CompressionMethod.Zlib;
+                    fastCompression = false;
+                    break;
+                case 3:
+                    compression = CompressionMethod.LZ4;
+                    break;
+                case 4:
+                    compression = CompressionMethod.LZ4;
+                    fastCompression = false;
+                    break;
+                default:
+                    break;
+            }
+
+            // None
+            // LZ4 fast
+            // LZ4 (high compression)
+            // Zlib fast
+            // Zlib (optimal)
             Directory.CreateDirectory(TempFolder);
             var packageOptions = new PackageCreationOptions() { 
                 Version = Game.BaldursGate3.PAKVersion(),
                 Priority = (byte)Properties.Settings.Default.packingPriority,
-                Compression = Properties.Settings.Default.packingCompression ? CompressionMethod.LZ4 : CompressionMethod.None
+                Compression = compression,
+                FastCompression = fastCompression
             };
             try
             {
