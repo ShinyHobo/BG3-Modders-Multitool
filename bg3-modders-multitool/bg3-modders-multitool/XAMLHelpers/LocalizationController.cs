@@ -124,8 +124,18 @@ public class LocalizationController : Application
             // Check destination
             var destinationIsDirectory = System.IO.Path.GetExtension(destination) == string.Empty;
 
-            // TODO - if source is folder, pak using options
-            // TODO - if source is pak, unpack to destination
+            if(sourceIsDirectory && !destinationIsDirectory)
+            {
+                // TODO - pack to destination
+            }
+            else if(destinationIsDirectory && !sourceIsDirectory)
+            {
+                // TODO - unpack to destination
+            }
+            else
+            {
+                Console.WriteLine($"Invalid operation; source and destination cannot both be {(sourceIsDirectory&&destinationIsDirectory?"directories":"files")}!");
+            }
         }
     }
 }
