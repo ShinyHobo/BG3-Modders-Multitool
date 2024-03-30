@@ -5,8 +5,8 @@ using bg3_modders_multitool.Views;
 using CommandLine;
 using System.Threading.Tasks;
 using Alphaleonis.Win32.Filesystem;
-using System.IO.Packaging;
 using System.Linq;
+using System.Collections.Generic;
 
 /// <summary>
 /// Controls the application lifecycle to allow for on the fly language selection
@@ -20,7 +20,11 @@ public class LocalizationController : Application
         {
             var wnd = new bg3_modders_multitool.ViewModels.MainWindow();
             _ = new Application { MainWindow = new Window { DataContext = wnd }};
-            Parser.Default.ParseArguments<Cli>(args).WithParsedAsync(Cli.Run).ContinueWith(_ => Console.WriteLine(wnd.ConsoleOutput));
+
+            Parser.Default.ParseArguments<Cli>(args)
+                .WithNotParsed(Cli.NotParsed)
+                .WithParsedAsync(Cli.Run)
+                .ContinueWith(_ => Console.WriteLine(wnd.ConsoleOutput));
         }
         else
         {
@@ -88,6 +92,19 @@ public class LocalizationController : Application
         }
 
         /// <summary>
+        /// Handle cli errors
+        /// </summary>
+        /// <param name="errs">The error list</param>
+        public static void NotParsed(IEnumerable<Error> errs)
+        {
+            var result = -2;
+            Console.WriteLine("errors {0}", errs.Count());
+            if (errs.Any(x => x is HelpRequestedError || x is VersionRequestedError))
+                result = -1;
+            Console.WriteLine("Exit code {0}", result);
+        }
+
+        /// <summary>
         /// Runs the multitool cli commands
         /// </summary>
         /// <param name="options">The cli options</param>
@@ -99,9 +116,16 @@ public class LocalizationController : Application
             var compression = bg3_modders_multitool.ViewModels.MainWindow.AvailableCompressionTypes.FirstOrDefault(c => c.Id == options.Compression);
             var zip = options.Zip;
 
-            // TODO - check if source exists
-            // TODO - check if source is folder
-            // TODO - check if destination is folder
+            // Check source (must exist)
+            var sourceIsDirectory = System.IO.Path.GetExtension(source) == string.Empty;
+            if ((sourceIsDirectory && !Directory.Exists(source)) || (!sourceIsDirectory && !File.Exists(source)))
+            {
+                Console.WriteLine("Invalid source folder/pak, does not exist");
+                return;
+            }
+
+            // Check destination
+            var destinationIsDirectory = System.IO.Path.GetExtension(destination) == string.Empty;
 
             // TODO - if source is folder, pak using options
             // TODO - if source is pak, unpack to destination
