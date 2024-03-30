@@ -1,9 +1,13 @@
 namespace bg3_modders_multitool
 {
     using bg3_modders_multitool.Themes;
+    using CommandLine;
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Management.Automation.Language;
+    using System.Runtime.InteropServices;
+    using System.Text;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
