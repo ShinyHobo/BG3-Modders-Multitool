@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// Controls the application lifecycle to allow for on the fly language selection
@@ -19,12 +20,16 @@ public class LocalizationController : Application
         if (args.Length > 0)
         {
             var wnd = new bg3_modders_multitool.ViewModels.MainWindow();
-            _ = new Application { MainWindow = new Window { DataContext = wnd }};
+            var app = new Application { MainWindow = new Window { DataContext = wnd }};
 
-            Parser.Default.ParseArguments<Cli>(args)
-                .WithNotParsed(Cli.NotParsed)
+            AttachConsole(-1);
+
+            Task.Run(() => Parser.Default.ParseArguments<Cli>(args)
+                //.WithNotParsed(Cli.NotParsed)
                 .WithParsedAsync(Cli.Run)
-                .ContinueWith(_ => Console.WriteLine(wnd.ConsoleOutput));
+                .ContinueWith(_ => Console.WriteLine(wnd.ConsoleOutput))).Wait();
+
+            FreeConsole();
         }
         else
         {
@@ -56,6 +61,12 @@ public class LocalizationController : Application
             App.Current.Shutdown();
         }
     }
+
+    [DllImport("kernel32.dll")]
+    static extern bool AttachConsole(int dwProcessId);
+
+    [DllImport("kernel32.dll")]
+    private static extern bool FreeConsole();
 
     /// <summary>
     /// The available cli arguments
