@@ -25,11 +25,10 @@ public class LocalizationController : Application
             AttachConsole(-1);
 
             Task.Run(() => Parser.Default.ParseArguments<Cli>(args)
-                //.WithNotParsed(Cli.NotParsed)
                 .WithParsedAsync(Cli.Run)
                 .ContinueWith(_ => Console.WriteLine(wnd.ConsoleOutput))).Wait();
 
-            FreeConsole();
+            App.Current.Shutdown();
         }
         else
         {
@@ -100,19 +99,6 @@ public class LocalizationController : Application
         public string GetUsage()
         {
             return "Read wiki for usage instructions...";
-        }
-
-        /// <summary>
-        /// Handle cli errors
-        /// </summary>
-        /// <param name="errs">The error list</param>
-        public static void NotParsed(IEnumerable<Error> errs)
-        {
-            var result = -2;
-            Console.WriteLine("errors {0}", errs.Count());
-            if (errs.Any(x => x is HelpRequestedError || x is VersionRequestedError))
-                result = -1;
-            Console.WriteLine("Exit code {0}", result);
         }
 
         /// <summary>
