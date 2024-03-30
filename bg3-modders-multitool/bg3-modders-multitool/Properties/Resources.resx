@@ -288,6 +288,21 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   <data name="ColorPickerMenu" xml:space="preserve">
     <value>Color Picker</value>
   </data>
+  <data name="CompressionOptionLZ4" xml:space="preserve">
+    <value>LZ4</value>
+  </data>
+  <data name="CompressionOptionLZ4HC" xml:space="preserve">
+    <value>LZ4 HC</value>
+  </data>
+  <data name="CompressionOptionNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="CompressionOptionZlibFast" xml:space="preserve">
+    <value>Zlib Fast</value>
+  </data>
+  <data name="CompressionOptionZlibOptimal" xml:space="preserve">
+    <value>Zlib Optimal</value>
+  </data>
   <data name="ConfigNeededLabel" xml:space="preserve">
     <value>Configuration needed:
 missing bg3.exe!</value>

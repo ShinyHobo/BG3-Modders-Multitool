@@ -378,11 +378,11 @@ namespace bg3_modders_multitool.ViewModels
         /// The list of available compression types
         /// </summary>
         public static List<PackingCompression> AvailableCompressionTypes = new List<PackingCompression>() { 
-            new PackingCompression("None", 0),
-            new PackingCompression("LZ4", 1),
-            new PackingCompression("LZ4 HC", 2),
-            new PackingCompression("Zlib Fast", 3),
-            new PackingCompression("Zlib Optimal", 4)
+            new PackingCompression(Properties.Resources.CompressionOptionNone, 0),
+            new PackingCompression(Properties.Resources.CompressionOptionLZ4, 1),
+            new PackingCompression(Properties.Resources.CompressionOptionLZ4HC, 2),
+            new PackingCompression(Properties.Resources.CompressionOptionZlibFast, 3),
+            new PackingCompression(Properties.Resources.CompressionOptionZlibOptimal, 4)
         };
 
         public class PackingCompression
