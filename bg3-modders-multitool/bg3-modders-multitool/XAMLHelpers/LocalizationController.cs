@@ -4,6 +4,9 @@ using System;
 using bg3_modders_multitool.Views;
 using CommandLine;
 using System.Threading.Tasks;
+using Alphaleonis.Win32.Filesystem;
+using System.IO.Packaging;
+using System.Linq;
 
 /// <summary>
 /// Controls the application lifecycle to allow for on the fly language selection
@@ -91,7 +94,17 @@ public class LocalizationController : Application
         /// <returns>The task</returns>
         public static async Task Run(Cli options)
         {
+            var source = Path.GetFullPath(options.Source);
+            var destination = Path.GetFullPath(options.Destination);
+            var compression = bg3_modders_multitool.ViewModels.MainWindow.AvailableCompressionTypes.FirstOrDefault(c => c.Id == options.Compression);
+            var zip = options.Zip;
 
+            // TODO - check if source exists
+            // TODO - check if source is folder
+            // TODO - check if destination is folder
+
+            // TODO - if source is folder, pak using options
+            // TODO - if source is pak, unpack to destination
         }
     }
 }
