@@ -154,5 +154,17 @@ namespace bg3_modders_multitool.Properties {
                 this["packingCompression"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int packingCompressionOption {
+            get {
+                return ((int)(this["packingCompressionOption"]));
+            }
+            set {
+                this["packingCompressionOption"] = value;
+            }
+        }
     }
 }

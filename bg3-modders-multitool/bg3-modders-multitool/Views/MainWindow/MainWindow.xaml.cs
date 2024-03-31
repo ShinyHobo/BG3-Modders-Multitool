@@ -49,6 +49,9 @@ namespace bg3_modders_multitool.Views
                 GeneralHelper.WriteToConsole(Properties.Resources.ExternalLSLibFound);
             }
             #endif
+
+            compressionOption.ItemsSource = ViewModels.MainWindow.AvailableCompressionTypes;
+            compressionOption.SelectedIndex = Properties.Settings.Default.packingCompressionOption;
         }
 
         #region General
@@ -526,5 +529,15 @@ namespace bg3_modders_multitool.Views
             vm.CheckForUpdates(true);
         }
         #endregion
+
+        /// <summary>
+        /// Updates the compression option setting
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void CompressionOption_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            MainWindowVM.PackingCompressionOption = ((ViewModels.MainWindow.PackingCompression)compressionOption.SelectedItem).Id;
+        }
     }
 }

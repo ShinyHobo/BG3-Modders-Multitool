@@ -81,11 +81,41 @@ namespace bg3_modders_multitool.Services
         /// <param name="destination">The destination path and mod name.</param>
         public static void PackMod(string fullpath, string destination)
         {
+            var compression = CompressionMethod.None;
+            var fastCompression = true;
+            int.TryParse(App.Current.Properties["cli_compression"]?.ToString(), out int cliCompression);
+            var selectedCompression = App.Current.Properties["cli_compression"] == null ? Properties.Settings.Default.packingCompressionOption : cliCompression;
+            switch (selectedCompression)
+            {
+                case 1: // Zlib Fast
+                    compression = CompressionMethod.Zlib;
+                    break;
+                case 2: // Zlib Optimal
+                    compression = CompressionMethod.Zlib;
+                    fastCompression = false;
+                    break;
+                case 3:
+                    compression = CompressionMethod.LZ4;
+                    break;
+                case 4:
+                    compression = CompressionMethod.LZ4;
+                    fastCompression = false;
+                    break;
+                default:
+                    break;
+            }
+
+            // None
+            // LZ4 fast
+            // LZ4 (high compression)
+            // Zlib fast
+            // Zlib (optimal)
             Directory.CreateDirectory(TempFolder);
             var packageOptions = new PackageCreationOptions() { 
                 Version = Game.BaldursGate3.PAKVersion(),
                 Priority = (byte)Properties.Settings.Default.packingPriority,
-                Compression = Properties.Settings.Default.packingCompression ? CompressionMethod.LZ4 : CompressionMethod.None
+                Compression = compression,
+                FastCompression = fastCompression
             };
             try
             {
@@ -321,7 +351,7 @@ namespace bg3_modders_multitool.Services
                                         // single mod directory
                                         metaList.Add(Guid.NewGuid().ToString(), ProcessMod(fullPath, dirName));
                                     }
-                                    else if(modsFolders.Length > 0)
+                                    else if (modsFolders.Length > 0)
                                     {
                                         // multiple mod directories?
                                         foreach (string dir in Directory.GetDirectories(fullPath))
@@ -336,34 +366,55 @@ namespace bg3_modders_multitool.Services
                                         return;
                                     }
 
-                                    if (Properties.Settings.Default.pakToMods)
+                                    if (App.Current.Properties["console_app"] == null)
                                     {
-                                        var modsFolder = $"{Properties.Settings.Default.gameDocumentsPath}\\Mods";
-                                        if(Directory.Exists(modsFolder))
+                                        if (Properties.Settings.Default.pakToMods)
                                         {
-                                            try
+                                            var modsFolder = $"{Properties.Settings.Default.gameDocumentsPath}\\Mods";
+                                            if (Directory.Exists(modsFolder))
                                             {
-                                                File.Copy($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", true);
-                                                GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                                try
+                                                {
+                                                    File.Copy($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", true);
+                                                    GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.InnerException);
+                                                }
                                             }
-                                            catch(Exception ex)
+                                        }
+                                        else
+                                        {
+                                            if (GenerateInfoJson(metaList))
                                             {
-                                                GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.InnerException);
+                                                GenerateZip(fullPath, dirName);
+                                                CleanTempDirectory();
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        if(GenerateInfoJson(metaList))
+                                        if((bool)App.Current.Properties["cli_zip"])
                                         {
-                                            GenerateZip(fullPath, dirName);
+                                            if (GenerateInfoJson(metaList))
+                                            {
+                                                GenerateZip(fullPath, dirName);
+                                                CleanTempDirectory();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            File.Copy($"{TempFolder}\\{dirName}.pak", (string)App.Current.Properties["cli_destination"], true);
+                                            GeneralHelper.WriteToConsole(Properties.Resources.PakMovedToDestination);
                                             CleanTempDirectory();
                                         }
                                     }
                                 }
-                                else if(File.Exists(fullPath))
+                                else if (File.Exists(fullPath))
                                 {
-                                    var task = Application.Current.Dispatcher.Invoke(() => {
+                                    var task = Application.Current.Dispatcher.Invoke(() =>
+                                    {
                                         var vm = App.Current.MainWindow.DataContext as ViewModels.MainWindow;
                                         return vm.Unpacker.UnpackPakFiles(new List<string> { fullPath }, false);
                                     });

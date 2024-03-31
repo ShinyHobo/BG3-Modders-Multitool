@@ -288,6 +288,21 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   <data name="ColorPickerMenu" xml:space="preserve">
     <value>Color Picker</value>
   </data>
+  <data name="CompressionOptionLZ4" xml:space="preserve">
+    <value>LZ4</value>
+  </data>
+  <data name="CompressionOptionLZ4HC" xml:space="preserve">
+    <value>LZ4 HC</value>
+  </data>
+  <data name="CompressionOptionNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="CompressionOptionZlibFast" xml:space="preserve">
+    <value>Zlib Fast</value>
+  </data>
+  <data name="CompressionOptionZlibOptimal" xml:space="preserve">
+    <value>Zlib Optimal</value>
+  </data>
   <data name="ConfigNeededLabel" xml:space="preserve">
     <value>Configuration needed:
 missing bg3.exe!</value>
@@ -935,13 +950,13 @@ Are you sure you want to delete the GameObject cache?</value>
     <comment>width, height</comment>
   </data>
   <data name="PackingCompressionLabel" xml:space="preserve">
-    <value>Use compression</value>
+    <value>Compression:</value>
   </data>
   <data name="PackingCompressionTooltip" xml:space="preserve">
-    <value>Whether or not to use LZ4 compression</value>
+    <value>The type of compression to use when packing</value>
   </data>
   <data name="PackingPriorityLabel" xml:space="preserve">
-    <value>Packing Priority</value>
+    <value>Packing Priority:</value>
   </data>
   <data name="PackingPriorityTooltip" xml:space="preserve">
     <value>Higher priorities allow vanilla node overrides</value>
@@ -958,6 +973,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="PakModedToMods" xml:space="preserve">
     <value>{0} pak moved to Mods folder!</value>
     <comment>pak name</comment>
+  </data>
+  <data name="PakMovedToDestination" xml:space="preserve">
+    <value>Pak moved to destination!</value>
   </data>
   <data name="PakPackingCancelled" xml:space="preserve">
     <value>Pak packing cancelled; you can find your files in the Temp Folder</value>

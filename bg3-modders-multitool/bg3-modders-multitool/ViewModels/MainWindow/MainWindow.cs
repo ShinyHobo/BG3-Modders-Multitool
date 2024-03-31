@@ -27,7 +27,7 @@ namespace bg3_modders_multitool.ViewModels
             PakToMods = Properties.Settings.Default.pakToMods;
             AutoUpdater = new AutoUpdaterService(this);
             PackingPriority = Properties.Settings.Default.packingPriority;
-            PackingCompression = Properties.Settings.Default.packingCompression;
+            PackingCompressionOption = Properties.Settings.Default.packingCompressionOption;
         }
 
         #region File Selection Methods
@@ -358,20 +358,48 @@ namespace bg3_modders_multitool.ViewModels
             }
         }
 
-        private bool _packingCompression;
-        public bool PackingCompression
+        private int _packingCompressionOption;
+        public int PackingCompressionOption
         {
-            get { return _packingCompression; }
+            get { return _packingCompressionOption; }
             set
             {
-                _packingCompression = value;
-                if (Properties.Settings.Default.packingCompression != value)
+                _packingCompressionOption = value;
+                if (Properties.Settings.Default.packingCompressionOption != value)
                 {
-                    Properties.Settings.Default.packingCompression = value;
+                    Properties.Settings.Default.packingCompressionOption = value;
                     Properties.Settings.Default.Save();
                 }
                 OnNotifyPropertyChanged();
             }
+        }
+
+        /// <summary>
+        /// The list of available compression types
+        /// </summary>
+        public static List<PackingCompression> AvailableCompressionTypes = new List<PackingCompression>() { 
+            new PackingCompression(Properties.Resources.CompressionOptionNone, 0),
+            new PackingCompression(Properties.Resources.CompressionOptionLZ4, 1),
+            new PackingCompression(Properties.Resources.CompressionOptionLZ4HC, 2),
+            new PackingCompression(Properties.Resources.CompressionOptionZlibFast, 3),
+            new PackingCompression(Properties.Resources.CompressionOptionZlibOptimal, 4)
+        };
+
+        public class PackingCompression
+        {
+            /// <summary>
+            /// The packing compression model constructor
+            /// </summary>
+            /// <param name="name">The name of the compression type</param>
+            /// <param name="id">The id</param>
+            public PackingCompression(string name, int id)
+            {
+                Name = name;
+                Id = id;
+            }
+
+            public string Name { get; set; }
+            public int Id { get; set; }
         }
         #endregion
 
