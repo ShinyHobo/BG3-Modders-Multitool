@@ -2437,6 +2437,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pak moved to destination!.
+        /// </summary>
+        public static string PakMovedToDestination {
+            get {
+                return ResourceManager.GetString("PakMovedToDestination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pak packing cancelled; you can find your files in the Temp Folder.
         /// </summary>
         public static string PakPackingCancelled {

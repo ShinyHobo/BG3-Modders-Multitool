@@ -16,6 +16,7 @@ namespace bg3_modders_multitool.Services
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using System.Windows.Threading;
 
     public static class GeneralHelper
     {
@@ -28,20 +29,37 @@ namespace bg3_modders_multitool.Services
         {
             if(resource != null)
             {
-                Application.Current.Dispatcher.Invoke(() => {
-                    try
-                    {
-                        var message = string.Format(resource, args);
-                        ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
-                    }
-                    catch
+                if (App.Current.Properties["console_app"] == null)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
                         try
                         {
-                            ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
-                        } catch { }
+                            var message = string.Format(resource, args);
+                            ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
+                            }
+                            catch { }
+                        }
+                    });
+                }
+                else
+                {
+                    try
+                    {
+                        var message = string.Format(resource, args);
+                        Console.WriteLine(string.Format(resource, args));
                     }
-                });
+                    catch
+                    {
+                        Console.WriteLine($"{Properties.Resources.BadTranslation}: {resource}");
+                    }
+                }
             }
         }
 

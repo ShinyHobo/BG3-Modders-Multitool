@@ -6,7 +6,6 @@ using CommandLine;
 using System.Threading.Tasks;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 /// <summary>
@@ -19,14 +18,19 @@ public class LocalizationController : Application
     {
         if (args.Length > 0)
         {
+            App app = new App();
+            app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             var wnd = new bg3_modders_multitool.ViewModels.MainWindow();
-            var app = new Application { MainWindow = new Window { DataContext = wnd }};
+            app.MainWindow = new Window { DataContext = wnd };
 
             AttachConsole(-1);
 
-            Task.Run(() => Parser.Default.ParseArguments<Cli>(args)
+            App.Current.Properties["console_app"] = 1;
+
+            Parser.Default.ParseArguments<Cli>(args)
                 .WithParsedAsync(Cli.Run)
-                .ContinueWith(_ => Console.WriteLine(wnd.ConsoleOutput))).Wait();
+                .ContinueWith(_ => Console.WriteLine(wnd.ConsoleOutput)).Wait();
 
             App.Current.Shutdown();
         }
@@ -34,6 +38,7 @@ public class LocalizationController : Application
         {
             App app = new App();
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             MainWindow wnd = new MainWindow();
             wnd.Closed += Wnd_Closed;
             app.Run(wnd);
@@ -90,12 +95,6 @@ public class LocalizationController : Application
         [Option('c', "compression", HelpText = "0: None\r\n1: LZ4\r\n2: LZ4 HC\r\n3: Zlib Fast\r\n4: Zlib Optimal")]
         public int Compression { get; set; }
 
-        /// <summary>
-        /// Whether to save as zip with usual contents, or leave as pak
-        /// </summary>
-        [Option('z', "zip", HelpText = "Whether to save as zip with usual contents, or leave as pak")]
-        public bool Zip { get; set; }
-
         public string GetUsage()
         {
             return "Read wiki for usage instructions...";
@@ -111,7 +110,6 @@ public class LocalizationController : Application
             var source = Path.GetFullPath(options.Source);
             var destination = Path.GetFullPath(options.Destination);
             var compression = bg3_modders_multitool.ViewModels.MainWindow.AvailableCompressionTypes.FirstOrDefault(c => c.Id == options.Compression);
-            var zip = options.Zip;
 
             // Check source (must exist)
             var sourceIsDirectory = System.IO.Path.GetExtension(source) == string.Empty;
@@ -122,15 +120,27 @@ public class LocalizationController : Application
             }
 
             // Check destination
-            var destinationIsDirectory = System.IO.Path.GetExtension(destination) == string.Empty;
+            var destinationExtension = System.IO.Path.GetExtension(destination);
+            var destinationIsDirectory = destinationExtension == string.Empty;
 
-            if(sourceIsDirectory && !destinationIsDirectory)
+            // Set global config
+            App.Current.Properties["cli_source"] = source;
+            App.Current.Properties["cli_destination"] = destination;
+            App.Current.Properties["cli_compression"] = compression.Id;
+            App.Current.Properties["cli_zip"] = destinationExtension == ".zip";
+
+            if (sourceIsDirectory && !destinationIsDirectory)
             {
-                // TODO - pack to destination
+                Console.WriteLine("Packing mod...");
+                
+                DataObject data = new DataObject(DataFormats.FileDrop, new string[] { source });
+                var dadVm = new bg3_modders_multitool.ViewModels.DragAndDropBox();
+                await dadVm.ProcessDrop(data);
             }
             else if(destinationIsDirectory && !sourceIsDirectory)
             {
                 // TODO - unpack to destination
+                Console.WriteLine("Unpacking mod...");
             }
             else
             {

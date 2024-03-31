@@ -83,7 +83,9 @@ namespace bg3_modders_multitool.Services
         {
             var compression = CompressionMethod.None;
             var fastCompression = true;
-            switch(Properties.Settings.Default.packingCompressionOption)
+            int.TryParse(App.Current.Properties["cli_compression"]?.ToString(), out int cliCompression);
+            var selectedCompression = App.Current.Properties["cli_compression"] == null ? Properties.Settings.Default.packingCompressionOption : cliCompression;
+            switch (selectedCompression)
             {
                 case 1: // Zlib Fast
                     compression = CompressionMethod.Zlib;
@@ -349,7 +351,7 @@ namespace bg3_modders_multitool.Services
                                         // single mod directory
                                         metaList.Add(Guid.NewGuid().ToString(), ProcessMod(fullPath, dirName));
                                     }
-                                    else if(modsFolders.Length > 0)
+                                    else if (modsFolders.Length > 0)
                                     {
                                         // multiple mod directories?
                                         foreach (string dir in Directory.GetDirectories(fullPath))
@@ -364,34 +366,55 @@ namespace bg3_modders_multitool.Services
                                         return;
                                     }
 
-                                    if (Properties.Settings.Default.pakToMods)
+                                    if (App.Current.Properties["console_app"] == null)
                                     {
-                                        var modsFolder = $"{Properties.Settings.Default.gameDocumentsPath}\\Mods";
-                                        if(Directory.Exists(modsFolder))
+                                        if (Properties.Settings.Default.pakToMods)
                                         {
-                                            try
+                                            var modsFolder = $"{Properties.Settings.Default.gameDocumentsPath}\\Mods";
+                                            if (Directory.Exists(modsFolder))
                                             {
-                                                File.Copy($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", true);
-                                                GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                                try
+                                                {
+                                                    File.Copy($"{TempFolder}\\{dirName}.pak", $"{modsFolder}\\{dirName}.pak", true);
+                                                    GeneralHelper.WriteToConsole(Properties.Resources.PakModedToMods, dirName);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.InnerException);
+                                                }
                                             }
-                                            catch(Exception ex)
+                                        }
+                                        else
+                                        {
+                                            if (GenerateInfoJson(metaList))
                                             {
-                                                GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.InnerException);
+                                                GenerateZip(fullPath, dirName);
+                                                CleanTempDirectory();
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        if(GenerateInfoJson(metaList))
+                                        if((bool)App.Current.Properties["cli_zip"])
                                         {
-                                            GenerateZip(fullPath, dirName);
+                                            if (GenerateInfoJson(metaList))
+                                            {
+                                                GenerateZip(fullPath, dirName);
+                                                CleanTempDirectory();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            File.Copy($"{TempFolder}\\{dirName}.pak", (string)App.Current.Properties["cli_destination"], true);
+                                            GeneralHelper.WriteToConsole(Properties.Resources.PakMovedToDestination);
                                             CleanTempDirectory();
                                         }
                                     }
                                 }
-                                else if(File.Exists(fullPath))
+                                else if (File.Exists(fullPath))
                                 {
-                                    var task = Application.Current.Dispatcher.Invoke(() => {
+                                    var task = Application.Current.Dispatcher.Invoke(() =>
+                                    {
                                         var vm = App.Current.MainWindow.DataContext as ViewModels.MainWindow;
                                         return vm.Unpacker.UnpackPakFiles(new List<string> { fullPath }, false);
                                     });

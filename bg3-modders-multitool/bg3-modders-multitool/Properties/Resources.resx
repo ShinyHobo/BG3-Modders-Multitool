@@ -974,6 +974,9 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>{0} pak moved to Mods folder!</value>
     <comment>pak name</comment>
   </data>
+  <data name="PakMovedToDestination" xml:space="preserve">
+    <value>Pak moved to destination!</value>
+  </data>
   <data name="PakPackingCancelled" xml:space="preserve">
     <value>Pak packing cancelled; you can find your files in the Temp Folder</value>
   </data>
