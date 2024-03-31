@@ -32,10 +32,10 @@ public class LocalizationController : Application
         }
         else
         {
-            MainWindow wnd = new MainWindow();
-            wnd.Closed += Wnd_Closed;
             App app = new App();
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            MainWindow wnd = new MainWindow();
+            wnd.Closed += Wnd_Closed;
             app.Run(wnd);
         }
     }
