@@ -108,13 +108,17 @@ namespace bg3_modders_multitool.Services
                             ConvertDecompressedFiles(decompressedFileList.Result, pakName);
                         }
 
-                        Application.Current.Dispatcher.Invoke(() => {
-                            lock (PakProgressCollection)
-                            {
-                                var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
-                                PakProgressCollection.Remove(pakProgress);
-                            }
-                        });
+                        if (App.Current.Properties["console_app"] == null)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => {
+                                lock (PakProgressCollection)
+                                {
+                                    var pakProgress = PakProgressCollection.First(p => p.PakName == pakName);
+                                    PakProgressCollection.Remove(pakProgress);
+                                }
+                            });
+                        }
+                            
                         GeneralHelper.WriteToConsole(Properties.Resources.UnpackingPakComplete, pakName);
                     }
                     catch (Exception ex)
@@ -139,9 +143,13 @@ namespace bg3_modders_multitool.Services
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.UnpackingComplete);
                 }
-                Application.Current.Dispatcher.Invoke(() => {
-                    unpackerProgressWindow.Close();
-                });
+                if (App.Current.Properties["console_app"] == null)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        unpackerProgressWindow.Close();
+                    });
+                }
             });
         }
 
@@ -310,7 +318,8 @@ namespace bg3_modders_multitool.Services
         {
             foreach (var file in decompressedFileList)
             {
-                var newPath = file.Replace(DragAndDropHelper.TempFolder, FileHelper.UnpackedModsPath);
+                var destination = App.Current.Properties["cli_destination"] == null ? FileHelper.UnpackedModsPath : (string)App.Current.Properties["cli_destination"];
+                var newPath = file.Replace(DragAndDropHelper.TempFolder, destination);
                 new System.IO.FileInfo(newPath).Directory.Create();
                 File.Copy(file, newPath, true);
             }

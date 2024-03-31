@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+using System.Collections.Generic;
 
 /// <summary>
 /// Controls the application lifecycle to allow for on the fly language selection
@@ -75,7 +77,7 @@ public class LocalizationController : Application
     /// <summary>
     /// The available cli arguments
     /// </summary>
-    private class Cli
+    private class Cli // TODO - set up translation resources for these
     {
         /// <summary>
         /// The source folder/file
@@ -139,8 +141,18 @@ public class LocalizationController : Application
             }
             else if(destinationIsDirectory && !sourceIsDirectory)
             {
-                // TODO - unpack to destination
-                Console.WriteLine("Unpacking mod...");
+                var sourceExtension = System.IO.Path.GetExtension(source);
+                if(sourceExtension == ".pak")
+                {
+                    Console.WriteLine("Unpacking mod...");
+
+                    var vm = new bg3_modders_multitool.ViewModels.MainWindow();
+                    await vm.Unpacker.UnpackPakFiles(new List<string> { source }, false);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid source extension. File must be a .pak!");
+                }
             }
             else
             {
