@@ -25,7 +25,11 @@ public class LocalizationController : Application
             var wnd = new bg3_modders_multitool.ViewModels.MainWindow();
             app.MainWindow = new Window { DataContext = wnd };
 
-            AttachConsole(-1);
+            if(!AttachConsole(-1))
+            {
+                // for debugging
+                AllocConsole();
+            }
 
             App.Current.Properties["console_app"] = true;
 
@@ -64,6 +68,9 @@ public class LocalizationController : Application
             App.Current.Shutdown();
         }
     }
+
+    [DllImport("kernel32.dll")]
+    static extern bool AllocConsole();
 
     [DllImport("kernel32.dll")]
     static extern bool AttachConsole(int dwProcessId);
