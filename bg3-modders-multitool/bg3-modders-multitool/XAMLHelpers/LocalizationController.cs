@@ -275,7 +275,7 @@ public class LocalizationController : Application
                     {
                         if(options.IndexResultsFile == null)
                         {
-                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Index results file location required! Check --help");
                             Console.ResetColor();
                             return;
