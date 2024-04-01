@@ -131,6 +131,7 @@
     <PackageReference Include="AlphaFS" Version="2.2.6" />
     <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
     <PackageReference Include="AvalonEdit" Version="6.0.0" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
