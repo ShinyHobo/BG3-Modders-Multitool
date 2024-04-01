@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Collections.Generic;
 
 /// <summary>

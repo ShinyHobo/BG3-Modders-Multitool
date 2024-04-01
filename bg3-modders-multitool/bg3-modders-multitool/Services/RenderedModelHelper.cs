@@ -5,9 +5,7 @@ namespace bg3_modders_multitool.Services
 {
     using Alphaleonis.Win32.Filesystem;
     using bg3_modders_multitool.Models;
-    using HelixToolkit.Wpf.SharpDX;
-    using HelixToolkit.Wpf.SharpDX.Assimp;
-    using HelixToolkit.Wpf.SharpDX.Model.Scene;
+    using HelixToolkit.SharpDX.Core.Assimp;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -15,6 +13,9 @@ namespace bg3_modders_multitool.Services
     using System.Xml;
     using System.Xml.Linq;
     using LSLib.Granny.Model;
+    using Assimp;
+    using HelixToolkit.SharpDX.Core;
+    using HelixToolkit.SharpDX.Core.Model.Scene;
 
     public static class RenderedModelHelper
     {
@@ -121,6 +122,7 @@ namespace bg3_modders_multitool.Services
 
             // Gather meshes
             var meshes = file.Root.Items.Where(x => x.Items.Any(y => y as MeshNode != null)).ToList();
+
             // Group meshes by lod
             var meshGroups = meshes.GroupBy(mesh => mesh.Name.Split('_').Last()).ToList();
             var geometryLookup = new Dictionary<string, List<MeshGeometry3DObject>>();
@@ -141,7 +143,7 @@ namespace bg3_modders_multitool.Services
                             if (materials != null && materials.ContainsKey(name))
                                 materialGuid = materials[name];
                             var meshNode = mesh.Items.Last() as MeshNode;
-                            var meshGeometry = meshNode.Geometry as MeshGeometry3D;
+                            var meshGeometry = meshNode.Geometry;
                             var baseMaterialId = LoadMaterial(materialGuid?.Item1, "basecolor", materialBanks);
                             if (baseMaterialId == null)
                                 baseMaterialId = LoadMaterial(materialGuid?.Item1, "Body_color_texture", materialBanks);
@@ -214,8 +216,8 @@ namespace bg3_modders_multitool.Services
                 {
                     var exporter = new LSLib.Granny.Model.Exporter();
                     exporter.Options = new ExporterOptions { InputFormat = ExportFormat.GR2, OutputFormat = ExportFormat.DAE };
-                    var original = LSLib.Granny.GR2Utils.LoadModel("\\\\?\\" + gr2, exporter.Options);
-                    LSLib.Granny.GR2Utils.SaveModel(original, "\\\\?\\"+dae, exporter);
+                    var original = LSLib.Granny.GR2Utils.LoadModel("\\\\?\\" + gr2.Replace("/", "\\"), exporter.Options);
+                    LSLib.Granny.GR2Utils.SaveModel(original, "\\\\?\\"+dae.Replace("/", "\\"), exporter);
                 }
                 catch (Exception ex)
                 {

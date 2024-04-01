@@ -102,15 +102,13 @@
         /// <returns>The bitmap image</returns>
         public static BitmapImage ConvertDDSToBitmap(PackagedFileInfo iconInfo)
         {
-            lock (iconInfo.PackageStream)
+            lock (iconInfo)
             {
-                iconInfo.PackageStream.Position = 0;
-                var iconStream = iconInfo.MakeStream();
+                using (System.IO.Stream iconStream = iconInfo.CreateContentReader())
                 using (var image = Pfim.Pfimage.FromStream(iconStream))
                 {
                     var data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
                     var bitmap = new Bitmap(image.Width, image.Height, image.Stride, PixelFormat.Format32bppArgb, data);
-                    iconInfo.ReleaseStream();
                     using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
                     {
                         bitmap.Save(ms, ImageFormat.Png);
@@ -173,7 +171,7 @@
                             {
                                 do
                                 {
-                                    tex = vts.ExtractPageFileTexture(vtsIndex, level, layer);
+                                    //tex = vts.ExtractPageFileTexture(vtsIndex, level, layer);
                                     level++;
                                 } while (tex == null && level < vts.TileSetLevels.Length);
                             }

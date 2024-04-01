@@ -83,7 +83,7 @@ namespace bg3_modders_multitool.Services
                     try
                     {
                         var packager = new Packager();
-                        packager.ProgressUpdate = (file2, numerator, denominator, fileInfo) =>
+                        packager.ProgressUpdate = (status, numerator, denominator) =>
                         {
                             if (Cancelled)
                             {
