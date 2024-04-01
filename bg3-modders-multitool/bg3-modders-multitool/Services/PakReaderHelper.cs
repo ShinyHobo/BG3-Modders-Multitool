@@ -48,13 +48,15 @@
                 {
                     lock (file)
                     {
-                        //file.SolidStream.Position = (long)file.OffsetInFile;
-                        using (Stream ms = file.CreateContentReader())
-                        using (BinaryReader reader = new BinaryReader(ms))
+                        if(file.SizeOnDisk > 0)
                         {
-                            int count;
-                            while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
-                                originalStream.Write(buffer, 0, count);
+                            using (Stream ms = file.CreateContentReader())
+                            using (BinaryReader reader = new BinaryReader(ms))
+                            {
+                                int count;
+                                while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+                                    originalStream.Write(buffer, 0, count);
+                            }
                         }
                     }
 

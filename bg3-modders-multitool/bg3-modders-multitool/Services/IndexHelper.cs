@@ -174,6 +174,11 @@ namespace bg3_modders_multitool.Services
                 }
             });
 
+            if (App.Current.Properties["console_app"]  != null)
+            {
+                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100%");
+            }
+
             GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
 
             var originalTime = DataContext.IndexStartTime;
