@@ -87,7 +87,7 @@ namespace bg3_modders_multitool.Services
                     var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                     try
                     {
-                        if(File.GetSize(path) == 0)
+                        if(!File.Exists(path) || File.GetSize(path) == 0)
                         {
                             newFile = file;
                         }
@@ -333,7 +333,7 @@ namespace bg3_modders_multitool.Services
                         }
                         else
                         {
-                            Process.Start(path);
+                            ProcessStart(path);
                         }
                     }
                 }
@@ -502,6 +502,20 @@ namespace bg3_modders_multitool.Services
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Opens the given path in the default process
+        /// </summary>
+        /// <param name="path">The process path (file, uri, etc)</param>
+        public static void ProcessStart(string path)
+        {
+            var psi = new ProcessStartInfo()
+            {
+                FileName = path,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         #region Process Finder

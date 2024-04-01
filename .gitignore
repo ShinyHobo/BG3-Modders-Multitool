@@ -265,3 +265,7 @@ bg3-modders-multitool/bg3-modders-multitool/LSLib/LSLib.bak.dll
 bg3-modders-multitool/bg3-modders-multitool/LSLib/LSLibNative.dll
 bg3-modders-multitool/bg3-modders-multitool/LSLib/LSLib.dll
 bg3-modders-multitool/bg3-modders-multitool-core/LSLib/
+bg3-modders-multitool/bg3-modders-multitool/LSLib/ZstdSharp.dll
+bg3-modders-multitool/bg3-modders-multitool/LSLib/System.IO.Hashing.dll
+bg3-modders-multitool/bg3-modders-multitool/Costura64/OpenTK.Mathematics.dll
+bg3-modders-multitool/bg3-modders-multitool/LSLib/StatParser.dll

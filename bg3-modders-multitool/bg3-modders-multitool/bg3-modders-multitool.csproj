@@ -1,26 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Resource.Embedder.2.2.0\build\Resource.Embedder.props" Condition="Exists('..\packages\Resource.Embedder.2.2.0\build\Resource.Embedder.props')" />
-  <Import Project="..\packages\Costura.Fody.5.7.0\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.5.7.0\build\Costura.Fody.props')" />
-  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DEE07D4E-CD36-43D0-A3DD-96D4D611B4E5}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>bg3_modders_multitool</RootNamespace>
-    <AssemblyName>bg3-modders-multitool</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <PublishUrl>G:\BG3\bg3-modders-multitool\publishes\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -36,45 +19,20 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>False</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>D6F259B59CB6EB5424335430571DC96508DB9823</ManifestCertificateThumbprint>
@@ -95,697 +53,37 @@
     <StartupObject>LocalizationController</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlphaFS, Version=2.2.0.0, Culture=neutral, PublicKeyToken=4d31a58f7d7ad5c9, processorArchitecture=MSIL">
-      <HintPath>..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll</HintPath>
-    </Reference>
-    <Reference Include="AssimpNet, Version=5.0.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\AssimpNet.5.0.0-beta1\lib\net40\AssimpNet.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommandLineParser.2.9.1\lib\net461\CommandLine.dll</HintPath>
-    </Reference>
-    <Reference Include="Costura, Version=5.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.5.7.0\lib\netstandard1.0\Costura.dll</HintPath>
-    </Reference>
-    <Reference Include="Cyotek.Drawing.BitmapFont, Version=1.0.0.0, Culture=neutral, PublicKeyToken=58daa28b0b2de221, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cyotek.Drawing.BitmapFont.2.0.4\lib\net472\Cyotek.Drawing.BitmapFont.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="FileAssociation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FileAssociation.1.0.0.0\lib\net35\FileAssociation.dll</HintPath>
-    </Reference>
-    <Reference Include="HelixToolkit, Version=2.24.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.2.24.0\lib\netstandard2.0\HelixToolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="HelixToolkit.Wpf.SharpDX, Version=2.24.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.Wpf.SharpDX.2.24.0\lib\net462\HelixToolkit.Wpf.SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="HelixToolkit.Wpf.SharpDX.Assimp, Version=2.24.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HelixToolkit.SharpDX.Assimp.2.24.0\lib\net46\HelixToolkit.Wpf.SharpDX.Assimp.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\packages\AvalonEdit.6.0.0\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
-    </Reference>
-    <Reference Include="J2N, Version=2.0.0.0, Culture=neutral, PublicKeyToken=f39447d697a969af, processorArchitecture=MSIL">
-      <HintPath>..\packages\J2N.2.0.0\lib\net45\J2N.dll</HintPath>
-    </Reference>
     <Reference Include="LSLib">
       <HintPath>LSLib\LSLib.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="LSLibNative, Version=1.0.8399.21114, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Costura64\LSLibNative.dll</HintPath>
     </Reference>
-    <Reference Include="Lucene.Net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.4.8.0-beta00016\lib\net45\Lucene.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="Lucene.Net.Analysis.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.Analysis.Common.4.8.0-beta00016\lib\net45\Lucene.Net.Analysis.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Lucene.Net.Queries, Version=4.0.0.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.Queries.4.8.0-beta00016\lib\net45\Lucene.Net.Queries.dll</HintPath>
-    </Reference>
-    <Reference Include="Lucene.Net.QueryParser, Version=4.0.0.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.QueryParser.4.8.0-beta00016\lib\net45\Lucene.Net.QueryParser.dll</HintPath>
-    </Reference>
-    <Reference Include="Lucene.Net.Sandbox, Version=4.0.0.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.Sandbox.4.8.0-beta00016\lib\net45\Lucene.Net.Sandbox.dll</HintPath>
-    </Reference>
     <Reference Include="LZ4">
       <HintPath>LSLib\LZ4.dll</HintPath>
-    </Reference>
-    <Reference Include="MdXaml, Version=1.21.0.0, Culture=neutral, PublicKeyToken=9f8c7afb435b7edc, processorArchitecture=MSIL">
-      <HintPath>..\packages\MdXaml.1.21.0\lib\net45\MdXaml.dll</HintPath>
-    </Reference>
-    <Reference Include="MdXaml.Plugins, Version=1.21.0.0, Culture=neutral, PublicKeyToken=9f8c7afb435b7edc, processorArchitecture=MSIL">
-      <HintPath>..\packages\MdXaml.Plugins.1.21.0\lib\net45\MdXaml.Plugins.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Configuration.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=7.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.7.0.1\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Primitives, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Primitives.7.0.0\lib\net462\Microsoft.Extensions.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Win32.Registry, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Win32.Registry.5.0.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Ookii.Dialogs.Wpf, Version=5.0.0.0, Culture=neutral, PublicKeyToken=66aa232afad40158, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ookii.Dialogs.Wpf.5.0.1\lib\net462\Ookii.Dialogs.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="Pfim, Version=0.11.2.0, Culture=neutral, PublicKeyToken=c0ebc20d008ae134, processorArchitecture=MSIL">
-      <HintPath>..\packages\Pfim.0.11.2\lib\netstandard2.0\Pfim.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
-    <Reference Include="Prism, Version=7.2.0.1422, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Core.7.2.0.1422\lib\net45\Prism.dll</HintPath>
+    <Reference Include="StatParser">
+      <HintPath>LSLib\StatParser.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D9, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D9.4.2.0\lib\net45\SharpDX.Direct3D9.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.AppContext.4.3.0\lib\net463\System.AppContext.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.IO.Hashing">
+      <HintPath>LSLib\System.IO.Hashing.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Console, Version=4.0.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
+    <Reference Include="ZstdSharp">
+      <HintPath>LSLib\ZstdSharp.dll</HintPath>
       <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.7.0.2\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Diagnostics.Tracing, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.Tracing.4.3.0\lib\net462\System.Diagnostics.Tracing.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Linq, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Linq.4.3.0\lib\net463\System.Linq.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Linq.Expressions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Linq.Expressions.4.3.0\lib\net463\System.Linq.Expressions.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.PowerShell.5.ReferenceAssemblies.1.1.0\lib\net4\System.Management.Automation.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Extensions, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.Extensions.4.3.1\lib\net462\System.Runtime.Extensions.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.InteropServices, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.InteropServices.4.3.0\lib\net463\System.Runtime.InteropServices.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.RegularExpressions.4.3.1\lib\net463\System.Text.RegularExpressions.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
-      <HintPath>..\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Enums\GameObjectType.cs" />
-    <Compile Include="Enums\StatStructure.cs" />
-    <Compile Include="Enums\TagStringType.cs" />
-    <Compile Include="Enums\ValueLists\Ability.cs" />
-    <Compile Include="Enums\ValueLists\Act.cs" />
-    <Compile Include="Enums\ValueLists\Action Type.cs" />
-    <Compile Include="Enums\ValueLists\AIFlag.cs" />
-    <Compile Include="Enums\ValueLists\AlchemyCombinationType.cs" />
-    <Compile Include="Enums\ValueLists\ArmorType.cs" />
-    <Compile Include="Enums\ValueLists\AtmosphereType.cs" />
-    <Compile Include="Enums\ValueLists\AttributeFlag.cs" />
-    <Compile Include="Enums\ValueLists\AuraFlag.cs" />
-    <Compile Include="Enums\ValueLists\BigQualifier.cs" />
-    <Compile Include="Enums\ValueLists\CastCheckType.cs" />
-    <Compile Include="Enums\ValueLists\CombatAIOverrideSpell.cs" />
-    <Compile Include="Enums\ValueLists\CooldownType.cs" />
-    <Compile Include="Enums\ValueLists\CursorMode.cs" />
-    <Compile Include="Enums\ValueLists\CustomProperties.cs" />
-    <Compile Include="Enums\ValueLists\DamageSourceType.cs" />
-    <Compile Include="Enums\ValueLists\DamageType.cs" />
-    <Compile Include="Enums\ValueLists\DeathType.cs" />
-    <Compile Include="Enums\ValueLists\DieType.cs" />
-    <Compile Include="Enums\ValueLists\DisturbanceDialogueCapability.cs" />
-    <Compile Include="Enums\ValueLists\DisturbanceInvestigationKind.cs" />
-    <Compile Include="Enums\ValueLists\DisturbanceMergeConditions.cs" />
-    <Compile Include="Enums\ValueLists\DisturbanceYesNoIgnoreStats.cs" />
-    <Compile Include="Enums\ValueLists\FlagType.cs" />
-    <Compile Include="Enums\ValueLists\FormatStringColor.cs" />
-    <Compile Include="Enums\ValueLists\GameAction.cs" />
-    <Compile Include="Enums\ValueLists\Handedness.cs" />
-    <Compile Include="Enums\ValueLists\HealValueType.cs" />
-    <Compile Include="Enums\ValueLists\HitAnimationType.cs" />
-    <Compile Include="Enums\ValueLists\IngredientCombineType.cs" />
-    <Compile Include="Enums\ValueLists\IngredientTransformType.cs" />
-    <Compile Include="Enums\ValueLists\IngredientType.cs" />
-    <Compile Include="Enums\ValueLists\InstrumentType.cs" />
-    <Compile Include="Enums\ValueLists\InterruptContext.cs" />
-    <Compile Include="Enums\ValueLists\InterruptContextScope.cs" />
-    <Compile Include="Enums\ValueLists\InterruptDefaultValue.cs" />
-    <Compile Include="Enums\ValueLists\InventoryTabs.cs" />
-    <Compile Include="Enums\ValueLists\ItemSlot.cs" />
-    <Compile Include="Enums\ValueLists\ItemUseTypes.cs" />
-    <Compile Include="Enums\ValueLists\LEDEffectType.cs" />
-    <Compile Include="Enums\ValueLists\LineOfSightFlags.cs" />
-    <Compile Include="Enums\ValueLists\ManagedStatusEffectType.cs" />
-    <Compile Include="Enums\ValueLists\MaterialType.cs" />
-    <Compile Include="Enums\ValueLists\ModifierType.cs" />
-    <Compile Include="Enums\ValueLists\ObjectSize.cs" />
-    <Compile Include="Enums\ValueLists\CinematicArenaFlag.cs" />
-    <Compile Include="Enums\ValueLists\OsirisTask.cs" />
-    <Compile Include="Enums\ValueLists\PassiveFlag.cs" />
-    <Compile Include="Enums\ValueLists\PenaltyPreciseQualifier.cs" />
-    <Compile Include="Enums\ValueLists\PenaltyQualifier.cs" />
-    <Compile Include="Enums\ValueLists\PickingState.cs" />
-    <Compile Include="Enums\ValueLists\PreciseQualifier.cs" />
-    <Compile Include="Enums\ValueLists\ProficiencyGroupFlags.cs" />
-    <Compile Include="Enums\ValueLists\ProgressionType.cs" />
-    <Compile Include="Enums\ValueLists\ProjectileDistribution.cs" />
-    <Compile Include="Enums\ValueLists\ProjectileType.cs" />
-    <Compile Include="Enums\ValueLists\Qualifier.cs" />
-    <Compile Include="Enums\ValueLists\Rarity.cs" />
-    <Compile Include="Enums\ValueLists\Relation.cs" />
-    <Compile Include="Enums\ValueLists\RequirementEvent.cs" />
-    <Compile Include="Enums\ValueLists\RestErrorFlags.cs" />
-    <Compile Include="Enums\ValueLists\Skill.cs" />
-    <Compile Include="Enums\ValueLists\SoundVocalType.cs" />
-    <Compile Include="Enums\ValueLists\SpellAttackType.cs" />
-    <Compile Include="Enums\ValueLists\SpellActionType.cs" />
-    <Compile Include="Enums\ValueLists\SpellAnimationIntentType.cs" />
-    <Compile Include="Enums\ValueLists\SpellAnimationType.cs" />
-    <Compile Include="Enums\ValueLists\SpellCategoryFlag.cs" />
-    <Compile Include="Enums\ValueLists\SpellElement.cs" />
-    <Compile Include="Enums\ValueLists\SpellSheathing.cs" />
-    <Compile Include="Enums\ValueLists\SpellSoundMagnitude.cs" />
-    <Compile Include="Enums\ValueLists\SpellStyleGroup.cs" />
-    <Compile Include="Enums\ValueLists\SpellFlagList.cs" />
-    <Compile Include="Enums\ValueLists\SpellHitAnimationType.cs" />
-    <Compile Include="Enums\ValueLists\SpellJumpType.cs" />
-    <Compile Include="Enums\ValueLists\SpellRequirement.cs" />
-    <Compile Include="Enums\ValueLists\SpellSchool.cs" />
-    <Compile Include="Enums\ValueLists\StatsFunctorContext.cs" />
-    <Compile Include="Enums\ValueLists\StatusAnimationType.cs" />
-    <Compile Include="Enums\ValueLists\StatusBoost.cs" />
-    <Compile Include="Enums\ValueLists\StatusEvent.cs" />
-    <Compile Include="Enums\ValueLists\StatusGroupFlags.cs" />
-    <Compile Include="Enums\ValueLists\StatusHealType.cs" />
-    <Compile Include="Enums\ValueLists\TagCategory.cs" />
-    <Compile Include="Enums\ValueLists\StatusSheathing.cs" />
-    <Compile Include="Enums\ValueLists\StatusStackType.cs" />
-    <Compile Include="Enums\ValueLists\StatusPropertyFlags.cs" />
-    <Compile Include="Enums\ValueLists\StepsType.cs" />
-    <Compile Include="Enums\ValueLists\StillAnimPriority.cs" />
-    <Compile Include="Enums\ValueLists\SurfaceChange.cs" />
-    <Compile Include="Enums\ValueLists\SurfaceType.cs" />
-    <Compile Include="Enums\ValueLists\Tension.cs" />
-    <Compile Include="Enums\ValueLists\ThrowOrigin.cs" />
-    <Compile Include="Enums\ValueLists\TickType.cs" />
-    <Compile Include="Enums\ValueLists\VampirismType.cs" />
-    <Compile Include="Enums\ValueLists\VerbalIntent.cs" />
-    <Compile Include="Enums\ValueLists\WeaponFlags.cs" />
-    <Compile Include="Enums\ValueLists\WeaponGroup.cs" />
-    <Compile Include="Enums\ValueLists\WeaponSet.cs" />
-    <Compile Include="Enums\ValueLists\WeaponType.cs" />
-    <Compile Include="Enums\ValueLists\YesNo.cs" />
-    <Compile Include="Models\GameObjects\AutoGenGameObject.cs" />
-    <Compile Include="Models\GameObjects\GameObjectAttribute.cs" />
-    <Compile Include="Models\GameObjects\GameObjectNode.cs" />
-    <Compile Include="Models\GameObjectTypes\LSString.cs" />
-    <Compile Include="Models\GameObjectTypes\StringType.cs" />
-    <Compile Include="Models\GameObjectTypes\TranslatedString.cs" />
-    <Compile Include="Models\GameObjectTypes\FixedString.cs" />
-    <Compile Include="Models\GameObject.cs" />
-    <Compile Include="Models\LintingError.cs" />
-    <Compile Include="Models\MeshGeometry.cs" />
-    <Compile Include="Models\MeshGeometry3DObject.cs" />
-    <Compile Include="Models\StatStructures\CriticalHitType.cs" />
-    <Compile Include="Models\StatStructures\CriticalHitTypeData.cs" />
-    <Compile Include="Models\StatStructures\Interrupt.cs" />
-    <Compile Include="Models\TextureAtlas.cs" />
-    <Compile Include="Models\IconUV.cs" />
-    <Compile Include="Models\Races\Component.cs" />
-    <Compile Include="Models\Races\Race.cs" />
-    <Compile Include="Enums\ValueLists\ResistanceFlag.cs" />
-    <Compile Include="Models\StatStructures\Armor.cs" />
-    <Compile Include="Models\StatStructures\Character.cs" />
-    <Compile Include="Models\StatStructures\Object.cs" />
-    <Compile Include="Models\StatStructures\PassiveData.cs" />
-    <Compile Include="Models\StatStructures\SpellData.cs" />
-    <Compile Include="Models\StatStructures\StatStructure.cs" />
-    <Compile Include="Models\StatStructures\StatusData.cs" />
-    <Compile Include="Models\StatStructures\Weapon.cs" />
-    <Compile Include="Models\Translation.cs" />
-    <Compile Include="Properties\Resources.zh-CN.Designer.cs">
-      <DependentUpon>Resources.zh-CN.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Services\AutoUpdaterService.cs" />
-    <Compile Include="Services\DragAndDropHelper.cs" />
-    <Compile Include="Services\FileHelper.cs" />
-    <Compile Include="Services\GeneralHelper.cs" />
-    <Compile Include="Services\IndexHelper.cs" />
-    <Compile Include="Services\PakReaderHelper.cs" />
-    <Compile Include="Services\PakUnpackHelper.cs" />
-    <Compile Include="Services\PathHelper.cs" />
-    <Compile Include="Services\RenderedModelHelper.cs" />
-    <Compile Include="Services\RootTemplateHelper.cs" />
-    <Compile Include="Services\TextureHelper.cs" />
-    <Compile Include="Themes\Attached\CornerHelper.cs" />
-    <Compile Include="Themes\Attached\MenuHelper.cs" />
-    <Compile Include="Themes\Attached\PasswordBoxHelper.cs" />
-    <Compile Include="Themes\Attached\TextBoxAutoSelect.cs" />
-    <Compile Include="Themes\Attached\TextHinting.cs" />
-    <Compile Include="Themes\ColorfulDarkTheme.xaml.cs">
-      <DependentUpon>ColorfulDarkTheme.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Themes\ColorfulLightTheme.xaml.cs">
-      <DependentUpon>ColorfulLightTheme.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Themes\Controls.xaml.cs">
-      <DependentUpon>Controls.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Themes\DarkTheme.xaml.cs">
-      <DependentUpon>DarkTheme.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Themes\LightTheme.xaml.cs">
-      <DependentUpon>LightTheme.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Themes\ThemesController.cs" />
-    <Compile Include="Themes\ThemeType.cs" />
-    <Compile Include="ViewModels\MainWindow\DragAndDropBox.cs" />
-    <Compile Include="ViewModels\Utilities\AddMissingMetaLsxViewModel.cs" />
-    <Compile Include="ViewModels\Utilities\AtlasToolViewModel.cs" />
-    <Compile Include="ViewModels\Utilities\GameObjectViewModel.cs" />
-    <Compile Include="ViewModels\Reusables\CheckBox.cs" />
-    <Compile Include="Models\InfoJson.cs" />
-    <Compile Include="ViewModels\MainWindow\MainWindow.cs" />
-    <Compile Include="Models\MetaLsx.cs" />
-    <Compile Include="Models\ModuleShortDesc.cs" />
-    <Compile Include="ViewModels\MainWindow\PakSelection.cs" />
-    <Compile Include="ViewModels\Utilities\SearchResults.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="Views\MainWindow\ConfigurationMenu.xaml.cs">
-      <DependentUpon>ConfigurationMenu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Other\FileLintingWindow.xaml.cs">
-      <DependentUpon>FileLintingWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Utilities\VersionCalculator.xaml.cs">
-      <DependentUpon>VersionCalculator.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Utilities\AddMissingMetaLsx.xaml.cs">
-      <DependentUpon>AddMissingMetaLsx.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Utilities\AtlasToolWindow.xaml.cs">
-      <DependentUpon>AtlasToolWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Utilities\ColorPickerWindow.xaml.cs">
-      <DependentUpon>ColorPickerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Utilities\IndexingWindow.xaml.cs">
-      <DependentUpon>IndexingWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainWindow\PakSelection.xaml.cs">
-      <DependentUpon>PakSelection.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Utilities\GameObjectWindow.xaml.cs">
-      <DependentUpon>GameObjectWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Other\UnpackerProgress.xaml.cs">
-      <DependentUpon>UnpackerProgress.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Other\Update.xaml.cs">
-      <DependentUpon>Update.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="XAMLHelpers\LocalizationController.cs" />
-    <Compile Include="XAMLHelpers\SelectableTextBlock.cs" />
-    <Compile Include="XAMLHelpers\TextBoxFormatter.cs" />
-    <Compile Include="XAMLHelpers\TextEditorWrapper.cs" />
-    <Page Include="Themes\ColorDictionaries\DarkGrey.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ColorDictionaries\Underdark.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ColorDictionaries\Grey.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ColorDictionaries\BrightLight.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ColorDictionaries\Astarion.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ColorDictionaries\Obscured.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ColorfulDarkTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ColorfulLightTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ControlColors.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\Controls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\DarkTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\LightTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MainWindow\ConfigurationMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainWindow\DragAndDropBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Other\FileLintingWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Utilities\VersionCalculator.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Utilities\AddMissingMetaLsx.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Utilities\AtlasToolWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Utilities\ColorPickerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Utilities\IndexingWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainWindow\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Views\MainWindow\DragAndDropBox.xaml.cs">
-      <DependentUpon>DragAndDropBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainWindow\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\MainWindow\PakSelection.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Utilities\GameObjectWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Other\UnpackerProgress.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Other\Update.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.zh-CN.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.zh-CN.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include=".globalconfig" />
-    <None Include="bg3-modders-multipack_TemporaryKey.pfx" />
     <EmbeddedResource Include="FileTemplates\meta.lsx" />
     <EmbeddedResource Include="FileTemplates\LsxBoilerplate.lsx" />
-    <None Include="Licenses\ASSIMP" />
-    <None Include="Licenses\LSLIB" />
-    <None Include="Licenses\LUCENENET" />
-    <None Include="Licenses\OPENTK" />
     <None Include="manifest.json" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
@@ -829,49 +127,78 @@
   <ItemGroup>
     <EmbeddedResource Include="Costura64\OpenTK.dll" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="AlphaFS" Version="2.2.6" />
+    <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
+    <PackageReference Include="AvalonEdit" Version="6.0.0" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Cyotek.Drawing.BitmapFont" Version="2.0.4" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+    <PackageReference Include="FileAssociation" Version="1.0.0" />
+    <PackageReference Include="Fody" Version="6.8.0" />
+    <PackageReference Include="HelixToolkit" Version="2.24.0" />
+    <PackageReference Include="HelixToolkit.SharpDX.Assimp" Version="2.24.0" />
+    <PackageReference Include="HelixToolkit.SharpDX.Core.Wpf" Version="2.24.0" />
+    <PackageReference Include="J2N" Version="2.0.0" />
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Queries" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Sandbox" Version="4.8.0-beta00016" />
+    <PackageReference Include="MdXaml" Version="1.21.0" />
+    <PackageReference Include="MdXaml.Plugins" Version="1.21.0" />
+    <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+    <PackageReference Include="Pfim" Version="0.11.2" />
+    <PackageReference Include="Prism.Core" Version="7.2.0.1422" />
+    <PackageReference Include="Resource.Embedder" Version="2.2.0" />
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+    <PackageReference Include="zlib.net" Version="1.0.4.0" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="8.0.0-preview.7.23375.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <AssemblyName>bg3-modders-multitool</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>set ASMINFO=$(ProjectDir)Properties\AssemblyInfo.cs
-FINDSTR /C:"[assembly: AssemblyFileVersion(" %25ASMINFO%25 | sed.exe "s/\[assembly: AssemblyFileVersion(\"/SET CURRENT_VERSION=/g;s/\")\]//g;s/\.\*//g" &gt;SetCurrVer.cmd
-CALL SetCurrVer.cmd
-DEL SetCurrVer.cmd
-
-mkdir = "$(ProjectDir)$(OutDir)app.publish"
-
-xcopy /y "$(ProjectDir)Images\icon.png" "$(ProjectDir)$(OutDir)app.publish"
-xcopy /y "$(SolutionDir)\..\README.md" "$(ProjectDir)$(OutDir)app.publish"
-
-@echo on
-echo { &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "name": "BG3_Modders_Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "version_number": "%25CURRENT_VERSION%25",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "website_url": "https://github.com/ShinyHobo/BG3-Modders-Multitool", &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "description": "Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace, among other useful features.",  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo "dependencies": [] &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json
-echo }   &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json</PreBuildEvent>
-  </PropertyGroup>
-  <Import Project="..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
-    <Error Condition="!Exists('..\packages\Fody.6.8.0\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.6.8.0\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
-    <Error Condition="!Exists('..\packages\Costura.Fody.5.7.0\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.5.7.0\build\Costura.Fody.props'))" />
-    <Error Condition="!Exists('..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\Resource.Embedder.2.2.0\build\Resource.Embedder.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Resource.Embedder.2.2.0\build\Resource.Embedder.props'))" />
-    <Error Condition="!Exists('..\packages\opentoolkit.redist.glfw.3.3.0-pre20190424184726\build\opentoolkit.redist.glfw.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\opentoolkit.redist.glfw.3.3.0-pre20190424184726\build\opentoolkit.redist.glfw.targets'))" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="set ASMINFO=$(ProjectDir)Properties\AssemblyInfo.cs&#xD;&#xA;echo $(ProjectDir)&#xD;&#xA;FINDSTR /C:&quot;[assembly: AssemblyFileVersion(&quot; %25ASMINFO%25 | sed.exe &quot;s/\[assembly: AssemblyFileVersion(\&quot;/SET CURRENT_VERSION=/g;s/\&quot;)\]//g;s/\.\*//g&quot; &gt;SetCurrVer.cmd&#xD;&#xA;CALL SetCurrVer.cmd&#xD;&#xA;DEL SetCurrVer.cmd&#xD;&#xA;&#xD;&#xA;mkdir = &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;&#xD;&#xA;xcopy /y &quot;$(ProjectDir)Images\icon.png&quot; &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;xcopy /y &quot;$(SolutionDir)\..\README.md&quot; &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;xcopy /f /y &quot;$(ProjectDir)$(OutDir)\bg3-modders-multitool.dll.config&quot; &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;xcopy /f /y &quot;$(ProjectDir)$(OutDir)\bg3-modders-multitool.runtimeconfig.json&quot; &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;xcopy /f /y &quot;$(ProjectDir)$(OutDir)\bg3-modders-multitool.dll&quot; &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;xcopy /f /y &quot;$(ProjectDir)$(OutDir)\bg3-modders-multitool.exe&quot; &quot;$(ProjectDir)$(OutDir)app.publish&quot;&#xD;&#xA;&#xD;&#xA;del /f $(ProjectDir)$(OutDir)app.publish\manifest.json&#xD;&#xA;@echo on&#xD;&#xA;echo { &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;name&quot;: &quot;BG3_Modders_Multitool&quot;, &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;version_number&quot;: &quot;%25CURRENT_VERSION%25&quot;,  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;website_url&quot;: &quot;https://github.com/ShinyHobo/BG3-Modders-Multitool&quot;, &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;description&quot;: &quot;Utility for quickly generating Baldur's Gate 3 mod packs from an unpacked workspace, among other useful features.&quot;,  &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo &quot;dependencies&quot;: [] &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json&#xD;&#xA;echo }   &gt;&gt; $(ProjectDir)$(OutDir)app.publish/manifest.json" />
   </Target>
-  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
-  <Import Project="..\packages\Fody.6.8.0\build\Fody.targets" Condition="Exists('..\packages\Fody.6.8.0\build\Fody.targets')" />
-  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
-  <Import Project="..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets')" />
-  <Import Project="..\packages\opentoolkit.redist.glfw.3.3.0-pre20190424184726\build\opentoolkit.redist.glfw.targets" Condition="Exists('..\packages\opentoolkit.redist.glfw.3.3.0-pre20190424184726\build\opentoolkit.redist.glfw.targets')" />
 </Project>
