@@ -8,7 +8,6 @@ using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
-using static System.Windows.Forms.Design.AxImporter;
 
 /// <summary>
 /// Controls the application lifecycle to allow for on the fly language selection
@@ -101,17 +100,23 @@ public class LocalizationController : Application
         [Option('a', "append", HelpText = "Appends to the out file rather than overwriting it; requires --out")]
         public bool AppendToFile { get; set; }
 
+        [Option("delete-index", HelpText = "Deletes the index; will ask for confirmation")]
+        public bool DeleteIndex { get; set; }
+
+        [Option("delete-index-force", HelpText = "Deletes the index without confirmation")]
+        public bool ForceDeleteIndex { get; set; }
+
         [Option("create-index", HelpText = "Generates a new index; will ask for confirmation")]
         public bool CreateIndex { get; set; }
 
-        [Option("create-index-force", HelpText = "Generates a new index without confirmation")]
-        public bool ForceCreateIndex { get; set; }
-
-        [Option("search-index", HelpText = "Searches the index for the given string (recommend using -o)")]
+        [Option("search-index", HelpText = "Searches the index for the given string; requires --index-results")]
         public string SearchIndex { get; set; }
 
         [Option("filter-index", HelpText = "Filters the search results by the extensions provided; requires --search-index")]
         public string FilterIndex { get; set; }
+
+        [Option("index-results", HelpText = "The file to print the index results to")]
+        public string IndexResultsFile { get; set; }
 
         public string GetUsage()
         {
@@ -141,7 +146,7 @@ public class LocalizationController : Application
                 if (source != null && destination == null)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Destination required!");
+                    Console.WriteLine("Destination required! Check --help");
                     Console.ResetColor();
                     return;
                 }
@@ -149,7 +154,7 @@ public class LocalizationController : Application
                 if (source == null && destination != null)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Source required!");
+                    Console.WriteLine("Source required! Check --help");
                     Console.ResetColor();
                     return;
                 }
@@ -214,11 +219,11 @@ public class LocalizationController : Application
                 }
                 else
                 {
-                    if(options.CreateIndex || options.ForceCreateIndex)
+                    if(options.DeleteIndex || options.ForceDeleteIndex)
                     {
-                        if(!options.ForceCreateIndex)
+                        if(!options.ForceDeleteIndex)
                         {
-                            Console.Write("This will delete and regenerate your index; this is irreversable. Are you sure? [y/n]:");
+                            Console.Write("This will delete your index; this is irreversable. Are you sure? [y/n]:");
                             var response = Console.ReadKey(false).Key;
                             Console.WriteLine(string.Empty);
                             if (response != ConsoleKey.Y)
@@ -231,14 +236,44 @@ public class LocalizationController : Application
                         }
 
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Deleting and regenerating index; this could take a while...");
+                        Console.WriteLine("Deleting index...");
                         Console.ResetColor();
-                        
-                        // TODO - create index functionality
 
+                        var vm = new bg3_modders_multitool.ViewModels.MainWindow()
+                        {
+                            SearchResults = new bg3_modders_multitool.ViewModels.SearchResults()
+                        };
+
+                        vm.SearchResults.IndexHelper.DeleteIndex();
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Index deleted; run --create-index to regenerate");
+                        Console.ResetColor();
                     }
-                    else if(options.SearchIndex != null)
+
+                    if(options.CreateIndex)
                     {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Indexing; this could take a while...");
+                        Console.ResetColor();
+
+                        var vm = new bg3_modders_multitool.ViewModels.MainWindow() {
+                            SearchResults = new bg3_modders_multitool.ViewModels.SearchResults()
+                        };
+
+                        await vm.SearchResults.IndexHelper.IndexDirectly();
+                    }
+                    
+                    if(options.SearchIndex != null)
+                    {
+                        if(options.IndexResultsFile == null)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Index results file location required! Check --help");
+                            Console.ResetColor();
+                            return;
+                        }
+
                         // TODO - search index functionality
                     }
                 }

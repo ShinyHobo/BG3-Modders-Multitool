@@ -63,9 +63,12 @@ namespace bg3_modders_multitool.Services
         public Task IndexDirectly()
         {
             return Task.Run(() => {
-                Application.Current.Dispatcher.Invoke(() => {
-                    DataContext.AllowIndexing = false;
-                });
+                if(App.Current.Properties["console_app"] == null)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.AllowIndexing = false;
+                    });
+                }
 
                 if (System.IO.Directory.Exists(luceneIndex) && !File.Exists(luceneCacheFile))
                     System.IO.Directory.Delete(luceneIndex, true);
@@ -98,21 +101,32 @@ namespace bg3_modders_multitool.Services
                 if(helpers.Count == 0)
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexUpToDate);
-                    Application.Current.Dispatcher.Invoke(() => {
-                        DataContext.AllowIndexing = true;
-                    });
+                    if (App.Current.Properties["console_app"] == null)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            DataContext.AllowIndexing = true;
+                        });
+                    }
+                        
                     return;
                 }
 
                 // Display total file count being indexed
                 GeneralHelper.WriteToConsole(Properties.Resources.FileListRetrieved);
-                Application.Current.Dispatcher.Invoke(() =>
+                if (App.Current.Properties["console_app"] == null)
                 {
-                    DataContext.IsIndexing = true;
-                    DataContext.IndexFileTotal = fileCount;
-                    DataContext.IndexStartTime = DateTime.Now;
-                    DataContext.IndexFileCount = 0;
-                });
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        DataContext.IsIndexing = true;
+                        DataContext.IndexFileTotal = fileCount;
+                        DataContext.IndexStartTime = DateTime.Now;
+                        DataContext.IndexFileCount = 0;
+                    });
+                }
+                else
+                {
+                    Console.WriteLine($"Indexing {fileCount} files...");
+                }
 
                 IndexFilesDirectly(helpers);
             });
@@ -163,12 +177,15 @@ namespace bg3_modders_multitool.Services
 
             var originalTime = DataContext.IndexStartTime;
 
-            Application.Current.Dispatcher.Invoke(() =>
+            if (App.Current.Properties["console_app"] == null)
             {
-                DataContext.IndexFileCount = 0;
-                DataContext.IndexStartTime = DateTime.Now;
-                DataContext.IndexFileTotal = cachedPaks.Count;
-            });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IndexFileCount = 0;
+                    DataContext.IndexStartTime = DateTime.Now;
+                    DataContext.IndexFileTotal = cachedPaks.Count;
+                });
+            }
 
             // Merge indexes
             using (Analyzer a = new CustomAnalyzer())
@@ -221,10 +238,13 @@ namespace bg3_modders_multitool.Services
 
             var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(originalTime.Add(DataContext.GetTimeTaken())).Ticks);
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, timeTaken.ToString("hh\\:mm\\:ss"));
-            Application.Current.Dispatcher.Invoke(() => {
-                DataContext.IsIndexing = false;
-                DataContext.AllowIndexing = true;
-            });
+            if (App.Current.Properties["console_app"] == null)
+            {
+                Application.Current.Dispatcher.Invoke(() => {
+                    DataContext.IsIndexing = false;
+                    DataContext.AllowIndexing = true;
+                });
+            }
         }
 
         /// <summary>
