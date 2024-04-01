@@ -281,7 +281,19 @@ public class LocalizationController : Application
                             return;
                         }
 
-                        // TODO - search index functionality
+                        var vm = new bg3_modders_multitool.ViewModels.MainWindow()
+                        {
+                            SearchResults = new bg3_modders_multitool.ViewModels.SearchResults()
+                        };
+
+                        using (var resultsWriter = new System.IO.StreamWriter(options.IndexResultsFile))
+                        {
+                            var matches = await vm.SearchResults.IndexHelper.SearchFiles(options.SearchIndex, true);
+                            foreach (var match in options.FilterIndex == null ? matches.Matches : matches.FilteredMatches)
+                            {
+                                resultsWriter.WriteLine(match);
+                            }
+                        }
                     }
                 }
             }
