@@ -162,8 +162,15 @@
                             <Label Content="{x:Static p:Resources.PackingPriorityLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-5,0,0,0"/>
                             <xctk:IntegerUpDown x:Name="packingPriority" Width="50" Height="20" Minimum="21" Maximum="127" Value="{Binding PackingPriority}"
                                 ToolTip="{x:Static p:Resources.PackingPriorityTooltip}"/>
-                            <CheckBox ToolTip="{x:Static p:Resources.PackingCompressionTooltip}" Cursor="Hand" Margin="10,0,0,0"
-                                IsChecked="{Binding PackingCompression}" Content="{x:Static p:Resources.PackingCompressionLabel}"/>
+                            <Label Content="{x:Static p:Resources.PackingCompressionLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
+                            <ComboBox ToolTip="{x:Static p:Resources.PackingCompressionTooltip}" Cursor="Hand" Margin="0,0,0,0" x:Name="compressionOption" 
+                                      SelectionChanged="CompressionOption_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </StackPanel>
                         <CheckBox ToolTip="{x:Static p:Resources.PakToModsTooltip}" Cursor="Hand" IsEnabled="{Binding ModsFolderLoaded}" Margin="0,0,0,0"
                             IsChecked="{Binding PakToMods}" Checked="PakToMods_Checked" Unchecked="PakToMods_Unchecked" Content="{x:Static p:Resources.PakToModsLabel}"/>
