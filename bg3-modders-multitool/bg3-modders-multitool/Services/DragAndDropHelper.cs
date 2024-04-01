@@ -81,35 +81,42 @@ namespace bg3_modders_multitool.Services
         /// <param name="destination">The destination path and mod name.</param>
         public static void PackMod(string fullpath, string destination)
         {
+            // TODO - move this to own function for getting compression settings
             var compression = CompressionMethod.None;
             var compressionLevel = LSCompressionLevel.Fast;
             int.TryParse(App.Current.Properties["cli_compression"]?.ToString(), out int cliCompression);
             var selectedCompression = App.Current.Properties["cli_compression"] == null ? Properties.Settings.Default.packingCompressionOption : cliCompression;
             switch (selectedCompression)
             {
-                case 1: // Zlib Fast
-                    compression = CompressionMethod.Zlib;
-                    break;
-                case 2: // Zlib Optimal
-                    compression = CompressionMethod.Zlib;
-                    compressionLevel = LSCompressionLevel.Max;
-                    break;
-                case 3:
+                case 1: // LZ4
                     compression = CompressionMethod.LZ4;
                     break;
-                case 4:
+                case 2: // LZ4 HC
                     compression = CompressionMethod.LZ4;
+                    compressionLevel = LSCompressionLevel.Default;
+                    break;
+                case 3: // Zlib Fast
+                    compression = CompressionMethod.Zlib;
+                    break;
+                case 4: // Zlib Optimal
+                    compression = CompressionMethod.Zlib;
+                    compressionLevel = LSCompressionLevel.Default;
+                    break;
+                case 5: // Zstd Fast
+                    compression = CompressionMethod.Zstd;
+                    break;
+                case 6: // Zstd Optimal
+                    compression = CompressionMethod.Zstd;
+                    compressionLevel = LSCompressionLevel.Default;
+                    break;
+                case 7: // Zstd Max
+                    compression = CompressionMethod.Zstd;
                     compressionLevel = LSCompressionLevel.Max;
                     break;
                 default:
                     break;
             }
 
-            // None
-            // LZ4 fast
-            // LZ4 (high compression)
-            // Zlib fast
-            // Zlib (optimal)
             Directory.CreateDirectory(TempFolder);
             var packageOptions = new PackageBuildData() { 
                 Version = Game.BaldursGate3.PAKVersion(),
@@ -399,7 +406,8 @@ namespace bg3_modders_multitool.Services
                                         {
                                             if (GenerateInfoJson(metaList))
                                             {
-                                                GenerateZip(fullPath, dirName);
+                                                var destination = new FileInfo(App.Current.Properties["cli_destination"].ToString());
+                                                GenerateZip(fullPath, destination.Name.Replace(destination.Extension, string.Empty));
                                                 CleanTempDirectory();
                                             }
                                         }
@@ -603,10 +611,26 @@ namespace bg3_modders_multitool.Services
                 if (errors.Count > 0)
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.ErrorsFoundPacking);
-                    Application.Current.Dispatcher.Invoke(() => {
-                        var popup = new FileLintingWindow(errors);
-                        return popup.ShowDialog();
-                    });
+                    if(App.Current.Properties["console_app"] == null)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            var popup = new FileLintingWindow(errors);
+                            return popup.ShowDialog();
+                        });
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Errors:");
+                        Console.ResetColor();
+                        foreach (var error in errors)
+                        {
+                            Console.WriteLine($"Type: {error.Type}");
+                            Console.WriteLine($"Location: {error.Path}");
+                            Console.WriteLine(error.Error);
+                            Console.WriteLine(string.Empty);
+                        }
+                    }
 
                     return false;
                 }

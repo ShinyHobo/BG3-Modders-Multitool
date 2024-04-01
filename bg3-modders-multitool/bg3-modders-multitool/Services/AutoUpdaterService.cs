@@ -147,11 +147,7 @@
 
                 // Create and/or clean temp directory
                 Directory.CreateDirectory(updateDirectory);
-                File.Delete(tempZip);
-                File.Delete(Path.Combine(updateDirectory, _exeName + ".exe"));
-                File.Delete(Path.Combine(updateDirectory, _exeName + ".runtimeconfig.json"));
-                File.Delete(Path.Combine(updateDirectory, _exeName + ".dll"));
-                File.Delete(Path.Combine(updateDirectory, _exeName + ".dll.config"));
+                DragAndDropHelper.CleanTempDirectory();
 
                 using (var client = new WebClient())
                 {

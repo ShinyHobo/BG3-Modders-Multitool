@@ -63,9 +63,12 @@ namespace bg3_modders_multitool.Services
         public Task IndexDirectly()
         {
             return Task.Run(() => {
-                Application.Current.Dispatcher.Invoke(() => {
-                    DataContext.AllowIndexing = false;
-                });
+                if(App.Current.Properties["console_app"] == null)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.AllowIndexing = false;
+                    });
+                }
 
                 if (System.IO.Directory.Exists(luceneIndex) && !File.Exists(luceneCacheFile))
                     System.IO.Directory.Delete(luceneIndex, true);
@@ -98,21 +101,33 @@ namespace bg3_modders_multitool.Services
                 if(helpers.Count == 0)
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexUpToDate);
-                    Application.Current.Dispatcher.Invoke(() => {
-                        DataContext.AllowIndexing = true;
-                    });
+                    if (App.Current.Properties["console_app"] == null)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            DataContext.AllowIndexing = true;
+                        });
+                    }
+                        
                     return;
                 }
 
                 // Display total file count being indexed
                 GeneralHelper.WriteToConsole(Properties.Resources.FileListRetrieved);
-                Application.Current.Dispatcher.Invoke(() =>
+                if (App.Current.Properties["console_app"] == null)
                 {
-                    DataContext.IsIndexing = true;
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        DataContext.IsIndexing = true;
+                        DataContext.IndexFileTotal = fileCount;
+                        DataContext.IndexStartTime = DateTime.Now;
+                        DataContext.IndexFileCount = 0;
+                    });
+                }
+                else
+                {
                     DataContext.IndexFileTotal = fileCount;
-                    DataContext.IndexStartTime = DateTime.Now;
-                    DataContext.IndexFileCount = 0;
-                });
+                    Console.WriteLine($"Indexing {fileCount} files...");
+                }
 
                 IndexFilesDirectly(helpers);
             });
@@ -159,16 +174,29 @@ namespace bg3_modders_multitool.Services
                 }
             });
 
+            if (App.Current.Properties["console_app"]  != null)
+            {
+                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100.00%");
+            }
+
             GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
 
             var originalTime = DataContext.IndexStartTime;
 
-            Application.Current.Dispatcher.Invoke(() =>
+            if (App.Current.Properties["console_app"] == null)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IndexFileCount = 0;
+                    DataContext.IndexStartTime = DateTime.Now;
+                    DataContext.IndexFileTotal = cachedPaks.Count;
+                });
+            }
+            else
             {
                 DataContext.IndexFileCount = 0;
-                DataContext.IndexStartTime = DateTime.Now;
                 DataContext.IndexFileTotal = cachedPaks.Count;
-            });
+            }
 
             // Merge indexes
             using (Analyzer a = new CustomAnalyzer())
@@ -184,9 +212,23 @@ namespace bg3_modders_multitool.Services
                             writer.AddIndexes(index);
                         }
 
-                        Application.Current.Dispatcher.Invoke(() => { DataContext.IndexFileCount++; });
+                        if (App.Current.Properties["console_app"] == null)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => { DataContext.IndexFileCount++; });
+                        }
+                        else
+                        {
+                            DataContext.IndexFileCount++;
+                            var percentDone = Math.Round(Convert.ToDecimal(DataContext.IndexFileCount / (float)DataContext.IndexFileTotal * 100), 2);
+                            Console.Write($"\r{DataContext.IndexFileCount}/{DataContext.IndexFileTotal} => {percentDone}%");
+                        }
                     }
                 }
+            }
+
+            if (App.Current.Properties["console_app"] != null)
+            {
+                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100.00%");
             }
 
             GeneralHelper.WriteToConsole(Properties.Resources.DeletingTempIndecies);
@@ -221,10 +263,13 @@ namespace bg3_modders_multitool.Services
 
             var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(originalTime.Add(DataContext.GetTimeTaken())).Ticks);
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, timeTaken.ToString("hh\\:mm\\:ss"));
-            Application.Current.Dispatcher.Invoke(() => {
-                DataContext.IsIndexing = false;
-                DataContext.AllowIndexing = true;
-            });
+            if (App.Current.Properties["console_app"] == null)
+            {
+                Application.Current.Dispatcher.Invoke(() => {
+                    DataContext.IsIndexing = false;
+                    DataContext.AllowIndexing = true;
+                });
+            }
         }
 
         /// <summary>
@@ -261,10 +306,20 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            Application.Current.Dispatcher.Invoke(() =>
+
+            if (App.Current.Properties["console_app"] == null)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IndexFileCount++;
+                });
+            }
+            else
             {
                 DataContext.IndexFileCount++;
-            });
+                var percentDone = Math.Round(Convert.ToDecimal(DataContext.IndexFileCount / (float)DataContext.IndexFileTotal * 100), 2);
+                Console.Write($"\r{DataContext.IndexFileCount}/{DataContext.IndexFileTotal} => {percentDone}%");
+            }
         }
         #endregion
 
@@ -477,7 +532,7 @@ namespace bg3_modders_multitool.Services
                                 var path = doc.Get("path").Replace("/", "\\");
                                 var ext = Path.GetExtension(path).ToLower();
                                 ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
-                                if (selectedFileTypes != null && !selectedFileTypes.Contains(ext))
+                                if (selectedFileTypes != null && !selectedFileTypes.Contains(ext.Replace(".", string.Empty)))
                                 {
                                     filteredSomeResults++;
                                     if (!FileHelper.FileTypes.Contains(ext))

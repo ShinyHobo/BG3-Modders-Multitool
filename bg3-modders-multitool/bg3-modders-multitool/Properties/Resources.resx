@@ -303,6 +303,15 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   <data name="CompressionOptionZlibOptimal" xml:space="preserve">
     <value>Zlib Optimal</value>
   </data>
+  <data name="CompressionOptionZstdFast" xml:space="preserve">
+    <value>Zstd Fast</value>
+  </data>
+  <data name="CompressionOptionZstdMax" xml:space="preserve">
+    <value>Zstd Max</value>
+  </data>
+  <data name="CompressionOptionZstdOptimal" xml:space="preserve">
+    <value>Zstd Optimal</value>
+  </data>
   <data name="ConfigNeededLabel" xml:space="preserve">
     <value>Configuration needed:
 missing bg3.exe!</value>
