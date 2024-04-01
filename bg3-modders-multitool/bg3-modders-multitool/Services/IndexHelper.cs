@@ -125,6 +125,7 @@ namespace bg3_modders_multitool.Services
                 }
                 else
                 {
+                    DataContext.IndexFileTotal = fileCount;
                     Console.WriteLine($"Indexing {fileCount} files...");
                 }
 
@@ -281,10 +282,20 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            Application.Current.Dispatcher.Invoke(() =>
+
+            if (App.Current.Properties["console_app"] == null)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IndexFileCount++;
+                });
+            }
+            else
             {
                 DataContext.IndexFileCount++;
-            });
+                var percentDone = Math.Round(Convert.ToDecimal(DataContext.IndexFileCount / (float)DataContext.IndexFileTotal * 100), 2);
+                Console.Write($"\r{DataContext.IndexFileCount}/{DataContext.IndexFileTotal} => {percentDone}%");
+            }
         }
         #endregion
 
