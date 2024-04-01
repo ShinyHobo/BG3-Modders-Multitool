@@ -596,6 +596,33 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zstd Fast.
+        /// </summary>
+        public static string CompressionOptionZstdFast {
+            get {
+                return ResourceManager.GetString("CompressionOptionZstdFast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zstd Max.
+        /// </summary>
+        public static string CompressionOptionZstdMax {
+            get {
+                return ResourceManager.GetString("CompressionOptionZstdMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zstd Optimal.
+        /// </summary>
+        public static string CompressionOptionZstdOptimal {
+            get {
+                return ResourceManager.GetString("CompressionOptionZstdOptimal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuration needed:
         ///missing bg3.exe!.
         /// </summary>

@@ -87,18 +87,29 @@ namespace bg3_modders_multitool.Services
             var selectedCompression = App.Current.Properties["cli_compression"] == null ? Properties.Settings.Default.packingCompressionOption : cliCompression;
             switch (selectedCompression)
             {
-                case 1: // Zlib Fast
-                    compression = CompressionMethod.Zlib;
-                    break;
-                case 2: // Zlib Optimal
-                    compression = CompressionMethod.Zlib;
-                    compressionLevel = LSCompressionLevel.Max;
-                    break;
-                case 3:
+                case 1: // LZ4
                     compression = CompressionMethod.LZ4;
                     break;
-                case 4:
+                case 2: // LZ4 HC
                     compression = CompressionMethod.LZ4;
+                    compressionLevel = LSCompressionLevel.Default;
+                    break;
+                case 3: // Zlib Fast
+                    compression = CompressionMethod.Zlib;
+                    break;
+                case 4: // Zlib Optimal
+                    compression = CompressionMethod.Zlib;
+                    compressionLevel = LSCompressionLevel.Default;
+                    break;
+                case 5: // Zstd Fast
+                    compression = CompressionMethod.Zstd;
+                    break;
+                case 6: // Zstd Optimal
+                    compression = CompressionMethod.Zstd;
+                    compressionLevel = LSCompressionLevel.Default;
+                    break;
+                case 7: // Zstd Max
+                    compression = CompressionMethod.Zstd;
                     compressionLevel = LSCompressionLevel.Max;
                     break;
                 default:
