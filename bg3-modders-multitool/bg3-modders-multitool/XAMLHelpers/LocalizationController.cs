@@ -98,7 +98,7 @@ public class LocalizationController : Application
         [Option('o', "out", HelpText = "Writes console output to the given file instead of the console window")]
         public string WriteToFile { get; set; }
 
-        [Option('a', "append", HelpText = "Appends to the out file rather than overwriting it")]
+        [Option('a', "append", HelpText = "Appends to the out file rather than overwriting it; requires --out")]
         public bool AppendToFile { get; set; }
 
         [Option("create-index", HelpText = "Generates a new index; will ask for confirmation")]
@@ -106,6 +106,12 @@ public class LocalizationController : Application
 
         [Option("create-index-force", HelpText = "Generates a new index without confirmation")]
         public bool ForceCreateIndex { get; set; }
+
+        [Option("search-index", HelpText = "Searches the index for the given string (recommend using -o)")]
+        public string SearchIndex { get; set; }
+
+        [Option("filter-index", HelpText = "Filters the search results by the extensions provided; requires --search-index")]
+        public string FilterIndex { get; set; }
 
         public string GetUsage()
         {
@@ -228,7 +234,12 @@ public class LocalizationController : Application
                         Console.WriteLine("Deleting and regenerating index; this could take a while...");
                         Console.ResetColor();
                         
-                        // TODO
+                        // TODO - create index functionality
+
+                    }
+                    else if(options.SearchIndex != null)
+                    {
+                        // TODO - search index functionality
                     }
                 }
             }
