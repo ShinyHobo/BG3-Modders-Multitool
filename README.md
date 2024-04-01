@@ -39,6 +39,7 @@ The Modder's Multitool is the Swiss Army Knife of Modding utilities for Baldur's
 - Modding resource links
 - Shortcuts to common modding directories
 - Automatic updates
+- Command line interface (packing, unpacking, indexing, search)
 
 # How do I use these tools?
 Excited to work with the Multitool's help, but unsure how to use it? [See the Wiki](https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki) for more information about the Project and how to use specific features of the Multitool, or look below for the ideal steps to learn the Multitool.
