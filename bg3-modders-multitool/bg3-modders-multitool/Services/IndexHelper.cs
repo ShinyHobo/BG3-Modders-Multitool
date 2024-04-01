@@ -176,7 +176,7 @@ namespace bg3_modders_multitool.Services
 
             if (App.Current.Properties["console_app"]  != null)
             {
-                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100%");
+                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100.00%");
             }
 
             GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
@@ -228,7 +228,7 @@ namespace bg3_modders_multitool.Services
 
             if (App.Current.Properties["console_app"] != null)
             {
-                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100%");
+                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100.00%");
             }
 
             GeneralHelper.WriteToConsole(Properties.Resources.DeletingTempIndecies);
