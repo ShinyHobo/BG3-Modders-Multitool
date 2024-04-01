@@ -81,13 +81,13 @@ public class LocalizationController : Application
         /// <summary>
         /// The source folder/file
         /// </summary>
-        [Option('s', "source", Required = true, HelpText = "Input folder/file")]
+        [Option('s', "source", HelpText = "Input folder/file")]
         public string Source { get; set; }
 
         /// <summary>
         /// The destination folder/file
         /// </summary>
-        [Option('d', "destination", Required = true, HelpText = "Output folder/file")]
+        [Option('d', "destination", HelpText = "Output folder/file")]
         public string Destination { get; set; }
 
         /// <summary>

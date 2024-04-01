@@ -399,7 +399,8 @@ namespace bg3_modders_multitool.Services
                                         {
                                             if (GenerateInfoJson(metaList))
                                             {
-                                                GenerateZip(fullPath, dirName);
+                                                var destination = new FileInfo(App.Current.Properties["cli_destination"].ToString());
+                                                GenerateZip(fullPath, destination.Name.Replace(destination.Extension, string.Empty));
                                                 CleanTempDirectory();
                                             }
                                         }
