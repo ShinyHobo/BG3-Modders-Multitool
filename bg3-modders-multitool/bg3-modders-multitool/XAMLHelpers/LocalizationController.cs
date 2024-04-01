@@ -101,6 +101,12 @@ public class LocalizationController : Application
         [Option('a', "append", HelpText = "Appends to the out file rather than overwriting it")]
         public bool AppendToFile { get; set; }
 
+        [Option("create-index", HelpText = "Generates a new index; will ask for confirmation")]
+        public bool CreateIndex { get; set; }
+
+        [Option("create-index-force", HelpText = "Generates a new index without confirmation")]
+        public bool ForceCreateIndex { get; set; }
+
         public string GetUsage()
         {
             return "Read wiki for usage instructions...";
@@ -144,7 +150,7 @@ public class LocalizationController : Application
 
                 // Check source (must exist)
                 var sourceIsDirectory = System.IO.Path.GetExtension(source) == string.Empty;
-                if ((sourceIsDirectory && !Directory.Exists(source)) || (!sourceIsDirectory && !File.Exists(source)))
+                if (source != null && ((sourceIsDirectory && !Directory.Exists(source)) || (!sourceIsDirectory && !File.Exists(source))))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Invalid source folder/pak, does not exist");
@@ -162,40 +168,68 @@ public class LocalizationController : Application
                 App.Current.Properties["cli_compression"] = compression.Id;
                 App.Current.Properties["cli_zip"] = destinationExtension == ".zip";
 
-                if (sourceIsDirectory && !destinationIsDirectory)
+                if (source != null && destination != null)
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Packing mod...");
-                    Console.ResetColor();
-
-                    DataObject data = new DataObject(DataFormats.FileDrop, new string[] { source });
-                    var dadVm = new bg3_modders_multitool.ViewModels.DragAndDropBox();
-                    await dadVm.ProcessDrop(data);
-                }
-                else if (destinationIsDirectory && !sourceIsDirectory)
-                {
-                    var sourceExtension = System.IO.Path.GetExtension(source);
-                    if (sourceExtension == ".pak")
+                    if (sourceIsDirectory && !destinationIsDirectory)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Unpacking mod...");
+                        Console.WriteLine("Packing mod...");
                         Console.ResetColor();
 
-                        var vm = new bg3_modders_multitool.ViewModels.MainWindow();
-                        await vm.Unpacker.UnpackPakFiles(new List<string> { source }, false);
+                        DataObject data = new DataObject(DataFormats.FileDrop, new string[] { source });
+                        var dadVm = new bg3_modders_multitool.ViewModels.DragAndDropBox();
+                        await dadVm.ProcessDrop(data);
+                    }
+                    else if (destinationIsDirectory && !sourceIsDirectory)
+                    {
+                        var sourceExtension = System.IO.Path.GetExtension(source);
+                        if (sourceExtension == ".pak")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Unpacking mod...");
+                            Console.ResetColor();
+
+                            var vm = new bg3_modders_multitool.ViewModels.MainWindow();
+                            await vm.Unpacker.UnpackPakFiles(new List<string> { source }, false);
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid source extension. File must be a .pak!");
+                            Console.ResetColor();
+                        }
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid source extension. File must be a .pak!");
+                        Console.WriteLine($"Invalid operation; source and destination cannot both be {(sourceIsDirectory && destinationIsDirectory ? "directories" : "files")}!");
                         Console.ResetColor();
                     }
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Invalid operation; source and destination cannot both be {(sourceIsDirectory && destinationIsDirectory ? "directories" : "files")}!");
-                    Console.ResetColor();
+                    if(options.CreateIndex || options.ForceCreateIndex)
+                    {
+                        if(!options.ForceCreateIndex)
+                        {
+                            Console.Write("This will delete and regenerate your index; this is irreversable. Are you sure? [y/n]:");
+                            var response = Console.ReadKey(false).Key;
+                            Console.WriteLine(string.Empty);
+                            if (response != ConsoleKey.Y)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine("Operation cancelled.");
+                                Console.ResetColor();
+                                return;
+                            }
+                        }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Deleting and regenerating index; this could take a while...");
+                        Console.ResetColor();
+                        
+                        // TODO
+                    }
                 }
             }
         }
