@@ -78,31 +78,26 @@ namespace bg3_modders_multitool.ViewModels
                 var modsPath = Path.Combine(_lastDirectory, "Mods");
 
                 var dir = new DirectoryInfo(modsPath);
-                if(dir.Exists)
+                if (dir.Exists)
                 {
                     var pathList = Directory.GetDirectories(modsPath);
-                    if (pathList.Length > 0)
+                    var metaPath = pathList.Select(p => Directory.GetFiles(p).FirstOrDefault(f => Path.GetFileName(f).Equals("meta.lsx"))).FirstOrDefault(f => f != null);
+                    if (metaPath != null)
                     {
-                        foreach (string file in Directory.GetFiles(pathList[0]))
+                        var xml = FixVersion(metaPath);
+                        if (xml != null)
                         {
-                            if (Path.GetFileName(file).Equals("meta.lsx"))
-                            {
-                                var xml = FixVersion(file);
-                                if (xml != null)
-                                {
-                                    var attributes = xml.Descendants("attribute");
+                            var attributes = xml.Descendants("attribute");
 
-                                    var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
-                                    if (version != null)
-                                    {
-                                        long.TryParse(version.Attribute("value").Value, out long versionValue);
-                                        var ver = PackedVersion.FromInt64(versionValue);
-                                        Major = (int)ver.Major;
-                                        Minor = (int)ver.Minor;
-                                        Revision = (int)ver.Revision;
-                                        Build = (int)ver.Build;
-                                    }
-                                }
+                            var version = attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value == "ModuleInfo").SingleOrDefault();
+                            if (version != null)
+                            {
+                                long.TryParse(version.Attribute("value").Value, out long versionValue);
+                                var ver = PackedVersion.FromInt64(versionValue);
+                                Major = (int)ver.Major;
+                                Minor = (int)ver.Minor;
+                                Revision = (int)ver.Revision;
+                                Build = (int)ver.Build;
                             }
                         }
                     }
@@ -141,7 +136,7 @@ namespace bg3_modders_multitool.ViewModels
                                 {
                                     var attributes = xml.Descendants("attribute");
 
-                                    foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version64"))
+                                    foreach (var attribute in attributes.Where(a => a.Attribute("id").Value == "Version64" && a.Parent.Attribute("id").Value != "ModuleShortDesc"))
                                     {
                                         attribute.Attribute("value").Value = new PackedVersion()
                                         {
