@@ -158,10 +158,9 @@
                     client.DownloadFile(newestRelease.DownloadUrl, tempZip);
                     using (ZipArchive archive = ZipFile.OpenRead(tempZip))
                     {
-                        // only grabbing the main exe for now
                         foreach (ZipArchiveEntry entry in archive.Entries.Where(e => e.FullName.Contains(_exeName)))
                         {
-                            entry.ExtractToFile(Path.Combine(updateDirectory, entry.FullName));
+                            entry.ExtractToFile(Path.Combine(updateDirectory, entry.FullName), true);
                         }
                     }
                     if (File.Exists(Path.Combine(updateDirectory, $"{_exeName}.exe")))
@@ -186,19 +185,12 @@
         private void ReplaceApplicationWithNewVersion()
         {
             var updatePath = $"{DragAndDropHelper.TempFolder}\\Update";
-            var updateExe = Path.Combine(updatePath, _exeName + ".exe");
-            var updateDll = Path.Combine(updatePath, _exeName + ".dll");
-            var updateDllConfig = Path.Combine(updatePath, _exeName + ".dll.config");
-            var updateRuntimeConfig = Path.Combine(updatePath, _exeName + ".runtimeconfig.json");
             var currentExe = Path.Combine(Directory.GetCurrentDirectory(), _exeName + ".exe");
             var process = new Process();
             process.StartInfo = new ProcessStartInfo("cmd.exe",
                 $"/c echo {Properties.Resources.ClosingAppForUpdate} " +
                 $"& C:\\Windows\\System32\\ping.exe -4 -n 5 \"\">nul " +
-                $"& copy /b/v/y \"{updateExe}\" \"{Directory.GetCurrentDirectory()}\" " +
-                $"& copy /b/v/y \"{updateDll}\" \"{Directory.GetCurrentDirectory()}\" " +
-                $"& copy /b/v/y \"{updateDllConfig}\" \"{Directory.GetCurrentDirectory()}\" " +
-                $"& copy /b/v/y \"{updateRuntimeConfig}\" \"{Directory.GetCurrentDirectory()}\" " +
+                $"& copy /b/v/y \"{updatePath}\" \"{Directory.GetCurrentDirectory()}\" " +
                 $"& rmdir \"{updatePath}\" /s /q " +
                 $"& del \"{DragAndDropHelper.TempFolder}\\update.zip\" " +
                 $"& start \"\" \"{currentExe}\"");
