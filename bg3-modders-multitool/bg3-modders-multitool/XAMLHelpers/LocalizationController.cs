@@ -27,7 +27,7 @@ public class LocalizationController : Application
 
             AttachConsole(-1);
 
-            App.Current.Properties["console_app"] = 1;
+            App.Current.Properties["console_app"] = true;
 
             Parser.Default.ParseArguments<Cli>(args)
                 .WithParsedAsync(Cli.Run)

@@ -604,10 +604,26 @@ namespace bg3_modders_multitool.Services
                 if (errors.Count > 0)
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.ErrorsFoundPacking);
-                    Application.Current.Dispatcher.Invoke(() => {
-                        var popup = new FileLintingWindow(errors);
-                        return popup.ShowDialog();
-                    });
+                    if(App.Current.Properties["console_app"] == null)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            var popup = new FileLintingWindow(errors);
+                            return popup.ShowDialog();
+                        });
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Errors:");
+                        Console.ResetColor();
+                        foreach (var error in errors)
+                        {
+                            Console.WriteLine($"Type: {error.Type}");
+                            Console.WriteLine($"Location: {error.Path}");
+                            Console.WriteLine(error.Error);
+                            Console.WriteLine(string.Empty);
+                        }
+                    }
 
                     return false;
                 }
