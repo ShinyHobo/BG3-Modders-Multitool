@@ -62,7 +62,7 @@
 
         private void CopyPatch_Click(object sender, RoutedEventArgs e)
         {
-            var version = $"{PackedVersion.Major}.{PackedVersion.Minor}.{PackedVersion.Build}.{PackedVersion.Revision}";
+            var version = $"{PackedVersion.Major}.{PackedVersion.Minor}.{PackedVersion.Revision}.{PackedVersion.Build}";
             System.Windows.Forms.Clipboard.SetDataObject(version, false, 10, 10);
             GeneralHelper.WriteToConsole(Properties.Resources.CopiedToClipboard, version);
         }
