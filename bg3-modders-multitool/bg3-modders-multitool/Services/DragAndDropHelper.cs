@@ -82,7 +82,7 @@ namespace bg3_modders_multitool.Services
         public static void PackMod(string fullpath, string destination)
         {
             var compression = CompressionMethod.None;
-            var fastCompression = true;
+            var compressionLevel = LSCompressionLevel.Fast;
             int.TryParse(App.Current.Properties["cli_compression"]?.ToString(), out int cliCompression);
             var selectedCompression = App.Current.Properties["cli_compression"] == null ? Properties.Settings.Default.packingCompressionOption : cliCompression;
             switch (selectedCompression)
@@ -92,14 +92,14 @@ namespace bg3_modders_multitool.Services
                     break;
                 case 2: // Zlib Optimal
                     compression = CompressionMethod.Zlib;
-                    fastCompression = false;
+                    compressionLevel = LSCompressionLevel.Max;
                     break;
                 case 3:
                     compression = CompressionMethod.LZ4;
                     break;
                 case 4:
                     compression = CompressionMethod.LZ4;
-                    fastCompression = false;
+                    compressionLevel = LSCompressionLevel.Max;
                     break;
                 default:
                     break;
@@ -111,11 +111,11 @@ namespace bg3_modders_multitool.Services
             // Zlib fast
             // Zlib (optimal)
             Directory.CreateDirectory(TempFolder);
-            var packageOptions = new PackageCreationOptions() { 
+            var packageOptions = new PackageBuildData() { 
                 Version = Game.BaldursGate3.PAKVersion(),
                 Priority = (byte)Properties.Settings.Default.packingPriority,
                 Compression = compression,
-                FastCompression = fastCompression
+                CompressionLevel = compressionLevel
             };
             try
             {
