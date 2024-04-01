@@ -108,9 +108,21 @@ public class LocalizationController : Application
         /// <returns>The task</returns>
         public static async Task Run(Cli options)
         {
-            var source = Path.GetFullPath(options.Source);
-            var destination = Path.GetFullPath(options.Destination);
+            var source = options.Source == null ? null : Path.GetFullPath(options.Source);
+            var destination = options.Destination == null ? null : Path.GetFullPath(options.Destination);
             var compression = bg3_modders_multitool.ViewModels.MainWindow.AvailableCompressionTypes.FirstOrDefault(c => c.Id == options.Compression);
+
+            if (source != null && destination == null)
+            {
+                Console.WriteLine("Destination required!");
+                return;
+            }
+
+            if (source == null && destination != null)
+            {
+                Console.WriteLine("Source required!");
+                return;
+            }
 
             // Check source (must exist)
             var sourceIsDirectory = System.IO.Path.GetExtension(source) == string.Empty;
