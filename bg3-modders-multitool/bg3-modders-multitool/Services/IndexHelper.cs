@@ -192,6 +192,11 @@ namespace bg3_modders_multitool.Services
                     DataContext.IndexFileTotal = cachedPaks.Count;
                 });
             }
+            else
+            {
+                DataContext.IndexFileCount = 0;
+                DataContext.IndexFileTotal = cachedPaks.Count;
+            }
 
             // Merge indexes
             using (Analyzer a = new CustomAnalyzer())
@@ -207,9 +212,23 @@ namespace bg3_modders_multitool.Services
                             writer.AddIndexes(index);
                         }
 
-                        Application.Current.Dispatcher.Invoke(() => { DataContext.IndexFileCount++; });
+                        if (App.Current.Properties["console_app"] == null)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => { DataContext.IndexFileCount++; });
+                        }
+                        else
+                        {
+                            DataContext.IndexFileCount++;
+                            var percentDone = Math.Round(Convert.ToDecimal(DataContext.IndexFileCount / (float)DataContext.IndexFileTotal * 100), 2);
+                            Console.Write($"\r{DataContext.IndexFileCount}/{DataContext.IndexFileTotal} => {percentDone}%");
+                        }
                     }
                 }
+            }
+
+            if (App.Current.Properties["console_app"] != null)
+            {
+                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100%");
             }
 
             GeneralHelper.WriteToConsole(Properties.Resources.DeletingTempIndecies);
