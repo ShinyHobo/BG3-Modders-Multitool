@@ -284,7 +284,8 @@ public class LocalizationController : Application
                             return;
                         }
 
-                        var fileTypes = options.FilterIndex?.Split(',');
+                        // sanitize file formats
+                        var fileTypes = options.FilterIndex?.Split(',').Select(f => $".{f.Replace(".", string.Empty)}").ToList();
 
                         var vm = new bg3_modders_multitool.ViewModels.MainWindow()
                         {
