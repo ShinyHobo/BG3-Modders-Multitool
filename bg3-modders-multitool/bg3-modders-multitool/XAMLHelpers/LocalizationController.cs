@@ -8,6 +8,7 @@ using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using static System.Windows.Forms.Design.AxImporter;
 
 /// <summary>
 /// Controls the application lifecycle to allow for on the fly language selection
@@ -29,9 +30,7 @@ public class LocalizationController : Application
 
             App.Current.Properties["console_app"] = true;
 
-            Parser.Default.ParseArguments<Cli>(args)
-                .WithParsedAsync(Cli.Run)
-                .ContinueWith(_ => Console.WriteLine(wnd.ConsoleOutput)).Wait();
+            Parser.Default.ParseArguments<Cli>(args).WithParsedAsync(Cli.Run).Wait();
 
             App.Current.Shutdown();
         }
@@ -96,6 +95,12 @@ public class LocalizationController : Application
         [Option('c', "compression", HelpText = "0: None\r\n1: LZ4\r\n2: LZ4 HC\r\n3: Zlib Fast\r\n4: Zlib Optimal")]
         public int Compression { get; set; }
 
+        [Option('o', "out", HelpText = "Writes console output to the given file instead of the console window")]
+        public string WriteToFile { get; set; }
+
+        [Option('a', "append", HelpText = "Appends to the out file rather than overwriting it")]
+        public bool AppendToFile { get; set; }
+
         public string GetUsage()
         {
             return "Read wiki for usage instructions...";
@@ -111,77 +116,87 @@ public class LocalizationController : Application
             var source = options.Source == null ? null : Path.GetFullPath(options.Source);
             var destination = options.Destination == null ? null : Path.GetFullPath(options.Destination);
             var compression = bg3_modders_multitool.ViewModels.MainWindow.AvailableCompressionTypes.FirstOrDefault(c => c.Id == options.Compression);
+            
+            var writeToFile = options.WriteToFile == null ? null : Path.GetFullPath(options.WriteToFile);
 
-            if (source != null && destination == null)
+            using (var writer = writeToFile != null ? new System.IO.StreamWriter(writeToFile, options.AppendToFile) : null)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Destination required!");
-                Console.ResetColor();
-                return;
-            }
+                if(options.WriteToFile != null)
+                {
+                    Console.SetOut(writer);
+                }
 
-            if (source == null && destination != null)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Source required!");
-                Console.ResetColor();
-                return;
-            }
+                if (source != null && destination == null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Destination required!");
+                    Console.ResetColor();
+                    return;
+                }
 
-            // Check source (must exist)
-            var sourceIsDirectory = System.IO.Path.GetExtension(source) == string.Empty;
-            if ((sourceIsDirectory && !Directory.Exists(source)) || (!sourceIsDirectory && !File.Exists(source)))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid source folder/pak, does not exist");
-                Console.ResetColor();
-                return;
-            }
+                if (source == null && destination != null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Source required!");
+                    Console.ResetColor();
+                    return;
+                }
 
-            // Check destination
-            var destinationExtension = System.IO.Path.GetExtension(destination);
-            var destinationIsDirectory = destinationExtension == string.Empty;
+                // Check source (must exist)
+                var sourceIsDirectory = System.IO.Path.GetExtension(source) == string.Empty;
+                if ((sourceIsDirectory && !Directory.Exists(source)) || (!sourceIsDirectory && !File.Exists(source)))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid source folder/pak, does not exist");
+                    Console.ResetColor();
+                    return;
+                }
 
-            // Set global config
-            App.Current.Properties["cli_source"] = source;
-            App.Current.Properties["cli_destination"] = destination;
-            App.Current.Properties["cli_compression"] = compression.Id;
-            App.Current.Properties["cli_zip"] = destinationExtension == ".zip";
+                // Check destination
+                var destinationExtension = System.IO.Path.GetExtension(destination);
+                var destinationIsDirectory = destinationExtension == string.Empty;
 
-            if (sourceIsDirectory && !destinationIsDirectory)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Packing mod...");
-                Console.ResetColor();
+                // Set global config
+                App.Current.Properties["cli_source"] = source;
+                App.Current.Properties["cli_destination"] = destination;
+                App.Current.Properties["cli_compression"] = compression.Id;
+                App.Current.Properties["cli_zip"] = destinationExtension == ".zip";
 
-                DataObject data = new DataObject(DataFormats.FileDrop, new string[] { source });
-                var dadVm = new bg3_modders_multitool.ViewModels.DragAndDropBox();
-                await dadVm.ProcessDrop(data);
-            }
-            else if(destinationIsDirectory && !sourceIsDirectory)
-            {
-                var sourceExtension = System.IO.Path.GetExtension(source);
-                if(sourceExtension == ".pak")
+                if (sourceIsDirectory && !destinationIsDirectory)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Unpacking mod...");
+                    Console.WriteLine("Packing mod...");
                     Console.ResetColor();
 
-                    var vm = new bg3_modders_multitool.ViewModels.MainWindow();
-                    await vm.Unpacker.UnpackPakFiles(new List<string> { source }, false);
+                    DataObject data = new DataObject(DataFormats.FileDrop, new string[] { source });
+                    var dadVm = new bg3_modders_multitool.ViewModels.DragAndDropBox();
+                    await dadVm.ProcessDrop(data);
+                }
+                else if (destinationIsDirectory && !sourceIsDirectory)
+                {
+                    var sourceExtension = System.IO.Path.GetExtension(source);
+                    if (sourceExtension == ".pak")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Unpacking mod...");
+                        Console.ResetColor();
+
+                        var vm = new bg3_modders_multitool.ViewModels.MainWindow();
+                        await vm.Unpacker.UnpackPakFiles(new List<string> { source }, false);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid source extension. File must be a .pak!");
+                        Console.ResetColor();
+                    }
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid source extension. File must be a .pak!");
+                    Console.WriteLine($"Invalid operation; source and destination cannot both be {(sourceIsDirectory && destinationIsDirectory ? "directories" : "files")}!");
                     Console.ResetColor();
                 }
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Invalid operation; source and destination cannot both be {(sourceIsDirectory&&destinationIsDirectory?"directories":"files")}!");
-                Console.ResetColor();
             }
         }
     }
