@@ -114,13 +114,17 @@ public class LocalizationController : Application
 
             if (source != null && destination == null)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Destination required!");
+                Console.ResetColor();
                 return;
             }
 
             if (source == null && destination != null)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Source required!");
+                Console.ResetColor();
                 return;
             }
 
@@ -128,7 +132,9 @@ public class LocalizationController : Application
             var sourceIsDirectory = System.IO.Path.GetExtension(source) == string.Empty;
             if ((sourceIsDirectory && !Directory.Exists(source)) || (!sourceIsDirectory && !File.Exists(source)))
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Invalid source folder/pak, does not exist");
+                Console.ResetColor();
                 return;
             }
 
@@ -144,8 +150,10 @@ public class LocalizationController : Application
 
             if (sourceIsDirectory && !destinationIsDirectory)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Packing mod...");
-                
+                Console.ResetColor();
+
                 DataObject data = new DataObject(DataFormats.FileDrop, new string[] { source });
                 var dadVm = new bg3_modders_multitool.ViewModels.DragAndDropBox();
                 await dadVm.ProcessDrop(data);
@@ -155,19 +163,25 @@ public class LocalizationController : Application
                 var sourceExtension = System.IO.Path.GetExtension(source);
                 if(sourceExtension == ".pak")
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Unpacking mod...");
+                    Console.ResetColor();
 
                     var vm = new bg3_modders_multitool.ViewModels.MainWindow();
                     await vm.Unpacker.UnpackPakFiles(new List<string> { source }, false);
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Invalid source extension. File must be a .pak!");
+                    Console.ResetColor();
                 }
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Invalid operation; source and destination cannot both be {(sourceIsDirectory&&destinationIsDirectory?"directories":"files")}!");
+                Console.ResetColor();
             }
         }
     }
