@@ -119,11 +119,14 @@ public class LocalizationController : Application
         [Option("search-index", HelpText = "Searches the index for the given string; requires --index-results")]
         public string SearchIndex { get; set; }
 
-        [Option("filter-index", HelpText = "Filters the search results by the extensions provided; requires --search-index")]
+        [Option("search-filter", HelpText = "Filters the search results by the comma delimited extension list provided (ie. \"lsf,loca,png\"); requires --search-index")]
         public string FilterIndex { get; set; }
 
         [Option("index-results", HelpText = "The file to print the index results to")]
         public string IndexResultsFile { get; set; }
+
+        [Option("fast-search", HelpText = "Disables the implicit leading wildcard for searches, drastically speeding them up, but may miss results if used incorrectly")]
+        public bool FastSearch { get; set; }
 
         public string GetUsage()
         {
@@ -281,6 +284,8 @@ public class LocalizationController : Application
                             return;
                         }
 
+                        var fileTypes = options.FilterIndex?.Split(',');
+
                         var vm = new bg3_modders_multitool.ViewModels.MainWindow()
                         {
                             SearchResults = new bg3_modders_multitool.ViewModels.SearchResults()
@@ -288,8 +293,9 @@ public class LocalizationController : Application
 
                         using (var resultsWriter = new System.IO.StreamWriter(options.IndexResultsFile))
                         {
-                            var matches = await vm.SearchResults.IndexHelper.SearchFiles(options.SearchIndex, true);
-                            foreach (var match in options.FilterIndex == null ? matches.Matches : matches.FilteredMatches)
+                            var matches = await vm.SearchResults.IndexHelper.SearchFiles(options.SearchIndex, true, fileTypes, !options.FastSearch);
+                            // TODO - do something with FilteredMatches?
+                             foreach (var match in matches.Matches)
                             {
                                 resultsWriter.WriteLine(match);
                             }

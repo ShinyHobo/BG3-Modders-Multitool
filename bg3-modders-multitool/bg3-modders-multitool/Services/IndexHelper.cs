@@ -532,7 +532,7 @@ namespace bg3_modders_multitool.Services
                                 var path = doc.Get("path").Replace("/", "\\");
                                 var ext = Path.GetExtension(path).ToLower();
                                 ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
-                                if (selectedFileTypes != null && !selectedFileTypes.Contains(ext))
+                                if (selectedFileTypes != null && !selectedFileTypes.Contains(ext.Replace(".", string.Empty)))
                                 {
                                     filteredSomeResults++;
                                     if (!FileHelper.FileTypes.Contains(ext))
