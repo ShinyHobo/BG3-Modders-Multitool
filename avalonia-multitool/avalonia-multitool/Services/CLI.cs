@@ -1,11 +1,7 @@
-﻿using Avalonia.Input;
-using avalonia_multitool;
-using CommandLine;
+﻿using CommandLine;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace avalonia_multitool.Services

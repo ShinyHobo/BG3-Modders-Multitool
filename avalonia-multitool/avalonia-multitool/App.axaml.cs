@@ -7,6 +7,10 @@ using avalonia_multitool.ViewModels;
 using avalonia_multitool.Views;
 using CommandLine;
 
+#if _WINDOWS
+using System.Runtime.InteropServices;
+#endif
+
 namespace avalonia_multitool;
 
 public partial class App : Application
@@ -29,12 +33,17 @@ public partial class App : Application
                     var wnd = new MainWindow();
                     desktop.MainWindow = new Window { DataContext = wnd };
 
+#if _WINDOWS
                     //if (!AttachConsole(-1))
                     //{
                     //    // for debugging
                     //    AllocConsole();
                     //}
+#else
+                    // TODO - attach to terminal?
+#endif
 
+                    // TODO - replace with static class to keep track of cli properites
                     //App.Current.Properties["console_app"] = true;
 
                     Parser.Default.ParseArguments<Cli>(args.Args).WithParsedAsync(Cli.Run).Wait();
@@ -60,4 +69,15 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
+
+#if _WINDOWS
+    //[DllImport("kernel32.dll")]
+    //static extern bool AllocConsole();
+
+    //[DllImport("kernel32.dll")]
+    //static extern bool AttachConsole(int dwProcessId);
+
+    //[DllImport("kernel32.dll")]
+    //private static extern bool FreeConsole();
+#endif
 }
