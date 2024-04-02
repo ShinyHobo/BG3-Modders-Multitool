@@ -1,9 +1,11 @@
 ﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
+using avalonia_multitool.Services;
 using avalonia_multitool.ViewModels;
 using avalonia_multitool.Views;
+using CommandLine;
 
 namespace avalonia_multitool;
 
@@ -18,9 +20,34 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
+            desktop!.Startup += (sender, args) =>
             {
-                DataContext = new MainViewModel()
+                if (args.Args.Length > 0)
+                {
+                    desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+                    var wnd = new MainWindow();
+                    desktop.MainWindow = new Window { DataContext = wnd };
+
+                    //if (!AttachConsole(-1))
+                    //{
+                    //    // for debugging
+                    //    AllocConsole();
+                    //}
+
+                    //App.Current.Properties["console_app"] = true;
+
+                    Parser.Default.ParseArguments<Cli>(args.Args).WithParsedAsync(Cli.Run).Wait();
+
+                    desktop.Shutdown();
+                }
+                else
+                {
+                    desktop.MainWindow = new MainWindow
+                    {
+                        DataContext = new MainViewModel()
+                    };
+                }
             };
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
