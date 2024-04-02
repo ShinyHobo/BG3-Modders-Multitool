@@ -4,6 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+#if _WINDOWS
+using System.Runtime.InteropServices;
+#endif
+
 namespace avalonia_multitool.Services
 {
     /// <summary>
@@ -234,5 +238,16 @@ namespace avalonia_multitool.Services
                 }
             }
         }
+
+#if _WINDOWS
+        [DllImport("kernel32.dll")]
+        public static extern bool AllocConsole();
+
+        [DllImport("kernel32.dll")]
+        public static extern bool AttachConsole(int dwProcessId);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool FreeConsole();
+#endif
     }
 }
