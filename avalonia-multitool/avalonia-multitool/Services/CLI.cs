@@ -80,7 +80,7 @@ namespace avalonia_multitool.Services
 
             using (var writer = writeToFile != null ? new System.IO.StreamWriter(writeToFile, options.AppendToFile) : null)
             {
-                if (options.WriteToFile != null)
+                if (options.WriteToFile != null && writer != null)
                 {
                     Console.SetOut(writer);
                 }
