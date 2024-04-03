@@ -168,8 +168,7 @@
                     
                     try
                     {
-                        var i = 0;
-                        for (var layer = 0; layer < vts.TileSetLevels.Length; layer++)
+                        for (var layer = 0; layer < vts.Header.NumLayers; layer++)
                         {
                             LSLib.VirtualTextures.BC5Image tex = null;
                             var level = 0;
@@ -184,35 +183,36 @@
                             catch { }
                             if (tex != null)
                             {
-                                LSLib.VirtualTextures.DDSHeader inStruct = default;
-                                inStruct.dwMagic = 542327876u;
-                                inStruct.dwSize = 124u;
-                                inStruct.dwFlags = 4103u;
-                                inStruct.dwWidth = (uint)tex.Width;
-                                inStruct.dwHeight = (uint)tex.Height;
-                                inStruct.dwPitchOrLinearSize = (uint)(tex.Width * tex.Height);
-                                inStruct.dwDepth = 1u;
-                                inStruct.dwMipMapCount = 1u;
-                                inStruct.dwPFSize = 32u;
-                                inStruct.dwPFFlags = 4u;
-                                inStruct.dwFourCC = 894720068u;
-                                inStruct.dwCaps = 4096u;
-                                using (System.IO.MemoryStream output = new System.IO.MemoryStream())
-                                using (System.IO.BinaryWriter binaryWriter = new System.IO.BinaryWriter(output))
+                                if (writeToDisk)
                                 {
-                                    BinUtils.WriteStruct(binaryWriter, ref inStruct);
-                                    binaryWriter.Write(tex.Data, 0, tex.Data.Length);
-                                    if (writeToDisk)
+                                    var saveLoc = FileHelper.GetPath($"{helper.PakName}\\{path}") + $"_{layer}.dds";
+                                    tex.SaveDDS(saveLoc);
+                                }
+                                else
+                                {
+
+                                    var header = new LSLib.VirtualTextures.DDSHeader
                                     {
-                                        var saveLoc = FileHelper.GetPath($"{helper.PakName}\\{path}") + $"_{layer}.dds";
-                                        Directory.CreateDirectory(Path.GetDirectoryName(saveLoc));
-                                        using (System.IO.FileStream file = new System.IO.FileStream(saveLoc, System.IO.FileMode.Create, System.IO.FileAccess.Write))
-                                        {
-                                            output.WriteTo(file);
-                                        }
-                                    }
-                                    else
+                                        dwMagic = LSLib.VirtualTextures.DDSHeader.DDSMagic,
+                                        dwSize = LSLib.VirtualTextures.DDSHeader.HeaderSize,
+                                        dwFlags = 0x1007,
+                                        dwWidth = (uint)tex.Width,
+                                        dwHeight = (uint)tex.Height,
+                                        dwPitchOrLinearSize = (uint)(tex.Width * tex.Height),
+                                        dwDepth = 1,
+                                        dwMipMapCount = 1,
+
+                                        dwPFSize = 32,
+                                        dwPFFlags = 0x04,
+                                        dwFourCC = LSLib.VirtualTextures.DDSHeader.FourCC_DXT5,
+
+                                        dwCaps = 0x1000
+                                    };
+                                    using (System.IO.MemoryStream output = new System.IO.MemoryStream())
+                                    using (System.IO.BinaryWriter binaryWriter = new System.IO.BinaryWriter(output))
                                     {
+                                        BinUtils.WriteStruct(binaryWriter, ref header);
+                                        binaryWriter.Write(tex.Data, 0, tex.Data.Length);
                                         files.Add(output.ToArray());
                                     }
                                 }
