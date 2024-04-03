@@ -11,8 +11,6 @@
     using System.Drawing.Imaging;
     using Alphaleonis.Win32.Filesystem;
     using System.Linq;
-    using LSLib.VirtualTextures;
-
 
     /// <summary>
     /// Service for dealing with textures
@@ -167,7 +165,6 @@
 
                     var vtsIndex = vts.FindPageFile(gtpFile);
                     var fileInfo = vts.PageFileInfos[vtsIndex];
-
                     
                     try
                     {
