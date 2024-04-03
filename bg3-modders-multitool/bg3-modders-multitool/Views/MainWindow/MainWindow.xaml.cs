@@ -63,13 +63,12 @@ namespace bg3_modders_multitool.Views
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {
             var dataDir = FileHelper.DataDirectory;
-            if (Directory.Exists(dataDir))
+            if (Directory.Exists(dataDir)&&File.Exists(MainWindowVM.Bg3ExeLocation))
             {
-                var bg3Exe = MainWindowVM.Bg3ExeLocation.Split('\\').Last();
-                Process pr = new Process();
-                pr.StartInfo.WorkingDirectory = MainWindowVM.Bg3ExeLocation.Replace($"\\{bg3Exe}", string.Empty);
-                pr.StartInfo.FileName = bg3Exe;
-                pr.StartInfo.Arguments = Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty;
+                var bg3Exe = new ProcessStartInfo(MainWindowVM.Bg3ExeLocation);
+                bg3Exe.Arguments = Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty;
+                var pr = new Process();
+                pr.StartInfo = bg3Exe;
                 pr.Start();
             }
             else

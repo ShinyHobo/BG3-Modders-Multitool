@@ -12,7 +12,6 @@
     using Alphaleonis.Win32.Filesystem;
     using System.Linq;
 
-
     /// <summary>
     /// Service for dealing with textures
     /// </summary>
@@ -159,10 +158,17 @@
                 {
                     var vts = new LSLib.VirtualTextures.VirtualTileSet(gtsStream);
                     vts.SingleFileContents = gtpContents;
+
+                    var textures = vts.FourCCMetadata.ExtractTextureMetadata();
+                    var texture = textures.FirstOrDefault(t => t.Name == guid);
+                    var indexOfTexture = textures.IndexOf(texture);
+
                     var vtsIndex = vts.FindPageFile(gtpFile);
                     var fileInfo = vts.PageFileInfos[vtsIndex];
+                    
                     try
                     {
+                        var i = 0;
                         for (var layer = 0; layer < vts.TileSetLevels.Length; layer++)
                         {
                             LSLib.VirtualTextures.BC5Image tex = null;
@@ -171,7 +177,7 @@
                             {
                                 do
                                 {
-                                    //tex = vts.ExtractPageFileTexture(vtsIndex, level, layer);
+                                    tex = vts.ExtractTexture(level, layer, texture);
                                     level++;
                                 } while (tex == null && level < vts.TileSetLevels.Length);
                             }
