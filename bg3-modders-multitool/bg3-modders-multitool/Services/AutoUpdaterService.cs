@@ -146,8 +146,8 @@
                 var updateDirectory = $"{DragAndDropHelper.TempFolder}\\Update";
 
                 // Create and/or clean temp directory
-                Directory.CreateDirectory(updateDirectory);
                 DragAndDropHelper.CleanTempDirectory();
+                Directory.CreateDirectory(updateDirectory);
 
                 using (var client = new WebClient())
                 {
