@@ -50,6 +50,11 @@ namespace bg3_modders_multitool.Views
             }
             #endif
 
+            if(GeneralHelper.IsAdministrator)
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.RunningAsAdmin);
+            }
+
             compressionOption.ItemsSource = ViewModels.MainWindow.AvailableCompressionTypes;
             compressionOption.SelectedIndex = Properties.Settings.Default.packingCompressionOption;
         }

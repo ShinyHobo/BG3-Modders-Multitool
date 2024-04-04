@@ -2727,6 +2727,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are running in adminstrator mode: drag and drop functionality is disabled! Unpacking can be done from the Utilities menu; click the blue box to create paks..
+        /// </summary>
+        public static string RunningAsAdmin {
+            get {
+                return ResourceManager.GetString("RunningAsAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to sRGB.
         /// </summary>
         public static string sARGBLabel {

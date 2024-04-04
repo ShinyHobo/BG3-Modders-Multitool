@@ -1076,6 +1076,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="RetrievingFileListDecompression" xml:space="preserve">
     <value>Retrieving file list for decompression.</value>
   </data>
+  <data name="RunningAsAdmin" xml:space="preserve">
+    <value>You are running in adminstrator mode: drag and drop functionality is disabled! Unpacking can be done from the Utilities menu; click the blue box to create paks.</value>
+  </data>
   <data name="sARGBLabel" xml:space="preserve">
     <value>sRGB</value>
   </data>

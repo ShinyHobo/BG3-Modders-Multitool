@@ -11,6 +11,7 @@ namespace bg3_modders_multitool.Services
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Interop;
@@ -379,5 +380,10 @@ namespace bg3_modders_multitool.Services
         /// If threading is not unlocked, this creates a max degree of parallelism equal to 75% of the processor count multiplied by two, rounded up (2 threads per processor)
         /// </summary>
         public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Settings.Default.unlockThreads ? -1 : Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
+
+        /// <summary>
+        /// Checks if the application is running under adminstrator mode
+        /// </summary>
+        public static bool IsAdministrator => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
     }
 }
