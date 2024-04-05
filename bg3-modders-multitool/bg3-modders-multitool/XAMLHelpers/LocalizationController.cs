@@ -132,6 +132,9 @@ public class LocalizationController : Application
         [Option("fast-search", HelpText = "Disables the implicit leading wildcard for searches, drastically speeding them up, but may miss results if used incorrectly")]
         public bool FastSearch { get; set; }
 
+        [Option('v', "version", HelpText = "Sets the version in the meta.lsx file")]
+        public string Version { get; set; }
+
         public string GetUsage()
         {
             return "Read wiki for usage instructions...";
@@ -147,6 +150,8 @@ public class LocalizationController : Application
             var source = options.Source == null ? null : Path.GetFullPath(options.Source);
             var destination = options.Destination == null ? null : Path.GetFullPath(options.Destination);
             var compression = bg3_modders_multitool.ViewModels.MainWindow.AvailableCompressionTypes.FirstOrDefault(c => c.Id == options.Compression);
+            var version = options.Version;
+
             
             var writeToFile = options.WriteToFile == null ? null : Path.GetFullPath(options.WriteToFile);
 
@@ -203,6 +208,31 @@ public class LocalizationController : Application
 
                         DataObject data = new DataObject(DataFormats.FileDrop, new string[] { source });
                         var dadVm = new bg3_modders_multitool.ViewModels.DragAndDropBox();
+
+                        if(version != null)
+                        {
+                            var versionSegs = version.Split('.');
+                            if(versionSegs.Length == 4)
+                            {
+                                dadVm.CanRebuild = Visibility.Visible;
+                                int.TryParse(versionSegs[0], out int major);
+                                int.TryParse(versionSegs[1], out int minor);
+                                int.TryParse(versionSegs[2], out int revision);
+                                int.TryParse(versionSegs[3], out int build);
+
+                                dadVm.Major = major;
+                                dadVm.Minor = minor;
+                                dadVm.Revision = revision;
+                                dadVm.Build = build;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid version format; use MAJOR.MINOR.REVISION.BUILD. Defaulting to detected meta.lsx version...");
+                                Console.ResetColor();
+                            }
+                        }
+
                         await dadVm.ProcessDrop(data);
                     }
                     else if (destinationIsDirectory && !sourceIsDirectory)
