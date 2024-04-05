@@ -72,6 +72,7 @@ namespace bg3_modders_multitool.Views
             {
                 var bg3Exe = new ProcessStartInfo(MainWindowVM.Bg3ExeLocation);
                 bg3Exe.Arguments = Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty;
+                bg3Exe.WorkingDirectory = Directory.GetParent(MainWindowVM.Bg3ExeLocation).FullName;
                 var pr = new Process();
                 pr.StartInfo = bg3Exe;
                 pr.Start();
