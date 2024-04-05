@@ -29,9 +29,9 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// List of all known file types used
         /// </summary>
-        public static readonly string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".clc",".clm",".cln",".cur",".dae",".dat",
-            ".data",".dds",".div",".fbx",".ffxactor",".ffxbones",".ffxanim",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".json",
-            ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsfx",".lsj",".lsx",".metal",".ogg",".osi",".patch",".png",".psd",".shd",".tga",".tmpl",".ttf",
+        public static readonly string[] FileTypes = { ".anc",".anm",".ann",".bin",".bk2",".bnk",".bshd",".chroma",".clc",".clm",".cln",".cur",".dae",".dat",
+            ".data",".dds",".div",".fbx",".ffxactor",".ffxbones",".ffxanim",".fnt",".gamescript",".gr2",".gtp",".gts",".itemscript",".jpg",".js",".json",
+            ".khn",".loca",".lsb",".lsbc",".lsbs",".lsf",".lsfx",".lsj",".lsx",".meta",".metal",".ogg",".osi",".otf",".patch",".png",".psd",".psocache",".shd",".tga",".tmpl",".ttf",
             ".txt",".wav",".wem",".xaml",".xml", Properties.Resources.Extensionless
         };
 
@@ -87,7 +87,7 @@ namespace bg3_modders_multitool.Services
                     var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
                     try
                     {
-                        if(File.GetSize(path) == 0)
+                        if(!File.Exists(path) || File.GetSize(path) == 0)
                         {
                             newFile = file;
                         }
@@ -333,7 +333,7 @@ namespace bg3_modders_multitool.Services
                         }
                         else
                         {
-                            Process.Start(path);
+                            ProcessStart(path);
                         }
                     }
                 }
@@ -502,6 +502,20 @@ namespace bg3_modders_multitool.Services
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Opens the given path in the default process
+        /// </summary>
+        /// <param name="path">The process path (file, uri, etc)</param>
+        public static void ProcessStart(string path)
+        {
+            var psi = new ProcessStartInfo()
+            {
+                FileName = path,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         #region Process Finder

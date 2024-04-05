@@ -248,6 +248,10 @@
   <data name="CancelUnpackingButton" xml:space="preserve">
     <value>Cancel Unpacking</value>
   </data>
+  <data name="CantDeleteResource" xml:space="preserve">
+    <value>Cant't delete {0}; is it open? Retrying...</value>
+    <comment>file/directory name</comment>
+  </data>
   <data name="ChangeLogMenu" xml:space="preserve">
     <value>Changelog</value>
   </data>
@@ -283,6 +287,30 @@ Dropping a .pak will unpack it into a nearby directory. </value>
   </data>
   <data name="ColorPickerMenu" xml:space="preserve">
     <value>Color Picker</value>
+  </data>
+  <data name="CompressionOptionLZ4" xml:space="preserve">
+    <value>LZ4</value>
+  </data>
+  <data name="CompressionOptionLZ4HC" xml:space="preserve">
+    <value>LZ4 HC</value>
+  </data>
+  <data name="CompressionOptionNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="CompressionOptionZlibFast" xml:space="preserve">
+    <value>Zlib Fast</value>
+  </data>
+  <data name="CompressionOptionZlibOptimal" xml:space="preserve">
+    <value>Zlib Optimal</value>
+  </data>
+  <data name="CompressionOptionZstdFast" xml:space="preserve">
+    <value>Zstd Fast</value>
+  </data>
+  <data name="CompressionOptionZstdMax" xml:space="preserve">
+    <value>Zstd Max</value>
+  </data>
+  <data name="CompressionOptionZstdOptimal" xml:space="preserve">
+    <value>Zstd Optimal</value>
   </data>
   <data name="ConfigNeededLabel" xml:space="preserve">
     <value>Configuration needed:
@@ -336,6 +364,9 @@ Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endor
   <data name="CorruptXmlFile" xml:space="preserve">
     <value>{0} appears to be corrupt or missing. Skipping file...</value>
     <comment>file path</comment>
+  </data>
+  <data name="CouldNotDisplayImage" xml:space="preserve">
+    <value>Could not display image; extract and open externally!</value>
   </data>
   <data name="CouldNotLoadImage" xml:space="preserve">
     <value>Could not load image: {0}</value>
@@ -927,8 +958,14 @@ Are you sure you want to delete the GameObject cache?</value>
     <value>Output dimensions: {0}x{1}</value>
     <comment>width, height</comment>
   </data>
+  <data name="PackingCompressionLabel" xml:space="preserve">
+    <value>Compression:</value>
+  </data>
+  <data name="PackingCompressionTooltip" xml:space="preserve">
+    <value>The type of compression to use when packing</value>
+  </data>
   <data name="PackingPriorityLabel" xml:space="preserve">
-    <value>Packing Priority</value>
+    <value>Packing Priority:</value>
   </data>
   <data name="PackingPriorityTooltip" xml:space="preserve">
     <value>Higher priorities allow vanilla node overrides</value>
@@ -945,6 +982,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="PakModedToMods" xml:space="preserve">
     <value>{0} pak moved to Mods folder!</value>
     <comment>pak name</comment>
+  </data>
+  <data name="PakMovedToDestination" xml:space="preserve">
+    <value>Pak moved to destination!</value>
   </data>
   <data name="PakPackingCancelled" xml:space="preserve">
     <value>Pak packing cancelled; you can find your files in the Temp Folder</value>
@@ -1035,6 +1075,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="RetrievingFileListDecompression" xml:space="preserve">
     <value>Retrieving file list for decompression.</value>
+  </data>
+  <data name="RunningAsAdmin" xml:space="preserve">
+    <value>You are running in adminstrator mode: drag and drop functionality is disabled! Unpacking can be done from the Utilities menu; click the blue box to create paks.</value>
   </data>
   <data name="sARGBLabel" xml:space="preserve">
     <value>sRGB</value>

@@ -1,6 +1,5 @@
 ﻿namespace bg3_modders_multitool.Services
 {
-    using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using LSLib.LS.Enums;
     using System;
@@ -20,14 +19,15 @@
         public List<PackagedFileInfo> PackagedFiles { get; private set; }
 
         public PakReaderHelper(string pakPath) {
-            PackageReader = new PackageReader(pakPath);
+            PackageReader = new PackageReader();
             PakName = Path.GetFileNameWithoutExtension(pakPath);
             try
             {
-                Package = PackageReader.Read();
+                Package = PackageReader.Read(pakPath);
                 PackagedFiles = Package.Files.Select(f => f as PackagedFileInfo).ToList();
             }
-            catch(NotAPackageException) { }
+            catch (NotAPackageException) { }
+            catch (InvalidDataException) { }
         }
 
         /// <summary>
@@ -46,23 +46,25 @@
             {
                 using (MemoryStream originalStream = new MemoryStream())
                 {
-                    lock (file.PackageStream)
+                    lock (file)
                     {
-                        file.PackageStream.Position = (long)file.OffsetInFile;
-                        using (Stream ms = file.MakeStream())
-                        using (BinaryReader reader = new BinaryReader(ms))
+                        if(file.SizeOnDisk > 0)
                         {
-                            int count;
-                            while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
-                                originalStream.Write(buffer, 0, count);
+                            using (Stream ms = file.CreateContentReader())
+                            using (BinaryReader reader = new BinaryReader(ms))
+                            {
+                                int count;
+                                while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+                                    originalStream.Write(buffer, 0, count);
+                            }
                         }
                     }
-                    
-                    if(file.SizeOnDisk != 0)
+
+                    if (file.SizeOnDisk != 0)
                     {
                         var ext = Path.GetExtension(file.Name);
                         var canConvertToLsx = FileHelper.ConvertableLsxResources.Contains(ext) && ext != ".lsj"; // lsj is already readible json
-                        if(convert && canConvertToLsx)
+                        if (convert && canConvertToLsx)
                         {
                             using (MemoryStream newOutStream = new MemoryStream())
                             {
@@ -88,7 +90,7 @@
                                 }
                             }
                         }
-                        else if(convert && ext == ".loca")
+                        else if (convert && ext == ".loca")
                         {
                             using (MemoryStream newOutStream = new MemoryStream())
                             {
@@ -114,10 +116,7 @@
                     }
                 }
             }
-            finally
-            {
-                file.ReleaseStream();
-            }
+            catch (Exception) { } // LZBlock is corrupted
 
             return new byte[0];
         }
@@ -132,9 +131,8 @@
             var file = PackagedFiles.FirstOrDefault(pf => pf.Name == filePath.Replace('\\', '/'));
             if (file != null)
             {
-                lock(file.PackageStream)
+                lock(file)
                 {
-                    file.PackageStream.Position = 0;
                     var originalExtension = Path.GetExtension(filePath);
                     var isConvertableToLsx = FileHelper.CanConvertToLsx(filePath);
                     var isConvertableToXml = originalExtension.Contains("loca");
@@ -144,7 +142,7 @@
                         if (isConvertableToLsx && file.SizeOnDisk != 0)
                         {
                             var format = ResourceUtils.ExtensionToResourceFormat(filePath);
-                            var resource = ResourceUtils.LoadResource(file.MakeStream(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
+                            var resource = ResourceUtils.LoadResource(file.CreateContentReader(), format, ResourceLoadParameters.FromGameVersion(Game.BaldursGate3));
                             var newFile = filePath.Replace(originalExtension, $"{originalExtension}.lsx");
                             newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
                             ResourceUtils.SaveResource(resource, newFile, conversionParams);
@@ -152,14 +150,14 @@
                         }
                         else if (isConvertableToXml && file.SizeOnDisk != 0)
                         {
-                            var resource = LocaUtils.Load(file.MakeStream(), LocaFormat.Loca);
+                            var resource = LocaUtils.Load(file.CreateContentReader(), LocaFormat.Loca);
                             var newFile = filePath.Replace(originalExtension, $"{originalExtension}.xml");
                             newFile = string.IsNullOrEmpty(altPath) ? FileHelper.GetPath($"{PakName}\\{newFile}") : $"{altPath}\\{newFile}";
                             LocaUtils.Save(resource, newFile, LocaFormat.Xml);
                             return newFile;
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         if (FileHelper.IsSpecialLSFSignature(ex.Message))
                         {

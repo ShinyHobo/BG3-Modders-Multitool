@@ -63,9 +63,12 @@ namespace bg3_modders_multitool.Services
         public Task IndexDirectly()
         {
             return Task.Run(() => {
-                Application.Current.Dispatcher.Invoke(() => {
-                    DataContext.AllowIndexing = false;
-                });
+                if(App.Current.Properties["console_app"] == null)
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        DataContext.AllowIndexing = false;
+                    });
+                }
 
                 if (System.IO.Directory.Exists(luceneIndex) && !File.Exists(luceneCacheFile))
                     System.IO.Directory.Delete(luceneIndex, true);
@@ -98,21 +101,33 @@ namespace bg3_modders_multitool.Services
                 if(helpers.Count == 0)
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexUpToDate);
-                    Application.Current.Dispatcher.Invoke(() => {
-                        DataContext.AllowIndexing = true;
-                    });
+                    if (App.Current.Properties["console_app"] == null)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => {
+                            DataContext.AllowIndexing = true;
+                        });
+                    }
+                        
                     return;
                 }
 
                 // Display total file count being indexed
                 GeneralHelper.WriteToConsole(Properties.Resources.FileListRetrieved);
-                Application.Current.Dispatcher.Invoke(() =>
+                if (App.Current.Properties["console_app"] == null)
                 {
-                    DataContext.IsIndexing = true;
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        DataContext.IsIndexing = true;
+                        DataContext.IndexFileTotal = fileCount;
+                        DataContext.IndexStartTime = DateTime.Now;
+                        DataContext.IndexFileCount = 0;
+                    });
+                }
+                else
+                {
                     DataContext.IndexFileTotal = fileCount;
-                    DataContext.IndexStartTime = DateTime.Now;
-                    DataContext.IndexFileCount = 0;
-                });
+                    Console.WriteLine($"Indexing {fileCount} files...");
+                }
 
                 IndexFilesDirectly(helpers);
             });
@@ -131,36 +146,57 @@ namespace bg3_modders_multitool.Services
                 using (Analyzer a = new CustomAnalyzer())
                 {
                     IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, a);
-                    using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
-                    using (IndexWriter writer = new IndexWriter(fSDirectory, config))
+                    try
                     {
-                        Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
+                        Alphaleonis.Win32.Filesystem.Directory.CreateDirectory($"{luceneDeltaDirectory}\\{helper.PakName}");
+                        using (FSDirectory fSDirectory = FSDirectory.Open($"{luceneDeltaDirectory}\\{helper.PakName}"))
+                        using (IndexWriter writer = new IndexWriter(fSDirectory, config))
                         {
-                            try
+                            Parallel.ForEach(helper.PackagedFiles, new ParallelOptions { MaxDegreeOfParallelism = 6 }, file =>
                             {
-                                IndexLuceneFileDirectly(file.Name, helper, writer);
-                            }
-                            catch (OutOfMemoryException)
-                            {
-                                GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
-                            }
-                        });
-                        writer.Commit();
-                        cachedPaks.Add(helper.PakName);
+                                try
+                                {
+                                    IndexLuceneFileDirectly(file.Name, helper, writer);
+                                }
+                                catch (OutOfMemoryException)
+                                {
+                                    GeneralHelper.WriteToConsole(Properties.Resources.OutOfMemFailedToIndex, file);
+                                }
+                            });
+                            writer.Commit();
+                            cachedPaks.Add(helper.PakName);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        GeneralHelper.WriteToConsole(ex.Message);
                     }
                 }
             });
+
+            if (App.Current.Properties["console_app"]  != null)
+            {
+                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100.00%");
+            }
 
             GeneralHelper.WriteToConsole(Properties.Resources.MergingIndices);
 
             var originalTime = DataContext.IndexStartTime;
 
-            Application.Current.Dispatcher.Invoke(() =>
+            if (App.Current.Properties["console_app"] == null)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IndexFileCount = 0;
+                    DataContext.IndexStartTime = DateTime.Now;
+                    DataContext.IndexFileTotal = cachedPaks.Count;
+                });
+            }
+            else
             {
                 DataContext.IndexFileCount = 0;
-                DataContext.IndexStartTime = DateTime.Now;
                 DataContext.IndexFileTotal = cachedPaks.Count;
-            });
+            }
 
             // Merge indexes
             using (Analyzer a = new CustomAnalyzer())
@@ -176,9 +212,23 @@ namespace bg3_modders_multitool.Services
                             writer.AddIndexes(index);
                         }
 
-                        Application.Current.Dispatcher.Invoke(() => { DataContext.IndexFileCount++; });
+                        if (App.Current.Properties["console_app"] == null)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => { DataContext.IndexFileCount++; });
+                        }
+                        else
+                        {
+                            DataContext.IndexFileCount++;
+                            var percentDone = Math.Round(Convert.ToDecimal(DataContext.IndexFileCount / (float)DataContext.IndexFileTotal * 100), 2);
+                            Console.Write($"\r{DataContext.IndexFileCount}/{DataContext.IndexFileTotal} => {percentDone}%");
+                        }
                     }
                 }
+            }
+
+            if (App.Current.Properties["console_app"] != null)
+            {
+                Console.WriteLine($"\r{DataContext.IndexFileTotal}/{DataContext.IndexFileTotal} => 100.00%");
             }
 
             GeneralHelper.WriteToConsole(Properties.Resources.DeletingTempIndecies);
@@ -213,10 +263,13 @@ namespace bg3_modders_multitool.Services
 
             var timeTaken = TimeSpan.FromTicks(DateTime.Now.Subtract(originalTime.Add(DataContext.GetTimeTaken())).Ticks);
             GeneralHelper.WriteToConsole(Properties.Resources.IndexFinished, timeTaken.ToString("hh\\:mm\\:ss"));
-            Application.Current.Dispatcher.Invoke(() => {
-                DataContext.IsIndexing = false;
-                DataContext.AllowIndexing = true;
-            });
+            if (App.Current.Properties["console_app"] == null)
+            {
+                Application.Current.Dispatcher.Invoke(() => {
+                    DataContext.IsIndexing = false;
+                    DataContext.AllowIndexing = true;
+                });
+            }
         }
 
         /// <summary>
@@ -253,10 +306,20 @@ namespace bg3_modders_multitool.Services
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.FailedToIndexFile, path, ex.Message);
             }
-            Application.Current.Dispatcher.Invoke(() =>
+
+            if (App.Current.Properties["console_app"] == null)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DataContext.IndexFileCount++;
+                });
+            }
+            else
             {
                 DataContext.IndexFileCount++;
-            });
+                var percentDone = Math.Round(Convert.ToDecimal(DataContext.IndexFileCount / (float)DataContext.IndexFileTotal * 100), 2);
+                Console.Write($"\r{DataContext.IndexFileCount}/{DataContext.IndexFileTotal} => {percentDone}%");
+            }
         }
         #endregion
 
@@ -394,12 +457,12 @@ namespace bg3_modders_multitool.Services
         {
             SearchText = search;
             return Task.Run(() => { 
-                var matches = new List<string>();
-                var filteredMatches = new List<string>();
+                var matches = new ConcurrentBag<string>();
+                var filteredMatches = new ConcurrentBag<string>();
                 if (!IndexDirectoryExists() && !DirectoryReader.IndexExists(mainFSDirectory))
                 {
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFound);
-                    return (Matches: matches, FilteredMatches: filteredMatches);
+                    return (Matches: matches.ToList(), FilteredMatches: filteredMatches.ToList());
                 }
 
                 try
@@ -408,39 +471,43 @@ namespace bg3_modders_multitool.Services
                     {
                         IndexSearcher searcher = new IndexSearcher(reader);
                         BooleanQuery query = new BooleanQuery();
-                        var wildCardChar = enableLeadingWildCard ? "*" : string.Empty;
-                        var pathQuery = new WildcardQuery(new Term("path", wildCardChar + QueryParserBase.Escape(search.ToLower().Trim()) + '*'));
-                        query.Add(pathQuery, Occur.SHOULD);
 
-                        var searchTerms = search.Trim().ToLower().Split(' ');
-                        if(searchTerms.Length > 1)
+                        if(!string.IsNullOrEmpty(search))
                         {
-                            var spanQueries = new List<SpanQuery>();
-                            for (int i = 0; i < searchTerms.Length; i++)
+                            var wildCardChar = enableLeadingWildCard ? "*" : string.Empty;
+                            var pathQuery = new WildcardQuery(new Term("path", wildCardChar + QueryParserBase.Escape(search.ToLower().Trim()) + '*'));
+                            query.Add(pathQuery, Occur.SHOULD);
+
+                            var searchTerms = search.Trim().ToLower().Split(' ');
+                            if (searchTerms.Length > 1)
                             {
-                                var term = searchTerms[i];
-                                if (i == 0)
+                                var spanQueries = new List<SpanQuery>();
+                                for (int i = 0; i < searchTerms.Length; i++)
                                 {
-                                    WildcardQuery wildcard = new WildcardQuery(new Term("body", wildCardChar + term));
-                                    SpanQuery spanWildcard = new SpanMultiTermQueryWrapper<WildcardQuery>(wildcard);
-                                    spanQueries.Add(spanWildcard);
+                                    var term = searchTerms[i];
+                                    if (i == 0)
+                                    {
+                                        WildcardQuery wildcard = new WildcardQuery(new Term("body", wildCardChar + term));
+                                        SpanQuery spanWildcard = new SpanMultiTermQueryWrapper<WildcardQuery>(wildcard);
+                                        spanQueries.Add(spanWildcard);
+                                    }
+                                    else if (i == searchTerms.Length - 1)
+                                    {
+                                        SpanQuery last = new SpanMultiTermQueryWrapper<PrefixQuery>(new PrefixQuery(new Term("body", term)));
+                                        spanQueries.Add(last);
+                                    }
+                                    else
+                                    {
+                                        SpanQuery mid = new SpanTermQuery(new Term("body", term));
+                                        spanQueries.Add(mid);
+                                    }
                                 }
-                                else if (i == searchTerms.Length - 1)
-                                {
-                                    SpanQuery last = new SpanMultiTermQueryWrapper<PrefixQuery>(new PrefixQuery(new Term("body", term)));
-                                    spanQueries.Add(last);
-                                }
-                                else
-                                {
-                                    SpanQuery mid = new SpanTermQuery(new Term("body", term));
-                                    spanQueries.Add(mid);
-                                }
+                                query.Add(new SpanNearQuery(spanQueries.ToArray(), 0, true), Occur.SHOULD);
                             }
-                            query.Add(new SpanNearQuery(spanQueries.ToArray(), 0, true), Occur.SHOULD);
-                        }
-                        else
-                        {
-                            query.Add(new WildcardQuery(new Term("body", wildCardChar + searchTerms[0] + '*')), Occur.SHOULD);
+                            else
+                            {
+                                query.Add(new WildcardQuery(new Term("body", wildCardChar + searchTerms[0] + '*')), Occur.SHOULD);
+                            }
                         }
 
                         if (reader.MaxDoc != 0)
@@ -450,34 +517,34 @@ namespace bg3_modders_multitool.Services
                                 GeneralHelper.WriteToConsole(Properties.Resources.IndexSearchStarted);
 
                             // perform search
-                            TopDocs topDocs = searcher.Search(query, reader.MaxDoc);
+                            TopDocs topDocs = string.IsNullOrEmpty(search) ? searcher.Search(new MatchAllDocsQuery(), reader.MaxDoc) : searcher.Search(query, reader.MaxDoc);
 
                             var filteredSomeResults = 0;
                             var missingExtensions = new List<string>();
 
                             // display results
-                            foreach (ScoreDoc scoreDoc in topDocs.ScoreDocs)
-                            {
+                            var pathSet = new HashSet<string> { "path" };
+                            Parallel.ForEach(topDocs.ScoreDocs, GeneralHelper.ParallelOptions, scoreDoc => {
                                 float score = scoreDoc.Score;
                                 int docId = scoreDoc.Doc;
 
-                                Document doc = searcher.Doc(docId);
+                                Document doc = searcher.Doc(docId, pathSet);
                                 var path = doc.Get("path").Replace("/", "\\");
                                 var ext = Path.GetExtension(path).ToLower();
                                 ext = string.IsNullOrEmpty(ext) ? Properties.Resources.Extensionless : ext;
                                 if (selectedFileTypes != null && !selectedFileTypes.Contains(ext))
                                 {
                                     filteredSomeResults++;
-                                    if(!FileHelper.FileTypes.Contains(ext))
+                                    if (!FileHelper.FileTypes.Contains(ext))
                                     {
                                         missingExtensions.Add(ext);
                                     }
                                     filteredMatches.Add(path);
-                                    continue;
+                                    return;
                                 }
 
                                 matches.Add(path);
-                            }
+                            });
 
                             if(missingExtensions.Count > 0)
                             {
@@ -505,7 +572,7 @@ namespace bg3_modders_multitool.Services
                     GeneralHelper.WriteToConsole(Properties.Resources.IndexCorrupt);
                 }
 
-                return (Matches: matches, FilteredMatches: filteredMatches);
+                return (Matches: matches.ToList(), FilteredMatches: filteredMatches.ToList());
             });
         }
         #endregion
@@ -619,14 +686,24 @@ namespace bg3_modders_multitool.Services
             var lines = new ConcurrentDictionary<long, string>();
             Parallel.ForEach(contents, GeneralHelper.ParallelOptions, (line, _, lineNumber) =>
             {
-                var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
-                if (index >= 0)
+                if(string.IsNullOrEmpty(SearchText))
                 {
-                    var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
+                    var text = System.Security.SecurityElement.Escape(line);
                     var escapedLine = System.Security.SecurityElement.Escape(line);
-                    escapedLine = escapedLine.Replace(text, $"<Span Background=\"DimGray\" Foreground=\"White\">{text}</Span>");
                     lines.TryAdd(lineNumber, escapedLine);
                 }
+                else
+                {
+                    var index = line.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase);
+                    if (index >= 0)
+                    {
+                        var text = System.Security.SecurityElement.Escape(line.Substring(index, SearchText.Length));
+                        var escapedLine = System.Security.SecurityElement.Escape(line);
+                        escapedLine = escapedLine.Replace(text, $"<Span Background=\"DimGray\" Foreground=\"White\">{text}</Span>");
+                        lines.TryAdd(lineNumber, escapedLine);
+                    }
+                }
+                
             });
             return lines.OrderBy(l => l.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }

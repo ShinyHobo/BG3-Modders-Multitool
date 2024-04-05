@@ -49,6 +49,14 @@ namespace bg3_modders_multitool.Views
                 GeneralHelper.WriteToConsole(Properties.Resources.ExternalLSLibFound);
             }
             #endif
+
+            if(GeneralHelper.IsAdministrator)
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.RunningAsAdmin);
+            }
+
+            compressionOption.ItemsSource = ViewModels.MainWindow.AvailableCompressionTypes;
+            compressionOption.SelectedIndex = Properties.Settings.Default.packingCompressionOption;
         }
 
         #region General
@@ -60,13 +68,13 @@ namespace bg3_modders_multitool.Views
         private void LaunchGameButton_Click(object sender, RoutedEventArgs e)
         {
             var dataDir = FileHelper.DataDirectory;
-            if (Directory.Exists(dataDir))
+            if (Directory.Exists(dataDir)&&File.Exists(MainWindowVM.Bg3ExeLocation))
             {
-                var bg3Exe = MainWindowVM.Bg3ExeLocation.Split('\\').Last();
-                Process pr = new Process();
-                pr.StartInfo.WorkingDirectory = MainWindowVM.Bg3ExeLocation.Replace($"\\{bg3Exe}", string.Empty);
-                pr.StartInfo.FileName = bg3Exe;
-                pr.StartInfo.Arguments = Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty;
+                var bg3Exe = new ProcessStartInfo(MainWindowVM.Bg3ExeLocation);
+                bg3Exe.Arguments = Properties.Settings.Default.quickLaunch ? "-continueGame --skip-launcher" : string.Empty;
+                bg3Exe.WorkingDirectory = Directory.GetParent(MainWindowVM.Bg3ExeLocation).FullName;
+                var pr = new Process();
+                pr.StartInfo = bg3Exe;
                 pr.Start();
             }
             else
@@ -229,6 +237,7 @@ namespace bg3_modders_multitool.Views
         #endregion
 
         #region Mod Packing
+
         private void PakToMods_Checked(object sender, RoutedEventArgs e)
         {
             GeneralHelper.TogglePakToMods(true);
@@ -248,7 +257,9 @@ namespace bg3_modders_multitool.Views
         {
             DataObject data = new DataObject(DataFormats.FileDrop, new string[] { MainWindowVM.DragAndDropBox.LastDirectory });
             rebuildBtn.IsEnabled = false;
+            // TODO - pass version here
             await MainWindowVM.DragAndDropBox.ProcessDrop(data);
+            // TODO - auto increment revision here
             rebuildBtn.IsEnabled = true;
         }
         #endregion
@@ -261,7 +272,7 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void OpenModsFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(PathHelper.ModsFolderPath);
+            FileHelper.ProcessStart(PathHelper.ModsFolderPath);
         }
 
         /// <summary>
@@ -271,7 +282,7 @@ namespace bg3_modders_multitool.Views
         /// <param name="e">The event arguments.</param>
         private void OpenProfilesFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(PathHelper.PlayerProfilesFolderPath);
+            FileHelper.ProcessStart(PathHelper.PlayerProfilesFolderPath);
         }
 
         /// <summary>
@@ -282,7 +293,7 @@ namespace bg3_modders_multitool.Views
         private void TempFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(DragAndDropHelper.TempFolder);
-            System.Diagnostics.Process.Start(DragAndDropHelper.TempFolder);
+            FileHelper.ProcessStart(DragAndDropHelper.TempFolder);
         }
 
         /// <summary>
@@ -293,7 +304,7 @@ namespace bg3_modders_multitool.Views
         private void unpackedModsFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(FileHelper.UnpackedModsPath);
-            System.Diagnostics.Process.Start(FileHelper.UnpackedModsPath);
+            FileHelper.ProcessStart(FileHelper.UnpackedModsPath);
         }
 
         /// <summary>
@@ -304,7 +315,7 @@ namespace bg3_modders_multitool.Views
         private void unpackedDataFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Directory.CreateDirectory(FileHelper.UnpackedDataPath);
-            System.Diagnostics.Process.Start(FileHelper.UnpackedDataPath);
+            FileHelper.ProcessStart(FileHelper.UnpackedDataPath);
         }
 
         /// <summary>
@@ -317,7 +328,7 @@ namespace bg3_modders_multitool.Views
             var dataDir = FileHelper.DataDirectory;
             if (Directory.Exists(dataDir))
             {
-                System.Diagnostics.Process.Start(dataDir);
+                FileHelper.ProcessStart(dataDir);
             }
             else
             {
@@ -330,62 +341,62 @@ namespace bg3_modders_multitool.Views
         #region Links
         private void BG3WikiLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://bg3.wiki/wiki/Modding_Resources");
+            FileHelper.ProcessStart("https://bg3.wiki/wiki/Modding_Resources");
         }
 
         private void BG3CommWikiLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/BG3-Community-Library-Team/BG3-Community-Library/wiki");
+            FileHelper.ProcessStart("https://github.com/BG3-Community-Library-Team/BG3-Community-Library/wiki");
         }
 
         private void ModTutLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.nexusmods.com/baldursgate3/mods/1514");
+            FileHelper.ProcessStart("https://www.nexusmods.com/baldursgate3/mods/1514");
         }
 
         private void BG3SELink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/releases");
+            FileHelper.ProcessStart("https://github.com/Norbyte/bg3se/releases");
         }
 
         private void BG3SEAPILink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/blob/main/Docs/API.md");
+            FileHelper.ProcessStart("https://github.com/Norbyte/bg3se/blob/main/Docs/API.md");
         }
 
         private void BG3SESampleLinkClick(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Norbyte/bg3se/tree/main/SampleMod");
+            FileHelper.ProcessStart("https://github.com/Norbyte/bg3se/tree/main/SampleMod");
         }
 
         private void LuaSetupLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/LaughingLeader/BG3ModdingTools/wiki/Script-Extender-Lua-Setup");
+            FileHelper.ProcessStart("https://github.com/LaughingLeader/BG3ModdingTools/wiki/Script-Extender-Lua-Setup");
         }
 
         private void ReportABugLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/ShinyHobo/BG3-Modders-Multitool/issues");
+            FileHelper.ProcessStart("https://github.com/ShinyHobo/BG3-Modders-Multitool/issues");
         }
 
         private void KofiLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://ko-fi.com/shinyhobo");
+            FileHelper.ProcessStart("https://ko-fi.com/shinyhobo");
         }
 
         private void LSLibLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Norbyte/lslib/releases");
+            FileHelper.ProcessStart("https://github.com/Norbyte/lslib/releases");
         }
 
         private void ConvertWemLink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://katiefrogs.github.io/vgmstream-web/");
+            FileHelper.ProcessStart("https://katiefrogs.github.io/vgmstream-web/");
         }
 
         private void SpellGenAssistant_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Shimizoki/BG3-Spell-Generation-Assistant");
+            FileHelper.ProcessStart("https://github.com/Shimizoki/BG3-Spell-Generation-Assistant");
         }
         #endregion
 
@@ -400,7 +411,7 @@ namespace bg3_modders_multitool.Views
         /// </summary>
         private void HowToUse_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki");
+            FileHelper.ProcessStart("https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki");
         }
         #endregion
 
@@ -420,8 +431,14 @@ namespace bg3_modders_multitool.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GameObjectButton_Click(object sender, RoutedEventArgs e)
+        private async void GameObjectButton_Click(object sender, RoutedEventArgs e)
         {
+
+            if (!IndexHelper.IndexDirectoryExists())
+            {
+                GeneralHelper.WriteToConsole(Properties.Resources.IndexNotFoundGenerating);
+                await IndexFiles(true);
+            }
             new GameObjectWindow().Show();
         }
 
@@ -517,5 +534,15 @@ namespace bg3_modders_multitool.Views
             vm.CheckForUpdates(true);
         }
         #endregion
+
+        /// <summary>
+        /// Updates the compression option setting
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void CompressionOption_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            MainWindowVM.PackingCompressionOption = ((ViewModels.MainWindow.PackingCompression)compressionOption.SelectedItem).Id;
+        }
     }
 }

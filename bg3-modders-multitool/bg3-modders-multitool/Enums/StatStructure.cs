@@ -5,6 +5,7 @@ namespace bg3_modders_multitool.Enums
 {
     public enum StatStructure
     {
+        None,
         Armor,
         Character,
         Object,

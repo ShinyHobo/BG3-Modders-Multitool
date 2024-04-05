@@ -1,9 +1,13 @@
 namespace bg3_modders_multitool
 {
     using bg3_modders_multitool.Themes;
+    using CommandLine;
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Management.Automation.Language;
+    using System.Runtime.InteropServices;
+    using System.Text;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
@@ -43,7 +47,7 @@ namespace bg3_modders_multitool
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Process unhandled exception
-            using (StreamWriter w = File.AppendText("log.txt"))
+            using (StreamWriter w = File.AppendText("crash_log.txt"))
             {
                 Log($"An Error occured:\nStack Trace:\n{e.Exception.StackTrace}\n\nMessage: {e.Exception.Message}", w);
             }

@@ -39,6 +39,7 @@ The Modder's Multitool is the Swiss Army Knife of Modding utilities for Baldur's
 - Modding resource links
 - Shortcuts to common modding directories
 - Automatic updates
+- Command line interface (packing, unpacking, indexing, search)
 
 # How do I use these tools?
 Excited to work with the Multitool's help, but unsure how to use it? [See the Wiki](https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki) for more information about the Project and how to use specific features of the Multitool, or look below for the ideal steps to learn the Multitool.
@@ -48,7 +49,7 @@ Excited to work with the Multitool's help, but unsure how to use it? [See the Wi
 4. [Updating the Multitool](https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki/Updating)
 
 ## Linux Users ##
-I have been told that [Bottles](https://github.com/bottlesdevs/Bottles) is a good resource for running this application under Linux
+You should be able to use most functions using [Bottles (Wiki Guide)](https://github.com/ShinyHobo/BG3-Modders-Multitool/wiki/Running-on-Linux) if running Linux
 
 ## Licensing ##
 Copyright © ShinyHobo 2020-2024
@@ -56,6 +57,8 @@ Copyright © ShinyHobo 2020-2024
 This software is source available, not open source. Redistribution, and modification for private or public use, without express permission from the copyright owner, is prohibited.
 
 Baldur's Gate 3 Modder's Multitool is unofficial fan content, not approved/endorsed by Larian Studios. Portions of the materials used are property of Wizards of the Coast LLC and Larian Studios Games ltd.
+
+LSLib is owned by Norbyte and utilized under the MIT license.
 
 [contributors-shield]: https://img.shields.io/github/contributors/ShinyHobo/BG3-Modders-Multitool.svg?style=for-the-badge
 [contributors-url]: https://github.com/ShinyHobo/BG3-Modders-Multitool/graphs/contributors

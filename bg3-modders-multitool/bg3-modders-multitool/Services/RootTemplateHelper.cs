@@ -9,6 +9,7 @@ namespace bg3_modders_multitool.Services
     using bg3_modders_multitool.Models;
     using bg3_modders_multitool.Models.Races;
     using bg3_modders_multitool.Properties;
+    using bg3_modders_multitool.ViewModels;
     using LSLib.LS;
     using System;
     using System.Collections.Concurrent;
@@ -247,6 +248,8 @@ namespace bg3_modders_multitool.Services
                 rootTemplate = FileHelper.GetPath(rootTemplate);
 
                 var fileExists = File.Exists(rootTemplate) || File.Exists(rootTemplate + ".lsx");
+                var triedToFix = false;
+                RootTemplateCorruptXML:
                 if (!fileExists)
                 {
                     var helper = PakReaderHelpers.First(h => h.PakName == fileToExist.Split('\\')[0]);
@@ -259,74 +262,102 @@ namespace bg3_modders_multitool.Services
                     var rootTemplatePath = FileHelper.Convert(rootTemplate, "lsx", Path.ChangeExtension(rootTemplate, "lsx"));
                     if (File.Exists(FileHelper.GetPath(rootTemplatePath)))
                     {
+                        XmlReader reader = null;
                         try
                         {
-                            var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
-                            using (XmlReader reader = XmlReader.Create(FileHelper.GetPath(rootTemplatePath)))
+                            using (var ms = new System.IO.StreamReader("\\\\?\\" + FileHelper.GetPath(rootTemplatePath)))
                             {
-                                reader.MoveToContent();
-                                while (!reader.EOF)
+                                if(ms.BaseStream.Length == 0)
                                 {
-                                    if (GameObjectViewModel.LoadingCanceled) loopState.Break();
-                                    if (reader.Name == "region")
+                                    UpdateFileProgress();
+                                    return;
+                                }
+                                var pak = Regex.Match(rootTemplatePath, @"(?<=UnpackedData\\).*?(?=\\)").Value;
+                                using (reader = XmlReader.Create(ms))
+                                {
+                                    reader.MoveToContent();
+                                    while (!reader.EOF)
                                     {
-                                        if (!reader.ReadToDescendant("children"))
+                                        if (GameObjectViewModel.LoadingCanceled) loopState.Break();
+                                        if (reader.Name == "region")
                                         {
-                                            reader.ReadToFollowing("region");
-                                        }
+                                            if (!reader.ReadToDescendant("children"))
+                                            {
+                                                reader.ReadToFollowing("region");
+                                            }
 
-                                        reader.ReadToDescendant("node");
-                                        do
-                                        {
-                                            var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileToExist };
-                                            reader.ReadToDescendant("attribute");
+                                            reader.ReadToDescendant("node");
                                             do
                                             {
-                                                var id = reader.GetAttribute("id");
-                                                var handle = reader.GetAttribute("handle");
-                                                var value = handle ?? reader.GetAttribute("value");
-                                                var type = reader.GetAttribute("type");
-                                                if (int.TryParse(type, out int typeInt))
-                                                    type = GeneralHelper.LarianTypeEnumConvert(type);
+                                                var gameObject = new GameObject { Pak = pak, Children = new List<GameObject>(), FileLocation = fileToExist };
+                                                reader.ReadToDescendant("attribute");
+                                                do
+                                                {
+                                                    var id = reader.GetAttribute("id");
+                                                    var handle = reader.GetAttribute("handle");
+                                                    var value = handle ?? reader.GetAttribute("value");
+                                                    var type = reader.GetAttribute("type");
+                                                    if (int.TryParse(type, out int typeInt))
+                                                        type = GeneralHelper.LarianTypeEnumConvert(type);
 
 #if DEBUG
-                                                typeBag.Add(type);
-                                                idBag.Add(id);
-                                                classBag.Add(new Tuple<string, string>(id, type));
+                                                    typeBag.Add(type);
+                                                    idBag.Add(id);
+                                                    classBag.Add(new Tuple<string, string>(id, type));
 #endif
-                                                if (string.IsNullOrEmpty(handle))
-                                                {
-                                                    gameObject.LoadProperty(id, type, value);
-                                                }
-                                                else
-                                                {
-                                                    gameObject.LoadProperty($"{id}Handle", type, value);
-                                                    if (value != null && TranslationLookup.ContainsKey(value))
+                                                    if (string.IsNullOrEmpty(handle))
                                                     {
-                                                        var translationText = TranslationLookup[value].Value;
-                                                        gameObject.LoadProperty(id, type, translationText);
+                                                        gameObject.LoadProperty(id, type, value);
                                                     }
-                                                }
-                                            } while (reader.ReadToNextSibling("attribute"));
-                                            if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
-                                                gameObject.ParentTemplateId = gameObject.TemplateName;
-                                            if (string.IsNullOrEmpty(gameObject.Name))
-                                                gameObject.Name = gameObject.DisplayName;
-                                            if (string.IsNullOrEmpty(gameObject.Name))
-                                                gameObject.Name = gameObject.Stats;
+                                                    else
+                                                    {
+                                                        gameObject.LoadProperty($"{id}Handle", type, value);
+                                                        if (value != null && TranslationLookup.ContainsKey(value))
+                                                        {
+                                                            var translationText = TranslationLookup[value].Value;
+                                                            gameObject.LoadProperty(id, type, translationText);
+                                                        }
+                                                    }
+                                                } while (reader.ReadToNextSibling("attribute"));
+                                                if (string.IsNullOrEmpty(gameObject.ParentTemplateId))
+                                                    gameObject.ParentTemplateId = gameObject.TemplateName;
+                                                if (string.IsNullOrEmpty(gameObject.Name))
+                                                    gameObject.Name = gameObject.DisplayName;
+                                                if (string.IsNullOrEmpty(gameObject.Name))
+                                                    gameObject.Name = gameObject.Stats;
 
-                                            GameObjectBag.Add(gameObject);
-                                        } while (reader.ReadToNextSibling("node"));
+                                                GameObjectBag.Add(gameObject);
+                                            } while (reader.ReadToNextSibling("node"));
+                                        }
+                                        reader.ReadToFollowing("region");
                                     }
-                                    reader.ReadToFollowing("region");
                                 }
                             }
                         }
                         catch
                         {
-                            rootTemplate = rootTemplate.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty);
-                            GeneralHelper.WriteToConsole(Properties.Resources.CorruptXmlFile, rootTemplate);
-                            return;
+                            if (reader != null)
+                            {
+                                reader.Dispose();
+                            }
+                            if (triedToFix)
+                            {
+                                GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, rootTemplate.Replace($"{FileHelper.UnpackedDataPath}\\", string.Empty));
+                                GameObjectViewModel.LoadingCanceled = true;
+                                return;
+                            }
+                            else
+                            {
+                                fileExists = false;
+                                goto RootTemplateCorruptXML;
+                            }
+                        }
+                        finally
+                        {
+                            if (reader != null)
+                            {
+                                reader.Dispose();
+                            }
                         }
                     }
                     UpdateFileProgress();
@@ -608,7 +639,9 @@ namespace bg3_modders_multitool.Services
                 if (GameObjectViewModel.LoadingCanceled) loopTask.Break();
                 var fileToExist = FileHelper.GetPath(visualBankFile);
                 var fileExists = File.Exists(fileToExist) || File.Exists(fileToExist + ".lsx");
-                if(!fileExists)
+                var triedToFix = false;
+                VisualBankCorruptXML:
+                if (!fileExists)
                 {
                     var helper = PakReaderHelpers.First(h => h.PakName == visualBankFile.Split('\\')[0]);
                     helper.DecompressPakFile(PakReaderHelper.GetPakPath(visualBankFile));
@@ -625,6 +658,11 @@ namespace bg3_modders_multitool.Services
                     {
                         using (var ms = new System.IO.StreamReader("\\\\?\\"+FileHelper.GetPath(visualBankFilePath)))
                         {
+                            if(ms.BaseStream.Length == 0)
+                            {
+                                UpdateFileProgress();
+                                return;
+                            }
                             reader = XmlReader.Create(ms);
                             reader.MoveToContent();
                             while (!reader.EOF)
@@ -683,12 +721,20 @@ namespace bg3_modders_multitool.Services
                     }
                     catch
                     {
-                        GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
-                        if(reader != null)
+                        if (reader != null)
                         {
                             reader.Dispose();
                         }
-                        GameObjectViewModel.LoadingCanceled = true;
+                        if (triedToFix)
+                        {
+                            GeneralHelper.WriteToConsole(Resources.CorruptXmlFile, visualBankFile);
+                            GameObjectViewModel.LoadingCanceled = true;
+                        }
+                        else
+                        {
+                            fileExists = false;
+                            goto VisualBankCorruptXML;
+                        }
                     }
                     finally
                     {

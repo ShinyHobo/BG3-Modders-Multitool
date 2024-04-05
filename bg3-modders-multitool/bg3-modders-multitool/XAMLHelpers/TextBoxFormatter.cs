@@ -4,7 +4,9 @@
 /// </summary>
 namespace bg3_modders_multitool.XAMLHelpers
 {
+    using bg3_modders_multitool.Services;
     using System;
+    using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -12,8 +14,8 @@ namespace bg3_modders_multitool.XAMLHelpers
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Documents;
-    using System.Windows.Interop;
     using System.Windows.Markup;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using System.Xml;
 
@@ -62,25 +64,41 @@ namespace bg3_modders_multitool.XAMLHelpers
                         {
                             try
                             {
-                                Pfim.IImage pfimImage;
-                                if (!isBase64 && File.Exists(imageLoc))
+                                var imageExists = !isBase64 && File.Exists(imageLoc);
+                                using (Pfim.IImage pfimImage = imageExists ? Pfim.Pfimage.FromFile(imageLoc) : Pfim.Pfimage.FromStream(new MemoryStream(Convert.FromBase64String(imageLoc))))
                                 {
-                                    // convert image to something WPF can read
-                                    pfimImage = Pfim.Pfimage.FromFile(imageLoc);
-                                }
-                                else
-                                {
-                                    var imageData = Convert.FromBase64String(imageLoc);
-                                    pfimImage = Pfim.Pfimage.FromStream(new MemoryStream(imageData));
-                                }
+                                    // pin image data to prevent AccessViolationException do to GC
+                                    var handle = GCHandle.Alloc(pfimImage.Data, GCHandleType.Pinned);
 
-                                var data = Marshal.UnsafeAddrOfPinnedArrayElement(pfimImage.Data, 0);
-                                var bitmap = new System.Drawing.Bitmap(pfimImage.Width, pfimImage.Height, pfimImage.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
-                                var bitmapImage = Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                                image.Source = bitmapImage;
-                                pfimImage.Dispose();
+                                    try
+                                    {
+                                        var data = handle.AddrOfPinnedObject();
+                                        var bitmap = new System.Drawing.Bitmap(pfimImage.Width, pfimImage.Height, pfimImage.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, data);
+                                        bitmap.MakeTransparent();
+
+                                        var bitmapData = bitmap.LockBits(
+                                            new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                                            ImageLockMode.ReadOnly, bitmap.PixelFormat);
+
+                                        var bitmapSource = BitmapSource.Create(bitmap.Width, bitmap.Height, bitmap.HorizontalResolution, bitmap.VerticalResolution, PixelFormats.Pbgra32, 
+                                            null, bitmapData.Scan0, bitmapData.Stride * bitmap.Height, bitmapData.Stride);
+
+                                        bitmap.UnlockBits(bitmapData);
+
+                                        image.Source = bitmapSource;
+                                    }
+                                    finally
+                                    {
+                                        handle.Free();
+                                    }
+                                }
                             }
-                            catch { }
+                            catch
+                            {
+                                // Error tends to be due to invalid source dimensions, unsure what is causing this. Images may be corrupt or unable to be converted
+                                textBlock.Inlines.Add(Properties.Resources.CouldNotDisplayImage);
+                                result.Child = null;
+                            }
                             textBlock.Inlines.Add(result);
                         }
                     }

@@ -440,6 +440,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cant&apos;t delete {0}; is it open? Retrying....
+        /// </summary>
+        public static string CantDeleteResource {
+            get {
+                return ResourceManager.GetString("CantDeleteResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog.
         /// </summary>
         public static string ChangeLogMenu {
@@ -538,6 +547,78 @@ namespace bg3_modders_multitool.Properties {
         public static string ColorPickerMenu {
             get {
                 return ResourceManager.GetString("ColorPickerMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LZ4.
+        /// </summary>
+        public static string CompressionOptionLZ4 {
+            get {
+                return ResourceManager.GetString("CompressionOptionLZ4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LZ4 HC.
+        /// </summary>
+        public static string CompressionOptionLZ4HC {
+            get {
+                return ResourceManager.GetString("CompressionOptionLZ4HC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string CompressionOptionNone {
+            get {
+                return ResourceManager.GetString("CompressionOptionNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zlib Fast.
+        /// </summary>
+        public static string CompressionOptionZlibFast {
+            get {
+                return ResourceManager.GetString("CompressionOptionZlibFast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zlib Optimal.
+        /// </summary>
+        public static string CompressionOptionZlibOptimal {
+            get {
+                return ResourceManager.GetString("CompressionOptionZlibOptimal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zstd Fast.
+        /// </summary>
+        public static string CompressionOptionZstdFast {
+            get {
+                return ResourceManager.GetString("CompressionOptionZstdFast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zstd Max.
+        /// </summary>
+        public static string CompressionOptionZstdMax {
+            get {
+                return ResourceManager.GetString("CompressionOptionZstdMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zstd Optimal.
+        /// </summary>
+        public static string CompressionOptionZstdOptimal {
+            get {
+                return ResourceManager.GetString("CompressionOptionZstdOptimal", resourceCulture);
             }
         }
         
@@ -685,6 +766,15 @@ namespace bg3_modders_multitool.Properties {
         public static string CorruptXmlFile {
             get {
                 return ResourceManager.GetString("CorruptXmlFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not display image; extract and open externally!.
+        /// </summary>
+        public static string CouldNotDisplayImage {
+            get {
+                return ResourceManager.GetString("CouldNotDisplayImage", resourceCulture);
             }
         }
         
@@ -2302,7 +2392,25 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Packing Priority.
+        ///   Looks up a localized string similar to Compression:.
+        /// </summary>
+        public static string PackingCompressionLabel {
+            get {
+                return ResourceManager.GetString("PackingCompressionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type of compression to use when packing.
+        /// </summary>
+        public static string PackingCompressionTooltip {
+            get {
+                return ResourceManager.GetString("PackingCompressionTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Packing Priority:.
         /// </summary>
         public static string PackingPriorityLabel {
             get {
@@ -2352,6 +2460,15 @@ namespace bg3_modders_multitool.Properties {
         public static string PakModedToMods {
             get {
                 return ResourceManager.GetString("PakModedToMods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pak moved to destination!.
+        /// </summary>
+        public static string PakMovedToDestination {
+            get {
+                return ResourceManager.GetString("PakMovedToDestination", resourceCulture);
             }
         }
         
@@ -2606,6 +2723,15 @@ namespace bg3_modders_multitool.Properties {
         public static string RetrievingFileListDecompression {
             get {
                 return ResourceManager.GetString("RetrievingFileListDecompression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are running in adminstrator mode: drag and drop functionality is disabled! Unpacking can be done from the Utilities menu; click the blue box to create paks..
+        /// </summary>
+        public static string RunningAsAdmin {
+            get {
+                return ResourceManager.GetString("RunningAsAdmin", resourceCulture);
             }
         }
         

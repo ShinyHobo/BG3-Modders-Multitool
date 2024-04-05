@@ -11,11 +11,13 @@ namespace bg3_modders_multitool.Services
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using System.Windows.Threading;
 
     public static class GeneralHelper
     {
@@ -28,20 +30,37 @@ namespace bg3_modders_multitool.Services
         {
             if(resource != null)
             {
-                Application.Current.Dispatcher.Invoke(() => {
-                    try
-                    {
-                        var message = string.Format(resource, args);
-                        ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
-                    }
-                    catch
+                if (App.Current.Properties["console_app"] == null)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
                         try
                         {
-                            ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
-                        } catch { }
+                            var message = string.Format(resource, args);
+                            ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole(string.Format(resource, args));
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                ((MainWindow)Application.Current.MainWindow.DataContext).WriteToConsole($"{Properties.Resources.BadTranslation}: {resource}");
+                            }
+                            catch { }
+                        }
+                    });
+                }
+                else
+                {
+                    try
+                    {
+                        var message = string.Format(resource, args);
+                        Console.WriteLine(string.Format(resource, args));
                     }
-                });
+                    catch
+                    {
+                        Console.WriteLine($"{Properties.Resources.BadTranslation}: {resource}");
+                    }
+                }
             }
         }
 
@@ -361,5 +380,10 @@ namespace bg3_modders_multitool.Services
         /// If threading is not unlocked, this creates a max degree of parallelism equal to 75% of the processor count multiplied by two, rounded up (2 threads per processor)
         /// </summary>
         public static ParallelOptions ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Settings.Default.unlockThreads ? -1 : Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0)) };
+
+        /// <summary>
+        /// Checks if the application is running under adminstrator mode
+        /// </summary>
+        public static bool IsAdministrator => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
     }
 }
