@@ -8,6 +8,7 @@ using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Globalization;
 
 /// <summary>
 /// Controls the application lifecycle to allow for on the fly language selection
@@ -19,11 +20,14 @@ public class LocalizationController : Application
     {
         if (args.Length > 0)
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
             App app = new App();
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             var wnd = new bg3_modders_multitool.ViewModels.MainWindow();
-            app.MainWindow = new Window { DataContext = wnd };
+            app.MainWindow = new MainWindow { DataContext = wnd };
 
             if(!AttachConsole(-1))
             {
