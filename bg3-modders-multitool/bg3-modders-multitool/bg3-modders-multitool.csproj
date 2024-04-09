@@ -61,10 +61,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Costura64\LSLibNative.dll</HintPath>
     </Reference>
-    <Reference Include="LZ4">
-      <HintPath>LSLib\LZ4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="PresentationFramework.Aero2" />
@@ -148,6 +144,7 @@
     <PackageReference Include="Lucene.Net.Queries" Version="4.8.0-beta00016" />
     <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016" />
     <PackageReference Include="Lucene.Net.Sandbox" Version="4.8.0-beta00016" />
+    <PackageReference Include="lz4net" Version="1.0.15.93" />
     <PackageReference Include="MdXaml" Version="1.21.0" />
     <PackageReference Include="MdXaml.Plugins" Version="1.21.0" />
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
