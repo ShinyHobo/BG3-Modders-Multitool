@@ -514,6 +514,7 @@
                         }
                         else
                         {
+                            // TODO - use memory stream, probably
                             var tempFile = System.IO.Path.GetTempFileName();
                             img.Save(tempFile, ImageFormat.Png);
 
