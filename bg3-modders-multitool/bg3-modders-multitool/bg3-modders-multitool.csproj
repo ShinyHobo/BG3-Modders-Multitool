@@ -127,6 +127,7 @@
     <PackageReference Include="AlphaFS" Version="2.2.6" />
     <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
     <PackageReference Include="AvalonEdit" Version="6.0.0" />
+    <PackageReference Include="BCnEncoder.Net" Version="2.1.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all">
       <PrivateAssets>all</PrivateAssets>
@@ -148,6 +149,7 @@
     <PackageReference Include="MdXaml" Version="1.21.0" />
     <PackageReference Include="MdXaml.Plugins" Version="1.21.0" />
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Include="Pfim" Version="0.11.2" />
     <PackageReference Include="Prism.Core" Version="7.2.0.1422" />
@@ -159,6 +161,7 @@
     <PackageReference Include="SharpDX.Direct3D9" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
