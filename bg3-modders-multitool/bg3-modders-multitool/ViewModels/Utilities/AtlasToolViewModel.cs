@@ -420,7 +420,20 @@
         private void CalculateAtlasDimensions()
         {
             VerticalFramesForSheet = (int)Math.Ceiling((float)SelectedFrames.Count / HorizontalFramesForSheet);
-            FrameOutputDimensions = string.Format(Properties.Resources.OutputImageDimensions, FrameWidth * HorizontalFramesForSheet, FrameHeight * VerticalFramesForSheet);
+
+            var width = FrameWidth * HorizontalFramesForSheet;
+            var height = FrameHeight * VerticalFramesForSheet;
+
+            // force square
+            //if(width > height)
+            //{
+            //    height = width;
+            //} else if(height > width)
+            //{
+            //    width = height;
+            //}
+
+            FrameOutputDimensions = string.Format(Properties.Resources.OutputImageDimensions, width, height);
         }
 
         /// <summary>
@@ -432,7 +445,7 @@
             {
                 InitialDirectory = AtlasLastDirectory,
                 Title = Properties.Resources.AtlasFileSaveTitle,
-                Filter = $"*.png|*.png"
+                Filter = $"Png Image|*.png|DDS Image|*.DDS"
             };
 
             var selection = selectedFileDialog.ShowDialog();
@@ -457,62 +470,86 @@
 
                 var atlasWidth = FrameWidth * HorizontalFramesForSheet;
                 var atlasHeight = FrameHeight * VerticalFramesForSheet;
-                using (var img = new Bitmap(atlasWidth, atlasHeight))
-                {
-                    var imgGfx = Graphics.FromImage(img);
-                    for (int i = 0; i < VerticalFramesForSheet; i++)
+
+                // force square
+                //if(atlasHeight > atlasWidth)
+                //{
+                //    atlasWidth = atlasHeight;
+                //} else if(atlasWidth > atlasHeight)
+                //{
+                //    atlasHeight = atlasWidth;
+                //}
+
+                System.Threading.Tasks.Task.Run(() => {
+                    using (var img = new Bitmap(atlasWidth, atlasHeight))
                     {
-                        for (int j = 0; j < HorizontalFramesForSheet; j++)
+                        var imgGfx = Graphics.FromImage(img);
+                        for (int i = 0; i < VerticalFramesForSheet; i++)
                         {
-                            var index = i * HorizontalFramesForSheet + j;
-                            if (index < SelectedFrames.Count)
+                            for (int j = 0; j < HorizontalFramesForSheet; j++)
                             {
-                                var file = SelectedFrames[index];
-                                using (var frame = Image.FromFile(file))
+                                var index = i * HorizontalFramesForSheet + j;
+                                if (index < SelectedFrames.Count)
                                 {
-                                    imgGfx.DrawImage(frame, new Rectangle(j * FrameWidth, i * FrameHeight, FrameWidth, FrameHeight), new Rectangle(0, 0, FrameWidth, FrameHeight), GraphicsUnit.Pixel);
-                                    frame.Dispose();
+                                    var file = SelectedFrames[index];
+                                    using (var frame = Image.FromFile(file))
+                                    {
+                                        imgGfx.DrawImage(frame, new Rectangle(j * FrameWidth, i * FrameHeight, FrameWidth, FrameHeight), new Rectangle(0, 0, FrameWidth, FrameHeight), GraphicsUnit.Pixel);
+                                        frame.Dispose();
+                                    }
                                 }
                             }
                         }
-                    }
-                    imgGfx.Dispose();
-                    img.Save(OutputFolderSelectionForSheet, ImageFormat.Png);
+                        imgGfx.Dispose();
 
-                    System.Threading.Tasks.Task.Run(() => {
-                        using (var image = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(OutputFolderSelectionForSheet))
+                        if(ext == ".png")
                         {
-                            var encoder = new BCnEncoder.Encoder.BcEncoder();
+                            img.Save(OutputFolderSelectionForSheet, ImageFormat.Png);
+                            
+                        }
+                        else
+                        {
+                            var tempFile = System.IO.Path.GetTempFileName();
+                            img.Save(tempFile, ImageFormat.Png);
 
-                            encoder.OutputOptions.GenerateMipMaps = true;
-                            encoder.OutputOptions.MaxMipMapLevel = 7;
-                            encoder.OutputOptions.Quality = BCnEncoder.Encoder.CompressionQuality.BestQuality;
-                            encoder.OutputOptions.Format = BCnEncoder.Shared.CompressionFormat.Bc7;
-                            encoder.OutputOptions.FileFormat = BCnEncoder.Shared.OutputFileFormat.Dds;
-                            encoder.Options.IsParallel = true;
-                            encoder.Options.TaskCount = GeneralHelper.ParallelOptions.MaxDegreeOfParallelism;
-
-                            using (System.IO.FileStream fs = System.IO.File.OpenWrite(OutputFolderSelectionForSheet.Replace(".png", ".dds")))
+                            using (var image = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(tempFile))
                             {
-                                var pixels = image.GetPixelMemoryGroup()[0];
-                                var colors = new ColorRgba32[image.Width * image.Height];
-                                for (var y = 0; y < image.Height; y++)
+                                var encoder = new BCnEncoder.Encoder.BcEncoder();
+
+                                encoder.OutputOptions.GenerateMipMaps = false;
+                                encoder.OutputOptions.MaxMipMapLevel = 3;
+                                encoder.OutputOptions.Quality = BCnEncoder.Encoder.CompressionQuality.Fast;
+                                encoder.OutputOptions.Format = BCnEncoder.Shared.CompressionFormat.Bc7;
+                                encoder.OutputOptions.FileFormat = BCnEncoder.Shared.OutputFileFormat.Dds;
+                                encoder.Options.IsParallel = true;
+                                encoder.Options.TaskCount = GeneralHelper.ParallelOptions.MaxDegreeOfParallelism;
+
+                                using (System.IO.FileStream fs = System.IO.File.OpenWrite(OutputFolderSelectionForSheet.Replace(".png", ".dds")))
                                 {
-                                    var yPixels = image.Frames.RootFrame.PixelBuffer.DangerousGetRowSpan(y);
-                                    var yColors = colors.AsSpan(y * image.Width, image.Width);
+                                    var pixels = image.GetPixelMemoryGroup()[0];
+                                    var colors = new ColorRgba32[image.Width * image.Height];
+                                    for (var y = 0; y < image.Height; y++)
+                                    {
+                                        var yPixels = image.Frames.RootFrame.PixelBuffer.DangerousGetRowSpan(y);
+                                        var yColors = colors.AsSpan(y * image.Width, image.Width);
 
-                                    MemoryMarshal.Cast<Rgba32, ColorRgba32>(yPixels).CopyTo(yColors);
+                                        MemoryMarshal.Cast<Rgba32, ColorRgba32>(yPixels).CopyTo(yColors);
+                                    }
+                                    var memory = new Memory2D<ColorRgba32>(colors.AsMemory().ToArray(), image.Height, image.Width);
+
+                                    encoder.EncodeToStream(memory, fs);
                                 }
-                                var memory = new Memory2D<ColorRgba32>(colors.AsMemory().ToArray(), image.Height, image.Width);
+                            }
 
-                                encoder.EncodeToStream(memory, fs);
+                            if (File.Exists(tempFile))
+                            {
+                                File.Delete(tempFile);
                             }
                         }
-
 
                         GeneralHelper.WriteToConsole(Properties.Resources.AtlasConstructed);
-                    });
-                }
+                    }
+                });
             }
             catch (Exception ex)
             {
