@@ -3,6 +3,8 @@
     using Alphaleonis.Win32.Filesystem;
     using BCnEncoder.Shared;
     using bg3_modders_multitool.Services;
+    using LSLib.LS.Story;
+    using Lucene.Net.Util;
     using Microsoft.Toolkit.HighPerformance;
     using Ookii.Dialogs.Wpf;
     using SixLabors.ImageSharp.Advanced;
@@ -14,6 +16,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
+    using System.Xml.Linq;
 
     public class AtlasToolViewModel : BaseViewModel
     {
@@ -471,6 +474,8 @@
                 var atlasWidth = FrameWidth * HorizontalFramesForSheet;
                 var atlasHeight = FrameHeight * VerticalFramesForSheet;
 
+                GenerateAtlasSheetCode(atlasHeight, atlasWidth);
+
                 // force square
                 //if(atlasHeight > atlasWidth)
                 //{
@@ -511,6 +516,10 @@
                         {
                             var tempFile = System.IO.Path.GetTempFileName();
                             img.Save(tempFile, ImageFormat.Png);
+
+                            // TODO ask for DDS settings here
+                            // save settings to settings
+                            // load previous settings from settings
 
                             using (var image = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(tempFile))
                             {
@@ -555,6 +564,59 @@
             {
                 GeneralHelper.WriteToConsole(Properties.Resources.GeneralError, ex.Message, ex.StackTrace);
             }
+        }
+
+        /// <summary>
+        /// Generates code for a given atlas sheet dimensions and icon dimensions
+        /// Asks for MapKey to use and offers to generate a new UUID for the sheet
+        /// </summary>
+        /// <param name="atlasHeight">The total atlas height</param>
+        /// <param name="atlasWidth">The total atlas width</param>
+        void GenerateAtlasSheetCode(int atlasHeight, int atlasWidth)
+        {
+            //FrameWidth * HorizontalFramesForSheet;
+            //FrameHeight * VerticalFramesForSheet;
+
+            // Ask for MapKey input -> format "[MapKeyInput]_##_Icon"
+            // Ask for UUID or provide option to generate one
+            // save inputs in settings
+
+            // https://bg3.wiki/wiki/Modding:Creating_Item_Icons#Sample_Code_for_Icons_Items
+            // https://docs.google.com/spreadsheets/d/1ZbozlhrM_WWBSEQrB3szUvu7eH1TvQh4iL-V-3DU5xY/edit#gid=0
+
+            var template = FileHelper.LoadFileTemplate("TextureAtlas.lsx");
+            var xml = XDocument.Parse(template);
+
+            #region Update Texture Info
+            var textureInfo = xml.Descendants("region").First(x => x.Attribute("id").Value == "TextureAtlasInfo");
+            var textureInfoChildren = textureInfo.Descendants("children").Single();
+
+            var textureAtlasIconSize = textureInfoChildren.Descendants("node").Where(n => n.Attribute("id").Value == "TextureAtlasIconSize").Single();
+            textureAtlasIconSize.Descendants("attribute").Where(n => n.Attribute("id").Value == "Height").Single().Attribute("value").Value = FrameHeight.ToString();
+            textureAtlasIconSize.Descendants("attribute").Where(n => n.Attribute("id").Value == "Width").Single().Attribute("value").Value = FrameWidth.ToString();
+
+            var textureAtlasPath = textureInfoChildren.Descendants("node").Where(n => n.Attribute("id").Value == "TextureAtlasPath").Single();
+            //textureAtlasPath.Descendants("attribute").Where(n => n.Attribute("id").Value == "Path").Single().Attribute("value").Value = ??;
+            //textureAtlasPath.Descendants("attribute").Where(n => n.Attribute("id").Value == "UUID").Single().Attribute("value").Value = ??;
+
+            var textureAtlasTextureSize = textureInfoChildren.Descendants("node").Where(n => n.Attribute("id").Value == "TextureAtlasTextureSize").Single();
+            textureAtlasTextureSize.Descendants("attribute").Where(n => n.Attribute("id").Value == "Height").Single().Attribute("value").Value = atlasHeight.ToString();
+            textureAtlasTextureSize.Descendants("attribute").Where(n => n.Attribute("id").Value == "Width").Single().Attribute("value").Value = atlasWidth.ToString();
+            #endregion
+
+            #region Update Icon List
+            var iconList = xml.Descendants("region").First(x => x.Attribute("id").Value == "IconUVList");
+
+            //<node id = "IconUV">
+            //  <attribute id = "MapKey" type = "FixedString" value = "MySweetMod_1_Icon"/>
+            //  <attribute id = "U1" type = "float" value = "0.0"/> Left
+            //  <attribute id = "U2" type = "float" value = "0.25"/> Right
+            //  <attribute id = "V1" type = "float" value = "0.0"/> Top
+            //  <attribute id = "V2" type = "float" value = "0.25"/> Bottom
+            //</node>
+            #endregion
+
+            xml.Save(OutputFolderSelectionForSheet.Replace(".png", ".lsx"));
         }
         #endregion
 

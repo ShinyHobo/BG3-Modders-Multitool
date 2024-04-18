@@ -166,5 +166,29 @@ namespace bg3_modders_multitool.Properties {
                 this["packingCompressionOption"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string atlasMapKey {
+            get {
+                return ((string)(this["atlasMapKey"]));
+            }
+            set {
+                this["atlasMapKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string atlasUUID {
+            get {
+                return ((string)(this["atlasUUID"]));
+            }
+            set {
+                this["atlasUUID"] = value;
+            }
+        }
     }
 }

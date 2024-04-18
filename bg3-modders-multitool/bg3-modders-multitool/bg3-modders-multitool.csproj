@@ -53,6 +53,9 @@
     <StartupObject>LocalizationController</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="FileTemplates\TextureAtlas.lsx" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="LSLib">
       <HintPath>LSLib\LSLib.dll</HintPath>
       <Private>True</Private>
@@ -119,6 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Lucene.Net.4.8.0-beta00016\analyzers\dotnet\cs\Lucene.Net.CodeAnalysis.CSharp.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FileTemplates\TextureAtlas.lsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Costura64\OpenTK.dll" />

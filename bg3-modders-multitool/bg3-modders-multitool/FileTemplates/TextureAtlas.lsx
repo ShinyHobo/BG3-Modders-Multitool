@@ -1,0 +1,27 @@
+﻿<save>
+   <version major="4" minor="0" revision="9" build="328" />
+   <region id="TextureAtlasInfo"> 
+       <node id="root">
+           <children>
+               <node id="TextureAtlasIconSize">
+                   <attribute id="Height" type="int64" value="REPLACE"/>
+                   <attribute id="Width" type="int64" value="REPLACE"/>
+               </node>
+               <node id="TextureAtlasPath">
+                   <attribute id="Path" type="LSString" value="REPLACE"/>
+                   <attribute id="UUID" type="FixedString" value="REPLACE"/>
+               </node>
+               <node id="TextureAtlasTextureSize">
+                   <attribute id="Height" type="int64" value="REPLACE"/>
+                   <attribute id="Width" type="int64" value="REPLACE"/>
+               </node>
+           </children>
+       </node>
+   </region>
+   <region id="IconUVList">
+       <node id="root">
+           <children>
+           </children>
+       </node>
+   </region>
+</save>
