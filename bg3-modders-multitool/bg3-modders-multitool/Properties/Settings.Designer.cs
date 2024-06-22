@@ -166,5 +166,17 @@ namespace bg3_modders_multitool.Properties {
                 this["packingCompressionOption"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string tempFolderPath {
+            get {
+                return ((string)(this["tempFolderPath"]));
+            }
+            set {
+                this["tempFolderPath"] = value;
+            }
+        }
     }
 }
