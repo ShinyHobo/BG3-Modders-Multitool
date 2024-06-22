@@ -2374,6 +2374,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not enough disk space! Canceling operation and cleaning temp directory....
+        /// </summary>
+        public static string OutOfDiskSpace {
+            get {
+                return ResourceManager.GetString("OutOfDiskSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OOME: Failed to index {0}.
         /// </summary>
         public static string OutOfMemFailedToIndex {
@@ -2835,6 +2844,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a folder for temporary storage.
+        /// </summary>
+        public static string SelectTempFolderLocation {
+            get {
+                return ResourceManager.GetString("SelectTempFolderLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shortcuts.
         /// </summary>
         public static string ShortcutsMenu {
@@ -2948,6 +2966,24 @@ namespace bg3_modders_multitool.Properties {
         public static string TempFilesCleaned {
             get {
                 return ResourceManager.GetString("TempFilesCleaned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Temp Folder.
+        /// </summary>
+        public static string TempFolderLocationLabel {
+            get {
+                return ResourceManager.GetString("TempFolderLocationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom location to perform packing/unpacking operations (use if your C: drive doesn&apos;t have space).
+        /// </summary>
+        public static string TempFolderLocationTooltip {
+            get {
+                return ResourceManager.GetString("TempFolderLocationTooltip", resourceCulture);
             }
         }
         

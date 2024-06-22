@@ -28,6 +28,16 @@ namespace bg3_modders_multitool.ViewModels
             AutoUpdater = new AutoUpdaterService(this);
             PackingPriority = Properties.Settings.Default.packingPriority;
             PackingCompressionOption = Properties.Settings.Default.packingCompressionOption;
+
+            if(Directory.Exists(Properties.Settings.Default.tempFolderPath))
+            {
+                TempFolderLocation = Properties.Settings.Default.tempFolderPath;
+            }
+            else
+            {
+                Properties.Settings.Default.tempFolderPath = null;
+                Properties.Settings.Default.Save();
+            }
         }
 
         #region File Selection Methods
@@ -219,6 +229,23 @@ namespace bg3_modders_multitool.ViewModels
 
                 ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _tempFolderLocation;
+
+        public string TempFolderLocation
+        {
+            get { return _tempFolderLocation; }
+            set
+            {
+                _tempFolderLocation = value;
+                if (Directory.Exists(value) && Properties.Settings.Default.tempFolderPath != value)
+                {
+                    Properties.Settings.Default.tempFolderPath = value;
+                    Properties.Settings.Default.Save();
+                    OnNotifyPropertyChanged();
+                }
             }
         }
 

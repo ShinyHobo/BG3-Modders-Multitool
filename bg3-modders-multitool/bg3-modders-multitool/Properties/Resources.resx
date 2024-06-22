@@ -950,6 +950,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="OpenMenu" xml:space="preserve">
     <value>Open</value>
   </data>
+  <data name="OutOfDiskSpace" xml:space="preserve">
+    <value>Not enough disk space! Canceling operation and cleaning temp directory...</value>
+  </data>
   <data name="OutOfMemFailedToIndex" xml:space="preserve">
     <value>OOME: Failed to index {0}</value>
     <comment>file path</comment>
@@ -1112,6 +1115,9 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   <data name="SelectLocation" xml:space="preserve">
     <value>Select</value>
   </data>
+  <data name="SelectTempFolderLocation" xml:space="preserve">
+    <value>Select a folder for temporary storage</value>
+  </data>
   <data name="ShortcutsMenu" xml:space="preserve">
     <value>Shortcuts</value>
   </data>
@@ -1150,6 +1156,12 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
   </data>
   <data name="TempFilesCleaned" xml:space="preserve">
     <value>Temp files cleaned.</value>
+  </data>
+  <data name="TempFolderLocationLabel" xml:space="preserve">
+    <value>Custom Temp Folder</value>
+  </data>
+  <data name="TempFolderLocationTooltip" xml:space="preserve">
+    <value>Custom location to perform packing/unpacking operations (use if your C: drive doesn't have space)</value>
   </data>
   <data name="TempFolderMenu" xml:space="preserve">
     <value>Temp Folder</value>

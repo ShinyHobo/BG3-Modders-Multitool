@@ -7,24 +7,42 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Style="{StaticResource CustomWindowStyle}"
-        Height="270" Width="425" Closed="Window_Closed" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Height="337" Width="423" Closed="Window_Closed" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Grid>
-        <Grid Margin="10,0,10,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="169*"/>
+            <ColumnDefinition Width="252*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Margin="10,0,10,0" Grid.ColumnSpan="2">
             <Label x:Name="bg3exeLabel" Content="{x:Static p:Resources.BG3ExeLabel}" HorizontalAlignment="Left" Margin="-5,0,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="bg3exeLocation" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding Bg3ExeLocation, Mode=TwoWay}" IsReadOnly="True"/>
             <Button x:Name="bg3exeSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="Bg3exeSelect_Click" 
                     Cursor="Hand" ToolTip="{x:Static p:Resources.GameExeLocationTooltip}"/>
         </Grid>
-        <Grid Margin="10,53,10,0">
-            <Label x:Name="gameDocumentPathLabel" Content="{x:Static p:Resources.GameDocsLocationLabel}" HorizontalAlignment="Left" Margin="-5,0,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="gameDocumentPath" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding GameDocumentsLocation, Mode=TwoWay}" IsReadOnly="True" />
-            <Button x:Name="gameDocumentPathSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="310,28,0,0" VerticalAlignment="Top" 
-                    Width="75" Height="23" Click="GameDocumentsLocationSelect_Click" Cursor="Hand" ToolTip="{x:Static p:Resources.GameDocsLocationTooltip}"/>
+        <Grid Margin="10,53,10,0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="22*"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="gameDocumentPathLabel" Content="{x:Static p:Resources.GameDocsLocationLabel}" HorizontalAlignment="Left" Margin="-5,0,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+            <TextBox x:Name="gameDocumentPath" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding GameDocumentsLocation, Mode=TwoWay}" IsReadOnly="True" Grid.ColumnSpan="2" />
+            <Button x:Name="gameDocumentPathSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="193,28,0,0" VerticalAlignment="Top" 
+                    Width="75" Height="23" Click="GameDocumentsLocationSelect_Click" Cursor="Hand" ToolTip="{x:Static p:Resources.GameDocsLocationTooltip}" Grid.Column="1"/>
         </Grid>
-        <StackPanel Orientation="Horizontal" Margin="10,103,100,60">
+        <Grid Margin="10,103,10,0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="22*"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="tempFolderPathLabel" Content="{x:Static p:Resources.TempFolderLocationLabel}" HorizontalAlignment="Left" Margin="-5,0,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+            <TextBox x:Name="tempFolderPath" HorizontalAlignment="Left" Height="23" Margin="0,28,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="310" Text="{Binding TempFolderLocation, Mode=TwoWay}" IsReadOnly="True" Grid.ColumnSpan="2" />
+            <Button x:Name="tempFolderPathSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="193,28,0,0" VerticalAlignment="Top" 
+        Width="75" Height="23" Click="TempFolderLocationSelect_Click" Cursor="Hand" ToolTip="{x:Static p:Resources.TempFolderLocationTooltip}" Grid.Column="1"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Margin="10,156,100,99" Grid.ColumnSpan="2">
             <StackPanel>
                 <Label Content="{x:Static p:Resources.LanguageSelectionLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-5,0,0,0"/>
-                <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Cursor="Hand" Height="22"
+                <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Cursor="Hand" Height="25"
                         SelectionChanged="Language_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -44,7 +62,7 @@
                 </ComboBox>
             </StackPanel>
         </StackPanel>
-        <StackPanel Margin="8,155,00,0">
+        <StackPanel Margin="8,215,0,0" Grid.ColumnSpan="2">
             <CheckBox ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" Margin="3"
                 IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Content="{x:Static p:Resources.QuickLaunchLabel}"/>
             <CheckBox ToolTip="{x:Static p:Resources.UnlockThreadsToolTip}" Cursor="Hand" Content="{x:Static p:Resources.UnlockThreadsLabel}" Margin="3"

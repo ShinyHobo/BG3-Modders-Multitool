@@ -26,7 +26,8 @@ namespace bg3_modders_multitool.Services
         /// <summary>
         /// Path to the temp directory to use.
         /// </summary>
-        public static string TempFolder = Path.GetTempPath() + "BG3ModPacker";
+        /// todo: set default temp folder path to old temp path
+        public static string TempFolder = string.IsNullOrEmpty(Settings.Default.tempFolderPath) || !Directory.Exists(Settings.Default.tempFolderPath) ? Path.GetTempPath() + "BG3ModPacker" : Settings.Default.tempFolderPath;
 
         /// <summary>
         /// Generates a list of meta.lsx files, representing the mods present.
@@ -529,8 +530,17 @@ namespace bg3_modders_multitool.Services
                     // check if matching file for .lsf exists as .lsf.lsx and ignore if yes
                     if (new FileInfo(file).Directory.GetFiles(fileName + "*").Length == 1)
                     {
-                        Directory.CreateDirectory(modParent);
-                        File.Copy(file, mod, true);
+                        try
+                        {
+                            Directory.CreateDirectory(modParent);
+                            File.Copy(file, mod, true);
+                        }
+                        catch (System.IO.IOException ex) when ((ex.HResult & 0xFFFF) == 0x27 || (ex.HResult & 0xFFFF) == 0x70)
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.OutOfDiskSpace);
+                            CleanTempDirectory();
+                            return;
+                        }
                     }
                 }
             }
