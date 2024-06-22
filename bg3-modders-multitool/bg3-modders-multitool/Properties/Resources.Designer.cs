@@ -2835,6 +2835,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a folder for temporary storage.
+        /// </summary>
+        public static string SelectTempFolderLocation {
+            get {
+                return ResourceManager.GetString("SelectTempFolderLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shortcuts.
         /// </summary>
         public static string ShortcutsMenu {
@@ -2948,6 +2957,24 @@ namespace bg3_modders_multitool.Properties {
         public static string TempFilesCleaned {
             get {
                 return ResourceManager.GetString("TempFilesCleaned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temporary working directory.
+        /// </summary>
+        public static string TempFolderLocationLabel {
+            get {
+                return ResourceManager.GetString("TempFolderLocationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A folder to store data temporarily.
+        /// </summary>
+        public static string TempFolderLocationTooltip {
+            get {
+                return ResourceManager.GetString("TempFolderLocationTooltip", resourceCulture);
             }
         }
         

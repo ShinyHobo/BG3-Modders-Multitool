@@ -62,6 +62,16 @@ namespace bg3_modders_multitool.Views
         }
 
         /// <summary>
+        /// Opens dialog for selecting temp folder location.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void TempFolderLocationSelect_Click(object sender, RoutedEventArgs e)
+        { 
+            vm.TempFolderLocation = vm.FolderLocationDialog(nameof(Properties.Settings.tempFolderPath), Properties.Resources.SelectTempFolderLocation);
+        }
+
+        /// <summary>
         /// Activates the quick launch features.
         /// </summary>
         /// <param name="sender">The sender.</param>

@@ -20,6 +20,7 @@ namespace bg3_modders_multitool.ViewModels
         {
             Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
             GameDocumentsLocation = Settings.Default.gameDocumentsPath ?? string.Empty;
+            TempFolderLocation = Properties.Settings.Default.tempFolderPath ?? Path.GetTempPath() + "BG3ModPacker";
             Unpacker = new PakUnpackHelper();
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
@@ -217,6 +218,21 @@ namespace bg3_modders_multitool.ViewModels
                 ModsFolderLoaded = Directory.Exists(PathHelper.ModsFolderPath);
                 ProfilesFolderLoaded = Directory.Exists(PathHelper.PlayerProfilesFolderPath);
 
+                ConfigNeeded = ValidateConfigNeeded();
+                OnNotifyPropertyChanged();
+            }
+        }
+
+        private string _tempFolderLocation;
+
+        public string TempFolderLocation
+        {
+            get { return _tempFolderLocation; }
+            set
+            {
+                _tempFolderLocation = value;
+
+                DragAndDropHelper.TempFolder = _tempFolderLocation;
                 ConfigNeeded = ValidateConfigNeeded();
                 OnNotifyPropertyChanged();
             }
