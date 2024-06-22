@@ -2961,7 +2961,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Temporary working directory.
+        ///   Looks up a localized string similar to Custom Temp Folder.
         /// </summary>
         public static string TempFolderLocationLabel {
             get {
@@ -2970,7 +2970,7 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A folder to store data temporarily.
+        ///   Looks up a localized string similar to Custom location to perform packing/unpacking operations (use if your C: drive doesn&apos;t have space).
         /// </summary>
         public static string TempFolderLocationTooltip {
             get {

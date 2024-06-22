@@ -1155,10 +1155,10 @@ Clicking "OK" will wipe your current index and rebuild it from scratch; this cou
     <value>Temp files cleaned.</value>
   </data>
   <data name="TempFolderLocationLabel" xml:space="preserve">
-    <value>Temporary working directory</value>
+    <value>Custom Temp Folder</value>
   </data>
   <data name="TempFolderLocationTooltip" xml:space="preserve">
-    <value>A folder to store data temporarily</value>
+    <value>Custom location to perform packing/unpacking operations (use if your C: drive doesn't have space)</value>
   </data>
   <data name="TempFolderMenu" xml:space="preserve">
     <value>Temp Folder</value>

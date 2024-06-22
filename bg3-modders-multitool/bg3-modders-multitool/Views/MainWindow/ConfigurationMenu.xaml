@@ -39,10 +39,10 @@
             <Button x:Name="tempFolderPathSelect" Content="{x:Static p:Resources.SelectLocation}" HorizontalAlignment="Left" Margin="193,28,0,0" VerticalAlignment="Top" 
         Width="75" Height="23" Click="TempFolderLocationSelect_Click" Cursor="Hand" ToolTip="{x:Static p:Resources.TempFolderLocationTooltip}" Grid.Column="1"/>
         </Grid>
-        <StackPanel Orientation="Horizontal" Margin="10,156,100,110" Grid.ColumnSpan="2">
+        <StackPanel Orientation="Horizontal" Margin="10,156,100,99" Grid.ColumnSpan="2">
             <StackPanel>
                 <Label Content="{x:Static p:Resources.LanguageSelectionLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-5,0,0,0"/>
-                <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Cursor="Hand" Height="22"
+                <ComboBox x:Name="languageSelection" ToolTip="{x:Static p:Resources.LanguageSelectionTooltip}" Cursor="Hand" Height="25"
                         SelectionChanged="Language_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -62,7 +62,7 @@
                 </ComboBox>
             </StackPanel>
         </StackPanel>
-        <StackPanel Margin="8,209,0,0" Grid.ColumnSpan="2">
+        <StackPanel Margin="8,215,0,0" Grid.ColumnSpan="2">
             <CheckBox ToolTip="{x:Static p:Resources.QuickLaunchTooltip}" Cursor="Hand" IsEnabled="{Binding LaunchGameAllowed}" Margin="3"
                 IsChecked="{Binding QuickLaunch}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Content="{x:Static p:Resources.QuickLaunchLabel}"/>
             <CheckBox ToolTip="{x:Static p:Resources.UnlockThreadsToolTip}" Cursor="Hand" Content="{x:Static p:Resources.UnlockThreadsLabel}" Margin="3"
