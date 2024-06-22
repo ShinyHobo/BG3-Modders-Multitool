@@ -530,8 +530,17 @@ namespace bg3_modders_multitool.Services
                     // check if matching file for .lsf exists as .lsf.lsx and ignore if yes
                     if (new FileInfo(file).Directory.GetFiles(fileName + "*").Length == 1)
                     {
-                        Directory.CreateDirectory(modParent);
-                        File.Copy(file, mod, true);
+                        try
+                        {
+                            Directory.CreateDirectory(modParent);
+                            File.Copy(file, mod, true);
+                        }
+                        catch (System.IO.IOException ex) when ((ex.HResult & 0xFFFF) == 0x27 || (ex.HResult & 0xFFFF) == 0x70)
+                        {
+                            GeneralHelper.WriteToConsole(Properties.Resources.OutOfDiskSpace);
+                            CleanTempDirectory();
+                            return;
+                        }
                     }
                 }
             }

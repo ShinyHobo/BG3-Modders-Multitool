@@ -2374,6 +2374,15 @@ namespace bg3_modders_multitool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not enough disk space! Canceling operation and cleaning temp directory....
+        /// </summary>
+        public static string OutOfDiskSpace {
+            get {
+                return ResourceManager.GetString("OutOfDiskSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OOME: Failed to index {0}.
         /// </summary>
         public static string OutOfMemFailedToIndex {

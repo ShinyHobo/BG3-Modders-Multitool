@@ -950,6 +950,9 @@ Are you sure you want to delete the GameObject cache?</value>
   <data name="OpenMenu" xml:space="preserve">
     <value>Open</value>
   </data>
+  <data name="OutOfDiskSpace" xml:space="preserve">
+    <value>Not enough disk space! Canceling operation and cleaning temp directory...</value>
+  </data>
   <data name="OutOfMemFailedToIndex" xml:space="preserve">
     <value>OOME: Failed to index {0}</value>
     <comment>file path</comment>
