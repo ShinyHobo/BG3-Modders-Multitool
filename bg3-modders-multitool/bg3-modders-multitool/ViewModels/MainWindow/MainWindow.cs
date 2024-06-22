@@ -20,7 +20,6 @@ namespace bg3_modders_multitool.ViewModels
         {
             Bg3ExeLocation = Properties.Settings.Default.bg3Exe;
             GameDocumentsLocation = Settings.Default.gameDocumentsPath ?? string.Empty;
-            TempFolderLocation = Properties.Settings.Default.tempFolderPath ?? Path.GetTempPath() + "BG3ModPacker";
             Unpacker = new PakUnpackHelper();
             LaunchGameAllowed = !string.IsNullOrEmpty(Bg3ExeLocation);
             QuickLaunch = Properties.Settings.Default.quickLaunch;
@@ -29,6 +28,16 @@ namespace bg3_modders_multitool.ViewModels
             AutoUpdater = new AutoUpdaterService(this);
             PackingPriority = Properties.Settings.Default.packingPriority;
             PackingCompressionOption = Properties.Settings.Default.packingCompressionOption;
+
+            if(Directory.Exists(Properties.Settings.Default.tempFolderPath))
+            {
+                TempFolderLocation = Properties.Settings.Default.tempFolderPath;
+            }
+            else
+            {
+                Properties.Settings.Default.tempFolderPath = null;
+                Properties.Settings.Default.Save();
+            }
         }
 
         #region File Selection Methods
@@ -231,10 +240,12 @@ namespace bg3_modders_multitool.ViewModels
             set
             {
                 _tempFolderLocation = value;
-
-                DragAndDropHelper.TempFolder = _tempFolderLocation;
-                ConfigNeeded = ValidateConfigNeeded();
-                OnNotifyPropertyChanged();
+                if (Directory.Exists(value) && Properties.Settings.Default.tempFolderPath != value)
+                {
+                    Properties.Settings.Default.tempFolderPath = value;
+                    Properties.Settings.Default.Save();
+                    OnNotifyPropertyChanged();
+                }
             }
         }
 

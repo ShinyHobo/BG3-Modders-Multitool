@@ -27,7 +27,7 @@ namespace bg3_modders_multitool.Services
         /// Path to the temp directory to use.
         /// </summary>
         /// todo: set default temp folder path to old temp path
-        public static string TempFolder = Settings.Default.tempFolderPath;
+        public static string TempFolder = string.IsNullOrEmpty(Settings.Default.tempFolderPath) || !Directory.Exists(Settings.Default.tempFolderPath) ? Path.GetTempPath() + "BG3ModPacker" : Settings.Default.tempFolderPath;
 
         /// <summary>
         /// Generates a list of meta.lsx files, representing the mods present.
